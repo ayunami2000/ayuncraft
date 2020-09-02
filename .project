@@ -20,11 +20,4 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src_minecraft</name>
-			<type>2</type>
-			<location>S:/Misc Minecraft/minecraft html5/minecrafthtml5mcp/src_minecraft</location>
-		</link>
-	</linkedResources>
 </projectDescription>

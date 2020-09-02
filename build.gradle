@@ -19,7 +19,8 @@ targetCompatibility = 1.8
 sourceSets {
     main {
         java {
-            srcDir '../minecrafthtml5mcp/src_minecraft'
+            srcDir 'src/main/java'
+            srcDir 'src/teavm/java'
         }
     }
 }

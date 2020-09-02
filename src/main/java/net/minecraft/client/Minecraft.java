@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import net.minecraft.src.*;
-import sun.java2d.loops.DrawLine;
 import net.lax1dude.eaglercraft.DefaultSkinRenderer;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglerProfile;
