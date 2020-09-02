@@ -1,0 +1,223 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
+package net.md_5.bungee.api.config;
+
+import java.beans.ConstructorProperties;
+import net.md_5.bungee.api.tab.TabListHandler;
+import java.util.Map;
+import java.net.InetSocketAddress;
+
+public class ListenerInfo {
+	private final InetSocketAddress host;
+	private final String motd;
+	private final int maxPlayers;
+	private final int tabListSize;
+	private final String defaultServer;
+	private final String fallbackServer;
+	private final boolean forceDefault;
+	private final boolean websocket;
+	private final Map<String, String> forcedHosts;
+	private final TexturePackInfo texturePack;
+	private final Class<? extends TabListHandler> tabList;
+
+	@ConstructorProperties({ "host", "motd", "maxPlayers", "tabListSize", "defaultServer", "fallbackServer", "forceDefault", "websocket", "forcedHosts", "texturePack", "tabList" })
+	public ListenerInfo(final InetSocketAddress host, final String motd, final int maxPlayers, final int tabListSize, final String defaultServer, final String fallbackServer, final boolean forceDefault, final boolean websocket,
+			final Map<String, String> forcedHosts, final TexturePackInfo texturePack, final Class<? extends TabListHandler> tabList) {
+		this.host = host;
+		this.motd = motd;
+		this.maxPlayers = maxPlayers;
+		this.tabListSize = tabListSize;
+		this.defaultServer = defaultServer;
+		this.fallbackServer = fallbackServer;
+		this.forceDefault = forceDefault;
+		this.websocket = websocket;
+		this.forcedHosts = forcedHosts;
+		this.texturePack = texturePack;
+		this.tabList = tabList;
+	}
+
+	public InetSocketAddress getHost() {
+		return this.host;
+	}
+
+	public String getMotd() {
+		return this.motd;
+	}
+
+	public int getMaxPlayers() {
+		return this.maxPlayers;
+	}
+
+	public int getTabListSize() {
+		return this.tabListSize;
+	}
+
+	public String getDefaultServer() {
+		return this.defaultServer;
+	}
+
+	public String getFallbackServer() {
+		return this.fallbackServer;
+	}
+
+	public boolean isForceDefault() {
+		return this.forceDefault;
+	}
+
+	public Map<String, String> getForcedHosts() {
+		return this.forcedHosts;
+	}
+
+	public TexturePackInfo getTexturePack() {
+		return this.texturePack;
+	}
+
+	public Class<? extends TabListHandler> getTabList() {
+		return this.tabList;
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (o == this) {
+			return true;
+		}
+		if (!(o instanceof ListenerInfo)) {
+			return false;
+		}
+		final ListenerInfo other = (ListenerInfo) o;
+		if (!other.canEqual(this)) {
+			return false;
+		}
+		final Object this$host = this.getHost();
+		final Object other$host = other.getHost();
+		Label_0065: {
+			if (this$host == null) {
+				if (other$host == null) {
+					break Label_0065;
+				}
+			} else if (this$host.equals(other$host)) {
+				break Label_0065;
+			}
+			return false;
+		}
+		final Object this$motd = this.getMotd();
+		final Object other$motd = other.getMotd();
+		Label_0102: {
+			if (this$motd == null) {
+				if (other$motd == null) {
+					break Label_0102;
+				}
+			} else if (this$motd.equals(other$motd)) {
+				break Label_0102;
+			}
+			return false;
+		}
+		if (this.getMaxPlayers() != other.getMaxPlayers()) {
+			return false;
+		}
+		if (this.getTabListSize() != other.getTabListSize()) {
+			return false;
+		}
+		final Object this$defaultServer = this.getDefaultServer();
+		final Object other$defaultServer = other.getDefaultServer();
+		Label_0165: {
+			if (this$defaultServer == null) {
+				if (other$defaultServer == null) {
+					break Label_0165;
+				}
+			} else if (this$defaultServer.equals(other$defaultServer)) {
+				break Label_0165;
+			}
+			return false;
+		}
+		final Object this$fallbackServer = this.getFallbackServer();
+		final Object other$fallbackServer = other.getFallbackServer();
+		Label_0202: {
+			if (this$fallbackServer == null) {
+				if (other$fallbackServer == null) {
+					break Label_0202;
+				}
+			} else if (this$fallbackServer.equals(other$fallbackServer)) {
+				break Label_0202;
+			}
+			return false;
+		}
+		if (this.isForceDefault() != other.isForceDefault()) {
+			return false;
+		}
+		final Object this$forcedHosts = this.getForcedHosts();
+		final Object other$forcedHosts = other.getForcedHosts();
+		Label_0252: {
+			if (this$forcedHosts == null) {
+				if (other$forcedHosts == null) {
+					break Label_0252;
+				}
+			} else if (this$forcedHosts.equals(other$forcedHosts)) {
+				break Label_0252;
+			}
+			return false;
+		}
+		final Object this$texturePack = this.getTexturePack();
+		final Object other$texturePack = other.getTexturePack();
+		Label_0289: {
+			if (this$texturePack == null) {
+				if (other$texturePack == null) {
+					break Label_0289;
+				}
+			} else if (this$texturePack.equals(other$texturePack)) {
+				break Label_0289;
+			}
+			return false;
+		}
+		final Object this$tabList = this.getTabList();
+		final Object other$tabList = other.getTabList();
+		if (this$tabList == null) {
+			if (other$tabList == null) {
+				return true;
+			}
+		} else if (this$tabList.equals(other$tabList)) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean canEqual(final Object other) {
+		return other instanceof ListenerInfo;
+	}
+
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		final Object $host = this.getHost();
+		result = result * 31 + (($host == null) ? 0 : $host.hashCode());
+		final Object $motd = this.getMotd();
+		result = result * 31 + (($motd == null) ? 0 : $motd.hashCode());
+		result = result * 31 + this.getMaxPlayers();
+		result = result * 31 + this.getTabListSize();
+		final Object $defaultServer = this.getDefaultServer();
+		result = result * 31 + (($defaultServer == null) ? 0 : $defaultServer.hashCode());
+		final Object $fallbackServer = this.getFallbackServer();
+		result = result * 31 + (($fallbackServer == null) ? 0 : $fallbackServer.hashCode());
+		result = result * 31 + (this.isForceDefault() ? 1231 : 1237);
+		final Object $forcedHosts = this.getForcedHosts();
+		result = result * 31 + (($forcedHosts == null) ? 0 : $forcedHosts.hashCode());
+		final Object $texturePack = this.getTexturePack();
+		result = result * 31 + (($texturePack == null) ? 0 : $texturePack.hashCode());
+		final Object $tabList = this.getTabList();
+		result = result * 31 + (($tabList == null) ? 0 : $tabList.hashCode());
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "ListenerInfo(host=" + this.getHost() + ", motd=" + this.getMotd() + ", maxPlayers=" + this.getMaxPlayers() + ", tabListSize=" + this.getTabListSize() + ", defaultServer=" + this.getDefaultServer() + ", fallbackServer="
+				+ this.getFallbackServer() + ", forceDefault=" + this.isForceDefault() + ", websocket=" + this.isWebsocket() + ", forcedHosts=" + this.getForcedHosts() + ", texturePack=" + this.getTexturePack() + ", tabList=" + this.getTabList() + ")";
+	}
+
+	public boolean isWebsocket() {
+		return websocket;
+	}
+}

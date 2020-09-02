@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>eaglercraft-unified</name>
+	<comment>Project eaglercraft-unified created by Buildship.</comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>src_minecraft</name>
+			<type>2</type>
+			<location>S:/Misc Minecraft/minecraft html5/minecrafthtml5mcp/src_minecraft</location>
+		</link>
+	</linkedResources>
+</projectDescription>
