@@ -10,7 +10,7 @@ Eaglercraft is a port of Minecraft 1.5.2 that runs in a web browser. It can join
 
 ## How does it work?
 
-Eaglercraft uses the decompiled source of the official version of Minecraft 1.5.2 direct from Mojang decompiled by [MCP](http://www.modcoderpack.com/), compiled using [TeaVM](https://teavm.org/). Therefore it can join any Minecraft 1.5.2 server, as it is really running a modified version on Minecraft 1.5.2 in the browser. However, due to CORS restrictions it must use a modified version of Bungeecord which proxies the browser's Websocket connection to the pure TCP connection used by Minecraft. For graphics, a custom compatibility layer created by me allows the fixed function OpenGL 1.3 based rendering engine mojang uses to operate through an HTML5 WebGL canvas with minimal changes to the source.
+Eaglercraft uses the decompiled source of the official version of Minecraft 1.5.2 direct from Mojang decompiled by [MCP](http://www.modcoderpack.com/) and compiled to Javascript using [TeaVM](https://teavm.org/). Therefore it can join any Minecraft 1.5.2 server, as it is really running (a modified version of) Minecraft 1.5.2 in the browser. However, due to CORS restrictions it must use a modified version of Bungeecord which proxies the browser's Websocket connection to the pure TCP connection used by Minecraft. For graphics, a custom compatibility layer created by me allows the fixed function OpenGL 1.3 based rendering engine mojang uses to operate through an HTML5 WebGL canvas with minimal changes to the source.
 
 ## Compiling
 
