@@ -1114,6 +1114,7 @@ public class EaglerAdapterImpl2 {
 		AudioBufferX ret = loadedSoundFiles.get(fileName);
 		if(ret == null) {
 			byte[] file = loadResourceBytes(fileName);
+			if(file == null) return null;
 			Uint8Array buf = Uint8Array.create(file.length);
 			buf.set(file);
 			ret = new AudioBufferX(decodeAudioAsync(buf.getBuffer()));
