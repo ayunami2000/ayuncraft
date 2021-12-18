@@ -12,6 +12,30 @@ Eaglercraft is real Minecraft 1.5.2 that you can play in any regular web browser
 
 Eaglercraft uses the decompiled source of the official version of Minecraft 1.5.2 direct from Mojang decompiled by [MCP](http://www.modcoderpack.com/) and compiled to Javascript using [TeaVM](https://teavm.org/). Therefore it can join any Minecraft 1.5.2 server, as it is really running (a modified version of) Minecraft 1.5.2 in the browser. However, due to CORS restrictions it must use a modified version of Bungeecord which proxies the browser's Websocket connection to the pure TCP connection used by Minecraft. For graphics, a custom compatibility layer created by me allows the fixed function OpenGL 1.3 based rendering engine mojang uses to operate through an HTML5 WebGL canvas with minimal changes to the source.
 
+## Installing
+
+If you want to use this project but don't want to compile it from scratch, download [stable-download/stable-download.zip](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/stable-download.zip) and extract
+
+Within stable-download.zip there is a 'java' and a 'web' folder. Upload the contents of the web folder to your web server. **Eaglercraft will not work if it is opened locally via file:///, it needs to be on an http:// or https:// page. Try [this extention](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb/) if you are on chrome.** The eaglercraft bungeecord executable is in the java/bungee_command folder along with the sample configuration file and a run.bat script to launch it. Spigot for minecraft 1.5.2 configured to work with the eaglercraft bungee executable is in java/spigot_command.
+
+To play the game, launch the run.bat script in both the bungee_command and spigot_command folders. Then navigate to the URL where the contents of the web folder ended up. The game should load without any issues. Go to the Multiplayer screen and select 'Direct Connect'. **Type 127.0.0.1:25565.** Press connect or whatever and enjoy, the default port configured in the bungeecord config.yml is 25565 instead of 80 to avoid any potential conflict with the web server or the OS (linux desktop users can't use port numbers under 1024 without sudo).
+
+**The default behavior in Eaglercraft if no :port is provided when connecting to a server is to use port 80, not port 25565. This is so the game's websocket in a production environment does not get blocked by any of the clients' firewalls. Also this enables you to use Cloudflare and nginx to create reverse proxy connections on the site to host multiple servers on the same domain.**
+
+If you want SSL, set up [nginx](https://www.nginx.com/) as a reverse proxy from port 443 to the port in the bungee config. You can very easily configure SSL on an nginx virtual host, much more easily than you could if I created my own websocket SSL config option in bungee. Or you could use Cloudflare to proxy the port 80 eaglercraft websocket to SSL too, and get the benefit of concealing your IP from DDoS. Couldflare can do this for free. To connect to a server running an SSL websocket on the multiplayer screen, use this format: `wss://[url]/`. You can also add the :port option again after the domain or ip address at the beggining of the URL to change the port and connect with SSL.
+
+**To change the default servers on the server list, see the base64 in the javascript at line 8 of [stable-download/web/index.html](https://github.com/LAX1DUDE/eaglercraft/tree/main/stable-download/web/index.html). Copy and decode the base64 in the quotes using [base64decode.org](base64decode.org) and open the resulting file with NBTExplorer (the minecraft one). You will see the list of default servers in a 'servers' tag stored as NBT components, and you can edit them and add more as long as you follow the same format the existing servers have. When you're done, encode the file back to base64 using [base64encode.org](base64encode.org) and replace the base64 between the quotes on line 8 in index.html with the new base64 from base64encode.org.**
+
+There is a plugin hard coded into the bungeecord server to synchronize skins, and also a plugin like authme for creating a lobby and authentication. Configure it like this in bungee:
+
+    authservice:
+      authfile: passwords.yml
+      enabled: true
+      limbo: lobby
+      timeout: 30
+
+Can't remember much on this one, so you're gonna have to do some experimentation
+
 ## Compiling
 
 To compile for the web, run the gradle 'teavm' compile target to generate the classes.js file.
@@ -23,6 +47,5 @@ To complile to regular desktop Java for quick debugging, using native OpenGL for
 
 
 To modify the game's assets repository (javascript/assets.epk), make your changes in lwjgl-runtime/resources/ and use the Eclipse project located in epkcompiler/ to regenerate the assets.epk file and copy it to the Javascript directory. 
-
 
 this project is just a proof of concept to show what can be accomplished when using TeaVM to cross compile an existing java program to javascript. It is not very fast or stable, and the only real useful portion is the emulator code which creates a makeshift fixed function OpenGL 1.3 context using webgl (based on OpenGL 3.3) operational in the browser. Maybe it can be used to port other games in the future.
