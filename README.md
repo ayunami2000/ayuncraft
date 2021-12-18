@@ -1,8 +1,8 @@
 # Eaglercraft
 
-[Live demo](https://games.nx-eags.tk/minecraft_demo/)
+[Live demo](https://g.eags.us/eaglercraft/)
 
-Note that the server may be down - if you still want an in-game demo compile the modified Bungeecord server found in `eaglercraftbungee` and connect it to a Minecarft 1.5.2 server.
+Note that the server may be down - if you want a gameplay demo download the files from here [https://github.com/LAX1DUDE/eaglercraft/tree/main/stable-download](https://github.com/LAX1DUDE/eaglercraft/tree/main/stable-download) and host the page locally yourself
 
 ## What is Eaglercraft?
 
