@@ -212,3 +212,5 @@ java.lang.NullPointerException: Cannot invoke "javax.crypto.SecretKey.getEncoded
 2021-12-17 19:28:42 [INFO] DumpsterFuck41_ lost connection: disconnect.quitting
 2021-12-17 19:32:22 [INFO] DumpsterFuck41_[/127.0.0.1:64840] logged in with entity id 6733 at ([world] -265.48936340189135, 73.0, 286.96534454456935)
 2021-12-17 19:32:43 [INFO] DumpsterFuck41_ lost connection: disconnect.quitting
+2021-12-17 19:41:41 [INFO] DumpsterFuck41_[/127.0.0.1:50122] logged in with entity id 6891 at ([world] -265.8803942569905, 74.0, 289.2177625408024)
+2021-12-17 19:42:03 [INFO] DumpsterFuck41_ lost connection: disconnect.quitting

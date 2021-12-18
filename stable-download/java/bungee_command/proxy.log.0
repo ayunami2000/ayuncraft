@@ -126,3 +126,11 @@
 
 19:32:43 [INFO] [DumpsterFuck41_] -> UpstreamBridge has disconnected
 19:32:43 [INFO] [DumpsterFuck41_] <-> DownstreamBridge <-> [lobby] has disconnected
+19:41:41 [INFO] websocket opened - /127.0.0.1:50121
+
+19:41:41 [INFO] [DumpsterFuck41_] <-> InitialHandler has connected
+19:41:41 [INFO] [DumpsterFuck41_] <-> ServerConnector [lobby] has connected
+19:42:03 [INFO] websocket closed - /127.0.0.1:50121
+
+19:42:03 [INFO] [DumpsterFuck41_] -> UpstreamBridge has disconnected
+19:42:03 [INFO] [DumpsterFuck41_] <-> DownstreamBridge <-> [lobby] has disconnected

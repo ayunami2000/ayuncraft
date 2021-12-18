@@ -6,7 +6,7 @@ Note that the server may be down - if you still want an in-game demo compile the
 
 ## What is Eaglercraft?
 
-Eaglercraft is a port of Minecraft 1.5.2 that runs in a web browser. It can join real Minecraft 1.5.2 servers through a custom proxy based on Bungeecord.
+Eaglercraft is real Minecraft 1.5.2 that you can play in any regular web browser. That includes school chromebooks, it works on all chromebooks. You can join real Minecraft 1.5.2 servers with it through a custom proxy based on Bungeecord.
 
 ## How does it work?
 
