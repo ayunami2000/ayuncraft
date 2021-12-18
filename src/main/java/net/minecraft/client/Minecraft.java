@@ -517,7 +517,7 @@ public class Minecraft implements Runnable {
 			((GuiScreen) par1GuiScreen).setWorldAndResolution(this, var3, var4);
 			this.skipRenderWorld = false;
 		} else {
-			this.setIngameFocus();
+			if(!this.inGameHasFocus) this.setIngameFocus();
 		}
 	}
 
@@ -927,12 +927,12 @@ public class Minecraft implements Runnable {
 	 */
 	public void setIngameFocus() {
 		//if (EaglerAdapter.isFocused()) {
-			if (!this.inGameHasFocus) {
+			//if (!this.inGameHasFocus) {
 				this.inGameHasFocus = true;
 				this.mouseHelper.grabMouseCursor();
 				this.displayGuiScreen((GuiScreen) null);
 				this.leftClickCounter = 10000;
-			}
+			//}
 		//}
 	}
 
@@ -941,11 +941,11 @@ public class Minecraft implements Runnable {
 	 * cursor.
 	 */
 	public void setIngameNotInFocus() {
-		if (this.inGameHasFocus) {
+		//if (this.inGameHasFocus) {
 			KeyBinding.unPressAllKeys();
 			this.inGameHasFocus = false;
 			this.mouseHelper.ungrabMouseCursor();
-		}
+		//}
 	}
 
 	/**
@@ -981,7 +981,7 @@ public class Minecraft implements Runnable {
 	
 	public void displayEaglercraftText(String s) {
 		if(this.thePlayer != null && shownPlayerMessages.add(s)) {
-			this.thePlayer.sendChatToPlayer("§6notice: §7"+s);
+			this.thePlayer.sendChatToPlayer("notice: "+s);
 		}
 	}
 

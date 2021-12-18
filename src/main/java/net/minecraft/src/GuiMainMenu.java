@@ -76,7 +76,7 @@ public class GuiMainMenu extends GuiScreen {
 		 * RunnableTitleScreen(this), "1.6 Update Check Thread")).start(); }
 		 */
 
-		this.field_92025_p = EaglerAdapter._wisWebGL() ? ("" + EnumChatFormatting.BOLD + "webassembly edition" + EnumChatFormatting.RESET + "") : ("" + EnumChatFormatting.BOLD + "eaglercraft desktop runtime" + EnumChatFormatting.RESET + "");
+		this.field_92025_p = EaglerAdapter._wisWebGL() ? ("eaglercraft javascript runtime") : ("eaglercraft desktop runtime");
 		this.start = System.currentTimeMillis() + System.currentTimeMillis() % 10000l;
 		this.ackLines = new ArrayList();
 		
@@ -141,7 +141,7 @@ public class GuiMainMenu extends GuiScreen {
 		GuiButton single;
 		this.buttonList.add(single = new GuiButton(1, this.width / 2 - 100, var4, var2.translateKey("menu.singleplayer")));
 		this.buttonList.add(new GuiButton(2, this.width / 2 - 100, var4 + 24 * 1, var2.translateKey("menu.multiplayer")));
-		this.buttonList.add(new GuiButton(3, this.width / 2 - 100, var4 + 24 * 2, var2.translateKey("menu.voicechannel")));
+		//this.buttonList.add(new GuiButton(3, this.width / 2 - 100, var4 + 24 * 2, var2.translateKey("menu.voicechannel")));
 		single.enabled = false;
 
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, var4 + 72 + 12, 98, 20, var2.translateKey("menu.options")));
@@ -198,11 +198,11 @@ public class GuiMainMenu extends GuiScreen {
 		if(!showAck) {
 			super.mouseClicked(par1, par2, par3);
 			if (par3 == 0) {
-				int w = this.fontRenderer.getStringWidth("§neaglercraft readme.txt") * 3 / 4;
+				int w = this.fontRenderer.getStringWidth("eaglercraft readme.txt") * 3 / 4;
 				if(par1 >= (this.width - w - 4) && par1 <= this.width && par2 >= 0 && par2 <= 9) {
 					showAck = true;
 				}
-				w = this.fontRenderer.getStringWidth("§ndebug console") * 3 / 4;
+				w = this.fontRenderer.getStringWidth("debug console") * 3 / 4;
 				if(par1 >= 0 && par1 <= (w + 4) && par2 >= 0 && par2 <= 9) {
 					EaglerAdapter.openConsole();
 				}
@@ -433,7 +433,7 @@ public class GuiMainMenu extends GuiScreen {
 		 * this.splashText, 0, -8, 16776960); EaglerAdapter.glPopMatrix();
 		 */
 
-		this.drawString(this.fontRenderer, "minecraft 1.5.2 [mcp 7.11]", 2, this.height - 20, 16777215);
+		this.drawString(this.fontRenderer, "minecraft 1.5.2", 2, this.height - 20, 16777215);
 		this.drawString(this.fontRenderer, ConfigConstants.mainMenuString, 2, this.height - 10, 16777215);
 
 		String var10 = "copyright 2020 calder young";
@@ -450,7 +450,7 @@ public class GuiMainMenu extends GuiScreen {
 			// 16777215);
 		}
 		
-		var10 = "§neaglercraft readme.txt";
+		var10 = "eaglercraft readme.txt";
 		int w = this.fontRenderer.getStringWidth(var10) * 3 / 4;
 		if(!showAck && par1 >= (this.width - w - 4) && par1 <= this.width && par2 >= 0 && par2 <= 9) {
 			drawRect((this.width - w - 4), 0, this.width, 9, 0x55000099);
@@ -463,7 +463,7 @@ public class GuiMainMenu extends GuiScreen {
 		this.drawString(this.fontRenderer, var10, 0, 0, 16777215);
 		EaglerAdapter.glPopMatrix();
 		
-		var10 = "§ndebug console";
+		var10 = "debug console";
 		w = this.fontRenderer.getStringWidth(var10) * 3 / 4;
 		if(!showAck && par1 >= 0 && par1 <= (w + 4) && par2 >= 0 && par2 <= 9) {
 			drawRect(0, 0, w + 4, 9, 0x55000099);

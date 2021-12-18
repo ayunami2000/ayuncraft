@@ -78,7 +78,7 @@ public class Client {
 			EaglerAdapterImpl2.removeEventHandlers();
 			
 			StringBuilder str = new StringBuilder();
-			str.append("i did an oopsie and crashed. report to cgiacun@gmail.com or LAX1DUDE#6306 on discord or @eagler.69 on instagram if you want to see this bug fixed\n\n");
+			str.append("Game Crashed! I have fallen and I can't get up! Send the following text to cgiacun@gmail.com or LAX1DUDE#6306 on discord or @calderyounggg on instagram\n\n");
 			str.append(t);
 			str.append('\n').append('\n');
 			str.append("eaglercraft.version = \"").append(ConfigConstants.version).append("\"\n");

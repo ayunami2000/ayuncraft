@@ -13,28 +13,28 @@
 config-version: 1
 commands:
   tab-complete: true
+  log: true
   spam-exclusions:
   - /skill
-  log: true
+messages:
+  whitelist: You are not whitelisted on this server!
+  unknown-command: Unknown command. Type "help" for help.
+  server-full: The server is full!
 listeners:
 - port: default
   host: default
   netty: true
 settings:
   netty-threads: 3
-  prevent-proxies: false
-  bungeecord-addresses:
-  - 127.0.0.1
-  bungeecord: true
   timeout-time: 60
   restart-on-crash: true
   restart-script: ./start.sh
   log-filters:
   - ^(.*)(/login)(.*)$
-messages:
-  whitelist: You are not whitelisted on this server!
-  unknown-command: Unknown command. Type "help" for help.
-  server-full: The server is full!
+  prevent-proxies: false
+  bungeecord-addresses:
+  - 127.0.0.1
+  bungeecord: true
 world-settings:
   default:
     verbose: true
@@ -43,28 +43,7 @@ world-settings:
     merge-radius:
       exp: 3.0
       item: 2.5
-    entity-activation-range:
-      animals: 32
-      monsters: 32
-      misc: 16
-    ticks-per:
-      hopper-check: 8
-      hopper-transfer: 8
-    growth:
-      cactus-modifier: 100
-      cane-modifier: 100
-      melon-modifier: 100
-      mushroom-modifier: 100
-      pumpkin-modifier: 100
-      sapling-modifier: 100
-      wheat-modifier: 100
-    entity-tracking-range:
-      players: 48
-      animals: 48
-      monsters: 48
-      misc: 32
-      other: 64
-    random-light-updates: false
+    mob-spawn-range: 4
     anti-xray:
       enabled: true
       engine-mode: 1
@@ -84,4 +63,25 @@ world-settings:
       - 82
       - 129
       - 130
-    mob-spawn-range: 4
+    ticks-per:
+      hopper-check: 8
+      hopper-transfer: 8
+    growth:
+      cactus-modifier: 100
+      cane-modifier: 100
+      melon-modifier: 100
+      mushroom-modifier: 100
+      pumpkin-modifier: 100
+      sapling-modifier: 100
+      wheat-modifier: 100
+    entity-activation-range:
+      animals: 32
+      monsters: 32
+      misc: 16
+    entity-tracking-range:
+      players: 48
+      animals: 48
+      monsters: 48
+      misc: 32
+      other: 64
+    random-light-updates: false

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.lax1dude.eaglercraft.Base64;
+import net.lax1dude.eaglercraft.ConfigConstants;
 import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.minecraft.client.Minecraft;
 
@@ -25,6 +26,9 @@ public class ServerList {
 	public static void loadDefaultServers(String base64) {
 		try {
 			NBTTagCompound nbt = CompressedStreamTools.readUncompressed(Base64.decodeBase64(base64));
+			if(nbt.getBoolean("profanity")) {
+				ConfigConstants.profanity = true;
+			}
 			forcedServers.clear();
 			NBTTagList list = nbt.getTagList("servers");
 			for (int i = 0; i < list.tagCount(); ++i) {

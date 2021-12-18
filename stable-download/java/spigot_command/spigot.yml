@@ -1,0 +1,87 @@
+# This is the main configuration file for Spigot.
+# As you can see, there's tons to configure. Some options may impact gameplay, so use
+# with caution, and make sure you know what each option does before configuring.
+# For a reference for any variable inside this file, check out the Spigot wiki at
+# http://www.spigotmc.org/wiki/spigot-configuration/
+# 
+# If you need help with the configuration or have any questions related to Spigot,
+# join us at the IRC or drop by our forums and leave a post.
+# 
+# IRC: #spigot @ irc.esper.net ( http://webchat.esper.net/?channel=spigot )
+# Forums: http://www.spigotmc.org/forum/
+
+config-version: 1
+settings:
+  log-filters:
+  - ^(.*)(/login)(.*)$
+  netty-threads: 3
+  prevent-proxies: false
+  bungeecord-addresses:
+  - 127.0.0.1
+  bungeecord: true
+  timeout-time: 60
+  restart-on-crash: true
+  restart-script: ./start.sh
+listeners:
+- port: default
+  host: default
+  netty: true
+commands:
+  tab-complete: true
+  log: true
+  spam-exclusions:
+  - /skill
+messages:
+  whitelist: You are not whitelisted on this server!
+  unknown-command: Unknown command. Type "help" for help.
+  server-full: The server is full!
+world-settings:
+  default:
+    verbose: true
+    chunks-per-tick: 650
+    merge-radius:
+      exp: 3.0
+      item: 2.5
+    view-distance: 10
+    growth:
+      cactus-modifier: 100
+      cane-modifier: 100
+      melon-modifier: 100
+      mushroom-modifier: 100
+      pumpkin-modifier: 100
+      sapling-modifier: 100
+      wheat-modifier: 100
+    entity-activation-range:
+      animals: 32
+      monsters: 32
+      misc: 16
+    entity-tracking-range:
+      players: 48
+      animals: 48
+      monsters: 48
+      misc: 32
+      other: 64
+    random-light-updates: false
+    ticks-per:
+      hopper-check: 8
+      hopper-transfer: 8
+    mob-spawn-range: 4
+    anti-xray:
+      enabled: true
+      engine-mode: 1
+      blocks:
+      - 1
+      - 5
+      - 14
+      - 15
+      - 16
+      - 21
+      - 48
+      - 49
+      - 54
+      - 56
+      - 73
+      - 74
+      - 82
+      - 129
+      - 130

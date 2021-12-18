@@ -15,6 +15,7 @@ import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.ajax.ReadyStateChangeHandler;
 import org.teavm.jso.ajax.XMLHttpRequest;
+import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.KeyboardEvent;
@@ -833,10 +834,23 @@ public class EaglerAdapterImpl2 {
 	public static final void mouseSetCursorPosition(int x, int y) {
 		
 	}
+	private static long mouseUngrabTimer = 0l;
+	private static int mouseUngrabTimeout = 0;
 	public static final void mouseSetGrabbed(boolean grabbed) {
 		if(grabbed) {
 			canvas.requestPointerLock();
+			long t = System.currentTimeMillis();
+			if(mouseUngrabTimeout != 0) Window.clearTimeout(mouseUngrabTimeout);
+			if(t - mouseUngrabTimer < 3000l) {
+				mouseUngrabTimeout = Window.setTimeout(new TimerHandler() {
+					@Override
+					public void onTimer() {
+						canvas.requestPointerLock();
+					}
+				}, 3000 - (int)(t - mouseUngrabTimer));
+			}
 		}else {
+			mouseUngrabTimer = System.currentTimeMillis();
 			doc.exitPointerLock();
 		}
 	}
