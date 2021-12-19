@@ -56,9 +56,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 			"Pig",
 			"Squid",
 			"Mooshroom",
-			"Villager",
-			"Long Arms",
-			"Laxative Dude"
+			"Villager"
 	};
 	
 	protected String screenTitle = "Edit Profile";
