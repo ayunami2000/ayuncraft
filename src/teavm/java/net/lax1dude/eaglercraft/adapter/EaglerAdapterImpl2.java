@@ -168,8 +168,8 @@ public class EaglerAdapterImpl2 {
 		setContextVar(webgl);
 		audioctx = AudioContext.create();
 		
-		String agent = getString("window.navigator.userAgent").toLowerCase();
-		if(agent.contains("windows")) isAnisotropicPatched = false;
+		//String agent = getString("window.navigator.userAgent").toLowerCase();
+		//if(agent.contains("windows")) isAnisotropicPatched = false;
 		
 		webgl.getExtension("EXT_texture_filter_anisotropic");
 		
@@ -851,6 +851,7 @@ public class EaglerAdapterImpl2 {
 			}
 		}else {
 			mouseUngrabTimer = System.currentTimeMillis();
+			if(mouseUngrabTimeout != 0) Window.clearTimeout(mouseUngrabTimeout);
 			doc.exitPointerLock();
 		}
 	}
@@ -969,7 +970,12 @@ public class EaglerAdapterImpl2 {
 	
 	private static void connectWebSocket(String sockURI, final AsyncCallback<String> cb) {
 		sockIsConnecting = true;
-		sock = WebSocket.create(sockURI);
+		try {
+			sock = WebSocket.create(sockURI);
+		} catch(Throwable t) {
+			sockIsConnecting = false;
+			return;
+		}
 		sock.setBinaryType("arraybuffer");
 		sock.onOpen(new EventListener<MessageEvent>() {
 			@Override

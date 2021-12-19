@@ -1494,9 +1494,9 @@ public class Minecraft implements Runnable {
 				this.playerController.flipPlayer(this.thePlayer);
 			}
 			
-			if(!EaglerAdapter._wisAnisotropicPatched()) {
-				displayEaglercraftText("ANGLE Issue #4994 is unpatched on this browser, using fake aliased sampling on linear magnified terrain texture for anisotropic filtering. Chrome patch progress and information available at https://crbug.com/angleproject/4994");
-			}
+			//if(!EaglerAdapter._wisAnisotropicPatched()) {
+			//	displayEaglercraftText("ANGLE Issue #4994 is unpatched on this browser, using fake aliased sampling on linear magnified terrain texture for anisotropic filtering. Chrome patch progress and information available at https://crbug.com/angleproject/4994");
+			//}
 			
 			displayEaglercraftText("go to -> Options -> Video Settings on the pause menu to enable fancy graphics");
 

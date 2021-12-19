@@ -167,7 +167,8 @@ public class FixedFunctionShader {
 		if(enable_alphatest) source += "#define CC_alphatest\n";
 		if(enable_unit0) source += "#define CC_unit0\n";
 		if(enable_unit1) source += "#define CC_unit1\n";
-		if(!EaglerAdapter._wisAnisotropicPatched()) source += "#define CC_patch_anisotropic\n";
+		//if(!EaglerAdapter._wisAnisotropicPatched()) source += "#define CC_patch_anisotropic\n";
+		source += "#define CC_patch_anisotropic\n";
 		source += shaderSource;
 		
 		ShaderGL v = _wglCreateShader(_wGL_VERTEX_SHADER);
