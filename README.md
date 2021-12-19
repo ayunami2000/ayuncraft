@@ -2,7 +2,7 @@
 
 ![eaglercraft](https://cdn.discordapp.com/attachments/378764518081429506/921932182484836352/readmeeee.png)
 
-### Official URL: [https://g.eags.us/eaglercraft/](https://g.eags.us/eaglercraft/)
+### Official Demo URL: [https://g.eags.us/eaglercraft/](https://g.eags.us/eaglercraft/)
 
 Note that the server may be down - if you want a gameplay demo download the files from here [https://github.com/LAX1DUDE/eaglercraft/tree/main/stable-download](https://github.com/LAX1DUDE/eaglercraft/tree/main/stable-download) and host the page locally yourself
 
