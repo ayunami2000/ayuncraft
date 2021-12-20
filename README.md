@@ -4,6 +4,8 @@
 
 ### Official Demo URL: [https://g.eags.us/eaglercraft/](https://g.eags.us/eaglercraft/)
 
+### Download Locally: [stable-download/Offline_Download_Version.html](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/Offline_Download_Version.html)
+
 Note that the server may be down - if you want a gameplay demo download the files from here [https://github.com/LAX1DUDE/eaglercraft/tree/main/stable-download](https://github.com/LAX1DUDE/eaglercraft/tree/main/stable-download) and host the page locally yourself
 
 ## What is Eaglercraft?
