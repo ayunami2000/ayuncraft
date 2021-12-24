@@ -16,7 +16,7 @@ scroll down for the detailed license statements
 
 Copyright (c) 2020 Calder Young.
 
-This work is licensed uner a Creative Commons
+This work is licensed under a Creative Commons
 Attribution-NonCommercial 4.0 International License
 §nhttp://creativecommons.org/licenses/by-nc/4.0/§r
 
