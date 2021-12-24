@@ -18,6 +18,7 @@ menu.online=Minecraft Realms
 menu.options=Options...
 menu.editprofile=Edit Profile
 menu.voicechannel=Voice Channel
+menu.forkme=Fork on Github
 menu.quit=Quit Game
 menu.returnToMenu=Save and Quit to Title
 menu.disconnect=Disconnect
