@@ -32,15 +32,9 @@ If you want SSL, set up [nginx](https://www.nginx.com/) as a reverse proxy from 
 
 **To change the default servers on the server list, see the base64 in the javascript at line 8 of [stable-download/web/index.html](https://github.com/LAX1DUDE/eaglercraft/tree/main/stable-download/web/index.html). Copy and decode the base64 in the quotes using [base64decode.org](base64decode.org) and open the resulting file with NBTExplorer (the minecraft one). You will see the list of default servers in a 'servers' tag stored as NBT components, and you can edit them and add more as long as you follow the same format the existing servers have. When you're done, encode the file back to base64 using [base64encode.org](base64encode.org) and replace the base64 between the quotes on line 8 in index.html with the new base64 from base64encode.org.**
 
-There is a plugin hard coded into the bungeecord server to synchronize skins, and also a plugin like authme for creating a lobby and authentication. Configure it like this in bungee:
+There is a plugin hard coded into the bungeecord server to synchronize the eaglercraft profile skins, and also a plugin like authme for creating a secure isolated authentication lobby on the proxy. The authentication lobby plugin has not been implemented though, it is non-functional. For now you'll just have to use a different 3rd party bungeecord lobby authentication plugin like AuthMeBungee if you want authentication, which unfortunately is a must for any public server to prevent people from stealing each other's usernames. Just ignore the existing EaglerAuth plugin and it's configuration section in the main config.yml and just install and use some 3rd party plugin like AuthMeBungee instead.
 
-    authservice:
-      authfile: passwords.yml
-      enabled: true
-      limbo: lobby
-      timeout: 30
-
-Can't remember much on this one, so you're gonna have to do some experimentation
+Someday I'll finish implementing EaglerAuth but right now I have bigger fish to fry
 
 ## Compiling
 
