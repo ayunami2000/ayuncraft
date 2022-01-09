@@ -73,6 +73,7 @@ public class YamlConfig implements ConfigurationAdapter {
 		if (groups.isEmpty()) {
 			groups.put("lax1dude", Collections.singletonList("admin"));
 		}
+		/*
 		final Map<String, Object> auth = this.get("authservice", new HashMap<String, Object>());
 		if(auth.isEmpty()) {
 			auth.put("enabled", false);
@@ -80,6 +81,7 @@ public class YamlConfig implements ConfigurationAdapter {
 			auth.put("authfile", "passwords.yml");
 			auth.put("timeout", 30);
 		}
+		*/
 	}
 
 	private <T> T get(final String path, final T def) {
@@ -203,7 +205,8 @@ public class YamlConfig implements ConfigurationAdapter {
 
 	@Override
 	public AuthServiceInfo getAuthSettings() {
-		final Map<String, Object> auth = this.get("authservice", new HashMap<String, Object>());
-		return new AuthServiceInfo(this.get("enabled", true, auth), this.get("limbo", "lobby", auth), new File(this.get("authfile", "passwords.yml", auth)), this.get("timeout", 30, auth));
+		//final Map<String, Object> auth = this.get("authservice", new HashMap<String, Object>());
+		//return new AuthServiceInfo(this.get("enabled", true, auth), this.get("limbo", "lobby", auth), new File(this.get("authfile", "passwords.yml", auth)), this.get("timeout", 30, auth));
+		return null;
 	}
 }

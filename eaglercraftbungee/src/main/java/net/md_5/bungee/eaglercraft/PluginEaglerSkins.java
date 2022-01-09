@@ -18,6 +18,8 @@ public class PluginEaglerSkins extends Plugin implements Listener {
 	
 	private static final int[] SKIN_DATA_SIZE = new int[] { 64*32*4, 64*64*4, 128*64*4, 128*128*4, 1 };
 	
+	private static final int VALID_DEFAULT_SKINS = 33;
+	
 	public PluginEaglerSkins() {
 		super(new PluginDescription("EaglerSkins", PluginEaglerSkins.class.getName(), "1.0.0", "LAX1DUDE", Collections.emptySet(), null));
 	}
@@ -42,6 +44,11 @@ public class PluginEaglerSkins extends Plugin implements Listener {
 			if("EAG|MySkin".equals(event.getTag())) {
 				int t = (int)msg[0] & 0xFF;
 				if(t >= 0 && t < SKIN_DATA_SIZE.length && msg.length == (SKIN_DATA_SIZE[t] + 1)) {
+					if(msg.length == 2) {
+						if(((int)msg[1] & 0xFF) >= VALID_DEFAULT_SKINS) {
+							msg[1] = 0;
+						}
+					}
 					skinCollection.put(user, msg);
 				}
 			}else if("EAG|FetchSkin".equals(event.getTag())) {

@@ -14,11 +14,6 @@ stats: 595698b3-9c36-4e86-b1ee-cb3027038f41
 groups:
   lax1dude:
   - admin
-authservice:
-  authfile: passwords.yml
-  enabled: false
-  limbo: lobby
-  timeout: 30
 player_limit: -1
 permissions:
   default:

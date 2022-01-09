@@ -173,7 +173,7 @@ public class BungeeCord extends ProxyServer {
 		this.config.load();
 		this.pluginManager.detectPlugins(this.pluginsFolder);
 		this.pluginManager.addInternalPlugin(new PluginEaglerSkins());
-		if(this.config.getAuthInfo().isEnabled()) this.pluginManager.addInternalPlugin(new PluginEaglerAuth());
+		//if(this.config.getAuthInfo().isEnabled()) this.pluginManager.addInternalPlugin(new PluginEaglerAuth());
 		if (this.reconnectHandler == null) {
 			this.reconnectHandler = new SQLReconnectHandler();
 		}

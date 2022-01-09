@@ -115,6 +115,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection {
 		}else if(handshake.getProcolVersion() != 61) {
 			this.disconnect("minecraft 1.5.2 required for eaglercraft backdoor access");
 		}
+		if (handshake.getUsername().length() < 3) {
+			this.disconnect("Username must be at least 3 characters");
+			return;
+		}
 		if (handshake.getUsername().length() > 16) {
 			this.disconnect("Cannot have username longer than 16 characters");
 			return;
