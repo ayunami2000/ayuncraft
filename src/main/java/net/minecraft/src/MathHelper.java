@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 
 
@@ -130,11 +130,11 @@ public class MathHelper {
 		return par0Str == null || par0Str.length() == 0;
 	}
 
-	public static int getRandomIntegerInRange(Random par0Random, int par1, int par2) {
+	public static int getRandomIntegerInRange(EaglercraftRandom par0Random, int par1, int par2) {
 		return par1 >= par2 ? par1 : par0Random.nextInt(par2 - par1 + 1) + par1;
 	}
 
-	public static double getRandomDoubleInRange(Random par0Random, double par1, double par3) {
+	public static double getRandomDoubleInRange(EaglercraftRandom par0Random, double par1, double par3) {
 		return par1 >= par3 ? par1 : par0Random.nextDouble() * (par3 - par1) + par1;
 	}
 

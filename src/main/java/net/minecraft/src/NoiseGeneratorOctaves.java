@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class NoiseGeneratorOctaves extends NoiseGenerator {
 	/**
@@ -10,7 +10,7 @@ public class NoiseGeneratorOctaves extends NoiseGenerator {
 	private NoiseGeneratorPerlin[] generatorCollection;
 	private int octaves;
 
-	public NoiseGeneratorOctaves(Random par1Random, int par2) {
+	public NoiseGeneratorOctaves(EaglercraftRandom par1Random, int par2) {
 		this.octaves = par2;
 		this.generatorCollection = new NoiseGeneratorPerlin[par2];
 

@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 
 
@@ -206,7 +206,7 @@ public class EntitySheep extends EntityAnimal {
 	 * This method is called when a sheep spawns in the world to select the color of
 	 * sheep fleece.
 	 */
-	public static int getRandomFleeceColor(Random par0Random) {
+	public static int getRandomFleeceColor(EaglercraftRandom par0Random) {
 		int var1 = par0Random.nextInt(100);
 		return var1 < 5 ? 15 : (var1 < 10 ? 7 : (var1 < 15 ? 8 : (var1 < 18 ? 12 : (par0Random.nextInt(500) == 0 ? 6 : 0))));
 	}

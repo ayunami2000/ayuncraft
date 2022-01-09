@@ -6,13 +6,14 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 
 
 public class EnchantmentHelper {
 	/** Is the random seed of enchantment effects. */
-	private static final Random enchantmentRand = new Random();
+	private static final EaglercraftRandom enchantmentRand = new EaglercraftRandom();
 
 	/**
 	 * Used to calculate the extra armor of enchantments on armors equipped on
@@ -264,7 +265,7 @@ public class EnchantmentHelper {
 	 * each index (2nd parameter: 0, 1 and 2), cutting to the max enchantability
 	 * power of the table (3rd parameter)
 	 */
-	public static int calcItemStackEnchantability(Random par0Random, int par1, int par2, ItemStack par3ItemStack) {
+	public static int calcItemStackEnchantability(EaglercraftRandom par0Random, int par1, int par2, ItemStack par3ItemStack) {
 		Item var4 = par3ItemStack.getItem();
 		int var5 = var4.getItemEnchantability();
 
@@ -284,7 +285,7 @@ public class EnchantmentHelper {
 	 * Adds a random enchantment to the specified item. Args: random, itemStack,
 	 * enchantabilityLevel
 	 */
-	public static ItemStack addRandomEnchantment(Random par0Random, ItemStack par1ItemStack, int par2) {
+	public static ItemStack addRandomEnchantment(EaglercraftRandom par0Random, ItemStack par1ItemStack, int par2) {
 		List var3 = buildEnchantmentList(par0Random, par1ItemStack, par2);
 		boolean var4 = par1ItemStack.itemID == Item.book.itemID;
 
@@ -314,7 +315,7 @@ public class EnchantmentHelper {
 	 * together to the ItemStack, the 3rd parameter is the total enchantability
 	 * level.
 	 */
-	public static List buildEnchantmentList(Random par0Random, ItemStack par1ItemStack, int par2) {
+	public static List buildEnchantmentList(EaglercraftRandom par0Random, ItemStack par1ItemStack, int par2) {
 		return new ArrayList();
 	}
 

@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class EnchantmentThorns extends Enchantment {
 	public EnchantmentThorns(int par1, int par2) {
@@ -35,15 +35,15 @@ public class EnchantmentThorns extends Enchantment {
 		return par1ItemStack.getItem() instanceof ItemArmor ? true : super.canApply(par1ItemStack);
 	}
 
-	public static boolean func_92094_a(int par0, Random par1Random) {
+	public static boolean func_92094_a(int par0, EaglercraftRandom par1Random) {
 		return par0 <= 0 ? false : par1Random.nextFloat() < 0.15F * (float) par0;
 	}
 
-	public static int func_92095_b(int par0, Random par1Random) {
+	public static int func_92095_b(int par0, EaglercraftRandom par1Random) {
 		return par0 > 10 ? par0 - 10 : 1 + par1Random.nextInt(4);
 	}
 
-	public static void func_92096_a(Entity par0Entity, EntityLiving par1EntityLiving, Random par2Random) {
+	public static void func_92096_a(Entity par0Entity, EntityLiving par1EntityLiving, EaglercraftRandom par2Random) {
 		int var3 = EnchantmentHelper.func_92098_i(par1EntityLiving);
 		ItemStack var4 = EnchantmentHelper.func_92099_a(Enchantment.thorns, par1EntityLiving);
 

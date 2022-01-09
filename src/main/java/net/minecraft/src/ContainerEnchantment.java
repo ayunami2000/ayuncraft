@@ -1,7 +1,8 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class ContainerEnchantment extends Container {
 	/** SlotEnchantmentTable object with ItemStack to be enchanted */
@@ -12,7 +13,7 @@ public class ContainerEnchantment extends Container {
 	private int posX;
 	private int posY;
 	private int posZ;
-	private Random rand = new Random();
+	private EaglercraftRandom rand = new EaglercraftRandom();
 
 	/** used as seed for EnchantmentNameParts (see GuiEnchantment) */
 	public long nameSeed;

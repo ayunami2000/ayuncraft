@@ -2,12 +2,11 @@ package net.minecraft.src;
 
 import java.nio.FloatBuffer;
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglerImage;
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.GuiScreenVoiceChannel;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
@@ -122,7 +121,7 @@ public class EntityRenderer {
 
 	/** Torch flicker DY */
 	float torchFlickerDY = 0.0F;
-	private Random random = new Random();
+	private EaglercraftRandom random = new EaglercraftRandom();
 
 	/** Rain sound counter */
 	private int rainSoundCounter = 0;
@@ -1215,7 +1214,6 @@ public class EntityRenderer {
 			EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
 			EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
 			EaglerAdapter.glAlphaFunc(EaglerAdapter.GL_GREATER, 0.01F);
-			snow.bindTexture();
 			double var9 = var41.lastTickPosX + (var41.posX - var41.lastTickPosX) * (double) par1;
 			double var11 = var41.lastTickPosY + (var41.posY - var41.lastTickPosY) * (double) par1;
 			double var13 = var41.lastTickPosZ + (var41.posZ - var41.lastTickPosZ) * (double) par1;

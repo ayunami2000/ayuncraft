@@ -4,7 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class EntityVillager extends EntityAgeable implements INpc, IMerchant {
 	private int randomTickDivider;
@@ -401,27 +402,27 @@ public class EntityVillager extends EntityAgeable implements INpc, IMerchant {
 	 * each recipie takes a random stack from villagerStockList and offers it for 1
 	 * emerald
 	 */
-	private static void addMerchantItem(MerchantRecipeList par0MerchantRecipeList, int par1, Random par2Random, float par3) {
+	private static void addMerchantItem(MerchantRecipeList par0MerchantRecipeList, int par1, EaglercraftRandom par2Random, float par3) {
 		if (par2Random.nextFloat() < par3) {
 			par0MerchantRecipeList.add(new MerchantRecipe(getRandomSizedStack(par1, par2Random), Item.emerald));
 		}
 	}
 
-	private static ItemStack getRandomSizedStack(int par0, Random par1Random) {
+	private static ItemStack getRandomSizedStack(int par0, EaglercraftRandom par1Random) {
 		return new ItemStack(par0, getRandomCountForItem(par0, par1Random), 0);
 	}
 
 	/**
 	 * default to 1, and villagerStockList contains a min/max amount for each index
 	 */
-	private static int getRandomCountForItem(int par0, Random par1Random) {
+	private static int getRandomCountForItem(int par0, EaglercraftRandom par1Random) {
 		Tuple var2 = (Tuple) villagerStockList.get(Integer.valueOf(par0));
 		return var2 == null ? 1
 				: (((Integer) var2.getFirst()).intValue() >= ((Integer) var2.getSecond()).intValue() ? ((Integer) var2.getFirst()).intValue()
 						: ((Integer) var2.getFirst()).intValue() + par1Random.nextInt(((Integer) var2.getSecond()).intValue() - ((Integer) var2.getFirst()).intValue()));
 	}
 
-	private static void addBlacksmithItem(MerchantRecipeList par0MerchantRecipeList, int par1, Random par2Random, float par3) {
+	private static void addBlacksmithItem(MerchantRecipeList par0MerchantRecipeList, int par1, EaglercraftRandom par2Random, float par3) {
 		if (par2Random.nextFloat() < par3) {
 			int var4 = getRandomCountForBlacksmithItem(par1, par2Random);
 			ItemStack var5;
@@ -439,7 +440,7 @@ public class EntityVillager extends EntityAgeable implements INpc, IMerchant {
 		}
 	}
 
-	private static int getRandomCountForBlacksmithItem(int par0, Random par1Random) {
+	private static int getRandomCountForBlacksmithItem(int par0, EaglercraftRandom par1Random) {
 		Tuple var2 = (Tuple) blacksmithSellingList.get(Integer.valueOf(par0));
 		return var2 == null ? 1
 				: (((Integer) var2.getFirst()).intValue() >= ((Integer) var2.getSecond()).intValue() ? ((Integer) var2.getFirst()).intValue()

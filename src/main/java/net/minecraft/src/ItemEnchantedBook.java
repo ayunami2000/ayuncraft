@@ -1,7 +1,8 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class ItemEnchantedBook extends Item {
 	public ItemEnchantedBook(int par1) {
@@ -92,7 +93,7 @@ public class ItemEnchantedBook extends Item {
 		}
 	}
 
-	public ItemStack func_92109_a(Random par1Random) {
+	public ItemStack func_92109_a(EaglercraftRandom par1Random) {
 		Enchantment var2 = Enchantment.field_92090_c[par1Random.nextInt(Enchantment.field_92090_c.length)];
 		ItemStack var3 = new ItemStack(this.itemID, 1, 0);
 		int var4 = MathHelper.getRandomIntegerInRange(par1Random, var2.getMinLevel(), var2.getMaxLevel());

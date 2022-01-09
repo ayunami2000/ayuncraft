@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class RandomPositionGenerator {
 	/**
@@ -45,7 +45,7 @@ public class RandomPositionGenerator {
 	 * which creature.getBlockPathWeight returns the highest number
 	 */
 	private static Vec3 findRandomTargetBlock(EntityCreature par0EntityCreature, int par1, int par2, Vec3 par3Vec3) {
-		Random var4 = par0EntityCreature.getRNG();
+		EaglercraftRandom var4 = par0EntityCreature.getRNG();
 		boolean var5 = false;
 		int var6 = 0;
 		int var7 = 0;

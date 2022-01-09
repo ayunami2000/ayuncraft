@@ -1,7 +1,8 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 
 
@@ -141,7 +142,7 @@ public abstract class Entity {
 	 * Reduces the velocity applied by entity collisions by the specified percent.
 	 */
 	public float entityCollisionReduction;
-	protected Random rand;
+	protected EaglercraftRandom rand;
 
 	/** How many ticks has this entity had ran since being alive */
 	public int ticksExisted;
@@ -219,7 +220,7 @@ public abstract class Entity {
 		this.stepHeight = 0.0F;
 		this.noClip = false;
 		this.entityCollisionReduction = 0.0F;
-		this.rand = new Random();
+		this.rand = new EaglercraftRandom();
 		this.ticksExisted = 0;
 		this.fireResistance = 1;
 		this.fire = 0;

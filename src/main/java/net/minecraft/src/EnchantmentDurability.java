@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class EnchantmentDurability extends Enchantment {
 	protected EnchantmentDurability(int par1, int par2) {
@@ -42,7 +42,7 @@ public class EnchantmentDurability extends Enchantment {
 	 * enchantment level, otherwise there is a 1-(par/1) chance for damage to be
 	 * negated.
 	 */
-	public static boolean negateDamage(ItemStack par0ItemStack, int par1, Random par2Random) {
+	public static boolean negateDamage(ItemStack par0ItemStack, int par1, EaglercraftRandom par2Random) {
 		return par0ItemStack.getItem() instanceof ItemArmor && par2Random.nextFloat() < 0.6F ? false : par2Random.nextInt(par1 + 1) > 0;
 	}
 }

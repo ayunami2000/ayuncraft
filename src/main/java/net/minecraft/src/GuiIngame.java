@@ -3,18 +3,17 @@ package net.minecraft.src;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.lax1dude.eaglercraft.EaglerAdapter;
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.lax1dude.eaglercraft.glemu.EffectPipeline;
 
 public class GuiIngame extends Gui {
 	private static RenderItem itemRenderer = null;
-	private final Random rand = new Random();
+	private final EaglercraftRandom rand = new EaglercraftRandom();
 	private final Minecraft mc;
 
 	/** ChatGUI instance that retains all previous chat data */

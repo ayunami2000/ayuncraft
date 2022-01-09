@@ -6,8 +6,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 
 
@@ -44,7 +45,7 @@ public abstract class World implements IBlockAccess {
 	 * planar series of values ill-suited for choosing random blocks in a 16x128x16
 	 * field.
 	 */
-	protected int updateLCG = (new Random()).nextInt();
+	protected int updateLCG = (new EaglercraftRandom()).nextInt();
 
 	/**
 	 * magic number used to generate fast random numbers for 3d distribution within
@@ -66,7 +67,7 @@ public abstract class World implements IBlockAccess {
 	public int difficultySetting;
 
 	/** RNG for World. */
-	public Random rand = new Random();
+	public EaglercraftRandom rand = new EaglercraftRandom();
 
 	/** The WorldProvider instance that World uses. */
 	public final WorldProvider provider;
@@ -3339,7 +3340,7 @@ public abstract class World implements IBlockAccess {
 	/**
 	 * puts the World Random seed to a specific state dependant on the inputs
 	 */
-	public Random setRandomSeed(int par1, int par2, int par3) {
+	public EaglercraftRandom setRandomSeed(int par1, int par2, int par3) {
 		long var4 = (long) par1 * 341873128712L + (long) par2 * 132897987541L + this.getWorldInfo().getSeed() + (long) par3;
 		this.rand.setSeed(var4);
 		return this.rand;

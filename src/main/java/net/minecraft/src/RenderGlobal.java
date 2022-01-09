@@ -8,11 +8,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.lax1dude.eaglercraft.EaglerAdapter;
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
@@ -91,9 +90,6 @@ public class RenderGlobal implements IWorldAccess {
 
 	/** Count entities hidden */
 	private int countEntitiesHidden;
-
-	/** Dummy buffer (50k) not used */
-	int[] dummyBuf50k = new int[50000];
 
 	/** How many renderers are loaded this frame that try to be rendered */
 	private int renderersLoaded;
@@ -214,7 +210,7 @@ public class RenderGlobal implements IWorldAccess {
 	}
 
 	private void renderStars() {
-		Random var1 = new Random(10842L);
+		EaglercraftRandom var1 = new EaglercraftRandom(10842L);
 		Tessellator var2 = Tessellator.instance;
 		var2.startDrawingQuads();
 
@@ -1742,7 +1738,7 @@ public class RenderGlobal implements IWorldAccess {
 	}
 
 	public void broadcastSound(int par1, int par2, int par3, int par4, int par5) {
-		Random var6 = this.theWorld.rand;
+		EaglercraftRandom var6 = this.theWorld.rand;
 
 		switch (par1) {
 		case 1013:
@@ -1778,7 +1774,7 @@ public class RenderGlobal implements IWorldAccess {
 	 * one-shot behaviour (particles, etc).
 	 */
 	public void playAuxSFX(EntityPlayer par1EntityPlayer, int par2, int par3, int par4, int par5, int par6) {
-		Random var7 = this.theWorld.rand;
+		EaglercraftRandom var7 = this.theWorld.rand;
 		double var8;
 		double var10;
 		double var12;

@@ -1,7 +1,8 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class Block {
 	/**
@@ -21,7 +22,7 @@ public class Block {
 	public static final StepSound soundLadderFootstep = new StepSoundSand("ladder", 1.0F, 1.0F);
 	public static final StepSound soundAnvilFootstep = new StepSoundAnvil("anvil", 0.3F, 1.0F);
 
-	public static final NoiseGeneratorPerlin grassNoise = new NoiseGeneratorPerlin(new Random("methamphetamine".hashCode()));
+	public static final NoiseGeneratorPerlin grassNoise = new NoiseGeneratorPerlin(new EaglercraftRandom("methamphetamine".hashCode()));
 	public static final double[] grassNoiseArray = new double[256];
 	private static int noiseChunkX = Integer.MIN_VALUE;
 	private static int noiseChunkZ = Integer.MIN_VALUE;
@@ -565,14 +566,14 @@ public class Block {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 	}
 
 	/**
 	 * A randomly called display update to be able to add particles or other items
 	 * for display
 	 */
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void randomDisplayTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 	}
 
 	/**
@@ -613,14 +614,14 @@ public class Block {
 	/**
 	 * Returns the quantity of items to drop on block destruction.
 	 */
-	public int quantityDropped(Random par1Random) {
+	public int quantityDropped(EaglercraftRandom par1Random) {
 		return 1;
 	}
 
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return this.blockID;
 	}
 
@@ -1045,7 +1046,7 @@ public class Block {
 	 * Returns the usual quantity dropped by the block plus a bonus of 1 to 'i'
 	 * (inclusive).
 	 */
-	public int quantityDroppedWithBonus(int par1, Random par2Random) {
+	public int quantityDroppedWithBonus(int par1, EaglercraftRandom par2Random) {
 		return this.quantityDropped(par2Random);
 	}
 

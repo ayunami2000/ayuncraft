@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 
 
@@ -13,7 +13,7 @@ public class BlockComparator extends BlockRedstoneLogic implements ITileEntityPr
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return Item.comparator.itemID;
 	}
 
@@ -149,7 +149,7 @@ public class BlockComparator extends BlockRedstoneLogic implements ITileEntityPr
 		}
 	}
 
-	private void func_96476_c(World par1World, int par2, int par3, int par4, Random par5Random) {
+	private void func_96476_c(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		int var6 = par1World.getBlockMetadata(par2, par3, par4);
 		int var7 = this.func_94491_m(par1World, par2, par3, par4, var6);
 		int var8 = this.getTileEntityComparator(par1World, par2, par3, par4).func_96100_a();
@@ -172,7 +172,7 @@ public class BlockComparator extends BlockRedstoneLogic implements ITileEntityPr
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		if (this.isRepeaterPowered) {
 			int var6 = par1World.getBlockMetadata(par2, par3, par4);
 			par1World.setBlock(par2, par3, par4, this.func_94484_i().blockID, var6 | 8, 4);

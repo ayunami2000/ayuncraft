@@ -2,7 +2,8 @@ package net.minecraft.src;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public final class ItemStack {
 	/** Size of the stack. */
@@ -237,7 +238,7 @@ public final class ItemStack {
 	 * false otherwise or if the ItemStack can't be damaged or if all points of
 	 * damage are negated.
 	 */
-	public boolean attemptDamageItem(int par1, Random par2Random) {
+	public boolean attemptDamageItem(int par1, EaglercraftRandom par2Random) {
 		if (!this.isItemStackDamageable()) {
 			return false;
 		} else {

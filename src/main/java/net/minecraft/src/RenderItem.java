@@ -1,10 +1,8 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
 import net.minecraft.client.Minecraft;
 import net.lax1dude.eaglercraft.EaglerAdapter;
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
@@ -12,7 +10,7 @@ public class RenderItem extends Render {
 	private RenderBlocks itemRenderBlocks = new RenderBlocks();
 
 	/** The RNG used in RenderItem (for bobbing itemstacks on the ground) */
-	private Random random = new Random();
+	private EaglercraftRandom random = new EaglercraftRandom();
 	public boolean renderWithColor = true;
 
 	/** Defines the zLevel of rendering of item on GUI. */

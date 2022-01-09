@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.minecraft.client.Minecraft;
 
 public class WorldClient extends World {
@@ -278,7 +278,7 @@ public class WorldClient extends World {
 
 	public void doVoidFogParticles(int par1, int par2, int par3) {
 		byte var4 = 16;
-		Random var5 = new Random();
+		EaglercraftRandom var5 = new EaglercraftRandom();
 
 		for (int var6 = 0; var6 < 1000; ++var6) {
 			int var7 = par1 + this.rand.nextInt(var4) - this.rand.nextInt(var4);

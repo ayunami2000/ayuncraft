@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockTorch extends Block {
 	protected BlockTorch(int par1) {
@@ -96,7 +96,7 @@ public class BlockTorch extends Block {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		super.updateTick(par1World, par2, par3, par4, par5Random);
 
 		if (par1World.getBlockMetadata(par2, par3, par4) == 0) {
@@ -217,7 +217,7 @@ public class BlockTorch extends Block {
 	 * A randomly called display update to be able to add particles or other items
 	 * for display
 	 */
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void randomDisplayTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		int var6 = par1World.getBlockMetadata(par2, par3, par4);
 		double var7 = (double) ((float) par2 + 0.5F);
 		double var9 = (double) ((float) par3 + 0.7F);

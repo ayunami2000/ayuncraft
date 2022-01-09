@@ -7,11 +7,10 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglerImage;
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
@@ -21,7 +20,7 @@ public class FontRenderer {
 
 	/** the height in pixels of default text */
 	public int FONT_HEIGHT = 9;
-	public Random fontRandom = new Random();
+	public EaglercraftRandom fontRandom = new EaglercraftRandom();
 
 	/**
 	 * Array of the start/end column (in upper/lower nibble) for every glyph in the

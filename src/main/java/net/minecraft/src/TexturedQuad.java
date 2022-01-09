@@ -32,9 +32,9 @@ public class TexturedQuad {
 			var1[var2] = this.vertexPositions[this.vertexPositions.length - var2 - 1];
 		}
 		
-		this.normal.xCoord = -this.normal.xCoord;
-		this.normal.yCoord = -this.normal.yCoord;
-		this.normal.zCoord = -this.normal.zCoord;
+		//this.normal.xCoord = -this.normal.xCoord;
+		//this.normal.yCoord = -this.normal.yCoord;
+		//this.normal.zCoord = -this.normal.zCoord;
 
 		this.vertexPositions = var1;
 	}

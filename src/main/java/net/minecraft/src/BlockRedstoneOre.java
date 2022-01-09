@@ -2,6 +2,8 @@ package net.minecraft.src;
 
 import java.util.Random;
 
+import net.lax1dude.eaglercraft.EaglercraftRandom;
+
 public class BlockRedstoneOre extends Block {
 	private boolean glowing;
 
@@ -115,7 +117,7 @@ public class BlockRedstoneOre extends Block {
 	 * The redstone ore sparkles.
 	 */
 	private void sparkle(World par1World, int par2, int par3, int par4) {
-		Random var5 = par1World.rand;
+		EaglercraftRandom var5 = par1World.rand;
 		double var6 = 0.0625D;
 
 		for (int var8 = 0; var8 < 6; ++var8) {
