@@ -40,6 +40,7 @@ public class RenderItemFrame extends Render {
 		float var4 = 0.75F;
 		float var5 = var4 / 2.0F;
 		EaglerAdapter.glPushMatrix();
+		EaglerAdapter.flipLightMatrix();
 		this.renderBlocksInstance.overrideBlockBounds(0.0D, (double) (0.5F - var5 + 0.0625F), (double) (0.5F - var5 + 0.0625F), (double) (var3 * 0.5F), (double) (0.5F + var5 - 0.0625F), (double) (0.5F + var5 - 0.0625F));
 		this.renderBlocksInstance.setOverrideBlockTexture(this.field_94147_f);
 		//RenderHelper.enableStandardItemLighting2();
@@ -67,6 +68,7 @@ public class RenderItemFrame extends Render {
 		EaglerAdapter.glPopMatrix();
 		this.renderBlocksInstance.unlockBlockBounds();
 		this.renderBlocksInstance.clearOverrideBlockTexture();
+		EaglerAdapter.flipLightMatrix();
 		EaglerAdapter.glPopMatrix();
 	}
 	

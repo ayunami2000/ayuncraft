@@ -92,9 +92,9 @@ public class RenderItem extends Render {
 					}
 
 					var18 = 1.0F;
-					EaglerAdapter.flipLightMatrix();
+					if (!renderInFrame) EaglerAdapter.flipLightMatrix();
 					this.itemRenderBlocks.renderBlockAsItem(var22, var10.getItemDamage(), var18);
-					EaglerAdapter.flipLightMatrix();
+					if (!renderInFrame) EaglerAdapter.flipLightMatrix();
 					EaglerAdapter.glPopMatrix();
 				}
 			} else {
@@ -218,6 +218,7 @@ public class RenderItem extends Render {
 				}
 
 				EaglerAdapter.glColor4f(par5, par6, par7, 1.0F);
+				EaglerAdapter.flipLightMatrix();
 				ItemRenderer.renderItemIn2D(var8, var10, var11, var9, var12, par2Icon.getSheetWidth(), par2Icon.getSheetHeight(), var16);
 
 				if (var18 != null && var18.hasEffect()) {
@@ -249,6 +250,7 @@ public class RenderItem extends Render {
 					EaglerAdapter.glEnable(EaglerAdapter.GL_LIGHTING);
 					EaglerAdapter.glDepthFunc(EaglerAdapter.GL_LEQUAL);
 				}
+				EaglerAdapter.flipLightMatrix();
 			}
 
 			EaglerAdapter.glPopMatrix();
@@ -267,6 +269,7 @@ public class RenderItem extends Render {
 					EaglerAdapter.glRotatef(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 				}
 
+				if (!renderInFrame) EaglerAdapter.flipLightMatrix();
 				EaglerAdapter.glColor4f(par5, par6, par7, 1.0F);
 				var8.startDrawingQuads();
 				var8.setNormal(0.0F, 1.0F, 0.0F);
@@ -275,6 +278,7 @@ public class RenderItem extends Render {
 				var8.addVertexWithUV((double) (var13 - var14), (double) (1.0F - var15), 0.0D, (double) var10, (double) var11);
 				var8.addVertexWithUV((double) (0.0F - var14), (double) (1.0F - var15), 0.0D, (double) var9, (double) var11);
 				var8.draw();
+				if (!renderInFrame) EaglerAdapter.flipLightMatrix();
 				EaglerAdapter.glPopMatrix();
 			}
 		}
