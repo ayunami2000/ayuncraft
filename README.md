@@ -1,6 +1,6 @@
 # Eaglercraft
 
-![eaglercraft](https://cdn.discordapp.com/attachments/378764518081429506/921932182484836352/readmeeee.png)
+![eaglercraft](https://media.discordapp.net/attachments/378764518081429506/929692379508777000/unknown.png)
 
 ### Official Demo URL: [https://g.eags.us/eaglercraft/](https://g.eags.us/eaglercraft/)
 
