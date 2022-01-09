@@ -91,7 +91,7 @@ public abstract class GuiContainer extends GuiScreen {
 		EaglerAdapter.glDisable(EaglerAdapter.GL_LIGHTING);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_DEPTH_TEST);
 		super.drawScreen(par1, par2, par3);
-		RenderHelper.enableGUIStandardItemLighting();
+		RenderHelper.enableGUIStandardItemLighting2();
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glTranslatef((float) var4, (float) var5, 0.0F);
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -268,7 +268,7 @@ public abstract class GuiContainer extends GuiScreen {
 			itemRenderer.zLevel = 0.0F;
 			EaglerAdapter.glEnable(EaglerAdapter.GL_LIGHTING);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_DEPTH_TEST);
-			RenderHelper.enableGUIStandardItemLighting();
+			RenderHelper.enableGUIStandardItemLighting2();
 			EaglerAdapter.glEnable(EaglerAdapter.GL_RESCALE_NORMAL);
 		}
 	}

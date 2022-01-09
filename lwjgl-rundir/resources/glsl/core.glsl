@@ -84,6 +84,8 @@ uniform vec2 texCoordV1;
 #ifdef CC_lighting
 uniform vec3 light0Pos;
 uniform vec3 light1Pos;
+uniform vec3 invertNormals;
+uniform vec3 normalUniform;
 #endif
 #ifdef CC_fog
 uniform vec4 fogColor;
@@ -94,7 +96,6 @@ uniform float fogDensity;
 uniform float fogPremultiply;
 #endif
 uniform vec4 colorUniform;
-uniform vec3 normalUniform;
 #ifdef CC_alphatest
 uniform float alphaTestF;
 #endif
@@ -108,6 +109,9 @@ uniform vec4 textureGenT_V;
 uniform vec4 textureGenR_V;
 uniform vec4 textureGenQ_V;
 uniform mat4 matrix_inverse_m;
+#endif
+#ifdef CC_patch_anisotropic
+uniform vec2 anisotropic_fix;
 #endif
 
 #ifdef CC_TEX_GEN_STRQ
@@ -173,12 +177,11 @@ void main(){
 #ifdef CC_unit0
 #ifdef CC_a_texture0
 
-#if (defined(CC_patch_anisotropic) && defined(CC_a_texture1) && defined(CC_a_color))
-	vec2 uv = (matrix_t * vec4(v_texture0, 0.0, 1.0)).xy ;
+#ifdef CC_patch_anisotropic
+	vec2 uv = (matrix_t * vec4(v_texture0, 0.0, 1.0)).xy;
 	
 	/* https://bugs.chromium.org/p/angleproject/issues/detail?id=4994 */
-	float x = 1024.0 * 63.0 / 64.0;
-    uv = ((uv * x) - fract(uv * x) + 0.5) / x;
+    uv = ((uv * anisotropic_fix) - fract(uv * anisotropic_fix) + 0.5) / anisotropic_fix;
 	
 	color *= texture(tex0, uv).bgra;
 #else
@@ -207,16 +210,17 @@ void main(){
 
 #ifdef CC_lighting
 #ifdef CC_a_normal
-	vec3 normal = normalize(matrix_mn * ((v_normal.xyz - 0.5) * 2.0));
+	vec3 normal = ((v_normal.xyz - 0.5) * 2.0);
 #else
-	vec3 normal = normalize(matrix_mn * normalUniform);
-#endif 
-	float ins = abs(dot(normal, light0Pos) + dot(normal, light1Pos));
-	color.rgb *= sqrt(0.4 + ins * 0.6);
+	vec3 normal = normalUniform;
+#endif
+	normal = normalize(matrix_mn * normal);
+	float ins = max(dot(normal, -light0Pos), 0.0) + max(dot(normal, -light1Pos), 0.0);
+	color.rgb *= min((0.4 + ins * 0.6), 1.0);
 #endif
 	
 #ifdef CC_fog
-	float dist = sqrt(v_position.x * v_position.x + v_position.y * v_position.y + v_position.z * v_position.z);
+	float dist = sqrt(dot(v_position, v_position));
 	float i = (fogMode == 1) ? clamp((dist - fogStart) / (fogEnd - fogStart), 0.0, 1.0) : clamp(1.0 - pow(2.718, -(fogDensity * dist)), 0.0, 1.0);
 	color.rgb = mix(color.rgb, fogColor.xyz, i * fogColor.a);
 #endif

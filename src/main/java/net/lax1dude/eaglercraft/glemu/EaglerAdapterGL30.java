@@ -144,6 +144,10 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	private static boolean enableNormalArray = false;
 	private static boolean enableTex0Array = false;
 	private static boolean enableTex1Array = false;
+	
+	private static boolean enableAnisotropicFix = false;
+	private static float anisotropicFixX = 1024.0f;
+	private static float anisotropicFixY = 1024.0f;
 
 	private static float colorR = 1.0f;
 	private static float colorG = 1.0f;
@@ -160,6 +164,13 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	private static float tex0Y = 0;
 	private static float tex1X = 0;
 	private static float tex1Y = 0;
+	private static TextureGL boundTexture0 = null;
+	private static boolean enableAnisotropicPatch = false;
+	private static boolean hintAnisotropicPatch = false;
+	
+	public static final void anisotropicPatch(boolean e) {
+		enableAnisotropicPatch = e;
+	}
 
 	private static boolean enableTexGen = false;
 	private static boolean enableColorMaterial = false;
@@ -271,9 +282,6 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 			_wglEnable(_wGL_BLEND);
 			break;
 		case GL_RESCALE_NORMAL:
-			//enableRescaleNormal = true;
-			//matNormalScalePointer = matModelPointer;
-			//matNormScaleV[0].setIdentity();
 			break;
 		case GL_TEXTURE_2D:
 			if(selectedTex == 0) {
@@ -463,6 +471,10 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		
 	}
 	public static final void glTexImage2D(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, ByteBuffer p9) {
+		if(p2 == 0 && selectedTex == 0 && boundTexture0 != null) {
+			boundTexture0.w = p4;
+			boundTexture0.h = p5;
+		}
 		_wglTexImage2D(_wGL_TEXTURE_2D, p2, _wGL_RGBA8, p4, p5, p6, _wGL_RGBA, _wGL_UNSIGNED_BYTE, p9);
 	}
 	public static final void glLight(int p1, int p2, FloatBuffer p3) {
@@ -471,14 +483,28 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	public static final void glLightModel(int p1, FloatBuffer p2) {
 		
 	}
+	private static Vector4f lightPos0vec0 = new Vector4f();
+	private static Vector4f lightPos1vec0 = new Vector4f();
 	private static Vector4f lightPos0vec = new Vector4f();
 	private static Vector4f lightPos1vec = new Vector4f();
 	public static final void copyModelToLightMatrix() {
+		lightPos0vec0.set(lightPos0vec);
+		lightPos1vec0.set(lightPos1vec);
 		lightPos0vec.set(0.2f, 1.0f, -0.7f, 0.0f); lightPos0vec.normalise();
 		lightPos1vec.set(-0.2f, 1.0f, 0.7f, 0.0f); lightPos1vec.normalise();
 		Matrix4f.transform(matModelV[matModelPointer], lightPos0vec, lightPos0vec).normalise();
 		Matrix4f.transform(matModelV[matModelPointer], lightPos1vec, lightPos1vec).normalise();
 		
+	}
+	public static final void flipLightMatrix() {
+		lightPos0vec0.set(lightPos0vec);
+		lightPos1vec0.set(lightPos1vec);
+		lightPos0vec.y = -lightPos0vec.y;
+		lightPos1vec.y = -lightPos1vec.y;
+	}
+	public static final void revertLightMatrix() {
+		lightPos0vec.set(lightPos0vec0);
+		lightPos1vec.set(lightPos1vec0);
 	}
 	public static final void glPushMatrix() {
 		switch(matrixMode) {
@@ -603,8 +629,23 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	public static final void glColorMask(boolean p1, boolean p2, boolean p3, boolean p4) {
 		_wglColorMask(p1, p2, p3, p4);
 	}
+	private static final void updateAnisotropicPatch() {
+		if(selectedTex == 0) {
+			enableAnisotropicFix = false;
+			if(enableAnisotropicPatch && boundTexture0 != null && boundTexture0.anisotropic && boundTexture0.nearest) {
+				enableAnisotropicFix = true;
+				anisotropicFixX = boundTexture0.w;
+				anisotropicFixY = boundTexture0.h;
+			}
+		}
+	}
 	public static final void glBindTexture(int p1, int p2) {
-		_wglBindTexture(_wGL_TEXTURE_2D, texObjects.get(p2));
+		TextureGL t = texObjects.get(p2);
+		_wglBindTexture(_wGL_TEXTURE_2D, t);
+		if(selectedTex == 0) {
+			boundTexture0 = t;
+			updateAnisotropicPatch();
+		}
 	}
 	public static final void glCopyTexSubImage2D(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {
 		_wglCopyTexSubImage2D(_wGL_TEXTURE_2D, p2, p3, p4, p5, p6, p7, p8);
@@ -638,7 +679,12 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		case GL_REPEAT: pp3 = _wGL_REPEAT; break;
 		case GL_CLAMP: pp3 = _wGL_CLAMP; break;
 		}
+
+		if(selectedTex == 0 && boundTexture0 != null && pp2 == _wGL_TEXTURE_MAG_FILTER) {
+			boundTexture0.nearest = pp3 == _wGL_NEAREST;
+		}
 		_wglTexParameteri(pp1, pp2, pp3);
+		updateAnisotropicPatch();
 	}
 	public static final void glTexParameterf(int p1, int p2, float p3) {
 		int pp1 = 0;
@@ -652,7 +698,11 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		default:
 		case GL_TEXTURE_MAX_ANISOTROPY: pp2 = _wGL_TEXTURE_MAX_ANISOTROPY; break;
 		}
+		if(selectedTex == 0 && boundTexture0 != null && pp2 == _wGL_TEXTURE_MAX_ANISOTROPY) {
+			boundTexture0.anisotropic = p3 > 1.0f;
+		}
 		_wglTexParameterf(pp1, pp2, p3);
+		updateAnisotropicPatch();
 	}
 	public static final void glLogicOp(int p1) {
 		
@@ -693,6 +743,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		if(!isCompilingDisplayList) {
 			compilingDisplayList = displayLists.get(p1);
 			if(compilingDisplayList != null) {
+				compilingDisplayList.shaderMode = -1;
 				compilingDisplayList.listLength = 0;
 				isCompilingDisplayList = true;
 			}
@@ -775,12 +826,22 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		case GL_BGRA: pp3 = _wGL_BGRA; break;
 		}
 		*/
+		if(p2 == 0 && selectedTex == 0 && boundTexture0 != null) {
+			boundTexture0.w = p4;
+			boundTexture0.h = p5;
+		}
 		bytesUploaded += p9.remaining()*4;
 		_wglTexImage2D(_wGL_TEXTURE_2D, p2, _wGL_RGBA8, p4, p5, p6, _wGL_RGBA, _wGL_UNSIGNED_BYTE, p9);
+		updateAnisotropicPatch();
 	}
 	public static final void glTexImage2D_2(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, IntBuffer p9) {
+		if(p2 == 0 && selectedTex == 0 && boundTexture0 != null) {
+			boundTexture0.w = p4;
+			boundTexture0.h = p5;
+		}
 		bytesUploaded += p9.remaining()*4;
 		_wglTexImage2D(_wGL_TEXTURE_2D, p2, _wGL_RGB8, p4, p5, p6, _wGL_RGB, _wGL_UNSIGNED_BYTE, p9);
+		updateAnisotropicPatch();
 	}
 	public static final void glTexSubImage2D(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, IntBuffer p9) {
 		int pp1 = 0;
@@ -859,6 +920,9 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 			break;
 		}
 	}
+	public static final void hintAnisotropicFix(boolean hint) {
+		hintAnisotropicPatch = hint;
+	}
 	private static final int getShaderModeFlag0() {
 		int mode = 0;
 		mode = (mode | (enableColorArray ? FixedFunctionShader.COLOR : 0));
@@ -875,6 +939,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		mode = (mode | (enableAlphaTest ? FixedFunctionShader.ALPHATEST : 0));
 		mode = (mode | (enableTexture2D ? FixedFunctionShader.UNIT0 : 0));
 		mode = (mode | (enableTexture2D_1 ? FixedFunctionShader.UNIT1 : 0));
+		mode = (mode | ((enableTexture2D && (enableAnisotropicFix || (hintAnisotropicPatch && enableAnisotropicPatch))) ? FixedFunctionShader.FIX_ANISOTROPIC : 0));
 		return mode;
 	}
 	private static final int getShaderModeFlag() {
@@ -889,6 +954,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		mode = (mode | (enableAlphaTest ? FixedFunctionShader.ALPHATEST : 0));
 		mode = (mode | (enableTexture2D ? FixedFunctionShader.UNIT0 : 0));
 		mode = (mode | (enableTexture2D_1 ? FixedFunctionShader.UNIT1 : 0));
+		mode = (mode | ((enableTexture2D && (enableAnisotropicFix || (hintAnisotropicPatch && enableAnisotropicPatch))) ? FixedFunctionShader.FIX_ANISOTROPIC : 0));
 		return mode;
 	}
 	private static FixedFunctionShader shader = null;
@@ -929,6 +995,9 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 			s.setTexGenT(texT_plane, texT_X, texT_Y, texT_Z, texT_W);
 			s.setTexGenR(texR_plane, texR_X, texR_Y, texR_Z, texR_W);
 			s.setTexGenQ(texQ_plane, texQ_X, texQ_Y, texQ_Z, texQ_W);
+		}
+		if(enableAnisotropicFix) {
+			s.setAnisotropicFix(anisotropicFixX, anisotropicFixY);
 		}
 	}
 	private static Object blankUploadArray = _wCreateLowLevelIntBuffer(525000);

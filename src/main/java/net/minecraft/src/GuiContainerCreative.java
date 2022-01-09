@@ -534,7 +534,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer {
 	 */
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderHelper.enableGUIStandardItemLighting();
+		RenderHelper.enableGUIStandardItemLighting2();
 		CreativeTabs var4 = CreativeTabs.creativeTabArray[selectedTabIndex];
 		CreativeTabs[] var5 = CreativeTabs.creativeTabArray;
 		int var6 = var5.length;

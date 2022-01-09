@@ -24,6 +24,8 @@ public class RenderFallingSand extends Render {
 			EaglerAdapter.glPushMatrix();
 			EaglerAdapter.glTranslatef((float) par2, (float) par4, (float) par6);
 			tex.bindTexture();
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST);
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAG_FILTER, EaglerAdapter.GL_NEAREST);
 			EaglerAdapter.glDisable(EaglerAdapter.GL_LIGHTING);
 			Tessellator var12;
 

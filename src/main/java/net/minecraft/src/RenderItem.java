@@ -94,7 +94,9 @@ public class RenderItem extends Render {
 					}
 
 					var18 = 1.0F;
+					EaglerAdapter.flipLightMatrix();
 					this.itemRenderBlocks.renderBlockAsItem(var22, var10.getItemDamage(), var18);
+					EaglerAdapter.flipLightMatrix();
 					EaglerAdapter.glPopMatrix();
 				}
 			} else {

@@ -7,7 +7,7 @@ public enum EnumOptions {
 	AMBIENT_OCCLUSION("options.ao", false, false), GUI_SCALE("options.guiScale", false, false), RENDER_CLOUDS("options.renderClouds", false, true), PARTICLES("options.particles", false, false),
 	CHAT_VISIBILITY("options.chat.visibility", false, false), CHAT_COLOR("options.chat.color", false, true), CHAT_LINKS("options.chat.links", false, true), CHAT_OPACITY("options.chat.opacity", true, false),
 	CHAT_LINKS_PROMPT("options.chat.links.prompt", false, true), USE_SERVER_TEXTURES("options.serverTextures", false, true), SNOOPER_ENABLED("options.snooper", false, true), USE_FULLSCREEN("options.fullscreen", false, true),
-	ENABLE_VSYNC("options.vsync", false, true), ENABLE_FOG("options.fog", false, true), SHOW_CAPE("options.showCape", false, true), ANTIALIASING("options.framebufferAntialias", false, false), CHAT_SCALE("options.chat.scale", true, false), CHAT_WIDTH("options.chat.width", true, false),
+	PATCH_ANGLE("options.patchAnisotropic", false, true), ENABLE_FOG("options.fog", false, true), SHOW_CAPE("options.showCape", false, true), ANTIALIASING("options.framebufferAntialias", false, false), CHAT_SCALE("options.chat.scale", true, false), CHAT_WIDTH("options.chat.width", true, false),
 	CHAT_HEIGHT_FOCUSED("options.chat.height.focused", true, false), CHAT_HEIGHT_UNFOCUSED("options.chat.height.unfocused", true, false);
 
 	private final boolean enumFloat;

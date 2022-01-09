@@ -31,8 +31,9 @@ public class GuiScreenAddServer extends GuiScreen {
 		StringTranslate var1 = StringTranslate.getInstance();
 		EaglerAdapter.enableRepeatEvents(true);
 		this.buttonList.clear();
-		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + 12, var1.translateKey("addServer.add")));
-		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + 12, var1.translateKey("gui.cancel")));
+		int sslOff = EaglerAdapter.isSSLPage() ? 36 : 0;
+		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + 12 + sslOff, var1.translateKey("addServer.add")));
+		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + 12 + sslOff, var1.translateKey("gui.cancel")));
 		this.buttonList.add(new GuiButton(2, this.width / 2 - 100, 142, var1.translateKey("addServer.hideAddress") + ": " + (this.newServerData.isHidingAddress() ? var1.translateKey("gui.yes") : var1.translateKey("gui.no"))));
 		this.serverName = new GuiTextField(this.fontRenderer, this.width / 2 - 100, 66, 200, 20);
 		this.serverName.setFocused(true);
@@ -113,6 +114,10 @@ public class GuiScreenAddServer extends GuiScreen {
 		this.drawCenteredString(this.fontRenderer, var4.translateKey("addServer.title"), this.width / 2, 17, 16777215);
 		this.drawString(this.fontRenderer, var4.translateKey("addServer.enterName"), this.width / 2 - 100, 53, 10526880);
 		this.drawString(this.fontRenderer, var4.translateKey("addServer.enterIp"), this.width / 2 - 100, 94, 10526880);
+		if(EaglerAdapter.isSSLPage()) {
+			this.drawCenteredString(this.fontRenderer, var4.translateKey("addServer.SSLWarn1"), this.width / 2, 169, 0xccccff);
+			this.drawCenteredString(this.fontRenderer, var4.translateKey("addServer.SSLWarn2"), this.width / 2, 181, 0xccccff);
+		}
 		this.serverName.drawTextBox();
 		this.serverAddress.drawTextBox();
 		super.drawScreen(par1, par2, par3);

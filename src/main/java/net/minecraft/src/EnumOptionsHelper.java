@@ -65,7 +65,7 @@ class EnumOptionsHelper {
 		}
 
 		try {
-			enumOptionsMappingHelperArray[EnumOptions.ENABLE_VSYNC.ordinal()] = 12;
+			enumOptionsMappingHelperArray[EnumOptions.PATCH_ANGLE.ordinal()] = 12;
 		} catch (NoSuchFieldError var3) {
 			;
 		}

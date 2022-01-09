@@ -62,6 +62,7 @@ public class GameSettings {
 	public boolean showCape = true;
 	public boolean touchscreen = false;
 	public int antialiasMode = 1;
+	public boolean patchAnisotropic = false;
 	public int overrideWidth = 0;
 	public int overrideHeight = 0;
 	public boolean heldItemTooltips = true;
@@ -142,6 +143,7 @@ public class GameSettings {
 		this.particleSetting = 0;
 		this.language = "en_US";
 		this.mc = par1Minecraft;
+		this.patchAnisotropic = EaglerAdapter.isWindows();
 		this.loadOptions();
 	}
 
@@ -329,9 +331,9 @@ public class GameSettings {
 			}
 		}
 
-		if (par1EnumOptions == EnumOptions.ENABLE_VSYNC) {
-			this.enableVsync = !this.enableVsync;
-			EaglerAdapter.setVSyncEnabled(this.enableVsync);
+		if (par1EnumOptions == EnumOptions.PATCH_ANGLE) {
+			this.patchAnisotropic = !this.patchAnisotropic;
+			this.mc.renderGlobal.loadRenderers();
 		}
 
 		this.saveOptions();
@@ -385,7 +387,7 @@ public class GameSettings {
 			return this.fullScreen;
 
 		case 12:
-			return this.enableVsync;
+			return this.patchAnisotropic;
 
 		case 13:
 			return this.showCape;
@@ -493,6 +495,7 @@ public class GameSettings {
 			if(yee.hasKey("chatHeightUnfocused")) this.chatHeightUnfocused = yee.getFloat("chatHeightUnfocused");
 			if(yee.hasKey("chatScale")) this.chatScale = yee.getFloat("chatScale");
 			if(yee.hasKey("chatWidth")) this.chatWidth = yee.getFloat("chatWidth");
+			if(yee.hasKey("patchAnisotropic")) this.patchAnisotropic = yee.getBoolean("patchAnisotropic");
 			
 			for (int var4 = 0; var4 < this.keyBindings.length; ++var4) {
 				if(yee.hasKey(keyBindings[var4].keyDescription)) this.keyBindings[var4].keyCode = yee.getInteger(keyBindings[var4].keyDescription);
@@ -545,6 +548,7 @@ public class GameSettings {
 		yee.setFloat("chatHeightUnfocused", this.chatHeightUnfocused);
 		yee.setFloat("chatScale", this.chatScale);
 		yee.setFloat("chatWidth", this.chatWidth);
+		yee.setBoolean("patchAnisotropic", this.patchAnisotropic);
 		
 		for (int var4 = 0; var4 < this.keyBindings.length; ++var4) {
 			yee.setInteger(keyBindings[var4].keyDescription, keyBindings[var4].keyCode);

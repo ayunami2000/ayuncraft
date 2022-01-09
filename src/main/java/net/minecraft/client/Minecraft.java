@@ -1081,6 +1081,8 @@ public class Minecraft implements Runnable {
 		if (this.rightClickDelayTimer > 0) {
 			--this.rightClickDelayTimer;
 		}
+		
+		EaglerAdapter.anisotropicPatch(this.gameSettings.patchAnisotropic);
 
 		this.mcProfiler.startSection("stats");
 		this.mcProfiler.endStartSection("gui");
@@ -1497,8 +1499,12 @@ public class Minecraft implements Runnable {
 			//if(!EaglerAdapter._wisAnisotropicPatched()) {
 			//	displayEaglercraftText("ANGLE Issue #4994 is unpatched on this browser, using fake aliased sampling on linear magnified terrain texture for anisotropic filtering. Chrome patch progress and information available at https://crbug.com/angleproject/4994");
 			//}
+
+			StringTranslate var4 = StringTranslate.getInstance();
 			
-			displayEaglercraftText("go to -> Options -> Video Settings on the pause menu to enable fancy graphics");
+			if(!this.gameSettings.fancyGraphics || this.gameSettings.ambientOcclusion == 0) {
+				displayEaglercraftText(var4.translateKey("fancyGraphicsNote"));
+			}
 
 			this.thePlayer.preparePlayerToSpawn();
 			par1WorldClient.spawnEntityInWorld(this.thePlayer);

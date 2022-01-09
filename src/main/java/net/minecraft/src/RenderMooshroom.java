@@ -19,6 +19,7 @@ public class RenderMooshroom extends RenderLiving {
 
 		if (!par1EntityMooshroom.isChild()) {
 			terrain.bindTexture();
+			EaglerAdapter.flipLightMatrix();
 			EaglerAdapter.glEnable(EaglerAdapter.GL_CULL_FACE);
 			EaglerAdapter.glPushMatrix();
 			EaglerAdapter.glScalef(1.0F, -1.0F, 1.0F);
@@ -37,6 +38,7 @@ public class RenderMooshroom extends RenderLiving {
 			this.renderBlocks.renderBlockAsItem(Block.mushroomRed, 0, 1.0F);
 			EaglerAdapter.glPopMatrix();
 			EaglerAdapter.glDisable(EaglerAdapter.GL_CULL_FACE);
+			EaglerAdapter.flipLightMatrix();
 		}
 	}
 

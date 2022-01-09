@@ -41,6 +41,12 @@ public class RenderHelper {
 		EaglerAdapter.glLightModel(EaglerAdapter.GL_LIGHT_MODEL_AMBIENT, setColorBuffer(var0, var0, var0, 1.0F));
 		*/
 	}
+	public static void enableStandardItemLighting2() {
+		EaglerAdapter.glPushMatrix();
+		EaglerAdapter.glScalef(1.0F, -1.0F, 1.0F);
+		enableStandardItemLighting();
+		EaglerAdapter.glPopMatrix();
+	}
 
 	/**
 	 * Sets OpenGL lighting for rendering blocks as items inside GUI screens (such
@@ -50,6 +56,16 @@ public class RenderHelper {
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glRotatef(-30.0F, 0.0F, 1.0F, 0.0F);
 		EaglerAdapter.glRotatef(165.0F, 1.0F, 0.0F, 0.0F);
+		//EaglerAdapter.glScalef(1.0F, -1.0F, 1.0F);
+		enableStandardItemLighting();
+		EaglerAdapter.glPopMatrix();
+	}
+	
+	public static void enableGUIStandardItemLighting2() {
+		EaglerAdapter.glPushMatrix();
+		EaglerAdapter.glRotatef(-30.0F, 0.0F, 1.0F, 0.0F);
+		EaglerAdapter.glRotatef(165.0F, 1.0F, 0.0F, 0.0F);
+		EaglerAdapter.glScalef(1.0F, -1.0F, 1.0F);
 		enableStandardItemLighting();
 		EaglerAdapter.glPopMatrix();
 	}

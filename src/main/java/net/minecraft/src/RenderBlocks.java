@@ -6911,6 +6911,9 @@ public class RenderBlocks {
 	public void renderBlockAsItem(Block par1Block, int par2, float par3) {
 		Tessellator var4 = Tessellator.instance;
 		boolean var5 = par1Block.blockID == Block.grass.blockID;
+		
+		EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST);
+		EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAG_FILTER, EaglerAdapter.GL_NEAREST);
 
 		if (par1Block == Block.dispenser || par1Block == Block.dropper || par1Block == Block.furnaceIdle) {
 			par2 = 3;
@@ -6993,10 +6996,12 @@ public class RenderBlocks {
 				var4.draw();
 				EaglerAdapter.glTranslatef(0.5F, 0.5F, 0.5F);
 			} else if (var6 == 22) {
+				RenderHelper.enableStandardItemLighting();
 				EaglerAdapter.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
 				EaglerAdapter.glTranslatef(-0.5F, -0.5F, -0.5F);
 				ChestItemRenderHelper.instance.renderChest(par1Block, par2, par3);
 				EaglerAdapter.glDisable(EaglerAdapter.GL_RESCALE_NORMAL);
+				EaglerAdapter.revertLightMatrix();
 			} else if (var6 == 6) {
 				var4.startDrawingQuads();
 				var4.setNormal(0.0F, -1.0F, 0.0F);

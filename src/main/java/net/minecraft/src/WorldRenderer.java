@@ -150,6 +150,7 @@ public class WorldRenderer {
 			ChunkCache var9 = new ChunkCache(this.worldObj, var1 - var8, var2 - var8, var3 - var8, var4 + var8, var5 + var8, var6 + var8, var8);
 			Profiler p = Minecraft.getMinecraft().mcProfiler;
 			if (!var9.extendedLevelsInChunkCache()) {
+				EaglerAdapter.hintAnisotropicFix(true);
 				++chunksUpdated;
 				RenderBlocks var10 = new RenderBlocks(var9);
 				this.bytesDrawn = 0;
@@ -222,6 +223,7 @@ public class WorldRenderer {
 						break;
 					}
 				}
+				EaglerAdapter.hintAnisotropicFix(false);
 			}
 
 			HashSet var22 = new HashSet();

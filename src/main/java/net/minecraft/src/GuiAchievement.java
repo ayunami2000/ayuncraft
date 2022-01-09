@@ -123,7 +123,7 @@ public class GuiAchievement extends Gui {
 					this.theGame.fontRenderer.drawString(this.achievementStatName, var5 + 30, var6 + 18, -1);
 				}
 
-				RenderHelper.enableGUIStandardItemLighting();
+				RenderHelper.enableGUIStandardItemLighting2();
 				EaglerAdapter.glDisable(EaglerAdapter.GL_LIGHTING);
 				EaglerAdapter.glEnable(EaglerAdapter.GL_RESCALE_NORMAL);
 				EaglerAdapter.glEnable(EaglerAdapter.GL_COLOR_MATERIAL);

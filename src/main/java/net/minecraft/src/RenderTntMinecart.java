@@ -32,7 +32,9 @@ public class RenderTntMinecart extends RenderMinecart {
 			EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_DST_ALPHA);
 			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, (1.0F - ((float) var5 - par2 + 1.0F) / 100.0F) * 0.8F);
 			EaglerAdapter.glPushMatrix();
+			EaglerAdapter.flipLightMatrix();
 			this.field_94145_f.renderBlockAsItem(Block.tnt, 0, 1.0F);
+			EaglerAdapter.flipLightMatrix();
 			EaglerAdapter.glPopMatrix();
 			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);

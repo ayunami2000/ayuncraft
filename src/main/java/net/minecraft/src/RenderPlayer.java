@@ -538,7 +538,9 @@ public class RenderPlayer extends RenderLiving {
 						OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) var5 / 1.0F, (float) var6 / 1.0F);
 						EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 						terrain.bindTexture();
+						EaglerAdapter.flipLightMatrix();
 						this.renderBlocks.renderBlockAsItem(Block.blocksList[s.itemID], s.getItemDamage(), 1.0F);
+						EaglerAdapter.flipLightMatrix();
 						EaglerAdapter.glPopMatrix();
 						EaglerAdapter.glDisable(EaglerAdapter.GL_RESCALE_NORMAL);
 					}

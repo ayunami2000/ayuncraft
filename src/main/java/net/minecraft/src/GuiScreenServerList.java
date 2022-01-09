@@ -90,6 +90,10 @@ public class GuiScreenServerList extends GuiScreen {
 		this.drawDefaultBackground();
 		this.drawCenteredString(this.fontRenderer, var4.translateKey("selectServer.direct"), this.width / 2, this.height / 4 - 60 + 20, 16777215);
 		this.drawString(this.fontRenderer, var4.translateKey("addServer.enterIp"), this.width / 2 - 100, 100, 10526880);
+		if(EaglerAdapter.isSSLPage()) {
+			this.drawCenteredString(this.fontRenderer, var4.translateKey("addServer.SSLWarn1"), this.width / 2, 116 + 28, 0xccccff);
+			this.drawCenteredString(this.fontRenderer, var4.translateKey("addServer.SSLWarn2"), this.width / 2, 116 + 40, 0xccccff);
+		}
 		this.serverTextField.drawTextBox();
 		super.drawScreen(par1, par2, par3);
 	}

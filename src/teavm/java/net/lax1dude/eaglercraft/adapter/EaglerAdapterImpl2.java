@@ -17,6 +17,7 @@ import org.teavm.jso.ajax.ReadyStateChangeHandler;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
+import org.teavm.jso.core.JSNumber;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.KeyboardEvent;
 import org.teavm.jso.dom.events.MessageEvent;
@@ -51,6 +52,7 @@ import org.teavm.jso.websocket.WebSocket;
 import net.lax1dude.eaglercraft.AssetRepository;
 import net.lax1dude.eaglercraft.Base64;
 import net.lax1dude.eaglercraft.EarlyLoadScreen;
+import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.lax1dude.eaglercraft.adapter.teavm.WebGLQuery;
 import net.lax1dude.eaglercraft.adapter.teavm.WebGLVertexArray;
 import net.minecraft.src.MathHelper;
@@ -63,12 +65,19 @@ public class EaglerAdapterImpl2 {
 	public static final boolean _wisWebGL() {
 		return true;
 	}
-	private static boolean isAnisotropicPatched = true;
+	private static boolean isAnisotropicPatched = false;
 	public static final boolean _wisAnisotropicPatched() {
 		return isAnisotropicPatched;
 	}
 	public static final String _wgetShaderHeader() {
 		return "#version 300 es";
+	}
+	
+	@JSBody(params = { }, script = "return window.location.href;")
+	private static native String getLocationString();
+	
+	public static final boolean isSSLPage() {
+		return getLocationString().startsWith("https");
 	}
 	
 	public static final InputStream loadResource(String path) {
@@ -148,9 +157,20 @@ public class EaglerAdapterImpl2 {
 	private static EventListener keyup = null;
 	private static EventListener keypress = null;
 	private static EventListener wheel = null;
+	private static String[] identifier = new String[0];
+	
+	public static final String[] getIdentifier() {
+		return identifier;
+	}
 
 	@JSBody(params = { "v" }, script = "try { return \"\"+window.eval(v); } catch(e) { return \"<error>\"; }")
 	private static native String getString(String var);
+	
+	public static void onWindowUnload() {
+		LocalStorageManager.saveStorageA();
+		LocalStorageManager.saveStorageG();
+		LocalStorageManager.saveStorageP();
+	}
 	
 	public static final void initializeContext(HTMLElement rootElement, String assetPackageURI) {
 		parent = rootElement;
@@ -257,7 +277,7 @@ public class EaglerAdapterImpl2 {
 				isWindowFocused = true;
 			}
 		});
-		execute("window.onbeforeunload = function(){return false;};");
+		onBeforeCloseRegister();
 		execute("window.eagsFileChooser = {\r\n" + 
 				"inputElement: null,\r\n" + 
 				"openFileChooser: function(ext, mime){\r\n" + 
@@ -432,7 +452,11 @@ public class EaglerAdapterImpl2 {
 	public static final int _wGL_FRAMEBUFFER = FRAMEBUFFER;
 	
 	public static final class TextureGL { 
-		protected final WebGLTexture obj; 
+		protected final WebGLTexture obj;
+		public int w = -1;
+		public int h = -1;
+		public boolean nearest = true;
+		public boolean anisotropic = false;
 		protected TextureGL(WebGLTexture obj) { 
 			this.obj = obj; 
 		} 
@@ -808,6 +832,19 @@ public class EaglerAdapterImpl2 {
 	public static final void _wglBlitFramebuffer(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9, int p10) {
 		webgl.blitFramebuffer(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10);
 	}
+	@JSBody(params = { "ctx", "p" }, script = "return ctx.getTexParameter(0x0DE1, p) | 0;")
+	private static final native int __wglGetTexParameteri(WebGL2RenderingContext ctx, int p);
+	public static final int _wglGetTexParameteri(int p1) {
+		return __wglGetTexParameteri(webgl, p1);
+	}
+	@JSBody(params = { "ctx", "p" }, script = "return (0.0 + ctx.getTexParameter(0x0DE1, p));")
+	private static final native float __wglGetTexParameterf(WebGL2RenderingContext ctx, int p);
+	public static final float _wglGetTexParameterf(int p1) {
+		return __wglGetTexParameterf(webgl, p1);
+	}
+	public static final boolean isWindows() {
+		return getString("window.navigator.platform").toLowerCase().contains("win");
+	}
 	
 	private static MouseEvent currentEvent = null;
 	private static KeyboardEvent currentEventK = null;
@@ -1048,9 +1085,12 @@ public class EaglerAdapterImpl2 {
 	public static final void openLink(String url) {
 		win.open(url, "_blank");
 	}
-	
+
 	@JSBody(params = { "str" }, script = "window.eval(str);")
 	private static native void execute(String str);
+	
+	@JSBody(params = { }, script = "window.onbeforeunload = function(){javaMethods.get('net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.onWindowUnload()V').invoke();return false;};")
+	private static native void onBeforeCloseRegister();
 
 	@JSBody(params = { "ext", "mime" }, script = "window.eagsFileChooser.openFileChooser(ext, mime);")
 	public static native void openFileChooser(String ext, String mime);

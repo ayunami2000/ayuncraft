@@ -42,7 +42,9 @@ public class RenderItemFrame extends Render {
 		EaglerAdapter.glPushMatrix();
 		this.renderBlocksInstance.overrideBlockBounds(0.0D, (double) (0.5F - var5 + 0.0625F), (double) (0.5F - var5 + 0.0625F), (double) (var3 * 0.5F), (double) (0.5F + var5 - 0.0625F), (double) (0.5F + var5 - 0.0625F));
 		this.renderBlocksInstance.setOverrideBlockTexture(this.field_94147_f);
+		//RenderHelper.enableStandardItemLighting2();
 		this.renderBlocksInstance.renderBlockAsItem(var2, 0, 1.0F);
+		//EaglerAdapter.revertLightMatrix();
 		this.renderBlocksInstance.clearOverrideBlockTexture();
 		this.renderBlocksInstance.unlockBlockBounds();
 		EaglerAdapter.glPopMatrix();
@@ -131,7 +133,9 @@ public class RenderItemFrame extends Render {
 				}
 
 				RenderItem.renderInFrame = true;
+				EaglerAdapter.flipLightMatrix();
 				RenderManager.instance.renderEntityWithPosYaw(var3, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
+				EaglerAdapter.flipLightMatrix();
 				RenderItem.renderInFrame = false;
 
 				if (var3.getEntityItem().getItem() == Item.compass) {

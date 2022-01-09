@@ -38,6 +38,8 @@ profile.playerSkin=Player Skin
 profile.addSkin=Add Skin
 profile.clearSkin=Clear List
 
+fancyGraphicsNote=go to -> Options -> Video Settings on the pause menu to enable fancy graphics and smooth lighting
+
 voice.title=Voice Channel
 voice.addr=Channel Address
 voice.connect=Connect
@@ -143,6 +145,8 @@ lanServer.scanning=Scanning for games on your local network
 lanServer.start=Start LAN World
 lanServer.otherPlayers=Settings for Other Players
 mcoServer.title=Minecraft Online World
+addServer.SSLWarn1=you are on an https: page!
+addServer.SSLWarn2=html5 will only allow wss://
 
 multiplayer.title=Play Multiplayer
 multiplayer.connect=Connect
@@ -289,6 +293,8 @@ options.framebufferAntialias.auto=Auto
 options.framebufferAntialias.fxaa=FXAA
 options.framebufferAntialias.msaa4=MSAA4
 options.framebufferAntialias.msaa8=MSAA8
+options.patchAnisotropic=Fix ANGLE bug #4994
+
 performance.max=Max FPS
 performance.balanced=Balanced
 performance.powersaver=Power saver

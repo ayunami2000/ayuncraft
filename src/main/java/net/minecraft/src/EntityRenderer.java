@@ -973,7 +973,7 @@ public class EntityRenderer {
 			RenderHelper.disableStandardItemLighting();
 			terrain.bindTexture();
 			EaglerAdapter.glTexParameterf(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAX_ANISOTROPY, 16.0f);
-			//EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, mc.gameSettings.fancyGraphics ? EaglerAdapter.GL_LINEAR_MIPMAP_LINEAR : EaglerAdapter.GL_NEAREST_MIPMAP_LINEAR);
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST_MIPMAP_LINEAR);
 			EaglerAdapter.glAlphaFunc(EaglerAdapter.GL_GREATER, 0.6f);
 			this.mc.mcProfiler.endStartSection("terrain");
 			var5.sortAndRender(var4, 0, (double) par1);
@@ -1041,7 +1041,7 @@ public class EntityRenderer {
 			//}
 			
 			EaglerAdapter.glTexParameterf(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAX_ANISOTROPY, 1.0f);
-			//EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST_MIPMAP_LINEAR);
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST_MIPMAP_LINEAR);
 			
 			var6.renderTransparentParticles(var4, par1);
 
@@ -1282,8 +1282,7 @@ public class EntityRenderer {
 									var8.startDrawingQuads();
 								}
 
-								var32 = ((float) (ticks + var21 * var21 * 3121 + var21 * 45238971 + var20 * var20 * 418711 + var20 * 13761 & 31) + par1) / 32.0F * (3.0F + this.random.nextFloat());
-								var32 = var32 % 100000.0f;
+								var32 = ((float) ((ticks + var21 * var21 * 3121 + var21 * 45238971 + var20 * var20 * 418711 + var20 * 13761 & 31) % 100000) + par1) / 32.0F * (3.0F + this.random.nextFloat());
 								double var33 = (double) ((float) var21 + 0.5F) - var41.posX;
 								var35 = (double) ((float) var20 + 0.5F) - var41.posZ;
 								float var37 = MathHelper.sqrt_double(var33 * var33 + var35 * var35) / (float) var16;
@@ -1307,7 +1306,7 @@ public class EntityRenderer {
 									var8.startDrawingQuads();
 								}
 
-								var32 = (((float) (ticks & 511) + par1) / 512.0F);
+								var32 = (((float) (ticks % 512) + par1) / 512.0F);
 								float var46 = this.random.nextFloat() + var19 * 0.01F * (float) this.random.nextGaussian();
 								float var34 = this.random.nextFloat() + var19 * (float) this.random.nextGaussian() * 0.001F;
 								var35 = (double) ((float) var21 + 0.5F) - var41.posX;

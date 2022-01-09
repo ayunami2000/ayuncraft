@@ -17,6 +17,8 @@ public class TileEntityRendererPiston extends TileEntitySpecialRenderer {
 		if (var9 != null && par1TileEntityPiston.getProgress(par8) < 1.0F) {
 			Tessellator var10 = Tessellator.instance;
 			tex_terrain.bindTexture();
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST);
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAG_FILTER, EaglerAdapter.GL_NEAREST);
 			RenderHelper.disableStandardItemLighting();
 			EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);

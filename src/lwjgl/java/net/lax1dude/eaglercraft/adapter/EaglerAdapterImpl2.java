@@ -83,6 +83,14 @@ public class EaglerAdapterImpl2 {
 			return null;
 		}
 	}
+
+	public static final boolean isSSLPage() {
+		return true;
+	}
+	
+	public static final String[] getIdentifier() {
+		return new String[0];
+	}
 	
 	private static final boolean useEPKTest = false;
 
@@ -224,6 +232,10 @@ public class EaglerAdapterImpl2 {
 
 	public static final class TextureGL {
 		protected final int obj;
+		public int w = -1;
+		public int h = -1;
+		public boolean nearest = true;
+		public boolean anisotropic = false;
 		protected TextureGL(int obj) {
 			this.obj = obj;
 		}
@@ -572,6 +584,12 @@ public class EaglerAdapterImpl2 {
 	public static final void _wglLineWidth(float p1) {
 		GL11.glLineWidth(p1);
 	}
+	public static final int _wglGetTexParameteri(int p1) {
+		return GL11.glGetTexParameteri(GL11.GL_TEXTURE_2D, p1);
+	}
+	public static final float _wglGetTexParameterf(int p1) {
+		return GL11.glGetTexParameterf(GL11.GL_TEXTURE_2D, p1);
+	}
 	
 
 	// =======================================================================================
@@ -710,6 +728,9 @@ public class EaglerAdapterImpl2 {
 		if(ss != null) {
 			ss.cleanup();
 		}
+	}
+	public static final boolean isWindows() {
+		return System.getProperty("os.name").toLowerCase().contains("windows");
 	}
 	public static final boolean mouseNext() {
 		return Mouse.next();

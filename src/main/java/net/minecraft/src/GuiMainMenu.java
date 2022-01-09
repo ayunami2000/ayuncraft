@@ -437,7 +437,7 @@ public class GuiMainMenu extends GuiScreen {
 		this.drawString(this.fontRenderer, "minecraft 1.5.2", 2, this.height - 20, 16777215);
 		this.drawString(this.fontRenderer, ConfigConstants.mainMenuString, 2, this.height - 10, 16777215);
 
-		String var10 = "copyright 2020 calder young";
+		String var10 = "copyright " + Calendar.getInstance().get(Calendar.YEAR) + " calder young";
 		this.drawString(this.fontRenderer, var10, this.width - this.fontRenderer.getStringWidth(var10) - 2, this.height - 10, 16777215);
 
 		var10 = "all rights reserved";

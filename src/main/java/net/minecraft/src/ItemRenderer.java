@@ -41,7 +41,9 @@ public class ItemRenderer {
 
 		if (par2ItemStack.getItemSpriteNumber() == 0 && Block.blocksList[par2ItemStack.itemID] != null && RenderBlocks.renderItemIn3d(Block.blocksList[par2ItemStack.itemID].getRenderType())) {
 			terrain.bindTexture();
+			EaglerAdapter.flipLightMatrix();
 			this.renderBlocksInstance.renderBlockAsItem(Block.blocksList[par2ItemStack.itemID], par2ItemStack.getItemDamage(), 1.0F);
+			EaglerAdapter.flipLightMatrix();
 		} else {
 			Icon var4 = par1EntityLiving.getItemIcon(par2ItemStack, par3);
 
@@ -52,6 +54,8 @@ public class ItemRenderer {
 
 			if (par2ItemStack.getItemSpriteNumber() == 0) {
 				terrain.bindTexture();
+				EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST);
+				EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAG_FILTER, EaglerAdapter.GL_NEAREST);
 			} else {
 				items.bindTexture();
 			}
@@ -63,6 +67,7 @@ public class ItemRenderer {
 			float var9 = var4.getMaxV();
 			float var10 = 0.0F;
 			float var11 = 0.3F;
+			RenderHelper.enableStandardItemLighting2();
 			EaglerAdapter.glEnable(EaglerAdapter.GL_RESCALE_NORMAL);
 			EaglerAdapter.glTranslatef(-var10, -var11, 0.0F);
 			float var12 = 1.5F;
@@ -103,6 +108,7 @@ public class ItemRenderer {
 			}
 
 			EaglerAdapter.glDisable(EaglerAdapter.GL_RESCALE_NORMAL);
+			EaglerAdapter.revertLightMatrix();
 		}
 
 		EaglerAdapter.glPopMatrix();
@@ -451,6 +457,8 @@ public class ItemRenderer {
 
 		if (this.mc.thePlayer.isBurning()) {
 			terrain.bindTexture();
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST);
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAG_FILTER, EaglerAdapter.GL_NEAREST);
 			this.renderFireInFirstPerson(par1);
 		}
 
@@ -459,6 +467,8 @@ public class ItemRenderer {
 			int var3 = MathHelper.floor_double(this.mc.thePlayer.posY);
 			int var4 = MathHelper.floor_double(this.mc.thePlayer.posZ);
 			terrain.bindTexture();
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST);
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAG_FILTER, EaglerAdapter.GL_NEAREST);
 			int var5 = this.mc.theWorld.getBlockId(var2, var3, var4);
 
 			if (this.mc.theWorld.isBlockNormalCube(var2, var3, var4)) {

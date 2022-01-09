@@ -181,7 +181,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 	protected void actionPerformed(GuiButton par1GuiButton) {
 		if(!dropDownOpen) {
 			if(par1GuiButton.id == 200) {
-				EaglerProfile.username = this.username.getText();
+				EaglerProfile.username = this.username.getText().length() == 0 ? "null" : this.username.getText();
 				EaglerProfile.presetSkinId = selectedSlot - EaglerProfile.skinNames.size();
 				if(EaglerProfile.presetSkinId < 0) {
 					EaglerProfile.presetSkinId = -1;

@@ -47,6 +47,8 @@ public abstract class Render {
 		float var11 = par1Entity.width * 1.4F;
 		EaglerAdapter.glScalef(var11, var11, var11);
 		terrain.bindTexture();
+		EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST);
+		EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAG_FILTER, EaglerAdapter.GL_NEAREST);
 		Tessellator var12 = Tessellator.instance;
 		float var13 = 0.5F;
 		float var14 = 0.0F;

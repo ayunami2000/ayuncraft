@@ -101,7 +101,9 @@ public class RenderMinecart extends Render {
 	protected void renderBlockInMinecart(EntityMinecart par1EntityMinecart, float par2, Block par3Block, int par4) {
 		float var5 = par1EntityMinecart.getBrightness(par2);
 		EaglerAdapter.glPushMatrix();
+		EaglerAdapter.flipLightMatrix();
 		this.field_94145_f.renderBlockAsItem(par3Block, par4, var5);
+		EaglerAdapter.flipLightMatrix();
 		EaglerAdapter.glPopMatrix();
 	}
 

@@ -127,7 +127,7 @@ public class GuiMerchant extends GuiContainer {
 			ItemStack var9 = var8.getItemToBuy();
 			ItemStack var10 = var8.getSecondItemToBuy();
 			ItemStack var11 = var8.getItemToSell();
-			RenderHelper.enableGUIStandardItemLighting();
+			RenderHelper.enableGUIStandardItemLighting2();
 			EaglerAdapter.glDisable(EaglerAdapter.GL_LIGHTING);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_RESCALE_NORMAL);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_COLOR_MATERIAL);

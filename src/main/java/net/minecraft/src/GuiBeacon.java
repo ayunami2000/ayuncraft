@@ -153,7 +153,7 @@ public class GuiBeacon extends GuiContainer {
 			}
 		}
 
-		RenderHelper.enableGUIStandardItemLighting();
+		RenderHelper.enableGUIStandardItemLighting2();
 	}
 	
 	private static final TextureLocation tex = new TextureLocation("/gui/beacon.png");

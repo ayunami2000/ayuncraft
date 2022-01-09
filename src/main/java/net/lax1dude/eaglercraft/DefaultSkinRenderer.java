@@ -247,7 +247,6 @@ public class DefaultSkinRenderer {
 		int id = id2 - EaglerProfile.skinNames.size();
 		
 		EaglerAdapter.glEnable(EaglerAdapter.GL_TEXTURE_2D);
-		RenderHelper.enableStandardItemLighting();
 		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_CULL_FACE);
 		EaglerAdapter.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -257,6 +256,7 @@ public class DefaultSkinRenderer {
 		EaglerAdapter.glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
 		EaglerAdapter.glEnable(EaglerAdapter.GL_RESCALE_NORMAL);
 		EaglerAdapter.glScalef(1.0F, -1.0F, 1.0F);
+		RenderHelper.enableGUIStandardItemLighting();
 		EaglerAdapter.glTranslatef(0.0F, 1.0F, 0.0F);
 		EaglerAdapter.glRotatef(((y - my) * -0.06f), 1.0f, 0.0f, 0.0f);
 		EaglerAdapter.glRotatef(((x - mx) * 0.06f), 0.0f, 1.0f, 0.0f);

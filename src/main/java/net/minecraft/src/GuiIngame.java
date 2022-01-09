@@ -288,7 +288,7 @@ public class GuiIngame extends Gui {
 			EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
 			this.mc.mcProfiler.startSection("actionBar");
 			EaglerAdapter.glEnable(EaglerAdapter.GL_RESCALE_NORMAL);
-			RenderHelper.enableGUIStandardItemLighting();
+			RenderHelper.enableGUIStandardItemLighting2();
 
 			for (var18 = 0; var18 < 9; ++var18) {
 				var19 = var6 / 2 - 90 + var18 * 20 + 2;
@@ -425,7 +425,7 @@ public class GuiIngame extends Gui {
 			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 46, 14737632);
 			var45 = "verts: "+(EaglerAdapter.getVertexesPerSecond() / 1000)+"k, triangles: "+(EaglerAdapter.getTrianglesPerSecond() / 1000)+"k";
 			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 56, 14737632);
-			var45 = "rendering backend: "+(EaglerAdapter.isWebGL ? "webgl10" : "opengl30");
+			var45 = "rendering backend: "+(EaglerAdapter.isWebGL ? "webgl20" : "opengl30");
 			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 66, 14737632);
 			var45 = "glsl "+(EaglerAdapter._wgetShaderHeader() +", 32 bytes/vert");
 			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 76, 14737632);
@@ -718,6 +718,8 @@ public class GuiIngame extends Gui {
 		EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, par1);
 		terrain.bindTexture();
+		EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST);
+		EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAG_FILTER, EaglerAdapter.GL_NEAREST);
 		Icon var4 = Block.portal.getBlockTextureFromSide(1);
 		float var5 = var4.getMinU();
 		float var6 = var4.getMinV();

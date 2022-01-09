@@ -78,6 +78,8 @@ public class EffectRenderer {
 					break;
 				case 1:
 					terrain.bindTexture();
+					EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST);
+					EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAG_FILTER, EaglerAdapter.GL_NEAREST);
 					break;
 				case 2:
 					items.bindTexture();

@@ -36,6 +36,7 @@ public class RenderTNTPrimed extends Render {
 
 		var10 = (1.0F - ((float) par1EntityTNTPrimed.fuse - par9 + 1.0F) / 100.0F) * 0.8F;
 		terrain.bindTexture();
+		EaglerAdapter.flipLightMatrix();
 		this.blockRenderer.renderBlockAsItem(Block.tnt, 0, par1EntityTNTPrimed.getBrightness(par9));
 
 		if (par1EntityTNTPrimed.fuse / 5 % 2 == 0) {
@@ -50,6 +51,7 @@ public class RenderTNTPrimed extends Render {
 			EaglerAdapter.glEnable(EaglerAdapter.GL_LIGHTING);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_TEXTURE_2D);
 		}
+		EaglerAdapter.flipLightMatrix();
 
 		EaglerAdapter.glPopMatrix();
 	}

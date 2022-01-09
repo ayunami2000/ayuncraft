@@ -28,6 +28,7 @@ sourceSets {
 repositories {
     jcenter()
 }
+
 dependencies {
     implementation 'org.teavm:teavm-platform:0.6.1'
     implementation 'org.teavm:teavm-classlib:0.6.1'
@@ -36,11 +37,11 @@ dependencies {
 teavm {
    
    compileScopes = null;
-   minifying = false;
+   minifying = true;
    maxTopLevelNames = 10000;
    properties = null;
    debugInformationGenerated = false;
-   sourceMapsGenerated = false;
+   sourceMapsGenerated = true;
    sourceFilesCopied = false;
    incremental = false;
    transformers = null;

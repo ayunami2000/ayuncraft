@@ -421,7 +421,7 @@ public class RenderGlobal implements IWorldAccess {
 	 * Gets the render info for use on the Debug screen
 	 */
 	public String getDebugInfoRenders() {
-		return "C: " + this.renderersBeingRendered + "/" + this.renderersLoaded + "F: " + this.renderersBeingClipped + ", O: " + this.renderersBeingOccluded + ", E: " + this.renderersSkippingRenderPass;
+		return "C: " + this.renderersBeingRendered + "/" + this.renderersLoaded + ", F: " + this.renderersBeingClipped + ", O: " + this.renderersBeingOccluded + ", E: " + this.renderersSkippingRenderPass;
 	}
 	
 	public String getDebugInfoShort() {
@@ -1334,6 +1334,8 @@ public class RenderGlobal implements IWorldAccess {
 			float var7 = MathHelper.sin((float) Minecraft.getSystemTime() / 100.0F) * 0.2F + 0.8F;
 			EaglerAdapter.glColor4f(var7, var7, var7, MathHelper.sin((float) Minecraft.getSystemTime() / 200.0F) * 0.2F + 0.5F);
 			tex_terrain.bindTexture();
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST);
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAG_FILTER, EaglerAdapter.GL_NEAREST);
 		}
 
 		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
@@ -1348,6 +1350,8 @@ public class RenderGlobal implements IWorldAccess {
 		if (!this.damagedBlocks.isEmpty()) {
 			EaglerAdapter.glBlendFunc(EaglerAdapter.GL_DST_COLOR, EaglerAdapter.GL_SRC_COLOR);
 			tex_terrain.bindTexture();
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MIN_FILTER, EaglerAdapter.GL_NEAREST);
+			EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_MAG_FILTER, EaglerAdapter.GL_NEAREST);
 			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
 			EaglerAdapter.glPushMatrix();
 			EaglerAdapter.glDisable(EaglerAdapter.GL_ALPHA_TEST);

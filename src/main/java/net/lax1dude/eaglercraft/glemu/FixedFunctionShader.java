@@ -3,13 +3,15 @@ package net.lax1dude.eaglercraft.glemu;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.glemu.vector.Matrix3f;
 import net.lax1dude.eaglercraft.glemu.vector.Matrix4f;
+import net.lax1dude.eaglercraft.glemu.vector.Vector2f;
+import net.lax1dude.eaglercraft.glemu.vector.Vector3f;
 import net.lax1dude.eaglercraft.glemu.vector.Vector4f;
 
 import static net.lax1dude.eaglercraft.glemu.EaglerAdapterGL30.*;
 
 public class FixedFunctionShader {
 	
-	private static final FixedFunctionShader[] instances = new FixedFunctionShader[1024]; //lol
+	private static final FixedFunctionShader[] instances = new FixedFunctionShader[2048]; //lol
 	
 	public static void refreshCoreGL() {
 		for(int i = 0; i < instances.length; ++i) {
@@ -31,6 +33,7 @@ public class FixedFunctionShader {
 	public static final int ALPHATEST = 128;
 	public static final int UNIT0 = 256;
 	public static final int UNIT1 = 512;
+	public static final int FIX_ANISOTROPIC = 1024;
 	
 	public static FixedFunctionShader instance(int i) {
 		FixedFunctionShader s = instances[i];
@@ -45,6 +48,7 @@ public class FixedFunctionShader {
 			boolean CC_alphatest = false;
 			boolean CC_unit0 = false;
 			boolean CC_unit1 = false;
+			boolean CC_anisotropic = false;
 			if((i & COLOR) == COLOR) {
 				CC_a_color = true;
 			}
@@ -75,7 +79,10 @@ public class FixedFunctionShader {
 			if((i & UNIT1) == UNIT1) {
 				CC_unit1 = true;
 			}
-			s = new FixedFunctionShader(i, CC_a_color, CC_a_normal, CC_a_texture0, CC_a_texture1, CC_TEX_GEN_STRQ, CC_lighting, CC_fog, CC_alphatest, CC_unit0, CC_unit1);
+			if((i & FIX_ANISOTROPIC) == FIX_ANISOTROPIC) {
+				CC_anisotropic = true;
+			}
+			s = new FixedFunctionShader(i, CC_a_color, CC_a_normal, CC_a_texture0, CC_a_texture1, CC_TEX_GEN_STRQ, CC_lighting, CC_fog, CC_alphatest, CC_unit0, CC_unit1, CC_anisotropic);
 			instances[i] = s;
 		}
 		return s;
@@ -93,6 +100,7 @@ public class FixedFunctionShader {
 	private final boolean enable_alphatest;
 	private final boolean enable_unit0;
 	private final boolean enable_unit1;
+	private final boolean enable_anisotropic_fix;
 	private final ProgramGL globject;
 
 	private UniformGL u_matrix_m = null;
@@ -127,6 +135,9 @@ public class FixedFunctionShader {
 	
 	private UniformGL u_light0Pos = null;
 	private UniformGL u_light1Pos = null;
+	//private UniformGL u_invertNormals = null;
+	
+	private UniformGL u_anisotropic_fix = null;
 
 	private final int a_position;
 	private final int a_texture0;
@@ -140,7 +151,7 @@ public class FixedFunctionShader {
 	public final BufferGL genericBuffer;
 	public boolean bufferIsInitialized = false;
 	
-	private FixedFunctionShader(int j, boolean CC_a_color, boolean CC_a_normal, boolean CC_a_texture0, boolean CC_a_texture1, boolean CC_TEX_GEN_STRQ, boolean CC_lighting, boolean CC_fog, boolean CC_alphatest, boolean CC_unit0, boolean CC_unit1) {
+	private FixedFunctionShader(int j, boolean CC_a_color, boolean CC_a_normal, boolean CC_a_texture0, boolean CC_a_texture1, boolean CC_TEX_GEN_STRQ, boolean CC_lighting, boolean CC_fog, boolean CC_alphatest, boolean CC_unit0, boolean CC_unit1, boolean CC_anisotropic_fix) {
 		enable_color = CC_a_color;
 		enable_normal = CC_a_normal;
 		enable_texture0 = CC_a_texture0;
@@ -151,6 +162,7 @@ public class FixedFunctionShader {
 		enable_alphatest = CC_alphatest;
 		enable_unit0 = CC_unit0;
 		enable_unit1 = CC_unit1;
+		enable_anisotropic_fix = CC_anisotropic_fix;
 		
 		if(shaderSource == null) {
 			shaderSource = fileContents("/glsl/core.glsl");
@@ -167,8 +179,7 @@ public class FixedFunctionShader {
 		if(enable_alphatest) source += "#define CC_alphatest\n";
 		if(enable_unit0) source += "#define CC_unit0\n";
 		if(enable_unit1) source += "#define CC_unit1\n";
-		//if(!EaglerAdapter._wisAnisotropicPatched()) source += "#define CC_patch_anisotropic\n";
-		source += "#define CC_patch_anisotropic\n";
+		if(enable_anisotropic_fix) source += "#define CC_patch_anisotropic\n";
 		source += shaderSource;
 		
 		ShaderGL v = _wglCreateShader(_wGL_VERTEX_SHADER);
@@ -215,6 +226,7 @@ public class FixedFunctionShader {
 		
 		if(enable_lighting) {
 			u_normalUniform = _wglGetUniformLocation(globject, "normalUniform");
+			//u_invertNormals = _wglGetUniformLocation(globject, "invertNormals");
 			u_light0Pos = _wglGetUniformLocation(globject, "light0Pos");
 			u_light1Pos = _wglGetUniformLocation(globject, "light1Pos");
 		}
@@ -242,6 +254,11 @@ public class FixedFunctionShader {
 			u_textureGenR_V = _wglGetUniformLocation(globject, "textureGenR_V");
 			u_textureGenQ_V = _wglGetUniformLocation(globject, "textureGenQ_V");
 			u_matrix_inverse_m = _wglGetUniformLocation(globject, "matrix_inverse_m");
+		}
+		
+		if(enable_anisotropic_fix) {
+			u_anisotropic_fix =  _wglGetUniformLocation(globject, "anisotropic_fix");
+			_wglUniform2f(u_anisotropic_fix, 1024.0f * 63.0f / 64.0f, 1024.0f * 63.0f / 64.0f);
 		}
 		
 		_wglUniform1i(_wglGetUniformLocation(globject, "tex0"), 0);
@@ -330,8 +347,32 @@ public class FixedFunctionShader {
 	private Matrix4f inverseModelMatrix = (Matrix4f) new Matrix4f().setZero();
 	private Vector4f light0Pos = new Vector4f();
 	private Vector4f light1Pos = new Vector4f();
+	private Vector2f anisotropicFix = new Vector2f(0.0f, 0.0f);
 	
 	private boolean bound = false;
+
+	private float invertNormalsX = 0.0f;
+	private float invertNormalsY = 0.0f;
+	private float invertNormalsZ = 0.0f;
+	
+	public void setInvertNormals(float x, float y, float z) {
+		/*
+		if(invertNormalsX != x || invertNormalsY != y || invertNormalsZ != z) {
+			invertNormalsX = x;
+			invertNormalsY = y;
+			invertNormalsZ = z;
+			_wglUniform3f(u_invertNormals, x, y, z);
+		}
+		*/
+	}
+	
+	public void setAnisotropicFix(float x, float y) {
+		if(anisotropicFix.x != x || anisotropicFix.y != y) {
+			anisotropicFix.x = x;
+			anisotropicFix.y = y;
+			_wglUniform2f(u_anisotropic_fix, x, y);
+		}
+	}
 
 	public void setModelMatrix(Matrix4f mat) {
 		if(!mat.equals(modelMatrix)) {
