@@ -67,7 +67,7 @@ public class ItemRenderer {
 			float var9 = var4.getMaxV();
 			float var10 = 0.0F;
 			float var11 = 0.3F;
-			RenderHelper.enableStandardItemLighting2();
+			EaglerAdapter.flipLightMatrix();
 			EaglerAdapter.glEnable(EaglerAdapter.GL_RESCALE_NORMAL);
 			EaglerAdapter.glTranslatef(-var10, -var11, 0.0F);
 			float var12 = 1.5F;
@@ -108,8 +108,9 @@ public class ItemRenderer {
 			}
 
 			EaglerAdapter.glDisable(EaglerAdapter.GL_RESCALE_NORMAL);
-			EaglerAdapter.revertLightMatrix();
 		}
+		
+		EaglerAdapter.flipLightMatrix();
 
 		EaglerAdapter.glPopMatrix();
 	}

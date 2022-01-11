@@ -11,7 +11,6 @@ precision highp float;
 
 uniform mat4 matrix_m;
 uniform mat4 matrix_p;
-uniform mat3 matrix_mn;
 uniform mat4 matrix_t;
 
 #ifdef CC_VERT
@@ -84,7 +83,6 @@ uniform vec2 texCoordV1;
 #ifdef CC_lighting
 uniform vec3 light0Pos;
 uniform vec3 light1Pos;
-uniform vec3 invertNormals;
 uniform vec3 normalUniform;
 #endif
 #ifdef CC_fog
@@ -214,7 +212,7 @@ void main(){
 #else
 	vec3 normal = normalUniform;
 #endif
-	normal = normalize(matrix_mn * normal);
+	normal = normalize(mat3(matrix_m) * normal);
 	float ins = max(dot(normal, -light0Pos), 0.0) + max(dot(normal, -light1Pos), 0.0);
 	color.rgb *= min((0.4 + ins * 0.6), 1.0);
 #endif

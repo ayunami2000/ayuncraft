@@ -13,6 +13,7 @@ import net.lax1dude.eaglercraft.glemu.vector.Matrix3f;
 import net.lax1dude.eaglercraft.glemu.vector.Matrix4f;
 import net.lax1dude.eaglercraft.glemu.vector.Vector3f;
 import net.lax1dude.eaglercraft.glemu.vector.Vector4f;
+import net.minecraft.src.RenderItem;
 
 public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 
@@ -217,8 +218,6 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	private static int matrixMode = GL_MODELVIEW;
 
 	static Matrix4f[] matModelV = new Matrix4f[32];
-	static Matrix4f matNormV = new Matrix4f();
-	static Matrix3f matNormV3 = new Matrix3f();
 	static int matModelPointer = 0;
 	
 	static Matrix4f[] matProjV = new Matrix4f[6];
@@ -494,13 +493,18 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		lightPos1vec.set(-0.2f, 1.0f, 0.7f, 0.0f); lightPos1vec.normalise();
 		Matrix4f.transform(matModelV[matModelPointer], lightPos0vec, lightPos0vec).normalise();
 		Matrix4f.transform(matModelV[matModelPointer], lightPos1vec, lightPos1vec).normalise();
-		
+		if(RenderItem.isRenderInProgress) {
+			System.out.println(""+lightPos0vec+"  "+lightPos1vec);
+			Thread.dumpStack();
+		}
 	}
 	public static final void flipLightMatrix() {
-		lightPos0vec0.set(lightPos0vec);
-		lightPos1vec0.set(lightPos1vec);
+		lightPos0vec.x = -lightPos0vec.x;
+		lightPos1vec.x = -lightPos1vec.x;
 		lightPos0vec.y = -lightPos0vec.y;
 		lightPos1vec.y = -lightPos1vec.y;
+		lightPos0vec.z = -lightPos0vec.z;
+		lightPos1vec.z = -lightPos1vec.z;
 	}
 	public static final void revertLightMatrix() {
 		lightPos0vec.set(lightPos0vec0);
@@ -979,13 +983,6 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		s.setTextureMatrix(matTexV[matTexPointer]);
 		if(enableColorMaterial && enableLighting) {
 			s.setNormal(normalX, normalY, normalZ);
-			Matrix4f matNormV_l = matNormV;
-			Matrix3f matNormV3_l = matNormV3;
-			matNormV_l.load(matModelV[matModelPointer]).invert().transpose();
-			matNormV3_l.m00 = matNormV_l.m00; matNormV3_l.m01 = matNormV_l.m01; matNormV3_l.m02 = matNormV_l.m02;
-			matNormV3_l.m10 = matNormV_l.m10; matNormV3_l.m11 = matNormV_l.m11; matNormV3_l.m12 = matNormV_l.m12;
-			matNormV3_l.m20 = matNormV_l.m20; matNormV3_l.m21 = matNormV_l.m21; matNormV3_l.m22 = matNormV_l.m22;
-			s.setModelNormalMatrix(matNormV3_l);
 			s.setLightPositions(lightPos0vec, lightPos1vec);
 		}
 		s.setTex0Coords(tex0X, tex0Y);

@@ -24,14 +24,17 @@ public class RenderItem extends Render {
 	
 	private static final TextureLocation terrain = new TextureLocation("/terrain.png");
 	private static final TextureLocation items = new TextureLocation("/gui/items.png");
+	
+	public static boolean isRenderInProgress = false;
 
 	/**
 	 * Renders the item
 	 */
 	public void doRenderItem(EntityItem par1EntityItem, double par2, double par4, double par6, float par8, float par9) {
+		isRenderInProgress = true;
 		this.random.setSeed(187L);
 		ItemStack var10 = par1EntityItem.getEntityItem();
-
+		
 		if (var10.getItem() != null) {
 			EaglerAdapter.glPushMatrix();
 			float var11 = MathHelper.sin(((float) par1EntityItem.age + par9) / 10.0F + par1EntityItem.hoverStart) * 0.1F + 0.1F;
@@ -56,6 +59,7 @@ public class RenderItem extends Render {
 
 			EaglerAdapter.glTranslatef((float) par2, (float) par4 + var11, (float) par6);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_RESCALE_NORMAL);
+			
 			int var17;
 			float var18;
 			float var19;
@@ -64,6 +68,7 @@ public class RenderItem extends Render {
 			if (var10.getItemSpriteNumber() == 0 && Block.blocksList[var10.itemID] != null && RenderBlocks.renderItemIn3d(Block.blocksList[var10.itemID].getRenderType())) {
 				Block var22 = Block.blocksList[var10.itemID];
 				EaglerAdapter.glRotatef(var12, 0.0F, 1.0F, 0.0F);
+				//RenderHelper.enableStandardItemLighting();
 
 				if (renderInFrame) {
 					EaglerAdapter.glScalef(1.25F, 1.25F, 1.25F);
@@ -158,6 +163,7 @@ public class RenderItem extends Render {
 			EaglerAdapter.glDisable(EaglerAdapter.GL_RESCALE_NORMAL);
 			EaglerAdapter.glPopMatrix();
 		}
+		isRenderInProgress = false;
 	}
 	
 	private static final TextureLocation glint = new TextureLocation("%blur%/misc/glint.png");

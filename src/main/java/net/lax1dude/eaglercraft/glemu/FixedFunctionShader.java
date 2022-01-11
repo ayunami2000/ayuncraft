@@ -1,10 +1,8 @@
 package net.lax1dude.eaglercraft.glemu;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
-import net.lax1dude.eaglercraft.glemu.vector.Matrix3f;
 import net.lax1dude.eaglercraft.glemu.vector.Matrix4f;
 import net.lax1dude.eaglercraft.glemu.vector.Vector2f;
-import net.lax1dude.eaglercraft.glemu.vector.Vector3f;
 import net.lax1dude.eaglercraft.glemu.vector.Vector4f;
 
 import static net.lax1dude.eaglercraft.glemu.EaglerAdapterGL30.*;
@@ -105,7 +103,6 @@ public class FixedFunctionShader {
 
 	private UniformGL u_matrix_m = null;
 	private UniformGL u_matrix_p = null;
-	private UniformGL u_matrix_mn = null;
 	private UniformGL u_matrix_t = null;
 	
 	private UniformGL u_fogColor = null;
@@ -218,7 +215,6 @@ public class FixedFunctionShader {
 		_wglUseProgram(globject);
 
 		u_matrix_m = _wglGetUniformLocation(globject, "matrix_m");
-		u_matrix_mn = _wglGetUniformLocation(globject, "matrix_mn");
 		u_matrix_p = _wglGetUniformLocation(globject, "matrix_p");
 		u_matrix_t = _wglGetUniformLocation(globject, "matrix_t");
 
@@ -338,33 +334,14 @@ public class FixedFunctionShader {
 	private float[] modelBuffer = new float[16];
 	private float[] projectionBuffer = new float[16];
 	private float[] textureBuffer = new float[16];
-	private float[] normalModelBuffer = new float[9];
 
 	private Matrix4f modelMatrix = (Matrix4f) new Matrix4f().setZero();
 	private Matrix4f projectionMatrix = (Matrix4f) new Matrix4f().setZero();
 	private Matrix4f textureMatrix = (Matrix4f) new Matrix4f().setZero();
-	private Matrix3f normalModelMatrix = (Matrix3f) new Matrix3f().setZero();
 	private Matrix4f inverseModelMatrix = (Matrix4f) new Matrix4f().setZero();
 	private Vector4f light0Pos = new Vector4f();
 	private Vector4f light1Pos = new Vector4f();
 	private Vector2f anisotropicFix = new Vector2f(0.0f, 0.0f);
-	
-	private boolean bound = false;
-
-	private float invertNormalsX = 0.0f;
-	private float invertNormalsY = 0.0f;
-	private float invertNormalsZ = 0.0f;
-	
-	public void setInvertNormals(float x, float y, float z) {
-		/*
-		if(invertNormalsX != x || invertNormalsY != y || invertNormalsZ != z) {
-			invertNormalsX = x;
-			invertNormalsY = y;
-			invertNormalsZ = z;
-			_wglUniform3f(u_invertNormals, x, y, z);
-		}
-		*/
-	}
 	
 	public void setAnisotropicFix(float x, float y) {
 		if(anisotropicFix.x != x || anisotropicFix.y != y) {
@@ -383,12 +360,6 @@ public class FixedFunctionShader {
 				inverseModelMatrix.store(modelBuffer);
 				_wglUniformMat4fv(u_matrix_inverse_m, modelBuffer);
 			}
-		}
-	}
-	public void setModelNormalMatrix(Matrix3f mat) {
-		if(!mat.equals(normalModelMatrix)) {
-			normalModelMatrix.load(mat).store(normalModelBuffer);
-			_wglUniformMat3fv(u_matrix_mn, normalModelBuffer);
 		}
 	}
 	public void setProjectionMatrix(Matrix4f mat) {
