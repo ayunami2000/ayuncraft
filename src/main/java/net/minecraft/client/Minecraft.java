@@ -526,14 +526,15 @@ public class Minecraft implements Runnable {
 	 * string.
 	 */
 	public void checkGLError(String par1Str) {
-		//int var2 = EaglerAdapter.glGetError();
+		int var2;
+		
 
-		//if (var2 != 0) {
-		//	String var3 = EaglerAdapter.gluErrorString(var2);
-		//	System.err.println("########## GL ERROR ##########");
-		//	System.err.println("@ " + par1Str);
-		//	System.err.println(var2 + ": " + var3);
-		//}
+		while ((var2 = EaglerAdapter.glGetError()) != 0) {
+			String var3 = EaglerAdapter.gluErrorString(var2);
+			System.err.println("########## GL ERROR ##########");
+			System.err.println("@ " + par1Str);
+			System.err.println(var2 + ": " + var3);
+		}
 	}
 
 	/**
