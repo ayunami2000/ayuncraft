@@ -186,7 +186,6 @@ public class EaglerAdapterImpl2 {
 			throw new RuntimeException("WebGL 2.0 is not supported in your browser ("+getString("window.navigator.userAgent")+")");
 		}
 		setContextVar(webgl);
-		audioctx = AudioContext.create();
 		
 		//String agent = getString("window.navigator.userAgent").toLowerCase();
 		//if(agent.contains("windows")) isAnisotropicPatched = false;
@@ -328,6 +327,8 @@ public class EaglerAdapterImpl2 {
 				}
 			}
 		}
+		
+		audioctx = AudioContext.create();
 		
 		mouseEvents.clear();
 		keyEvents.clear();
