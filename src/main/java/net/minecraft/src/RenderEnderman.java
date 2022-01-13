@@ -56,7 +56,9 @@ public class RenderEnderman extends RenderLiving {
 			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			terrain.bindTexture();
+			EaglerAdapter.flipLightMatrix();
 			this.renderBlocks.renderBlockAsItem(Block.blocksList[par1EntityEnderman.getCarried()], par1EntityEnderman.getCarryingData(), 1.0F);
+			EaglerAdapter.flipLightMatrix();
 			EaglerAdapter.glPopMatrix();
 			EaglerAdapter.glDisable(EaglerAdapter.GL_RESCALE_NORMAL);
 		}

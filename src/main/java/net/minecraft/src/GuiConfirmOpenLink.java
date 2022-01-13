@@ -23,9 +23,9 @@ public class GuiConfirmOpenLink extends GuiYesNo {
 	 * Adds the buttons (and other controls) to the screen in question.
 	 */
 	public void initGui() {
-		this.buttonList.add(new GuiButton(0, this.width / 3 - 83 + 0, this.height / 6 + 96, 100, 20, this.buttonText1));
-		this.buttonList.add(new GuiButton(2, this.width / 3 - 83 + 105, this.height / 6 + 96, 100, 20, this.copyLinkButtonText));
-		this.buttonList.add(new GuiButton(1, this.width / 3 - 83 + 210, this.height / 6 + 96, 100, 20, this.buttonText2));
+		this.buttonList.add(new GuiButton(0, (this.width - 105) / 2 - 105, this.height / 6 + 96, 100, 20, this.buttonText1));
+		this.buttonList.add(new GuiButton(2, (this.width - 105) / 2, this.height / 6 + 96, 100, 20, this.copyLinkButtonText));
+		this.buttonList.add(new GuiButton(1, (this.width - 105) / 2 + 105, this.height / 6 + 96, 100, 20, this.buttonText2));
 	}
 
 	/**

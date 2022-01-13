@@ -29,8 +29,7 @@ public class ChatClickData {
 	/**
 	 * computes the URI from the clicked chat data object
 	 */
-	/*
-	public URI getURI() {
+	public String getURI() {
 		String var1 = this.getClickedUrl();
 
 		if (var1 == null) {
@@ -39,24 +38,18 @@ public class ChatClickData {
 			Matcher var2 = pattern.matcher(var1);
 
 			if (var2.matches()) {
-				try {
-					String var3 = var2.group(0);
+				String var3 = var2.group(0);
 
-					if (var2.group(1) == null) {
-						var3 = "http://" + var3;
-					}
-
-					return new URI(var3);
-				} catch (URISyntaxException var4) {
-					System.err.println("Couldn\'t create URI from chat");
-					var4.printStackTrace();
+				if (var2.group(1) == null) {
+					var3 = "http://" + var3;
 				}
+
+				return var3;
 			}
 
 			return null;
 		}
 	}
-	*/
 
 	private String findClickedUrl() {
 		int var1 = this.field_78310_f.lastIndexOf(" ", this.field_78310_f.length()) + 1;

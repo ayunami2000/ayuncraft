@@ -139,14 +139,14 @@ public class GuiChat extends GuiScreen {
 			ChatClickData var4 = this.mc.ingameGUI.getChatGUI().func_73766_a(EaglerAdapter.mouseGetX(), EaglerAdapter.mouseGetY());
 
 			if (var4 != null) {
-				String var5 = var4.getClickedUrl();
+				String var5 = var4.getURI();
 
 				if (var5 != null) {
 					if (this.mc.gameSettings.chatLinksPrompt) {
 						this.clickedURI = var5;
-						this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, var4.getClickedUrl(), 0, false));
+						this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, var5, 0, false));
 					} else {
-						 EaglerAdapter.openLink(var4.getClickedUrl());
+						 EaglerAdapter.openLink(var5);
 					}
 
 					return;
