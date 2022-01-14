@@ -20,6 +20,10 @@ public class MouseHelper {
 	 * Grabs the mouse cursor it doesn't move and isn't seen.
 	 */
 	public void grabMouseCursor() {
+		int var1 = Minecraft.getMinecraft().displayWidth;
+		int var2 = Minecraft.getMinecraft().displayHeight;
+		
+		EaglerAdapter.mouseSetCursorPosition(var1 / 2, var2 / 2);
 		EaglerAdapter.mouseSetGrabbed(true);
 		this.deltaX = 0;
 		this.deltaY = 0;

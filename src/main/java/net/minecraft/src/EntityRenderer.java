@@ -919,6 +919,8 @@ public class EntityRenderer {
 			}
 
 			EaglerAdapter.glViewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
+			EffectPipelineFXAA.displayWidth = this.mc.displayWidth;
+			EffectPipelineFXAA.displayHeight = this.mc.displayHeight;
 			EffectPipelineFXAA.beginPipelineRender();
 			this.mc.mcProfiler.endStartSection("clear");
 			EaglerAdapter.glClear(EaglerAdapter.GL_COLOR_BUFFER_BIT | EaglerAdapter.GL_DEPTH_BUFFER_BIT);

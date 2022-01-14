@@ -26,8 +26,10 @@ public class EffectPipelineFXAA {
 	private static BufferArrayGL renderQuadArray = null;
 	private static BufferGL renderQuadBuffer;
 
-	private static int width = -1;
-	private static int height = -1;
+	public static int displayWidth = -1;
+	public static int displayHeight = -1;
+	public static int width = -1;
+	public static int height = -1;
 
 	private static int[] originalViewport = new int[4];
 
@@ -142,6 +144,9 @@ public class EffectPipelineFXAA {
 	}
 
 	public static void beginPipelineRender() {
+		if(width == -1 || displayWidth == -1 || height == -1 || displayHeight == -1) {
+			return;
+		}
 		int mode = Minecraft.getMinecraft().gameSettings.antialiasMode;
 		if(mode == 0) newState = 0;
 		if(mode == 1) newState = Minecraft.getMinecraft().gameSettings.fancyGraphics ? 1 : 0;
@@ -153,14 +158,12 @@ public class EffectPipelineFXAA {
 			if(state == 0) {
 				destroy();
 			}
-			width = -1;
-			height = -1;
 		}
 		if(state == 0) return;
-		_wglGetParameter(_wGL_VIEWPORT, 4, originalViewport);
-		if (width != originalViewport[2] || height != originalViewport[3]) {
-			width = originalViewport[2];
-			height = originalViewport[3];
+		//_wglGetParameter(_wGL_VIEWPORT, 4, originalViewport);
+		if (displayWidth != width || displayHeight != height) {
+			width = displayWidth;
+			height = displayHeight;
 			if(state == 1) {
 				if(isUsingFXAA == false || fxaaProgram == null) {
 					initFXAA();
@@ -190,6 +193,9 @@ public class EffectPipelineFXAA {
 	}
 
 	public static void endPipelineRender() {
+		if(width == -1 || displayWidth == -1 || height == -1 || displayHeight == -1) {
+			return;
+		}
 		if(state == 0) return;
 		_wglBindFramebuffer(_wGL_FRAMEBUFFER, null);
 		_wglClear(_wGL_COLOR_BUFFER_BIT | _wGL_DEPTH_BUFFER_BIT);

@@ -43,6 +43,7 @@ public class GuiChat extends GuiScreen {
 	 */
 	public void initGui() {
 		EaglerAdapter.enableRepeatEvents(true);
+		this.buttonList.add(new GuiButton(69, this.width - 100, 3, 97, 20, "Exit Chat"));
 		this.sentHistoryCursor = this.mc.ingameGUI.getChatGUI().getSentMessages().size();
 		this.inputField = new GuiTextField(this.fontRenderer, 4, this.height - 12, this.width - 4, 12);
 		this.inputField.setMaxStringLength(100);
@@ -50,6 +51,12 @@ public class GuiChat extends GuiScreen {
 		this.inputField.setFocused(true);
 		this.inputField.setText(this.defaultInputFieldText);
 		this.inputField.setCanLoseFocus(false);
+	}
+	
+	protected void actionPerformed(GuiButton par1GuiButton) {
+		if (par1GuiButton.id == 69) {
+			this.mc.displayGuiScreen(null);
+		}
 	}
 
 	/**
