@@ -92,9 +92,10 @@ public class EffectPipelineFXAA {
 			
 			fxaaScreenSize = _wglGetUniformLocation(fxaaProgram, "screenSize");
 		}
-		isUsingFXAA = true;
 		
 		destroy();
+		
+		isUsingFXAA = true;
 		framebuffer = _wglCreateFramebuffer();
 		fxaaSourceTexture = _wglGenTextures();
 		
@@ -116,9 +117,8 @@ public class EffectPipelineFXAA {
 	}
 	
 	private static void initMSAA() {
-		msaaInit = true;
-		isUsingFXAA = false;
 		destroy();
+		msaaInit = true;
 		framebuffer = _wglCreateFramebuffer();
 		framebuffer_color = _wglCreateRenderBuffer();
 		framebuffer_depth = _wglCreateRenderBuffer();
@@ -129,10 +129,11 @@ public class EffectPipelineFXAA {
 		_wglRenderbufferStorageMultisample(state == 2 ? 4 : 8, _wGL_DEPTH_COMPONENT32F, width, height);
 		_wglFramebufferRenderbuffer(_wGL_COLOR_ATTACHMENT0, framebuffer_color);
 		_wglFramebufferRenderbuffer(_wGL_DEPTH_ATTACHMENT, framebuffer_depth);
-		_wglBindFramebuffer(_wGL_FRAMEBUFFER, null);
 	}
 	
 	public static void destroy() {
+		isUsingFXAA = false;
+		msaaInit = false;
 		if(framebuffer != null) _wglDeleteFramebuffer(framebuffer);
 		if(framebuffer_color != null) _wglDeleteRenderbuffer(framebuffer_color);
 		if(framebuffer_depth != null) _wglDeleteRenderbuffer(framebuffer_depth);
@@ -144,7 +145,7 @@ public class EffectPipelineFXAA {
 	}
 
 	public static void beginPipelineRender() {
-		if(width == -1 || displayWidth == -1 || height == -1 || displayHeight == -1) {
+		if(displayWidth <= 0 || displayHeight <= 0) {
 			return;
 		}
 		int mode = Minecraft.getMinecraft().gameSettings.antialiasMode;
@@ -153,19 +154,25 @@ public class EffectPipelineFXAA {
 		if(mode == 2) newState = 1;
 		if(mode == 3) newState = 2;
 		if(mode == 4) newState = 3;
-		if(state != newState) {
+		if(newState == 0) {
 			state = newState;
-			if(state == 0) {
-				destroy();
-			}
+			destroy();
+			return;
 		}
-		if(state == 0) return;
+		if(newState != state && !(newState == 3 && state == 2)) {
+			destroy();
+		}
 		//_wglGetParameter(_wGL_VIEWPORT, 4, originalViewport);
-		if (displayWidth != width || displayHeight != height) {
+		if (displayWidth != width || displayHeight != height || state != newState) {
+			state = newState;
 			width = displayWidth;
 			height = displayHeight;
+			originalViewport[0] = 0;
+			originalViewport[1] = 0;
+			originalViewport[2] = width;
+			originalViewport[3] = height;
 			if(state == 1) {
-				if(isUsingFXAA == false || fxaaProgram == null) {
+				if(isUsingFXAA == false) {
 					initFXAA();
 				}else {
 					_wglBindTexture(_wGL_TEXTURE_2D, fxaaSourceTexture);
@@ -174,7 +181,7 @@ public class EffectPipelineFXAA {
 					_wglRenderbufferStorage(_wGL_DEPTH_COMPONENT32F, width, height);
 				}
 			}else if(state == 2 || state == 3) {
-				if(isUsingFXAA == true || msaaInit == false) {
+				if(msaaInit == false) {
 					initMSAA();
 				}else {
 					_wglBindRenderbuffer(framebuffer_color);
@@ -193,10 +200,9 @@ public class EffectPipelineFXAA {
 	}
 
 	public static void endPipelineRender() {
-		if(width == -1 || displayWidth == -1 || height == -1 || displayHeight == -1) {
+		if(displayWidth <= 0 || displayHeight <= 0 || state == 0) {
 			return;
 		}
-		if(state == 0) return;
 		_wglBindFramebuffer(_wGL_FRAMEBUFFER, null);
 		_wglClear(_wGL_COLOR_BUFFER_BIT | _wGL_DEPTH_BUFFER_BIT);
 		if(state == 1) {

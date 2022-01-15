@@ -226,7 +226,6 @@ public class SoundManager {
 				soundevents.add(new EntitySoundEvent(par2Entity, id = EaglerAdapter.beginPlayback(path, 0f, 0f, 0f, v, par4)));
 				EaglerAdapter.moveSound(id, (float)par2Entity.posX, (float)par2Entity.posY, (float)par2Entity.posZ, (float)par2Entity.motionX, (float)par2Entity.motionY, (float)par2Entity.motionZ);
 			}else {
-				if(par1Str.contains("mob.villager")) Minecraft.getMinecraft().displayEaglercraftText("the villager sound effects got lost");
 				System.err.println("unregistered sound effect: "+par1Str);
 			}
 		}
@@ -250,10 +249,6 @@ public class SoundManager {
 				}
 				EaglerAdapter.beginPlayback(path, par2, par3, par4, v, par6);
 			}else {
-				if(par1Str.contains("mob.villager")) {
-					Minecraft.getMinecraft().displayEaglercraftText("the villager sound effects got lost");
-					return;
-				}
 				System.err.println("unregistered sound effect: "+par1Str);
 			}
 		}
