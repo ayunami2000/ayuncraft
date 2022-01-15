@@ -906,6 +906,10 @@ public class EntityRenderer {
 		double var9 = var4.lastTickPosY + (var4.posY - var4.lastTickPosY) * (double) par1;
 		double var11 = var4.lastTickPosZ + (var4.posZ - var4.lastTickPosZ) * (double) par1;
 		this.mc.mcProfiler.endStartSection("center");
+		
+		EffectPipelineFXAA.displayWidth = this.mc.displayWidth;
+		EffectPipelineFXAA.displayHeight = this.mc.displayHeight;
+		EffectPipelineFXAA.beginPipelineRender();
 
 		for (int var13 = 0; var13 < 2; ++var13) {
 			if (this.mc.gameSettings.anaglyph) {
@@ -919,9 +923,6 @@ public class EntityRenderer {
 			}
 
 			EaglerAdapter.glViewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
-			EffectPipelineFXAA.displayWidth = this.mc.displayWidth;
-			EffectPipelineFXAA.displayHeight = this.mc.displayHeight;
-			EffectPipelineFXAA.beginPipelineRender();
 			this.mc.mcProfiler.endStartSection("clear");
 			EaglerAdapter.glClear(EaglerAdapter.GL_COLOR_BUFFER_BIT | EaglerAdapter.GL_DEPTH_BUFFER_BIT);
 			this.updateFogColor(par1);
