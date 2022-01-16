@@ -1,12 +1,14 @@
 # Eaglercraft
 
-![eaglercraft](https://media.discordapp.net/attachments/378764518081429506/929692379508777000/unknown.png)
+![eaglercraft](https://cdn.discordapp.com/attachments/378764518081429506/932053915061587978/thumbnail2.png)
 
 ### Official Demo URL: [https://g.eags.us/eaglercraft/](https://g.eags.us/eaglercraft/)
 
 ### Download Locally: [stable-download/Offline_Download_Version.html](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/Offline_Download_Version.html)
 
 (right click the link and press 'Save link as...' to download the file)
+
+**Here is a 50 minute source walkthrough: [https://youtu.be/QvHvSX4Th84](https://youtu.be/QvHvSX4Th84)**
 
 Note that the server may be down - if you want a gameplay demo download the files from here [https://github.com/LAX1DUDE/eaglercraft/tree/main/stable-download](https://github.com/LAX1DUDE/eaglercraft/tree/main/stable-download) and host the page locally yourself
 
@@ -18,7 +20,7 @@ Eaglercraft is real Minecraft 1.5.2 that you can play in any regular web browser
 
 ## How does it work?
 
-Eaglercraft uses the decompiled source of the official version of Minecraft 1.5.2 direct from Mojang decompiled by [MCP](http://www.modcoderpack.com/) and compiled to Javascript using [TeaVM](https://teavm.org/). Therefore it can join any Minecraft 1.5.2 server, as it is really running (a modified version of) Minecraft 1.5.2 in the browser. However, due to CORS restrictions it must use a modified version of Bungeecord which proxies the browser's Websocket connection to the pure TCP connection used by Minecraft. For graphics, a custom compatibility layer created by me allows the fixed function OpenGL 1.3 based rendering engine mojang uses to operate through an HTML5 WebGL canvas with minimal changes to the source.
+Eaglercraft uses the decompiled source code of the official build of Minecraft 1.5.2 direct from Mojang. It is decompiled by [MCP](http://www.modcoderpack.com/) and then recompiled to Javascript using [TeaVM](https://teavm.org/). Therefore it can join real Minecraft 1.5.2 servers, as it is really running Minecraft 1.5.2 in the browser. However, due to security limitations in modern browsers, it must use javascript Websocket objects for multiplayer instead of direct TCP connections to it's servers. A modified version of Bungeecord is included with Eaglercraft which accepts browser HTTP Websocket connections from Eaglercraft clients and unwraps the streams internally to regular TCP so they can be forwarded to regular Bukkit servers with no plugins. For graphics, a custom GPU compatibility layer allows Mojang's fixed function OpenGL 1.3 based rendering engine to render directly to an HTML5 WebGL 2.0 canvas on the page with minimal changes to the source, preserving the game's graphics to look exactly the same as desktop vanilla Minecraft 1.5.2.
 
 ## Installing
 
