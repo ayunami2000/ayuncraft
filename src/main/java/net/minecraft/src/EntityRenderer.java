@@ -1171,9 +1171,9 @@ public class EntityRenderer {
 				this.rainSoundCounter = 0;
 
 				if (var10 > var2.posY + 1.0D && var3.getPrecipitationHeight(MathHelper.floor_double(var2.posX), MathHelper.floor_double(var2.posZ)) > MathHelper.floor_double(var2.posY)) {
-					this.mc.theWorld.playSound(var8, var10, var12, "ambient.weather.rain", 0.03F, 0.5F, false);
+					this.mc.theWorld.playSound(var8, var10, var12, "ambient.weather.rain", 0.006F, 0.5F, false);
 				} else {
-					this.mc.theWorld.playSound(var8, var10, var12, "ambient.weather.rain", 0.06F, 1.0F, false);
+					this.mc.theWorld.playSound(var8, var10, var12, "ambient.weather.rain", 0.012F, 1.0F, false);
 				}
 			}
 		}
