@@ -149,7 +149,7 @@ public class GuiScreen extends Gui {
 		int var1 = EaglerAdapter.mouseGetEventX() * this.width / this.mc.displayWidth;
 		int var2 = this.height - EaglerAdapter.mouseGetEventY() * this.height / this.mc.displayHeight - 1;
 
-		TMI.instance.controller.handleScrollWheel(var1, var2);
+		if(this instanceof GuiContainer)TMI.instance.controller.handleScrollWheel(var1, var2);
 
 		if (EaglerAdapter.mouseGetEventButtonState()) {
 			if (this.mc.gameSettings.touchscreen && this.field_92018_d++ > 0) {

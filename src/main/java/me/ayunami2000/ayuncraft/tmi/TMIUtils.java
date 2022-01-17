@@ -1,11 +1,10 @@
 package me.ayunami2000.ayuncraft.tmi;
 
-import java.awt.Color;
+import me.ayunami2000.ayuncraft.Color;
 import java.io.*;
 
 import me.ayunami2000.ayuncraft.File;
 
-import java.lang.reflect.Field;
 import java.text.FieldPosition;
 import java.text.MessageFormat;
 import java.text.Normalizer;
@@ -276,6 +275,7 @@ public class TMIUtils
         var1.clear();
         var2.clear();
 
+        /*
         try
         {
             Class var4 = Class.forName("com.eloraam.redpower.RedPowerBase");
@@ -295,6 +295,7 @@ public class TMIUtils
         {
             System.out.println(var21);
         }
+        */
 
         ArrayList var26 = new ArrayList();
         Item[] var27 = Item.itemsList;
@@ -657,6 +658,8 @@ public class TMIUtils
 
     public static String deaccent(String var0)
     {
+        return var0;
+        /*
         try
         {
             Class.forName("java.text.Normalizer");
@@ -669,6 +672,7 @@ public class TMIUtils
         String var1 = Normalizer.normalize(var0, Form.NFD);
         Pattern var2 = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return var2.matcher(var1).replaceAll("");
+        */
     }
 
     public static void filterItems(String var0, TMIConfig var1)
@@ -1113,6 +1117,8 @@ public class TMIUtils
 
     public static void suppressAchievementNotice()
     {
+        //dont
+        /*
         try
         {
             Field[] var0 = Minecraft.getMinecraft().guiAchievement.getClass().getDeclaredFields();
@@ -1133,6 +1139,7 @@ public class TMIUtils
         {
             System.out.println(var4);
         }
+        */
     }
 
     public static int maxStackSize(int var0)
