@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import me.ayunami2000.ayuncraft.tmi.TMI;
+import me.ayunami2000.ayuncraft.tmi.TMIConfig;
+import me.ayunami2000.ayuncraft.tmi.TMIUtils;
 import net.minecraft.client.Minecraft;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.TextureLocation;
@@ -65,6 +69,7 @@ public abstract class GuiContainer extends GuiScreen {
 	public GuiContainer(Container par1Container) {
 		this.inventorySlots = par1Container;
 		this.field_94068_E = true;
+		TMI.instance.controller.onCreate(this);
 		if(itemRenderer == null) itemRenderer = new RenderItem();
 	}
 
@@ -82,6 +87,18 @@ public abstract class GuiContainer extends GuiScreen {
 	 * Draws the screen and all the components in it.
 	 */
 	public void drawScreen(int par1, int par2, float par3) {
+		if (this instanceof GuiContainerCreative)
+		{
+			try
+			{
+				GuiTextField var4 = ((GuiContainerCreative)this).searchField;
+				var4.xPos = this.guiLeft + 82;
+			}
+			catch (Exception var15)
+			{
+				System.out.println(var15);
+			}
+		}
 		this.drawDefaultBackground();
 		int var4 = this.guiLeft;
 		int var5 = this.guiTop;
@@ -118,6 +135,8 @@ public abstract class GuiContainer extends GuiScreen {
 				EaglerAdapter.glEnable(EaglerAdapter.GL_DEPTH_TEST);
 			}
 		}
+
+		TMI.instance.controller.onEnterFrame(par1, par2, this.xSize, this.ySize);
 
 		this.drawGuiContainerForegroundLayer(par1, par2);
 		InventoryPlayer var14 = this.mc.thePlayer.inventory;
@@ -182,7 +201,8 @@ public abstract class GuiContainer extends GuiScreen {
 	}
 
 	protected void drawItemStackTooltip(ItemStack par1ItemStack, int par2, int par3) {
-		List var4 = par1ItemStack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
+		//par1ItemStack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips)
+		List var4 = TMIUtils.itemDisplayNameMultiline(par1ItemStack, TMIConfig.getInstance().isEnabled(), this.mc.gameSettings.advancedItemTooltips);
 
 		for (int var5 = 0; var5 < var4.size(); ++var5) {
 			if (var5 == 0) {
@@ -401,77 +421,83 @@ public abstract class GuiContainer extends GuiScreen {
 	 */
 	protected void mouseClicked(int par1, int par2, int par3) {
 		super.mouseClicked(par1, par2, par3);
-		boolean var4 = par3 == this.mc.gameSettings.keyBindPickBlock.keyCode + 100;
-		Slot var5 = this.getSlotAtPosition(par1, par2);
-		long var6 = Minecraft.getSystemTime();
-		this.field_94074_J = this.field_94072_H == var5 && var6 - this.field_94070_G < 250L && this.field_94073_I == par3;
-		this.field_94068_E = false;
 
-		if (par3 == 0 || par3 == 1 || var4) {
-			int var8 = this.guiLeft;
-			int var9 = this.guiTop;
-			boolean var10 = par1 < var8 || par2 < var9 || par1 >= var8 + this.xSize || par2 >= var9 + this.ySize;
-			int var11 = -1;
+		Slot fard1 = this.getSlotAtPosition(par1, par2);
+		boolean fard2 = par1 >= this.guiLeft && par2 >= this.guiTop && par1 <= this.guiLeft + this.xSize && par2 <= this.guiTop + this.ySize;
 
-			if (var5 != null) {
-				var11 = var5.slotNumber;
-			}
+		if (TMI.instance.controller.onMouseEvent(par1, par2, par3, fard2, fard1, this.inventorySlots)) {
+			boolean var4 = par3 == this.mc.gameSettings.keyBindPickBlock.keyCode + 100;
+			Slot var5 = this.getSlotAtPosition(par1, par2);
+			long var6 = Minecraft.getSystemTime();
+			this.field_94074_J = this.field_94072_H == var5 && var6 - this.field_94070_G < 250L && this.field_94073_I == par3;
+			this.field_94068_E = false;
 
-			if (var10) {
-				var11 = -999;
-			}
+			if (par3 == 0 || par3 == 1 || var4) {
+				int var8 = this.guiLeft;
+				int var9 = this.guiTop;
+				boolean var10 = par1 < var8 || par2 < var9 || par1 >= var8 + this.xSize || par2 >= var9 + this.ySize;
+				int var11 = -1;
 
-			if (this.mc.gameSettings.touchscreen && var10 && this.mc.thePlayer.inventory.getItemStack() == null) {
-				this.mc.displayGuiScreen((GuiScreen) null);
-				return;
-			}
+				if (var5 != null) {
+					var11 = var5.slotNumber;
+				}
 
-			if (var11 != -1) {
-				if (this.mc.gameSettings.touchscreen) {
-					if (var5 != null && var5.getHasStack()) {
-						this.clickedSlot = var5;
-						this.draggedStack = null;
-						this.isRightMouseClick = par3 == 1;
-					} else {
-						this.clickedSlot = null;
-					}
-				} else if (!this.field_94076_q) {
-					if (this.mc.thePlayer.inventory.getItemStack() == null) {
-						if (par3 == this.mc.gameSettings.keyBindPickBlock.keyCode + 100) {
-							this.handleMouseClick(var5, var11, par3, 3);
+				if (var10) {
+					var11 = -999;
+				}
+
+				if (this.mc.gameSettings.touchscreen && var10 && this.mc.thePlayer.inventory.getItemStack() == null) {
+					this.mc.displayGuiScreen((GuiScreen) null);
+					return;
+				}
+
+				if (var11 != -1) {
+					if (this.mc.gameSettings.touchscreen) {
+						if (var5 != null && var5.getHasStack()) {
+							this.clickedSlot = var5;
+							this.draggedStack = null;
+							this.isRightMouseClick = par3 == 1;
 						} else {
-							boolean var12 = var11 != -999 && (EaglerAdapter.isKeyDown(42) || EaglerAdapter.isKeyDown(54));
-							byte var13 = 0;
+							this.clickedSlot = null;
+						}
+					} else if (!this.field_94076_q) {
+						if (this.mc.thePlayer.inventory.getItemStack() == null) {
+							if (par3 == this.mc.gameSettings.keyBindPickBlock.keyCode + 100) {
+								this.handleMouseClick(var5, var11, par3, 3);
+							} else {
+								boolean var12 = var11 != -999 && (EaglerAdapter.isKeyDown(42) || EaglerAdapter.isKeyDown(54));
+								byte var13 = 0;
 
-							if (var12) {
-								this.field_94075_K = var5 != null && var5.getHasStack() ? var5.getStack() : null;
-								var13 = 1;
-							} else if (var11 == -999) {
-								var13 = 4;
+								if (var12) {
+									this.field_94075_K = var5 != null && var5.getHasStack() ? var5.getStack() : null;
+									var13 = 1;
+								} else if (var11 == -999) {
+									var13 = 4;
+								}
+
+								this.handleMouseClick(var5, var11, par3, var13);
 							}
 
-							this.handleMouseClick(var5, var11, par3, var13);
-						}
+							this.field_94068_E = true;
+						} else {
+							this.field_94076_q = true;
+							this.field_94067_D = par3;
+							this.field_94077_p.clear();
 
-						this.field_94068_E = true;
-					} else {
-						this.field_94076_q = true;
-						this.field_94067_D = par3;
-						this.field_94077_p.clear();
-
-						if (par3 == 0) {
-							this.field_94071_C = 0;
-						} else if (par3 == 1) {
-							this.field_94071_C = 1;
+							if (par3 == 0) {
+								this.field_94071_C = 0;
+							} else if (par3 == 1) {
+								this.field_94071_C = 1;
+							}
 						}
 					}
 				}
 			}
-		}
 
-		this.field_94072_H = var5;
-		this.field_94070_G = var6;
-		this.field_94073_I = par3;
+			this.field_94072_H = var5;
+			this.field_94070_G = var6;
+			this.field_94073_I = par3;
+		}
 	}
 
 	protected void func_85041_a(int par1, int par2, int par3, long par4) {
@@ -661,17 +687,19 @@ public abstract class GuiContainer extends GuiScreen {
 	 * KeyListener.keyTyped(KeyEvent e).
 	 */
 	protected void keyTyped(char par1, int par2) {
-		if (par2 == 1 || par2 == this.mc.gameSettings.keyBindInventory.keyCode) {
-			this.mc.thePlayer.closeScreen();
-		}
+		if(!TMI.instance.controller.onKeypress(par1, par2)) {
+			if (par2 == 1 || par2 == this.mc.gameSettings.keyBindInventory.keyCode) {
+				this.mc.thePlayer.closeScreen();
+			}
 
-		this.checkHotbarKeys(par2);
+			this.checkHotbarKeys(par2);
 
-		if (this.theSlot != null && this.theSlot.getHasStack()) {
-			if (par2 == this.mc.gameSettings.keyBindPickBlock.keyCode) {
-				this.handleMouseClick(this.theSlot, this.theSlot.slotNumber, 0, 3);
-			} else if (par2 == this.mc.gameSettings.keyBindDrop.keyCode) {
-				this.handleMouseClick(this.theSlot, this.theSlot.slotNumber, isCtrlKeyDown() ? 1 : 0, 4);
+			if (this.theSlot != null && this.theSlot.getHasStack()) {
+				if (par2 == this.mc.gameSettings.keyBindPickBlock.keyCode) {
+					this.handleMouseClick(this.theSlot, this.theSlot.slotNumber, 0, 3);
+				} else if (par2 == this.mc.gameSettings.keyBindDrop.keyCode) {
+					this.handleMouseClick(this.theSlot, this.theSlot.slotNumber, isCtrlKeyDown() ? 1 : 0, 4);
+				}
 			}
 		}
 	}
@@ -697,6 +725,7 @@ public abstract class GuiContainer extends GuiScreen {
 	 * Called when the screen is unloaded. Used to disable keyboard repeat events
 	 */
 	public void onGuiClosed() {
+		TMI.instance.controller.onClose();
 		if (this.mc.thePlayer != null) {
 			this.inventorySlots.onCraftGuiClosed(this.mc.thePlayer);
 		}
@@ -707,7 +736,7 @@ public abstract class GuiContainer extends GuiScreen {
 	 * single-player
 	 */
 	public boolean doesGuiPauseGame() {
-		return false;
+		return TMI.instance.controller.shouldPauseGame();
 	}
 
 	/**

@@ -2,6 +2,8 @@ package net.minecraft.src;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.ayunami2000.ayuncraft.tmi.TMI;
 import net.minecraft.client.Minecraft;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.TextureLocation;
@@ -146,6 +148,8 @@ public class GuiScreen extends Gui {
 	public void handleMouseInput() {
 		int var1 = EaglerAdapter.mouseGetEventX() * this.width / this.mc.displayWidth;
 		int var2 = this.height - EaglerAdapter.mouseGetEventY() * this.height / this.mc.displayHeight - 1;
+
+		TMI.instance.controller.handleScrollWheel(var1, var2);
 
 		if (EaglerAdapter.mouseGetEventButtonState()) {
 			if (this.mc.gameSettings.touchscreen && this.field_92018_d++ > 0) {

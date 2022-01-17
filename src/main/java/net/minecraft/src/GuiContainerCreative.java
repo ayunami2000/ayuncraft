@@ -23,7 +23,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer {
 	 * True if the left mouse button was held down last time drawScreen was called.
 	 */
 	private boolean wasClicking;
-	private GuiTextField searchField;
+	public GuiTextField searchField;
 
 	/**
 	 * Used to back up the ContainerCreative's inventory slots before filling it
