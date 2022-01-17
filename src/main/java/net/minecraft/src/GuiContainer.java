@@ -136,8 +136,6 @@ public abstract class GuiContainer extends GuiScreen {
 			}
 		}
 
-		TMI.instance.controller.onEnterFrame(par1, par2, this.xSize, this.ySize);
-
 		this.drawGuiContainerForegroundLayer(par1, par2);
 		InventoryPlayer var14 = this.mc.thePlayer.inventory;
 		ItemStack var16 = this.draggedStack == null ? var14.getItemStack() : this.draggedStack;
@@ -185,6 +183,8 @@ public abstract class GuiContainer extends GuiScreen {
 		}
 		EaglerAdapter.glDisable(EaglerAdapter.GL_RESCALE_NORMAL);
 
+
+		TMI.instance.controller.onEnterFrame(par1, par2, this.xSize, this.ySize);
 		EaglerAdapter.glEnable(EaglerAdapter.GL_LIGHTING);
 		EaglerAdapter.glEnable(EaglerAdapter.GL_DEPTH_TEST);
 		RenderHelper.enableStandardItemLighting();
