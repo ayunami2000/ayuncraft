@@ -28,6 +28,11 @@ public class EaglerImage {
 		this.w = pw;
 		this.h = ph;
 		this.alpha = palpha;
+		if(!palpha) {
+			for(int i = 0; i < pdata.length; ++i) {
+				pdata[i] = pdata[i] | 0xFF000000;
+			}
+		}
 		this.data = pdata;
 	}
 	
