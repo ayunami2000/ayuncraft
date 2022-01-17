@@ -855,27 +855,33 @@ public class TMIUtils
 
         if (TMIConfig.isMultiplayer())
         {
-            NumberFormat var5 = NumberFormat.getIntegerInstance();
-            var5.setGroupingUsed(false);
-            MessageFormat var6 = new MessageFormat((String)var1.getSettings().get("give-command"));
-            var6.setFormatByArgumentIndex(1, var5);
-            var6.setFormatByArgumentIndex(2, var5);
-            var6.setFormatByArgumentIndex(3, var5);
-            Object[] var7 = new Object[] {var4.thePlayer.username, Integer.valueOf(var3.itemID), Integer.valueOf(var3.stackSize), Integer.valueOf(var3.getItemDamageForDisplay())};
-            StringBuilder var8 = new StringBuilder();
-            var8.append(var6.format(var7));
-            Iterator var9 = getEnchantments(var3).iterator();
+            if(TMIUtils.isCreativeMode()){
+                //var4.thePlayer.inventory.addItemStackToInventory(var0);
+                var4.thePlayer.inventory.mainInventory[0] = var0;
+                var4.playerController.sendSlotPacket(var0, var4.thePlayer.inventoryContainer.inventorySlots.size() - 9);
+                var4.getNetHandler().addToSendQueue(new Packet16BlockItemSwitch(0));
+            }else {
+                NumberFormat var5 = NumberFormat.getIntegerInstance();
+                var5.setGroupingUsed(false);
+                MessageFormat var6 = new MessageFormat((String) var1.getSettings().get("give-command"));
+                var6.setFormatByArgumentIndex(1, var5);
+                var6.setFormatByArgumentIndex(2, var5);
+                var6.setFormatByArgumentIndex(3, var5);
+                Object[] var7 = new Object[]{var4.thePlayer.username, Integer.valueOf(var3.itemID), Integer.valueOf(var3.stackSize), Integer.valueOf(var3.getItemDamageForDisplay())};
+                StringBuilder var8 = new StringBuilder();
+                var8.append(var6.format(var7));
+                Iterator var9 = getEnchantments(var3).iterator();
 
-            while (var9.hasNext())
-            {
-                int[] var10 = (int[])var9.next();
-                var8.append(" ");
-                var8.append(var10[0]);
-                var8.append(":");
-                var8.append(var10[1]);
+                while (var9.hasNext()) {
+                    int[] var10 = (int[]) var9.next();
+                    var8.append(" ");
+                    var8.append(var10[0]);
+                    var8.append(":");
+                    var8.append(var10[1]);
+                }
+
+                var4.thePlayer.sendChatMessage(var8.toString());
             }
-
-            var4.thePlayer.sendChatMessage(var8.toString());
         }
         else
         {
