@@ -51,31 +51,6 @@ public class NoteblockPlayer {
         }
     }
 
-    /*
-    private static void playSong(String[] songLines,HashMap<Integer,HashMap<Integer,Vec3>> instrNoteToBlock) throws InterruptedException {
-        int ticks=0;
-        for (String songLine : songLines) {
-            if(playing) {
-                String[] songInfo = songLine.split(":");
-                int tick = Integer.parseInt(songInfo[0]);
-                int note = Integer.parseInt(songInfo[1]);
-                int instr = Integer.parseInt(songInfo[2]);
-                if(instr!=-1) {
-                    Vec3 blockPos=instrNoteToBlock.get(instr).get(note);
-                    try {
-                        mc.playerController.clickBlock((int) blockPos.xCoord, (int) (blockPos.yCoord - 1), (int) blockPos.zCoord, 1);
-                        rotateToBlock(blockPos.addVector(0,-1,0));
-                    }catch(NullPointerException e){}
-                    Thread.sleep((tick - ticks) * 50L);
-                    ticks=tick;
-                    //mc.getNetHandler().addToSendQueue(new Packet14BlockDig(0, (int) blockPos.xCoord, (int) blockPos.yCoord, (int) blockPos.zCoord,1));
-                    //mc.thePlayer.swingItem();
-                }
-            }
-        }
-    }
-    */
-
     public static void rotateToBlock(Vec3 block){
         block=block.addVector(0.5,0.5,0.5);
 
@@ -107,11 +82,6 @@ public class NoteblockPlayer {
             instrNoteToBlocks=songBlocks;
             tickPassed=0;
             playingSong=true;
-            /*
-            try {
-                playSong(songLines,songBlocks);
-            } catch (InterruptedException e) {}
-            */
         }
     }
 
@@ -148,7 +118,6 @@ public class NoteblockPlayer {
     public static void placeAndTuneNoteblocks(HashMap<Integer, HashMap<Integer, Vec3>> instrNoteToBlock){
         if(!playing)return;
         building=true;
-        //mc.thePlayer.sendChatMessage("/gamemode 1");
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {}
@@ -274,49 +243,6 @@ public class NoteblockPlayer {
                         blockDist=currPos.distanceTo(blockPos);
                     }
                     correctNote=false;
-                    /*
-                    if(playing) {
-                        ItemStack noteblocks = new ItemStack(instruments[instr]);
-                        mc.thePlayer.inventory.clearInventory(-1,-1);
-                        mc.thePlayer.inventory.currentItem=0;
-                        mc.thePlayer.inventory.mainInventory[mc.thePlayer.inventory.currentItem]=noteblocks;
-                        mc.playerController.sendSlotPacket(noteblocks,0);
-                        try {
-                            Thread.sleep(100);
-                            //mc.thePlayer.inventoryContainer.detectAndSendChanges();
-                        }catch(InterruptedException e){}
-                        PlayerControllerMP.clickBlockCreative(mc,mc.playerController, (int) blockPos.xCoord, (int) (blockPos.yCoord-2), (int) blockPos.zCoord,1);
-                        mc.thePlayer.swingItem();
-                        try {
-                            Thread.sleep(50);
-                            mc.getNetHandler().addToSendQueue(new Packet15Place((int) blockPos.xCoord, (int) (blockPos.yCoord-1), (int) blockPos.zCoord,1,mc.thePlayer.inventory.getCurrentItem(),0,1,0));
-                            Thread.sleep(50);
-                        } catch (InterruptedException e) {
-                        }
-                        noteblocks = new ItemStack(Block.music);
-                        mc.thePlayer.inventory.clearInventory(-1,-1);
-                        mc.thePlayer.inventory.currentItem=0;
-                        mc.thePlayer.inventory.mainInventory[mc.thePlayer.inventory.currentItem]=noteblocks;
-                        mc.getNetHandler().addToSendQueue(new Packet16BlockItemSwitch(0));
-                        mc.playerController.sendSlotPacket(noteblocks,0);
-                        try {
-                            Thread.sleep(100);
-                            //mc.thePlayer.inventoryContainer.detectAndSendChanges();
-                        }catch(InterruptedException e){}
-                        PlayerControllerMP.clickBlockCreative(mc,mc.playerController, (int) blockPos.xCoord, (int) (blockPos.yCoord-1), (int) blockPos.zCoord,1);
-                        mc.thePlayer.swingItem();
-                        try {
-                            Thread.sleep(50);
-                            mc.getNetHandler().addToSendQueue(new Packet15Place((int) blockPos.xCoord, (int) blockPos.yCoord, (int) blockPos.zCoord,1,mc.thePlayer.inventory.getCurrentItem(),0,1,0));
-                            Thread.sleep(50);
-                            for(int i=0;i<note;i++){
-                                Thread.sleep(50);
-                                mc.getNetHandler().addToSendQueue(new Packet15Place((int) blockPos.xCoord, (int) blockPos.yCoord, (int) blockPos.zCoord,1,mc.thePlayer.inventory.getCurrentItem(),0,1,0));
-                            }
-                        } catch (InterruptedException e) {
-                        }
-                    }
-                    */
                 }
             }
         }
