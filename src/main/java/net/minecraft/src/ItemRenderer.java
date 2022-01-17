@@ -250,6 +250,7 @@ public class ItemRenderer {
 		RenderPlayer var26 = (RenderPlayer) var24;
 
 		if (var17 != null && var17.itemID == Item.map.itemID) {
+			EaglerAdapter.flipLightMatrix();
 			EaglerAdapter.glPushMatrix();
 			var7 = 0.8F;
 			var19 = var3.getSwingProgress(par1);
@@ -318,6 +319,7 @@ public class ItemRenderer {
 			}
 
 			EaglerAdapter.glPopMatrix();
+			EaglerAdapter.flipLightMatrix();
 		} else if (var17 != null) {
 			EaglerAdapter.glPushMatrix();
 			var7 = 0.8F;

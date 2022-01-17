@@ -328,7 +328,7 @@ public class Minecraft implements Runnable {
 			float f = ((float)(System.currentTimeMillis() - t1) / 333f);
 			
 			EaglerAdapter.glClear(EaglerAdapter.GL_COLOR_BUFFER_BIT | EaglerAdapter.GL_DEPTH_BUFFER_BIT);
-			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, MathHelper.clamp_float(f*0.6f, 0.0F, 1.0F));
+			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, MathHelper.clamp_float(f, 0.0F, 1.0F));
 			this.renderEngine.bindTexture("%blur%/title/mojang.png");
 			EaglerAdapter.glPushMatrix();
 			float f1 = 0.875f + 0.025f * (float)Math.sqrt(f);
@@ -369,7 +369,7 @@ public class Minecraft implements Runnable {
 			float f = ((float)(System.currentTimeMillis() - t1) / 340f);
 			
 			EaglerAdapter.glClear(EaglerAdapter.GL_COLOR_BUFFER_BIT | EaglerAdapter.GL_DEPTH_BUFFER_BIT);
-			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, MathHelper.clamp_float((1.0f - f)*0.6f, 0.0F, 1.0F));
+			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, MathHelper.clamp_float((1.0f - f), 0.0F, 1.0F));
 			this.renderEngine.bindTexture("%blur%/title/mojang.png");
 			EaglerAdapter.glPushMatrix();
 			float f1 = 0.9f + 0.025f * f * f;
