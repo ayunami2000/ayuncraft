@@ -51,7 +51,7 @@ public class TMIController implements _tmi_MgButtonHandler, _tmi_MgItemHandler, 
             TMIUtils.suppressAchievementNotice();
             boolean var6 = false;
 
-            if (this.window instanceof GuiContainerCreative && TMIPrivateFields.creativeTab.getInt(this.window) == CreativeTabs.tabAllSearch.getTabIndex())
+            if (this.window instanceof GuiContainerCreative && ((GuiContainerCreative)this.window).selectedTabIndex == CreativeTabs.tabAllSearch.getTabIndex())
             {
                 var6 = true;
             }
@@ -111,9 +111,9 @@ public class TMIController implements _tmi_MgButtonHandler, _tmi_MgItemHandler, 
 
             try
             {
-                if (TMIUtils.isCreativeMode() && TMIPrivateFields.creativeTab.getInt(this.window) == CreativeTabs.tabAllSearch.getTabIndex())
+                if (TMIUtils.isCreativeMode() && ((GuiContainerCreative)this.window).selectedTabIndex == CreativeTabs.tabAllSearch.getTabIndex())
                 {
-                    TMIPrivateFields.setCreativeTab.invoke((GuiContainerCreative)this.window, new Object[] {CreativeTabs.tabInventory});
+                    ((GuiContainerCreative)this.window).setCurrentCreativeTab(CreativeTabs.tabInventory);
                 }
             }
             catch (Exception var3)
@@ -169,8 +169,8 @@ public class TMIController implements _tmi_MgButtonHandler, _tmi_MgItemHandler, 
 
             try
             {
-                TMIPrivateFields.lwjglMouseEventDWheel.setInt((Object)null, 0);
-                TMIPrivateFields.lwjglMouseDWheel.setInt((Object)null, 0);
+                //TMIPrivateFields.lwjglMouseEventDWheel.setInt((Object)null, 0);
+                //TMIPrivateFields.lwjglMouseDWheel.setInt((Object)null, 0);
             }
             catch (Exception var5)
             {
@@ -212,7 +212,7 @@ public class TMIController implements _tmi_MgButtonHandler, _tmi_MgItemHandler, 
                 {
                     try
                     {
-                        Slot var10 = (Slot)((Slot)TMIPrivateFields.creativeSlot.get((SlotCreativeInventory)var5));
+                        Slot var10 = ((SlotCreativeInventory)var5).theSlot;
                         var12 = var10.slotNumber;
                     }
                     catch (Exception var16)

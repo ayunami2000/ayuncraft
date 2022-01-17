@@ -12,7 +12,7 @@ public class EntityList {
 	private static Map classToStringMapping = new HashMap();
 
 	/** provides a mapping between an entityID and an Entity Class */
-	private static Map IDtoClassMapping = new HashMap();
+	public static Map IDtoClassMapping = new HashMap();
 
 	/** provides a mapping between an Entity Class and an entity ID */
 	private static Map classToIDMapping = new HashMap();

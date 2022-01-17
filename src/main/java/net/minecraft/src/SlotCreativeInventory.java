@@ -1,7 +1,7 @@
 package net.minecraft.src;
 
 public class SlotCreativeInventory extends Slot {
-	private final Slot theSlot;
+	public final Slot theSlot;
 
 	final GuiContainerCreative theCreativeInventory;
 

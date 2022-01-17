@@ -956,7 +956,7 @@ public class TMIUtils
     {
         try
         {
-            TMIPrivateFields.stackDamage.setInt(var0, var1);
+            var0.itemDamage=var1;
         }
         catch (Exception var3)
         {
@@ -1007,15 +1007,7 @@ public class TMIUtils
 
     public static int getGameMode()
     {
-        try
-        {
-            return ((EnumGameType)TMIPrivateFields.gameMode.get(Minecraft.getMinecraft().playerController)).getID();
-        }
-        catch (IllegalAccessException var1)
-        {
-            System.out.println(var1);
-            return 0;
-        }
+        return Minecraft.getMinecraft().playerController.currentGameType.getID();
     }
 
     public static void setGameMode(int var0)
@@ -1486,6 +1478,7 @@ public class TMIUtils
         Item var1 = Item.itemsList[var0];
         Item.itemsList[var0] = null;
 
+        /*
         try
         {
             Class var2 = Class.forName("cpw.mods.fml.common.registry.GameData");
@@ -1506,6 +1499,7 @@ public class TMIUtils
         {
             ;
         }
+        */
 
         return var1;
     }

@@ -32,17 +32,10 @@ public class _tmi_MgTextField extends _tmi_MgWidget
     {
         if (this.show)
         {
-            try
-            {
-                TMIPrivateFields.textFieldX.setInt(this.textField, this.x);
-                TMIPrivateFields.textFieldY.setInt(this.textField, this.y);
-                TMIPrivateFields.textFieldWidth.setInt(this.textField, this.width);
-                TMIPrivateFields.textFieldHeight.setInt(this.textField, this.height);
-            }
-            catch (IllegalAccessException var5)
-            {
-                System.out.println(var5);
-            }
+            this.textField.xPos=this.x;
+            this.textField.yPos=this.y;
+            this.textField.width=this.width;
+            this.textField.height=this.height;
 
             this.textField.drawTextBox();
 

@@ -443,7 +443,7 @@ public class Block {
 	/**
 	 * Sets the bounds of the block. minX, minY, minZ, maxX, maxY, maxZ
 	 */
-	protected final void setBlockBounds(float par1, float par2, float par3, float par4, float par5, float par6) {
+	public final void setBlockBounds(float par1, float par2, float par3, float par4, float par5, float par6) {
 		this.minX = (double) par1;
 		this.minY = (double) par2;
 		this.minZ = (double) par3;

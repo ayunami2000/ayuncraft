@@ -42,7 +42,7 @@ public class _tmi_MgCanvas
 
         try
         {
-            TMIPrivateFields.drawGradientRect.invoke(this.window, new Object[] {Integer.valueOf(var1), Integer.valueOf(var2), Integer.valueOf(var3), Integer.valueOf(var4), Integer.valueOf(var5), Integer.valueOf(var6)});
+            this.window.drawGradientRect(var1, var2, var3, var4, var5, var6);
         }
         catch (Exception var8)
         {

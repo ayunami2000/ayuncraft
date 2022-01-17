@@ -10,12 +10,12 @@ public class GuiTextField extends Gui {
 	 * screen.
 	 */
 	private final FontRenderer fontRenderer;
-	private final int xPos;
-	private final int yPos;
+	public int xPos;
+	public int yPos;
 
 	/** The width of this text field. */
-	private final int width;
-	private final int height;
+	public int width;
+	public int height;
 
 	/** Have the current text beign edited on the textbox. */
 	private String text = "";

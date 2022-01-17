@@ -25,7 +25,7 @@ public final class ItemStack {
 	public NBTTagCompound stackTagCompound;
 
 	/** Damage dealt to the item or number of use. Raise when using items. */
-	private int itemDamage;
+    public int itemDamage;
 
 	/** Item frame this stack is on, or null if not on an item frame. */
 	private EntityItemFrame itemFrame;

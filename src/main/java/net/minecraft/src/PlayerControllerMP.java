@@ -35,7 +35,7 @@ public class PlayerControllerMP {
 	private boolean isHittingBlock = false;
 
 	/** Current game type for the player */
-	private EnumGameType currentGameType;
+    public EnumGameType currentGameType;
 
 	/** Index of the current item held by the player in the inventory hotbar */
 	private int currentPlayerItem;

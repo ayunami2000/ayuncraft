@@ -1,19 +1,42 @@
 package me.ayunami2000.ayuncraft.tmi;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import net.minecraft.src.EntityList;
+
 import java.util.Iterator;
-import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import net.minecraft.src.*;
-import net.lax1dude.eaglercraft.EaglerAdapter;
-
 public class TMIPrivateFields
 {
+
+    public static SortedSet getSpawnerEntityIdSet()
+    {
+        try
+        {
+            TreeSet var0 = new TreeSet(EntityList.IDtoClassMapping.keySet());
+            Iterator var1 = TMIItemInfo.excludedSpawnerIds.iterator();
+
+            while (var1.hasNext())
+            {
+                Integer var2 = (Integer)var1.next();
+
+                if (var0.contains(var2))
+                {
+                    var0.remove(var2);
+                }
+            }
+
+            return var0;
+        }
+        catch (Exception var3)
+        {
+            System.out.println(var3);
+            TreeSet retval=new TreeSet<>();
+            retval.add(0);
+            return retval;
+        }
+    }
+    /*
     public static Field lwjglMouseDWheel;
     public static Field lwjglMouseEventDWheel;
     public static Field textFieldX;
@@ -205,4 +228,5 @@ public class TMIPrivateFields
             var1.printStackTrace();
         }
     }
+    */
 }

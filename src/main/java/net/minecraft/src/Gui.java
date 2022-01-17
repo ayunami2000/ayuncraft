@@ -67,7 +67,7 @@ public class Gui {
 	/**
 	 * Draws a rectangle with a vertical gradient between the specified colors.
 	 */
-	protected void drawGradientRect(int par1, int par2, int par3, int par4, int par5, int par6) {
+	public void drawGradientRect(int par1, int par2, int par3, int par4, int par5, int par6) {
 		float var7 = (float) (par5 >> 24 & 255) / 255.0F;
 		float var8 = (float) (par5 >> 16 & 255) / 255.0F;
 		float var9 = (float) (par5 >> 8 & 255) / 255.0F;

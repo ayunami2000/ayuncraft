@@ -11,7 +11,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer {
 	private static InventoryBasic inventory = new InventoryBasic("tmp", true, 45);
 
 	/** Currently selected creative inventory tab index. */
-	private static int selectedTabIndex = CreativeTabs.tabBlock.getTabIndex();
+	public static int selectedTabIndex = CreativeTabs.tabBlock.getTabIndex();
 
 	/** Amount scrolled in Creative mode inventory (0 = top, 1 = bottom) */
 	private float currentScroll = 0.0F;
@@ -367,7 +367,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer {
 		return selectedTabIndex != CreativeTabs.tabInventory.getTabIndex() && CreativeTabs.creativeTabArray[selectedTabIndex].shouldHidePlayerInventory() && ((ContainerCreative) this.inventorySlots).hasMoreThan1PageOfItemsInList();
 	}
 
-	private void setCurrentCreativeTab(CreativeTabs par1CreativeTabs) {
+	public void setCurrentCreativeTab(CreativeTabs par1CreativeTabs) {
 		int var2 = selectedTabIndex;
 		selectedTabIndex = par1CreativeTabs.getTabIndex();
 		ContainerCreative var3 = (ContainerCreative) this.inventorySlots;

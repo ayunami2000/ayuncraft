@@ -18,7 +18,7 @@ public class TMIItemSnow extends ItemBlock
     {
         try
         {
-            TMIPrivateFields.setBlockBounds.invoke(Block.snow, new Object[] {Float.valueOf(0.0F), Float.valueOf(0.0F), Float.valueOf(0.0F), Float.valueOf(1.0F), Float.valueOf((float)(2 * (1 + var1)) / 16.0F), Float.valueOf(1.0F)});
+            Block.snow.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, (float) (2 * (1 + var1)) / 16.0F, 1.0F);
         }
         catch (Exception var3)
         {

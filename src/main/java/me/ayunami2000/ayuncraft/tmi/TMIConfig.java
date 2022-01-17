@@ -177,7 +177,7 @@ public class TMIConfig
             {
                 if (Minecraft.getMinecraft().currentScreen instanceof GuiContainerCreative)
                 {
-                    TMIPrivateFields.setCreativeTab.invoke((GuiContainerCreative)Minecraft.getMinecraft().currentScreen, new Object[] {CreativeTabs.tabInventory});
+                    ((GuiContainerCreative)Minecraft.getMinecraft().currentScreen).setCurrentCreativeTab(CreativeTabs.tabInventory);
                 }
             }
             catch (Exception var5)
