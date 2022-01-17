@@ -49,6 +49,7 @@ public class TMIItemSpawner extends ItemBlock
             }
             else
             {
+                /*
                 MobSpawnerBaseLogic var13 = var12.func_98049_a();
 
                 if (var13 == null)
@@ -91,6 +92,9 @@ public class TMIItemSpawner extends ItemBlock
 
                     return true;
                 }
+                */
+                System.out.println("[TMI] Failed to access spawner data from TileEntity.");
+                return false;
             }
         }
     }

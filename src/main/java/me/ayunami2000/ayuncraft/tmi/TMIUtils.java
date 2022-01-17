@@ -1,15 +1,10 @@
 package me.ayunami2000.ayuncraft.tmi;
 
 import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
+
+import me.ayunami2000.ayuncraft.File;
+
 import java.lang.reflect.Field;
 import java.text.FieldPosition;
 import java.text.MessageFormat;
@@ -19,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.text.Normalizer.Form;
 import java.util.*;
 import java.util.regex.Pattern;
+
+import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import net.lax1dude.eaglercraft.EaglerAdapter;
@@ -40,12 +37,12 @@ public class TMIUtils
 
     public static File configFile()
     {
-        return new File(Minecraft.getMinecraftDir(), "TooManyItems.txt");
+        return new File("TooManyItems.txt");
     }
 
     public static File nbtFile()
     {
-        return new File(Minecraft.getMinecraftDir(), "TMI.nbt");
+        return new File("TMI.nbt");
     }
 
     public static void loadPreferences(TMIConfig var0)
@@ -67,7 +64,7 @@ public class TMIUtils
                     }
                 }
 
-                BufferedReader var7 = new BufferedReader(new FileReader(var2));
+                BufferedReader var7 = new BufferedReader(new StringReader(LocalStorageManager.gameSettingsStorage.getString(var2.getFileName())));
                 String var4;
 
                 while ((var4 = var7.readLine()) != null)
@@ -112,7 +109,8 @@ public class TMIUtils
             saveNBTFile(var0);
             Map var1 = var0.getSettings();
             File var2 = configFile();
-            PrintWriter var3 = new PrintWriter(new FileWriter(var2));
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter var3 = new PrintWriter(stringWriter);
             Iterator var4 = var1.keySet().iterator();
 
             while (var4.hasNext())
@@ -126,6 +124,7 @@ public class TMIUtils
             }
 
             var3.close();
+            LocalStorageManager.gameSettingsStorage.setString(var2.getFileName(),stringWriter.toString());
         }
         catch (Exception var6)
         {
@@ -137,7 +136,7 @@ public class TMIUtils
     {
         try
         {
-            DataOutputStream var1 = new DataOutputStream(new FileOutputStream(nbtFile()));
+            //DataOutputStream var1 = new DataOutputStream(new FileOutputStream(nbtFile()));
             NBTTagList var2 = new NBTTagList();
             NBTTagList var3 = new NBTTagList();
             List var4 = var0.getFavorites();
@@ -184,7 +183,9 @@ public class TMIUtils
                 }
             }
 
-            TMIPrivateFields.writeTagList.invoke(var2, new Object[] {var1});
+            LocalStorageManager.gameSettingsStorage.setTag(nbtFile().getFileName(),var2);
+
+            //TMIPrivateFields.writeTagList.invoke(var2, new Object[] {var1});
         }
         catch (Exception var10)
         {
@@ -203,9 +204,9 @@ public class TMIUtils
                 return;
             }
 
-            DataInputStream var2 = new DataInputStream(new FileInputStream(var1));
-            NBTTagList var3 = new NBTTagList();
-            TMIPrivateFields.readTagList.invoke(var3, new Object[] {var2});
+            //DataInputStream var2 = new DataInputStream(new FileInputStream(var1));
+            NBTTagList var3 = LocalStorageManager.gameSettingsStorage.getTagList(var1.getFileName());
+            //TMIPrivateFields.readTagList.invoke(var3, new Object[] {var2});
             boolean var4 = false;
 
             if (var3.tagCount() > 0)
@@ -718,12 +719,13 @@ public class TMIUtils
             StringBuffer var2 = new StringBuffer();
             var1.format(new Date(), var2, new FieldPosition(1));
             String var3 = "tmi" + var2.toString() + ".txt";
-            File var4 = new File(Minecraft.getAppDir("minecraft"), var3);
-            PrintWriter var5 = new PrintWriter(new FileWriter(var4));
+            StringWriter var4 = new StringWriter();
+            PrintWriter var5 = new PrintWriter(var4);
             var5.print("[code]TMI Version: 1.5.2 2013-04-25\n");
             var0.printStackTrace(var5);
             var5.println("[/code]");
             var5.close();
+            System.out.println(var4.toString());
         }
         catch (Exception var6)
         {
@@ -1460,8 +1462,8 @@ public class TMIUtils
     {
         try
         {
-            File var0 = new File(Minecraft.getAppDir("minecraft"), "TMIItemList.txt");
-            PrintWriter var1 = new PrintWriter(new FileWriter(var0));
+            StringWriter var0 = new StringWriter();
+            PrintWriter var1 = new PrintWriter(var0);
             Iterator var2 = TMIConfig.getInstance().getItems().iterator();
 
             while (var2.hasNext())
@@ -1471,6 +1473,7 @@ public class TMIUtils
             }
 
             var1.close();
+            System.out.println(var0);
         }
         catch (Exception var4)
         {

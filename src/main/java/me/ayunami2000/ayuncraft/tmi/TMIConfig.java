@@ -13,7 +13,6 @@ import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.GuiContainerCreative;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
-import org.lwjgl.input.Keyboard;
 
 public class TMIConfig
 {
@@ -51,24 +50,7 @@ public class TMIConfig
 
     public static boolean isMultiplayer()
     {
-        ThreadGroup var0 = Thread.currentThread().getThreadGroup();
-        Thread[] var1 = new Thread[var0.activeCount()];
-        var0.enumerate(var1);
-
-        for (int var2 = 0; var2 < var1.length; ++var2)
-        {
-            if (var1[var2] != null)
-            {
-                String var3 = var1[var2].getName();
-
-                if (var3 != null && var3.equals("Client read thread"))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return true;
     }
 
     public static TMIConfig getInstance()
@@ -100,7 +82,13 @@ public class TMIConfig
     {
         String var1 = (String)this.settings.get("key");
         boolean var2 = false;
-        int var3 = EaglerAdapter.getKeyIndex(var1.toUpperCase());
+        int var3 = 0;
+        for(int i=0;i<256;i++){
+            if(var1.toUpperCase().equals(EaglerAdapter.getKeyName(i))){
+                var3 = i;
+                break;
+            }
+        }
 
         if (var3 == 0)
         {
