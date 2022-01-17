@@ -21,7 +21,7 @@ public class GuiScreenModules extends GuiScreen {
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 6 + 124, "Give"));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, this.height / 6 + 100, "Toggle Notebot"));
         this.buttonList.add(new GuiButton(3, this.width / 2 - 100, this.height / 6 + 76, "Toggle Legit mode"));
-        this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 6 + 52, "Toggle Noclip"));
+        this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 6 + 52, "Toggle Flight"));
     }
 
     public void onGuiClosed() {
@@ -79,7 +79,7 @@ public class GuiScreenModules extends GuiScreen {
         }else if(par1GuiButton.id == 3){
             NoteblockPlayer.legit=!NoteblockPlayer.legit;
         }else if(par1GuiButton.id == 4){
-            mc.thePlayer.noClip=!mc.thePlayer.noClip;
+            mc.thePlayer.capabilities.isFlying=!mc.thePlayer.capabilities.isFlying;
         }
     }
 
