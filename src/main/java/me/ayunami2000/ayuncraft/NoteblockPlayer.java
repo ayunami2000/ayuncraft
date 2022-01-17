@@ -21,11 +21,14 @@ public class NoteblockPlayer {
     private static Minecraft mc=Minecraft.getMinecraft();
     public static boolean legit=false;
 
+    public static boolean flying=false;
+
     private static boolean playingSong=false;
     private static String[] songLiness=null;
     private static HashMap<Integer,HashMap<Integer,Vec3>> instrNoteToBlocks=null;
     private static int tickPassed=0;
     public static void tick(){
+        if(flying)mc.thePlayer.capabilities.isFlying=true;
         if(playing&&playingSong){
             int linesPlayed=0;
             for (String songLine : songLiness) {

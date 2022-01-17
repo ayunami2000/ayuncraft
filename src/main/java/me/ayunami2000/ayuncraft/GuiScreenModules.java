@@ -79,7 +79,8 @@ public class GuiScreenModules extends GuiScreen {
         }else if(par1GuiButton.id == 3){
             NoteblockPlayer.legit=!NoteblockPlayer.legit;
         }else if(par1GuiButton.id == 4){
-            mc.thePlayer.capabilities.isFlying=!mc.thePlayer.capabilities.isFlying;
+            NoteblockPlayer.flying=!NoteblockPlayer.flying;
+            if(!NoteblockPlayer.flying)mc.thePlayer.capabilities.isFlying=false;
         }
     }
 
