@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import me.ayunami2000.ayuncraft.GuiScreenModules;
 import net.lax1dude.eaglercraft.GuiScreenVoiceChannel;
 
 public class GuiIngameMenu extends GuiScreen {
@@ -24,6 +25,7 @@ public class GuiIngameMenu extends GuiScreen {
 
 		this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 24 + var1, StatCollector.translateToLocal("menu.returnToGame")));
 		//this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 48 + var1, StatCollector.translateToLocal("menu.voicechannel")));
+		this.buttonList.add(new GuiButton(6, this.width / 2 - 100, this.height / 4 + 48 + var1, "ayuncraft"));
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + var1, 98, 20, StatCollector.translateToLocal("menu.options")));
 		GuiButton var3;
 		this.buttonList.add(var3 = new GuiButton(7, this.width / 2 + 2, this.height / 4 + 96 + var1, 98, 20, StatCollector.translateToLocal("menu.shareToLan")));
@@ -56,9 +58,13 @@ public class GuiIngameMenu extends GuiScreen {
 			this.mc.setIngameFocus();
 			this.mc.sndManager.resumeAllSounds();
 			break;
-			
+
 		case 5:
 			this.mc.displayGuiScreen(new GuiScreenVoiceChannel(this));
+			break;
+
+		case 6:
+			this.mc.displayGuiScreen(new GuiScreenModules(this));
 			break;
 		}
 	}

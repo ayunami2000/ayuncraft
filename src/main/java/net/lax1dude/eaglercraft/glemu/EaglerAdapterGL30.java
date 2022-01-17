@@ -677,7 +677,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		case GL_NEAREST_MIPMAP_NEAREST: pp3 = _wGL_NEAREST_MIPMAP_NEAREST; break;
 		case GL_NEAREST: pp3 = _wGL_NEAREST; break;
 		case GL_REPEAT: pp3 = _wGL_REPEAT; break;
-		case GL_CLAMP: pp3 = _wGL_REPEAT; break;
+		case GL_CLAMP: pp3 = _wGL_CLAMP; break;
 		}
 
 		if(selectedTex == 0 && boundTexture0 != null && pp2 == _wGL_TEXTURE_MAG_FILTER) {

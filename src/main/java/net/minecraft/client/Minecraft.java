@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 
+import me.ayunami2000.ayuncraft.NoteblockPlayer;
 import net.minecraft.src.*;
 import net.lax1dude.eaglercraft.DefaultSkinRenderer;
 import net.lax1dude.eaglercraft.EaglerAdapter;
@@ -1130,8 +1131,9 @@ public class Minecraft implements Runnable {
 				this.currentScreen.updateScreen();
 			}
 		}
-		
+
 		GuiScreenVoiceChannel.tickVoiceConnection();
+		NoteblockPlayer.tick();
 
 		if (this.currentScreen == null || this.currentScreen.allowUserInput) {
 			this.mcProfiler.endStartSection("mouse");

@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 
+import me.ayunami2000.ayuncraft.NoteblockPlayer;
 
 public class BlockNote extends BlockContainer {
 	public BlockNote(int par1) {
@@ -71,6 +72,7 @@ public class BlockNote extends BlockContainer {
 	 * z, blockID, EventID, event parameter
 	 */
 	public boolean onBlockEventReceived(World par1World, int par2, int par3, int par4, int par5, int par6) {
+		NoteblockPlayer.notePlayed(par2,par3,par4,par6);
 		float var7 = (float) Math.pow(2.0D, (double) (par6 - 12) / 12.0D);
 		String var8 = "harp";
 
