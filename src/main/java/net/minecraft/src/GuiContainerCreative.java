@@ -52,7 +52,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer {
 		}
 	}
 
-	protected void handleMouseClick(Slot par1Slot, int par2, int par3, int par4) {
+	public void handleMouseClick(Slot par1Slot, int par2, int par3, int par4) {
 		this.field_74234_w = true;
 		boolean var5 = par4 == 1;
 		par4 = par2 == -999 && par4 == 0 ? 4 : par4;
