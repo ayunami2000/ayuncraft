@@ -648,7 +648,7 @@ public abstract class GuiContainer extends GuiScreen {
 		return par5 >= par1 - 1 && par5 < par1 + par3 + 1 && par6 >= par2 - 1 && par6 < par2 + par4 + 1;
 	}
 
-	protected void handleMouseClick(Slot par1Slot, int par2, int par3, int par4) {
+	public void handleMouseClick(Slot par1Slot, int par2, int par3, int par4) {
 		if (par1Slot != null) {
 			par2 = par1Slot.slotNumber;
 		}

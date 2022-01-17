@@ -16,6 +16,7 @@ import net.lax1dude.eaglercraft.glemu.vector.Vector4f;
 import net.minecraft.src.RenderItem;
 
 public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
+	public static boolean glBlendEnabled=false;
 
 	public static final int GL_ZERO = 0;
 	public static final int GL_ONE = 1;
@@ -279,6 +280,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 			break;
 		case GL_BLEND:
 			_wglEnable(_wGL_BLEND);
+			glBlendEnabled=true;
 			break;
 		case GL_RESCALE_NORMAL:
 			break;
@@ -413,6 +415,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 			break;
 		case GL_BLEND:
 			_wglDisable(_wGL_BLEND);
+			glBlendEnabled=false;
 			break;
 		case GL_RESCALE_NORMAL:
 			break;

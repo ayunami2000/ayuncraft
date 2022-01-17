@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-class SlotCreativeInventory extends Slot {
+public class SlotCreativeInventory extends Slot {
 	private final Slot theSlot;
 
 	final GuiContainerCreative theCreativeInventory;

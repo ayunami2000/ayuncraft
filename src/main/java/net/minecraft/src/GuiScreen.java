@@ -24,7 +24,7 @@ public class GuiScreen extends Gui {
 	public boolean allowUserInput = false;
 
 	/** The FontRenderer used by GuiScreen */
-	protected FontRenderer fontRenderer;
+	public FontRenderer fontRenderer;
 	public GuiParticle guiParticles;
 
 	/** The button that was just pressed. */
