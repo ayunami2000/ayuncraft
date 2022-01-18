@@ -70,7 +70,7 @@ public class GuiScreenModules extends GuiScreen {
                             String name = EaglerAdapter.getFileChooserResultName();
                             NoteblockPlayer.songdata = b;
                             mc.thePlayer.sendChatToPlayer("Playing \""+name+"\" on notebot!");
-                            NoteblockPlayer.play((name.toLowerCase().endsWith(".nbs")?NoteblockPlayer.loadSong():me.ayunami2000.ayunAudioStreamer.MidiConverter.midiToTxt()).split("\n"));
+                            NoteblockPlayer.play((name.toLowerCase().endsWith(".nbs")?NoteblockPlayer.loadSong():MidiConverter.midiToTxt()).split("\n"));
                         }
                     }
                 });
