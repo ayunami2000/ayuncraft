@@ -947,7 +947,7 @@ public class EaglerAdapterImpl2 {
 	private static native int commitContext(JSObject obj);
 	
 	public static final void updateDisplay() {
-		//commitContext(webgl);
+		commitContext(webgl);
 		try {
 			Thread.sleep(1l);
 		} catch (InterruptedException e) {
