@@ -856,7 +856,6 @@ public class TMIUtils
         if (TMIConfig.isMultiplayer())
         {
             if(TMIUtils.isCreativeMode()){
-                //var4.thePlayer.inventory.addItemStackToInventory(var0);
                 var4.thePlayer.inventory.mainInventory[0] = var0;
                 var4.playerController.sendSlotPacket(var0, var4.thePlayer.inventoryContainer.inventorySlots.size() - 9);
                 var4.getNetHandler().addToSendQueue(new Packet16BlockItemSwitch(0));
