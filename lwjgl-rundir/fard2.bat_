@@ -1,0 +1,4 @@
+for /R %%A in (*.mp3) do (
+ffmpeg -i "%%A" -c:a libvorbis -q:a 4 "%%~dpnA.ogg"
+del "%%A"
+)
