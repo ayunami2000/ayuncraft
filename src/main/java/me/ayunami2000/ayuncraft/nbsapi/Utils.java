@@ -37,12 +37,7 @@ public class Utils {
 					thisTick.add(new WritableNote(n.getInstrument(), n.getPitch(), currentLayer, i));
 				}
 			}
-			Collections.sort(thisTick, new Comparator<WritableNote>() {
-				@Override
-				public int compare(WritableNote note1, WritableNote note2) {
-					return Integer.compare(note1.getLayer(), note2.getLayer());
-				}
-			});
+			Collections.sort(thisTick, Comparator.comparing(WritableNote::getLayer));
 			result.addAll(thisTick);
 		}
 		return result;

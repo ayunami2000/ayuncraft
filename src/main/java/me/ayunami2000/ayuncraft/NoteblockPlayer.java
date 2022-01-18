@@ -74,10 +74,9 @@ public class NoteblockPlayer {
         mc.thePlayer.rotationPitch=pitch%360.0F;
     }
 
-    public static void play(){
+    public static void play(String[] songLines){
         playingSong=false;
         playing=true;
-        String[] songLines=loadSong().split("\n");
         HashMap<Integer, HashMap<Integer, Vec3>> songBlocks=songLinesToBlocks(songLines);
         if(playing)placeAndTuneNoteblocks(songBlocks);
         if(playing) {

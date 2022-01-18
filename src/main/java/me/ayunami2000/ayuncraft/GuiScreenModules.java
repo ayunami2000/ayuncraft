@@ -18,10 +18,10 @@ public class GuiScreenModules extends GuiScreen {
         this.iteminfo = new GuiTextField(this.fontRenderer, this.width / 2 - 98, this.height / 6 + 24, 195, 20);
         this.iteminfo.setFocused(true);
         this.iteminfo.setText("383");
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 6 + 124, "Give"));
-        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, this.height / 6 + 100, "Toggle Notebot"));
-        this.buttonList.add(new GuiButton(3, this.width / 2 - 100, this.height / 6 + 76, "Toggle Legit mode"));
-        this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 6 + 52, "Toggle Flight"));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 6 + 52, "Give"));
+        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, this.height / 6 + 76, "Toggle Notebot"));
+        this.buttonList.add(new GuiButton(3, this.width / 2 - 100, this.height / 6 + 100, "Toggle Legit mode"));
+        this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 6 + 124, "Toggle Flight"));
     }
 
     public void onGuiClosed() {
@@ -57,7 +57,7 @@ public class GuiScreenModules extends GuiScreen {
                 NoteblockPlayer.thr = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        EaglerAdapter.openFileChooser("nbs", "application/nbs");
+                        EaglerAdapter.openFileChooser("nbs", ".nbs,.mid,.midi");
                         try {
                             Thread.sleep(1000);
                             while(!EaglerAdapter.isFocused()){
@@ -70,7 +70,7 @@ public class GuiScreenModules extends GuiScreen {
                             String name = EaglerAdapter.getFileChooserResultName();
                             NoteblockPlayer.songdata = b;
                             mc.thePlayer.sendChatToPlayer("Playing \""+name+"\" on notebot!");
-                            NoteblockPlayer.play();
+                            NoteblockPlayer.play((name.toLowerCase().endsWith(".nbs")?NoteblockPlayer.loadSong():me.ayunami2000.ayunAudioStreamer.MidiConverter.midiToTxt()).split("\n"));
                         }
                     }
                 });
