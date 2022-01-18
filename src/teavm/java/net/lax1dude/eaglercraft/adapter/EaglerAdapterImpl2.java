@@ -1201,11 +1201,11 @@ public class EaglerAdapterImpl2 {
 		p.setConeOuterGain(0f);
 		p.setOrientation(0f, 1f, 0f);
 		GainNode g = audioctx.createGain();
-		g.getGain().setValue(volume > 1.0f ? 1.0f : volume);
+		g.getGain().setValue(/*volume > 1.0f ? 1.0f : volume*/volume);
 		s.connect(g);
 		g.connect(p);
 		p.connect(audioctx.getDestination());
-		s.start(0.0d, 0.03d);
+		s.start(0.0d, /*0.03d*/0.0d);
 		final int theId = ++playbackId;
 		activeSoundEffects.put(theId, new AudioBufferSourceNodeX(s, p, g));
 		s.setOnEnded(new EventListener<MediaEvent>() {
@@ -1225,10 +1225,10 @@ public class EaglerAdapterImpl2 {
 		s.setBuffer(b);
 		s.getPlaybackRate().setValue(pitch);
 		GainNode g = audioctx.createGain();
-		g.getGain().setValue(volume > 1.0f ? 1.0f : volume);
+		g.getGain().setValue(/*volume > 1.0f ? 1.0f : volume*/volume);
 		s.connect(g);
 		g.connect(audioctx.getDestination());
-		s.start(0.0d, 0.03d);
+		s.start(0.0d, /*0.03d*/0.0d);
 		final int theId = ++playbackId;
 		activeSoundEffects.put(theId, new AudioBufferSourceNodeX(s, null, g));
 		s.setOnEnded(new EventListener<MediaEvent>() {
@@ -1250,7 +1250,7 @@ public class EaglerAdapterImpl2 {
 	public static final void setVolume(int id, float volume) {
 		AudioBufferSourceNodeX b = activeSoundEffects.get(id);
 		if(b != null) {
-			b.gain.getGain().setValue(volume > 1.0f ? 1.0f : volume);
+			b.gain.getGain().setValue(/*volume > 1.0f ? 1.0f : volume*/volume);
 			if(b.panner != null) b.panner.setMaxDistance(volume * 16f + 0.1f);
 		}
 	}
