@@ -1,6 +1,4 @@
-package me.ayunami2000.ayunAudioStreamer;
-
-import me.ayunami2000.ayuncraft.NoteblockPlayer;
+package me.ayunami2000.ayuncraft;
 
 import java.io.*;
 import java.util.ArrayList;
