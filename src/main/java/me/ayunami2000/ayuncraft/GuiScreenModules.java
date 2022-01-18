@@ -54,27 +54,26 @@ public class GuiScreenModules extends GuiScreen {
                 NoteblockPlayer.thr=null;
                 mc.thePlayer.sendChatToPlayer("Stopped notebot!");
             }else {
-                NoteblockPlayer.thr = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        EaglerAdapter.openFileChooser("nbs", ".nbs,.mid,.midi");
-                        try {
-                            Thread.sleep(1000);
-                            while(!EaglerAdapter.isFocused()){
-                                Thread.sleep(100);
-                            }
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {}
-                        byte[] b;
-                        if ((b = EaglerAdapter.getFileChooserResult()) != null && b.length > 0) {
-                            String name = EaglerAdapter.getFileChooserResultName();
-                            NoteblockPlayer.songdata = b;
-                            mc.thePlayer.sendChatToPlayer("Playing \""+name+"\" on notebot!");
-                            NoteblockPlayer.play((name.toLowerCase().endsWith(".nbs")?NoteblockPlayer.loadSong():MidiConverter.midiToTxt()).split("\n"));
+                EaglerAdapter.openFileChooser("nbs", ".nbs,.mid,.midi");
+                NoteblockPlayer.zleep(1000);
+                while(!EaglerAdapter.isFocused()){
+                    NoteblockPlayer.zleep(100);
+                }
+                NoteblockPlayer.zleep(500);
+                byte[] b;
+                if ((b = EaglerAdapter.getFileChooserResult()) != null && b.length > 0) {
+                    String name = EaglerAdapter.getFileChooserResultName();
+                    NoteblockPlayer.songdata = b;
+                    mc.thePlayer.sendChatToPlayer("Playing \""+name+"\" on notebot!");
+                    String[] songLines=(name.toLowerCase().endsWith(".nbs")?NoteblockPlayer.loadSong():MidiConverter.midiToTxt()).split("\n");
+                    NoteblockPlayer.thr = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            NoteblockPlayer.play(songLines);
                         }
-                    }
-                });
-                NoteblockPlayer.thr.start();
+                    });
+                    NoteblockPlayer.thr.start();
+                }
             }
         }else if(par1GuiButton.id == 3){
             NoteblockPlayer.legit=!NoteblockPlayer.legit;

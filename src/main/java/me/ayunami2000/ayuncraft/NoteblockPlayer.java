@@ -116,13 +116,20 @@ public class NoteblockPlayer {
         }
     }
 
+    public static void zleep(int ms){
+        long startTime=System.currentTimeMillis();
+        try {
+            while(System.currentTimeMillis()-startTime<ms){
+                Thread.sleep(0);
+            }
+        } catch (InterruptedException e) {}
+    }
+
     public static boolean building=false;
     public static void placeAndTuneNoteblocks(HashMap<Integer, HashMap<Integer, Vec3>> instrNoteToBlock){
         if(!playing)return;
         building=true;
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {}
+        zleep(100);
         for(Map.Entry<Integer, HashMap<Integer, Vec3>> entry : instrNoteToBlock.entrySet()) {
             Integer instr = entry.getKey();
             HashMap<Integer, Vec3> noteBlockPos = entry.getValue();
@@ -154,9 +161,7 @@ public class NoteblockPlayer {
                                     mc.thePlayer.inventory.mainInventory[0] = item;
                                     mc.playerController.sendSlotPacket(item, mc.thePlayer.inventoryContainer.inventorySlots.size() - 9);
                                     mc.getNetHandler().addToSendQueue(new Packet16BlockItemSwitch(0));
-                                    try{
-                                        Thread.sleep(50);
-                                    } catch (InterruptedException e) {}
+                                    zleep(50);
                                 }
                                 rotateToBlock(blockPos.addVector(0,-1,0));
                                 if(id1!=0) {
@@ -165,9 +170,7 @@ public class NoteblockPlayer {
                                     mc.getNetHandler().addToSendQueue(new Packet14BlockDig(1, (int) blockPos.xCoord, (int) (blockPos.yCoord - 1), (int) blockPos.zCoord, 1));
                                     mc.getNetHandler().addToSendQueue(new Packet14BlockDig(2, (int) blockPos.xCoord, (int) (blockPos.yCoord - 1), (int) blockPos.zCoord, 1));
                                     PlayerControllerMP.clickBlockCreative(mc, mc.playerController, (int) blockPos.xCoord, (int) (blockPos.yCoord - 1), (int) blockPos.zCoord, 1);
-                                    try{
-                                        Thread.sleep(50);
-                                    } catch (InterruptedException e) {}
+                                    zleep(50);
                                 }
                                 /*
                                 //attempt to place
@@ -182,9 +185,7 @@ public class NoteblockPlayer {
                                     mc.thePlayer.inventory.mainInventory[0] = item;
                                     mc.playerController.sendSlotPacket(item, mc.thePlayer.inventoryContainer.inventorySlots.size() - 9);
                                     mc.getNetHandler().addToSendQueue(new Packet16BlockItemSwitch(0));
-                                    try{
-                                        Thread.sleep(50);
-                                    } catch (InterruptedException e) {}
+                                    zleep(50);
                                 }
                                 rotateToBlock(blockPos.addVector(0,-2,0));
                                 if(id1!=0) {
@@ -193,9 +194,7 @@ public class NoteblockPlayer {
                                     mc.getNetHandler().addToSendQueue(new Packet14BlockDig(1, (int) blockPos.xCoord, (int) (blockPos.yCoord - 1), (int) blockPos.zCoord, 1));
                                     mc.getNetHandler().addToSendQueue(new Packet14BlockDig(2, (int) blockPos.xCoord, (int) (blockPos.yCoord - 1), (int) blockPos.zCoord, 1));
                                     PlayerControllerMP.clickBlockCreative(mc, mc.playerController, (int) blockPos.xCoord, (int) (blockPos.yCoord - 1), (int) blockPos.zCoord, 1);
-                                    try{
-                                        Thread.sleep(50);
-                                    } catch (InterruptedException e) {}
+                                    zleep(50);
                                 }
                                 if(id2!=0) {
                                     //attempt to break
@@ -203,9 +202,7 @@ public class NoteblockPlayer {
                                     mc.getNetHandler().addToSendQueue(new Packet14BlockDig(1, (int) blockPos.xCoord, (int) (blockPos.yCoord - 2), (int) blockPos.zCoord, 1));
                                     mc.getNetHandler().addToSendQueue(new Packet14BlockDig(2, (int) blockPos.xCoord, (int) (blockPos.yCoord - 2), (int) blockPos.zCoord, 1));
                                     PlayerControllerMP.clickBlockCreative(mc, mc.playerController, (int) blockPos.xCoord, (int) (blockPos.yCoord - 2), (int) blockPos.zCoord, 1);
-                                    try{
-                                        Thread.sleep(50);
-                                    } catch (InterruptedException e) {}
+                                    zleep(50);
                                 }
                                 /*
                                 //attempt to place
@@ -237,9 +234,7 @@ public class NoteblockPlayer {
                             currentNote=-1;
                             hasBeenPlaced=false;
                         }
-                        try {
-                            Thread.sleep(50);
-                        } catch (InterruptedException e) {}
+                        zleep(50);
                         currPos=mc.thePlayer.getPosition(1);
                         //rangeBlockDist=currPos.addVector(0,mc.thePlayer.getEyeHeight(),0).distanceTo(blockPosVec3d);
                         blockDist=currPos.distanceTo(blockPos);
@@ -250,9 +245,7 @@ public class NoteblockPlayer {
         }
         if(playing) {
             mc.thePlayer.sendChatMessage("/gamemode 0");
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {}
+            zleep(500);
         }
         building = false;
     }
@@ -358,9 +351,11 @@ public class NoteblockPlayer {
                     //keep notes within 2-octave range
                     Integer notePitch=Math.max(33,Math.min(57,noteInfo.getPitch()))-33;
                     int instrId=noteInfo.getInstrument().getID();
-                    if(instrId!=-1)instrId=in2old[nb2in[instrId]];
-                    tickLines.add(noteKey + ":" + notePitch + ":" + instrId + "\n");
-                    songLines.put(noteKey,tickLines);
+                    if(instrId!=-1){
+                        instrId=in2old[nb2in[instrId]];
+                        tickLines.add(noteKey + ":" + notePitch + ":" + instrId + "\n");
+                        songLines.put(noteKey,tickLines);
+                    }
                 }
             }
             SortedSet<Integer> ticks = new TreeSet<>(songLines.keySet());
