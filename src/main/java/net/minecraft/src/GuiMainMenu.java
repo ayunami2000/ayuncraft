@@ -259,25 +259,29 @@ public class GuiMainMenu extends GuiScreen {
 		EaglerAdapter.glMatrixMode(EaglerAdapter.GL_PROJECTION);
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glLoadIdentity();
-		EaglerAdapter.gluPerspective(120.0F, 1.0F, 0.05F, 10.0F);
+		//EaglerAdapter.gluPerspective(120.0F, 1.0F, 0.05F, 10.0F);
+		//EaglerAdapter.gluPerspective(120.0F, (float)this.mc.displayHeight / (float)this.mc.displayWidth, 0.05F, 10.0F);
+		EaglerAdapter.gluPerspective(120.0F, (float)this.mc.displayWidth / (float)this.mc.displayHeight, 0.05F, 10.0F);
 		EaglerAdapter.glMatrixMode(EaglerAdapter.GL_MODELVIEW);
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glLoadIdentity();
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		EaglerAdapter.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);
-		EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
+		//EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_ALPHA_TEST);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_CULL_FACE);
 		EaglerAdapter.glDepthMask(false);
-		EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
+		//EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
 		byte var5 = 8;
 
-		for (int var6 = 0; var6 < var5 * var5; ++var6) {
-			EaglerAdapter.glPushMatrix();
-			float var7 = ((float) (var6 % var5) / (float) var5 - 0.5F) / 64.0F;
-			float var8 = ((float) (var6 / var5) / (float) var5 - 0.5F) / 64.0F;
-			float var9 = 0.0F;
-			EaglerAdapter.glTranslatef(var7, var8, var9);
+		//for (int var6 = 0; var6 < var5 * var5; ++var6) {
+			//EaglerAdapter.glPushMatrix();
+			//float var7 = ((float) (var6 % var5) / (float) var5 - 0.5F) / 64.0F;
+			//float var8 = ((float) (var6 / var5) / (float) var5 - 0.5F) / 64.0F;
+			//float var7 = 0.0F;
+			//float var8 = 0.0F;
+			//float var9 = 0.0F;
+			//EaglerAdapter.glTranslatef(var7, var8, var9);
 			
 			float panTimer = (float)(System.currentTimeMillis() - start) * 0.03f;
 			EaglerAdapter.glRotatef(MathHelper.sin(panTimer / 400.0F) * 25.0F + 20.0F, 1.0F, 0.0F, 0.0F);
@@ -307,20 +311,23 @@ public class GuiMainMenu extends GuiScreen {
 				}
 
 				titlePanoramaPaths[var10].bindTexture();
+
 				var4.startDrawingQuads();
-				var4.setColorRGBA_I(16777215, 255 / (var6 + 1));
+				//var4.setColorRGBA_I(16777215, 255 / (var6 + 1));
+				var4.setColorRGBA_I(16777215, 255);
 				float var11 = 0.0F;
 				var4.addVertexWithUV(-1.0D, -1.0D, 1.0D, (double) (0.0F + var11), (double) (0.0F + var11));
 				var4.addVertexWithUV(1.0D, -1.0D, 1.0D, (double) (1.0F - var11), (double) (0.0F + var11));
 				var4.addVertexWithUV(1.0D, 1.0D, 1.0D, (double) (1.0F - var11), (double) (1.0F - var11));
 				var4.addVertexWithUV(-1.0D, 1.0D, 1.0D, (double) (0.0F + var11), (double) (1.0F - var11));
 				var4.draw();
+
 				EaglerAdapter.glPopMatrix();
 			}
 
-			EaglerAdapter.glPopMatrix();
+			//EaglerAdapter.glPopMatrix();
 			EaglerAdapter.glColorMask(true, true, true, false);
-		}
+		//}
 
 		var4.setTranslation(0.0D, 0.0D, 0.0D);
 		EaglerAdapter.glColorMask(true, true, true, true);
@@ -368,6 +375,10 @@ public class GuiMainMenu extends GuiScreen {
 	 * Renders the skybox in the main menu
 	 */
 	private void renderSkybox(int par1, int par2, float par3) {
+		//no more blur >:)
+		EaglerAdapter.glViewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
+		this.drawPanorama(par1, par2, par3);
+		/*
 		EaglerAdapter.glViewport(0, 0, 256, 256);
 		this.drawPanorama(par1, par2, par3);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_TEXTURE_2D);
@@ -396,6 +407,7 @@ public class GuiMainMenu extends GuiScreen {
 		var4.addVertexWithUV((double) var8, 0.0D, (double) this.zLevel, (double) (0.5F + var6), (double) (0.5F - var7));
 		var4.addVertexWithUV(0.0D, 0.0D, (double) this.zLevel, (double) (0.5F + var6), (double) (0.5F + var7));
 		var4.draw();
+		*/
 	}
 
 	private static final TextureLocation mclogo = new TextureLocation("/title/mclogo.png");
@@ -413,8 +425,9 @@ public class GuiMainMenu extends GuiScreen {
 		short var5 = 274;
 		int var6 = this.width / 2 - var5 / 2;
 		byte var7 = 30;
-		this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
-		this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
+		//no more gradient >:)
+		//this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
+		//this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
 		mclogo.bindTexture();
 		
 		this.drawTexturedModalRect(var6 + 0, var7 + 0, 0, 0, 99, 44);

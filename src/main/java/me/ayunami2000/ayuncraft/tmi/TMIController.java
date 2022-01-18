@@ -63,6 +63,13 @@ public class TMIController implements _tmi_MgButtonHandler, _tmi_MgItemHandler, 
                 if (EaglerAdapter.isKeyDown(this.config.getHotkey()) && this.focusedTextField == null && !var6 && !var7)
                 {
                     this.config.toggleEnabled();
+                    if(this.window instanceof InventoryEffectRenderer&&!Minecraft.getMinecraft().thePlayer.getActivePotionEffects().isEmpty()){
+                        if(this.config.isEnabled()){
+                            this.window.guiLeft = (this.window.width - this.window.xSize) / 2;
+                        }else{
+                            this.window.guiLeft = 160 + (this.window.width - this.window.xSize - 200) / 2;
+                        }
+                    }
                     TMIUtils.savePreferences(this.config);
                     this.lastKeyPressTime = System.currentTimeMillis();
                 }

@@ -3,6 +3,7 @@ package net.minecraft.src;
 import java.util.Collection;
 import java.util.Iterator;
 
+import me.ayunami2000.ayuncraft.tmi.TMIConfig;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.TextureLocation;
 
@@ -20,7 +21,7 @@ public abstract class InventoryEffectRenderer extends GuiContainer {
 		super.initGui();
 
 		if (!this.mc.thePlayer.getActivePotionEffects().isEmpty()) {
-			this.guiLeft = 160 + (this.width - this.xSize - 200) / 2;
+			if(!TMIConfig.getInstance().isEnabled())this.guiLeft = 160 + (this.width - this.xSize - 200) / 2;
 			this.field_74222_o = true;
 		}
 	}

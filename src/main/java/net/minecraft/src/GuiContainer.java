@@ -18,7 +18,7 @@ public abstract class GuiContainer extends GuiScreen {
 	protected static RenderItem itemRenderer = null;
 
 	/** The X size of the inventory window in pixels. */
-	protected int xSize = 176;
+	public int xSize = 176;
 
 	/** The Y size of the inventory window in pixels. */
 	protected int ySize = 166;
@@ -29,7 +29,7 @@ public abstract class GuiContainer extends GuiScreen {
 	/**
 	 * Starting X position for the Gui. Inconsistent use for Gui backgrounds.
 	 */
-	protected int guiLeft;
+	public int guiLeft;
 
 	/**
 	 * Starting Y position for the Gui. Inconsistent use for Gui backgrounds.

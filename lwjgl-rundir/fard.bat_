@@ -1,0 +1,4 @@
+for /R %%A in (*.ogg) do (
+ffmpeg -i "%%A" -acodec libmp3lame -vn -ar 44100 -ac 2 -b:a 128k "%%~dpnA.mp3"
+del "%%A"
+)

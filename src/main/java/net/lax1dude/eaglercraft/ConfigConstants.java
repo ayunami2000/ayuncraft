@@ -7,7 +7,7 @@ public class ConfigConstants {
 	public static final String version = "22m03a";
 	public static final String mainMenuString = "eaglercraft " + version;
 	
-	public static final String forkMe = "https://github.com/LAX1DUDE/eaglercraft";
+	public static final String forkMe = "https://github.com/ayunami2000/ayuncraft";
 
 	public static final boolean html5build = true;
 
