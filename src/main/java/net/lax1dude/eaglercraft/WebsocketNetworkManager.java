@@ -1,135 +1,268 @@
 package net.lax1dude.eaglercraft;
 
-import java.io.InputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
+import java.security.PrivateKey;
 import java.util.LinkedList;
 
-import net.minecraft.src.INetworkManager;
-import net.minecraft.src.NetHandler;
-import net.minecraft.src.Packet;
+import net.minecraft.client.Minecraft;
+import net.minecraft.src.*;
+import org.bouncycastle.crypto.BufferedBlockCipher;
+
+import javax.crypto.SecretKey;
 
 public class WebsocketNetworkManager implements INetworkManager {
-	
+	private boolean isInputBeingDecrypted;
+	private boolean isOutputEncrypted;
+	private SecretKey sharedKeyForEncryption;
+	private PrivateKey privateKey;
+
+	private BufferedBlockCipher inputBufferedBlockCipher=null;
+	private BufferedBlockCipher outputBufferedBlockCipher=null;
+
 	private NetHandler netHandler;
-	
+
 	public WebsocketNetworkManager(String uri, String eagler, NetHandler netHandler) throws IOException {
+		this(uri,eagler,netHandler,(PrivateKey)null);
+		//this(uri,eagler,netHandler,CryptManager.createNewKeyPair().getPrivate());
+	}
+
+	public WebsocketNetworkManager(String uri, String eagler, NetHandler netHandler, PrivateKey privKey) throws IOException {
 		this.netHandler = netHandler;
+		this.privateKey = privKey;
+		//this.sharedKeyForEncryption = CryptManager.createNewSharedKey();
+		this.sharedKeyForEncryption = null;
+		this.isInputBeingDecrypted = false;
+		this.isOutputEncrypted = false;
 		if(!EaglerAdapter.startConnection(uri)) {
 			throw new IOException("websocket to "+uri+" failed");
 		}
 		EaglerAdapter.setDebugVar("minecraftServer", uri);
 	}
-	
+
 	public void setNetHandler(NetHandler netHandler) {
 		this.netHandler = netHandler;
 	}
-	
+
 	private ByteArrayOutputStream sendBuffer = new ByteArrayOutputStream();
-	
+
 	public void addToSendQueue(Packet var1) {
 		try {
 			sendBuffer.reset();
-			DataOutputStream yee = new DataOutputStream(sendBuffer);
+			//the following attempts to keep packets encrypted because i forgot that last code i sent lol
+			DataOutputStream yee;
+			if(this.isOutputEncrypted&&!(var1 instanceof Packet252SharedKey)){
+				yee = this.encryptOuputStream();
+			}else{
+				yee = new DataOutputStream(sendBuffer);
+			}
+
+			if (Minecraft.getMinecraft().gameSettings.useDefaultProtocol && var1 instanceof Packet252SharedKey && !this.isOutputEncrypted)
+			{
+				if (!this.netHandler.isServerHandler())
+				{
+					this.sharedKeyForEncryption = ((Packet252SharedKey)var1).getSharedKey();
+				}
+				this.isOutputEncrypted=true;
+				//yee=this.encryptOuputStream(yee);
+			}
 			Packet.writePacket(var1, yee);
+			//System.out.println("SENDING: "+var1);
+			yee.flush();
 			EaglerAdapter.writePacket(sendBuffer.toByteArray());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void wakeThreads() {
 	}
-	
+
 	private static class ByteBufferDirectInputStream extends InputStream {
 		private ByteBuffer buf;
 		private ByteBufferDirectInputStream(ByteBuffer b) {
 			this.buf = b;
 		}
-		
+
 		@Override
 		public int read() throws IOException {
 			return buf.remaining() > 0 ? ((int)buf.get() & 0xFF) : -1;
 		}
-		
+
 		@Override
 		public int available() {
 			return buf.remaining();
 		}
 	}
-	
+
 	private ByteBuffer oldChunkBuffer = null;
 	private LinkedList<ByteBuffer> readChunks = new LinkedList();
-	
+
+	private ByteBuffer oldDecryptedChunkBuffer = null;
+	private LinkedList<ByteBuffer> decryptedReadChunks = new LinkedList();
+
 	public void processReadPackets() {
 		readChunks.clear();
-		
+
 		if(oldChunkBuffer != null) {
 			readChunks.add(oldChunkBuffer);
 		}
-		
+
 		byte[] packet;
 		while((packet = EaglerAdapter.readPacket()) != null) {
 			readChunks.add(ByteBuffer.wrap(packet));
 		}
 		if(!readChunks.isEmpty()) {
-			
+
 			int cap = 0;
 			for(ByteBuffer b : readChunks) {
 				cap += b.limit();
 			}
-			
+
 			ByteBuffer stream = ByteBuffer.allocate(cap);
 			for(ByteBuffer b : readChunks) {
 				stream.put(b);
 			}
 			stream.flip();
-			
-			DataInputStream packetStream = new DataInputStream(new ByteBufferDirectInputStream(stream));
-			while(stream.hasRemaining()) {
-				stream.mark();
-				try {
-					Packet pkt = Packet.readPacket(packetStream, false);
-					//System.out.println(pkt.toString());
-					pkt.processPacket(this.netHandler);
-				} catch (EOFException e) {
-					stream.reset();
-					break;
-				}  catch (IOException e) {
-					continue;
-				} catch (Throwable e2) {
-					e2.printStackTrace();
+
+			if(this.isInputBeingDecrypted){
+				decryptedReadChunks.clear();
+
+				if (oldDecryptedChunkBuffer != null) {
+					decryptedReadChunks.add(oldDecryptedChunkBuffer);
+					oldDecryptedChunkBuffer = null;
+				}
+
+				byte[] block = new byte[2048];
+				byte[] decryp = new byte[this.inputBufferedBlockCipher.getOutputSize(2048)];
+				while (stream.remaining() >= 2048) {
+					stream.get(block);
+					int i = this.inputBufferedBlockCipher.processByte(block, 0, 2048, decryp, 0);
+					ByteBuffer chunk = ByteBuffer.allocate(i);
+					chunk.put(decryp, 0, i);
+					chunk.flip();
+					decryptedReadChunks.add(chunk);
+				}
+
+				oldChunkBuffer = stream.remaining() > 0 ? stream.slice() : null;
+
+				int cap2 = 0;
+				for (ByteBuffer b : decryptedReadChunks) {
+					cap2 += b.limit();
+				}
+
+				ByteBuffer decStream = ByteBuffer.allocate(cap2);
+				for (ByteBuffer b : decryptedReadChunks) {
+					decStream.put(b);
+				}
+				decStream.flip();
+
+				DataInputStream packetStream = new DataInputStream(new ByteBufferDirectInputStream(decStream));
+				while (decStream.hasRemaining()) {
+					decStream.mark();
+					try {
+						Packet pkt = Packet.readPacket(packetStream, false);
+						//System.out.println("RECEIVING: " + pkt);
+						pkt.processPacket(this.netHandler);
+					} catch (EOFException e) {
+						decStream.reset();
+						break;
+					} catch (IOException e) {
+						continue;
+					} catch (Throwable e2) {
+						e2.printStackTrace();
+					}
+				}
+
+				if (decStream.hasRemaining()) {
+					oldDecryptedChunkBuffer = decStream.slice();
+				} else {
+					oldDecryptedChunkBuffer = null;
+				}
+			}else {
+				DataInputStream packetStream = new DataInputStream(new ByteBufferDirectInputStream(stream));
+				while (stream.hasRemaining()) {
+					stream.mark();
+					try {
+						Packet pkt = Packet.readPacket(packetStream, false);
+						boolean change=false;
+						if (pkt != null) {
+							if (Minecraft.getMinecraft().gameSettings.useDefaultProtocol && pkt instanceof Packet252SharedKey && !this.isInputBeingDecrypted) {
+								if (this.netHandler.isServerHandler()) {
+									this.sharedKeyForEncryption = ((Packet252SharedKey) pkt).getSharedKey(this.privateKey);
+								}
+								packetStream = this.decryptInputStream(new ByteBufferDirectInputStream(stream));
+								change=true;
+							}
+							//System.out.println("RECEIVING: " + pkt);
+							pkt.processPacket(this.netHandler);
+							if(change){
+								processReadPackets();
+								return;
+							}
+						}
+					} catch (EOFException e) {
+						stream.reset();
+						break;
+					} catch (IOException e) {
+						continue;
+					} catch (Throwable e2) {
+						e2.printStackTrace();
+					}
+				}
+
+				if (stream.hasRemaining()) {
+					oldChunkBuffer = stream.slice();
+				} else {
+					oldChunkBuffer = null;
 				}
 			}
-			
-			if(stream.hasRemaining()) {
-				oldChunkBuffer = stream.slice();
-			}else {
-				oldChunkBuffer = null;
-			}
-			
 		}
 	}
-	
+
 	public void serverShutdown() {
 		if(EaglerAdapter.connectionOpen()) {
 			EaglerAdapter.endConnection();
 			EaglerAdapter.setDebugVar("minecraftServer", "null");
 		}
 	}
-	
+
+	private DataInputStream decryptInputStream(ByteBufferDirectInputStream var1) throws IOException
+	{
+		this.isInputBeingDecrypted = true;
+		if(this.inputBufferedBlockCipher==null){
+			this.inputBufferedBlockCipher = CryptManager.createBufferedBlockCipher(false,this.sharedKeyForEncryption);
+		}
+		return new DataInputStream(CryptManager.decryptInputStream(this.inputBufferedBlockCipher, var1));
+	}
+
+	/**
+	 * flushes the stream and replaces it with an encryptedOutputStream
+	 */
+	private DataOutputStream encryptOuputStream(DataOutputStream var0) throws IOException
+	{
+		var0.flush();
+		this.isOutputEncrypted = true;
+		BufferedOutputStream var1 = new BufferedOutputStream(CryptManager.encryptOuputStream(this.sharedKeyForEncryption, var0), 5120);
+		return new DataOutputStream(var1);
+	}
+	private DataOutputStream encryptOuputStream() throws IOException
+	{
+		if(this.outputBufferedBlockCipher==null){
+			this.outputBufferedBlockCipher = CryptManager.createBufferedBlockCipher(true,this.sharedKeyForEncryption);
+		}
+		BufferedOutputStream var1 = new BufferedOutputStream(CryptManager.encryptOuputStream(this.outputBufferedBlockCipher, sendBuffer), 5120);
+		return new DataOutputStream(var1);
+	}
+
 	public int packetSize() {
 		return 0;
 	}
-	
+
 	public void networkShutdown(String var1, Object... var2) {
 		serverShutdown();
 	}
-	
+
 	public void closeConnections() {
 		if(EaglerAdapter.connectionOpen()) {
 			EaglerAdapter.endConnection();

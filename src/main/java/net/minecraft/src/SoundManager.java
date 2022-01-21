@@ -324,7 +324,7 @@ public class SoundManager {
 	
 	public void playTheTitleMusic() {
 		if(titleMusic == -1 || !EaglerAdapter.isPlaying(titleMusic)) {
-			titleMusic = EaglerAdapter.beginPlaybackStatic("/sounds/gta.mp3", 1.0f, 1.0f);
+			titleMusic = EaglerAdapter.beginPlaybackStatic("/sounds/gta.mp3", this.options.musicVolume, 1.0f);
 		}
 	}
 	
