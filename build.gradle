@@ -37,12 +37,12 @@ dependencies {
 teavm {
    
    compileScopes = null;
-   minifying = true;
+   minifying = false;
    maxTopLevelNames = 10000;
    properties = null;
    debugInformationGenerated = false;
    sourceMapsGenerated = true;
-   sourceFilesCopied = false;
+   sourceFilesCopied = true;
    incremental = false;
    transformers = null;
    

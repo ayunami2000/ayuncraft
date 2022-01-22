@@ -5,25 +5,24 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
-import java.security.Key;
+import me.ayunami2000.ayuncraft.java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import me.ayunami2000.ayuncraft.java.security.PrivateKey;
+import me.ayunami2000.ayuncraft.java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Arrays;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
+import me.ayunami2000.ayuncraft.javax.crypto.SecretKey;
+import me.ayunami2000.ayuncraft.javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.crypto.BufferedBlockCipher;
 import org.bouncycastle.crypto.CipherKeyGenerator;
 import org.bouncycastle.crypto.KeyGenerationParameters;
@@ -47,7 +46,7 @@ public class CryptManager
     {
         CipherKeyGenerator var0 = new CipherKeyGenerator();
         var0.init(new KeyGenerationParameters(new SecureRandom(), 128));
-        return new SecretKeySpec(var0.generateKey(), "AES");
+        return (SecretKey) new SecretKeySpec(var0.generateKey(), "AES");
     }
 
     public static KeyPair createNewKeyPair()
@@ -117,7 +116,7 @@ public class CryptManager
         {
             X509EncodedKeySpec var1 = new X509EncodedKeySpec(par0ArrayOfByte);
             KeyFactory var2 = KeyFactory.getInstance("RSA");
-            return var2.generatePublic(var1);
+            return (PublicKey) var2.generatePublic(var1);
         }
         catch (NoSuchAlgorithmException var3)
         {
@@ -137,7 +136,7 @@ public class CryptManager
      */
     public static SecretKey decryptSharedKey(PrivateKey par0PrivateKey, byte[] par1ArrayOfByte)
     {
-        return new SecretKeySpec(decryptData(par0PrivateKey, par1ArrayOfByte), "AES");
+        return (SecretKey) new SecretKeySpec(decryptData((Key) par0PrivateKey, par1ArrayOfByte), "AES");
     }
 
     /**
@@ -218,12 +217,12 @@ public class CryptManager
 
     public static OutputStream encryptOuputStream(SecretKey par0SecretKey, OutputStream par1OutputStream)
     {
-        return new CipherOutputStream(par1OutputStream, createBufferedBlockCipher(true, par0SecretKey));
+        return new CipherOutputStream(par1OutputStream, createBufferedBlockCipher(true, (Key) par0SecretKey));
     }
 
     public static InputStream decryptInputStream(SecretKey par0SecretKey, InputStream par1InputStream)
     {
-        return new CipherInputStream(par1InputStream, createBufferedBlockCipher(false, par0SecretKey));
+        return new CipherInputStream(par1InputStream, createBufferedBlockCipher(false, (Key) par0SecretKey));
     }
 
     public static OutputStream encryptOuputStream(BufferedBlockCipher bufferedBlockCipher, OutputStream par1OutputStream)

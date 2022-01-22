@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 
+import me.ayunami2000.ayuncraft.java.security.Key;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import me.ayunami2000.ayuncraft.CryptManager;
@@ -58,6 +59,7 @@ public class WebsocketNetworkManager implements INetworkManager {
 				//yee=this.encryptOuputStream(yee);
 			}
 			Packet.writePacket(var1, yee);
+			if(logpackets)System.out.println("SENDING: "+var1);
 			yee.flush();
 			EaglerAdapter.writePacket(sendBuffer.toByteArray());
 		} catch (IOException e) {
@@ -184,9 +186,9 @@ public class WebsocketNetworkManager implements INetworkManager {
 							if(logpackets)System.out.println("RECEIVING: " + pkt);
 							pkt.processPacket(this.netHandler);
 							if(change){
-								//processReadPackets();
-								//return;
-								break;
+								processReadPackets();
+								return;
+								//break;
 							}
 						}
 					} catch (EOFException e) {
@@ -219,7 +221,7 @@ public class WebsocketNetworkManager implements INetworkManager {
 	{
 		this.isInputBeingDecrypted = true;
 		if(this.inputBufferedBlockCipher==null){
-			this.inputBufferedBlockCipher = CryptManager.createBufferedBlockCipher(false,this.sharedKeyForEncryption);
+			this.inputBufferedBlockCipher = CryptManager.createBufferedBlockCipher(false, (Key) this.sharedKeyForEncryption);
 		}
 		return new DataInputStream(CryptManager.decryptInputStream(this.inputBufferedBlockCipher, var1));
 	}
@@ -237,7 +239,7 @@ public class WebsocketNetworkManager implements INetworkManager {
 	private DataOutputStream encryptOuputStream() throws IOException
 	{
 		if(this.outputBufferedBlockCipher==null){
-			this.outputBufferedBlockCipher = CryptManager.createBufferedBlockCipher(true,this.sharedKeyForEncryption);
+			this.outputBufferedBlockCipher = CryptManager.createBufferedBlockCipher(true, (Key) this.sharedKeyForEncryption);
 		}
 		BufferedOutputStream var1 = new BufferedOutputStream(CryptManager.encryptOuputStream(this.outputBufferedBlockCipher, sendBuffer), 5120);
 		return new DataOutputStream(var1);

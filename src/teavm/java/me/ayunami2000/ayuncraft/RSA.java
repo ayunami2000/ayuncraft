@@ -44,7 +44,7 @@ public class RSA {
       BigInteger q = BigInteger.probablePrime(N/2, random);
       BigInteger phi = (p.subtract(one)).multiply(q.subtract(one));
 
-      modulus    = p.multiply(q);                                  
+      modulus    = p.multiply(q);
       publicKey  = new BigInteger("65537");     // common value in practice = 2^16 + 1
       privateKey = publicKey.modInverse(phi);
    }
@@ -67,6 +67,14 @@ public class RSA {
       privateKey=k;
    }
 
+   void setModulus(BigInteger k) {
+      modulus=k;
+   }
+
+   void setModulus() {
+      modulus=one;
+   }
+
 
    BigInteger getPublicKey() {
       return publicKey;
@@ -74,6 +82,10 @@ public class RSA {
 
    BigInteger getPrivateKey() {
       return privateKey;
+   }
+
+   BigInteger getModulus() {
+      return modulus;
    }
 
    public String toString() {
