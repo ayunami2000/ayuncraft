@@ -2,7 +2,6 @@ package net.lax1dude.eaglercraft;
 
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import net.minecraft.client.Minecraft;
@@ -173,7 +172,6 @@ public class WebsocketNetworkManager implements INetworkManager {
 			}else {
 				DataInputStream packetStream = new DataInputStream(new ByteBufferDirectInputStream(stream));
 				while (stream.hasRemaining()) {
-					if(logpackets)System.out.println("FARD");
 					stream.mark();
 					try {
 						Packet pkt = Packet.readPacket(packetStream, false);
@@ -186,8 +184,9 @@ public class WebsocketNetworkManager implements INetworkManager {
 							if(logpackets)System.out.println("RECEIVING: " + pkt);
 							pkt.processPacket(this.netHandler);
 							if(change){
-								processReadPackets();
-								return;
+								//processReadPackets();
+								//return;
+								break;
 							}
 						}
 					} catch (EOFException e) {
