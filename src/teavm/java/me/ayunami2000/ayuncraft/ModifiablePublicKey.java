@@ -1,6 +1,6 @@
 package me.ayunami2000.ayuncraft;
 
-import java.security.PublicKey;
+import me.ayunami2000.ayuncraft.java.security.PublicKey;
 
 public class ModifiablePublicKey implements PublicKey {
     private String algorithm;

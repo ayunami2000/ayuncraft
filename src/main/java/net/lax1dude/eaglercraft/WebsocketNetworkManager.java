@@ -9,7 +9,7 @@ import net.minecraft.src.*;
 import me.ayunami2000.ayuncraft.CryptManager;
 import org.bouncycastle.crypto.BufferedBlockCipher;
 
-import javax.crypto.SecretKey;
+import me.ayunami2000.ayuncraft.javax.crypto.SecretKey;
 
 public class WebsocketNetworkManager implements INetworkManager {
 	private boolean isInputBeingDecrypted;

@@ -3,9 +3,9 @@ package me.ayunami2000.ayuncraft;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.security.Key;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import me.ayunami2000.ayuncraft.java.security.Key;
+import me.ayunami2000.ayuncraft.java.security.PrivateKey;
+import me.ayunami2000.ayuncraft.java.security.PublicKey;
 
 import org.bouncycastle.crypto.BufferedBlockCipher;
 import org.bouncycastle.crypto.engines.AESFastEngine;
@@ -15,8 +15,8 @@ import org.bouncycastle.crypto.modes.CFBBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
+import me.ayunami2000.ayuncraft.javax.crypto.SecretKey;
+import me.ayunami2000.ayuncraft.javax.crypto.spec.SecretKeySpec;
 
 public class CryptManager
 {

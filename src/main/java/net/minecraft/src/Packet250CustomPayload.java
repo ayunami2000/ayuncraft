@@ -36,11 +36,13 @@ public class Packet250CustomPayload extends Packet {
 	 * Abstract. Reads the raw packet data from the data stream.
 	 */
 	public void readPacketData(DataInputStream par1DataInputStream) throws IOException {
-		if(!Minecraft.getMinecraft().gameSettings.useDefaultProtocol) {
-			this.channel = readString(par1DataInputStream, 20);
-			this.length = par1DataInputStream.readShort();
+		this.channel = readString(par1DataInputStream, 20);
+		this.length = par1DataInputStream.readShort();
 
-			if (this.length > 0 && this.length < 32767) {
+		if (this.length > 0 && this.length < 32767) {
+			if(Minecraft.getMinecraft().gameSettings.useDefaultProtocol){
+				par1DataInputStream.skipBytes(this.length);
+			}else {
 				this.data = new byte[this.length];
 				par1DataInputStream.readFully(this.data);
 			}

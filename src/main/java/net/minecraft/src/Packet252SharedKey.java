@@ -5,9 +5,9 @@ import me.ayunami2000.ayuncraft.CryptManager;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import javax.crypto.SecretKey;
+import me.ayunami2000.ayuncraft.java.security.PrivateKey;
+import me.ayunami2000.ayuncraft.java.security.PublicKey;
+import me.ayunami2000.ayuncraft.javax.crypto.SecretKey;
 
 public class Packet252SharedKey extends Packet
 {

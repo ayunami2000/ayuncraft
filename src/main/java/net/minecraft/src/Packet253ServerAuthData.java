@@ -5,7 +5,7 @@ import me.ayunami2000.ayuncraft.CryptManager;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.security.PublicKey;
+import me.ayunami2000.ayuncraft.java.security.PublicKey;
 
 public class Packet253ServerAuthData extends Packet
 {

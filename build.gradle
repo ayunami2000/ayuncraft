@@ -78,6 +78,6 @@ teavm {
    /** Add name of configurations here where to look for jarfiles. */
    includeJarsFrom = [];
    
-   /** By default teavmc taskd epends on javaCompile task, unless this varaibale is true. */
+   /** By default teavmc task depends on javaCompile task, unless this variable is true. */
    skipJavaCompile = false;       
 }
