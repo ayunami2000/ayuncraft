@@ -1,13 +1,13 @@
 package org.bouncycastle.crypto;
 
-import java.security.SecureRandom;
+import java.util.Random;
 
 public class KeyGenerationParameters
 {
-    private SecureRandom random;
+    private Random random;
     private int strength;
 
-    public KeyGenerationParameters(SecureRandom par1SecureRandom, int par2)
+    public KeyGenerationParameters(Random par1SecureRandom, int par2)
     {
         this.random = par1SecureRandom;
         this.strength = par2;
@@ -16,7 +16,7 @@ public class KeyGenerationParameters
     /**
      * Return the random source associated with this generator.
      */
-    public SecureRandom getRandom()
+    public Random getRandom()
     {
         return this.random;
     }

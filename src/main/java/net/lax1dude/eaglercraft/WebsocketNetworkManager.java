@@ -2,11 +2,12 @@ package net.lax1dude.eaglercraft;
 
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.security.PrivateKey;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
+import me.ayunami2000.ayuncraft.CryptManager;
 import org.bouncycastle.crypto.BufferedBlockCipher;
 
 import javax.crypto.SecretKey;
@@ -15,7 +16,8 @@ public class WebsocketNetworkManager implements INetworkManager {
 	private boolean isInputBeingDecrypted;
 	private boolean isOutputEncrypted;
 	private SecretKey sharedKeyForEncryption;
-	private PrivateKey privateKey;
+
+	private final boolean logpackets=true;
 
 	private BufferedBlockCipher inputBufferedBlockCipher=null;
 	private BufferedBlockCipher outputBufferedBlockCipher=null;
@@ -23,14 +25,7 @@ public class WebsocketNetworkManager implements INetworkManager {
 	private NetHandler netHandler;
 
 	public WebsocketNetworkManager(String uri, String eagler, NetHandler netHandler) throws IOException {
-		this(uri,eagler,netHandler,(PrivateKey)null);
-		//this(uri,eagler,netHandler,CryptManager.createNewKeyPair().getPrivate());
-	}
-
-	public WebsocketNetworkManager(String uri, String eagler, NetHandler netHandler, PrivateKey privKey) throws IOException {
 		this.netHandler = netHandler;
-		this.privateKey = privKey;
-		//this.sharedKeyForEncryption = CryptManager.createNewSharedKey();
 		this.sharedKeyForEncryption = null;
 		this.isInputBeingDecrypted = false;
 		this.isOutputEncrypted = false;
@@ -49,7 +44,7 @@ public class WebsocketNetworkManager implements INetworkManager {
 	public void addToSendQueue(Packet var1) {
 		try {
 			sendBuffer.reset();
-			//the following attempts to keep packets encrypted because i forgot that last code i sent lol
+
 			DataOutputStream yee;
 			if(this.isOutputEncrypted&&!(var1 instanceof Packet252SharedKey)){
 				yee = this.encryptOuputStream();
@@ -59,15 +54,11 @@ public class WebsocketNetworkManager implements INetworkManager {
 
 			if (Minecraft.getMinecraft().gameSettings.useDefaultProtocol && var1 instanceof Packet252SharedKey && !this.isOutputEncrypted)
 			{
-				if (!this.netHandler.isServerHandler())
-				{
-					this.sharedKeyForEncryption = ((Packet252SharedKey)var1).getSharedKey();
-				}
+				this.sharedKeyForEncryption = ((Packet252SharedKey)var1).getSharedKey();
 				this.isOutputEncrypted=true;
 				//yee=this.encryptOuputStream(yee);
 			}
 			Packet.writePacket(var1, yee);
-			//System.out.println("SENDING: "+var1);
 			yee.flush();
 			EaglerAdapter.writePacket(sendBuffer.toByteArray());
 		} catch (IOException e) {
@@ -162,7 +153,7 @@ public class WebsocketNetworkManager implements INetworkManager {
 					decStream.mark();
 					try {
 						Packet pkt = Packet.readPacket(packetStream, false);
-						//System.out.println("RECEIVING: " + pkt);
+						if(logpackets)System.out.println("RECEIVING: " + pkt);
 						pkt.processPacket(this.netHandler);
 					} catch (EOFException e) {
 						decStream.reset();
@@ -182,19 +173,17 @@ public class WebsocketNetworkManager implements INetworkManager {
 			}else {
 				DataInputStream packetStream = new DataInputStream(new ByteBufferDirectInputStream(stream));
 				while (stream.hasRemaining()) {
+					if(logpackets)System.out.println("FARD");
 					stream.mark();
 					try {
 						Packet pkt = Packet.readPacket(packetStream, false);
 						boolean change=false;
 						if (pkt != null) {
 							if (Minecraft.getMinecraft().gameSettings.useDefaultProtocol && pkt instanceof Packet252SharedKey && !this.isInputBeingDecrypted) {
-								if (this.netHandler.isServerHandler()) {
-									this.sharedKeyForEncryption = ((Packet252SharedKey) pkt).getSharedKey(this.privateKey);
-								}
 								packetStream = this.decryptInputStream(new ByteBufferDirectInputStream(stream));
 								change=true;
 							}
-							//System.out.println("RECEIVING: " + pkt);
+							if(logpackets)System.out.println("RECEIVING: " + pkt);
 							pkt.processPacket(this.netHandler);
 							if(change){
 								processReadPackets();

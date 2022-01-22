@@ -1,10 +1,10 @@
 package org.bouncycastle.crypto;
 
-import java.security.SecureRandom;
+import java.util.Random;
 
 public class CipherKeyGenerator
 {
-    protected SecureRandom random;
+    protected Random random;
     protected int strength;
 
     public void init(KeyGenerationParameters par1)

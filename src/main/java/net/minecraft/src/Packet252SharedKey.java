@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import me.ayunami2000.ayuncraft.CryptManager;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -73,7 +75,7 @@ public class Packet252SharedKey extends Packet
 	 */
 	public SecretKey getSharedKey()
 	{
-		return this.getSharedKey((PrivateKey)null);
+		return this.getSharedKey(null);
 	}
 
 	/**
