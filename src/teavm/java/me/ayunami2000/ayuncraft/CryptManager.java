@@ -61,6 +61,11 @@ public class CryptManager
             b[i] = (byte) (a.get(i) & 0xFF);
         }
         */
+
+        //ParseRSAPublicKey parser = new ParseRSAPublicKey(par0ArrayOfByte);
+        //BigInteger[] results = parser.parse();
+
+        //return new RSAPublicKeySpec(results[0],results[1]);
         return new ModifiablePublicKey("RSA","X.509",par0ArrayOfByte);
     }
 

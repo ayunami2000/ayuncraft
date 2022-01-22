@@ -185,7 +185,7 @@ public class CryptManager
         try
         {
             Cipher var3 = Cipher.getInstance(par1Str);
-            var3.init(par0, par2Key);
+            var3.init(par0, (java.security.Key) par2Key);
             return var3;
         }
         catch (InvalidKeyException var4)

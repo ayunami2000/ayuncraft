@@ -23,23 +23,9 @@
  *
  */
 
-package java.security.spec;
+package me.ayunami2000.ayuncraft.java.security.spec;
 
 import java.math.BigInteger;
-
-/**
- * This class specifies an RSA public key.
- *
- * @author Jan Luehe
- *
- *
- * @see java.security.Key
- * @see java.security.KeyFactory
- * @see KeySpec
- * @see X509EncodedKeySpec
- * @see RSAPrivateKeySpec
- * @see RSAPrivateCrtKeySpec
- */
 
 public class RSAPublicKeySpec implements KeySpec {
 
