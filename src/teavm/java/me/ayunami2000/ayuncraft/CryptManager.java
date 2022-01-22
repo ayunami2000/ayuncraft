@@ -1,15 +1,8 @@
 package me.ayunami2000.ayuncraft;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigInteger;
-import java.security.spec.RSAPublicKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Arrays;
 
-import com.rhg.rsa.RSAPrivateKey;
-import com.rhg.rsa.RSAPublicKey;
 import me.ayunami2000.ayuncraft.java.security.Key;
 import me.ayunami2000.ayuncraft.java.security.PrivateKey;
 import me.ayunami2000.ayuncraft.java.security.PublicKey;
@@ -26,8 +19,6 @@ import org.bouncycastle.crypto.params.ParametersWithIV;
 import me.ayunami2000.ayuncraft.javax.crypto.SecretKey;
 import me.ayunami2000.ayuncraft.javax.crypto.spec.SecretKeySpec;
 import org.teavm.jso.JSBody;
-import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Uint8Array;
 
 public class CryptManager
 {
@@ -35,7 +26,7 @@ public class CryptManager
     /**
      * Generate a new shared secret AES key from a static preset key
      */
-    private static final byte[] baseSharedKey = new byte[] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+    private static final byte[] baseSharedKey = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
     public static SecretKey createNewSharedKey(){
         return new SecretKeySpec(baseSharedKey,"AES");
     }
@@ -88,17 +79,25 @@ public class CryptManager
         rsa.setModulus(BigInteger.valueOf(16));
     }
     */
+    //private static final BigInteger modu = new BigInteger("1000000000000000000000000000000");
+
+    @JSBody(params = {"pubkey", "indata"}, script = "var enc=new JSEncrypt();enc.setPublicKey(pubkey);var res=enc.encrypt(indata);return res;")
+    private static native String encryptDataNative(String pubkey, String indata);
+
+    @JSBody(params = {"privkey", "indata"}, script = "var dec=new JSEncrypt();dec.setPrivateKey(privkey);var res=dec.decrypt(indata);return res;")
+    private static native String decryptDataNative(String privkey, String indata);
 
     /**
      * Encrypt byte[] data with RSA public key
      */
     public static byte[] encryptData(Key par0Key, byte[] par1ArrayOfByte)
     {
-        ///*
+        return Base64.decodeBase64(encryptDataNative("-----BEGIN PUBLIC KEY-----\n"+Base64.encodeBase64String(par0Key.getEncoded()).replaceAll("(.{64})", "$1\n")+"\n-----END PUBLIC KEY-----",Base64.encodeBase64String(par1ArrayOfByte)));
+        /*
         try {
             //System.out.println(Arrays.toString(par0Key.getEncoded()));
             //System.out.println(Arrays.toString(par1ArrayOfByte));
-            RSAPublicKey rsaPublicKey = new RSAPublicKey(BigInteger.valueOf(16), new BigInteger(par0Key.getEncoded()));
+            RSAPublicKey rsaPublicKey = new RSAPublicKey(modu, new BigInteger(par0Key.getEncoded()));
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             rsaPublicKey.use(par1ArrayOfByte, baos);
             return baos.toByteArray();
@@ -107,7 +106,7 @@ public class CryptManager
             //e.printStackTrace();
             return null;
         }
-        //*/
+        */
         /*
         try {
             rsa.setPublicKey(new BigInteger(par0Key.getEncoded()));
@@ -126,9 +125,10 @@ public class CryptManager
      */
     public static byte[] decryptData(Key par0Key, byte[] par1ArrayOfByte)
     {
-        ///*
+        return Base64.decodeBase64(decryptDataNative("-----BEGIN RSA PRIVATE KEY-----\n"+Base64.encodeBase64String(par0Key.getEncoded()).replaceAll("(.{64})", "$1\n")+"\n-----END RSA PRIVATE KEY-----",Base64.encodeBase64String(par1ArrayOfByte)));
+        /*
         try{
-            RSAPrivateKey rsaPrivateKey = new RSAPrivateKey(BigInteger.valueOf(16),new BigInteger(par0Key.getEncoded()));
+            RSAPrivateKey rsaPrivateKey = new RSAPrivateKey(modu,new BigInteger(par0Key.getEncoded()));
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             rsaPrivateKey.use(par1ArrayOfByte,baos);
             return baos.toByteArray();
@@ -136,7 +136,7 @@ public class CryptManager
             System.err.println(e.getClass().getName() + "\n" + e.getMessage());
             return null;
         }
-        //*/
+        */
         /*
         try {
             rsa.setPrivateKey(new BigInteger(par0Key.getEncoded()));
