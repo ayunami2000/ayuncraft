@@ -17,7 +17,7 @@ public class WebsocketNetworkManager implements INetworkManager {
 	private boolean isOutputEncrypted;
 	private SecretKey sharedKeyForEncryption;
 
-	private final boolean logpackets=true;
+	private final boolean logpackets=false;
 
 	private BufferedBlockCipher inputBufferedBlockCipher=null;
 	private BufferedBlockCipher outputBufferedBlockCipher=null;
@@ -125,11 +125,11 @@ public class WebsocketNetworkManager implements INetworkManager {
 					oldDecryptedChunkBuffer = null;
 				}
 
-				byte[] block = new byte[2048];
-				byte[] decryp = new byte[this.inputBufferedBlockCipher.getOutputSize(2048)];
-				while (stream.remaining() >= 2048) {
+				byte[] block = new byte[/*2048*/32];
+				byte[] decryp = new byte[this.inputBufferedBlockCipher.getOutputSize(/*2048*/32)];
+				while (stream.remaining() >= /*2048*/32) {
 					stream.get(block);
-					int i = this.inputBufferedBlockCipher.processByte(block, 0, 2048, decryp, 0);
+					int i = this.inputBufferedBlockCipher.processByte(block, 0, /*2048*/32, decryp, 0);
 					ByteBuffer chunk = ByteBuffer.allocate(i);
 					chunk.put(decryp, 0, i);
 					chunk.flip();
