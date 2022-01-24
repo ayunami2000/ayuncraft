@@ -18,6 +18,10 @@ public class CompilePackage {
 	private static ArrayList<File> files = new ArrayList();
 	
 	public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+		if(args.length != 2) {
+			System.out.print("Usage: java -jar CompilePackage.jar <input directory> <output file>");
+			return;
+		}
 		File root = new File(args[0]);
 		listDirectory(root);
 		ByteArrayOutputStream osb = new ByteArrayOutputStream();
@@ -47,7 +51,7 @@ public class CompilePackage {
 		os.writeUTF(" end");
 		os.flush();
 		os.close();
-		FileOutputStream out = new FileOutputStream(new File("out.epk"));
+		FileOutputStream out = new FileOutputStream(new File(args[1]));
 		out.write(osb.toByteArray());
 		out.close();
 	}
