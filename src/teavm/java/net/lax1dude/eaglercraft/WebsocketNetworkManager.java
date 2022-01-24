@@ -47,11 +47,8 @@ public class WebsocketNetworkManager implements INetworkManager {
 		this.isOutputEncrypted = false;
 		String proxyUrl=Minecraft.getMinecraft().gameSettings.proxy;
 		boolean stillConnect=true;
-		if(!proxyUrl.equals("")){
+		if(!proxyUrl.equals("")&&!uri.contains("/")){
 			stillConnect=false;
-			if(uri.startsWith("ws://"))uri=uri.substring(5);
-			if(uri.startsWith("wss://"))uri=uri.substring(6);
-			if(uri.contains("/"))uri=uri.split("/",2)[0];
 			if (ipPattern.matcher(proxyUrl).matches()&&ipPattern.matcher(uri).matches()) {
 				String ip = uri;
 				String port = "25565";

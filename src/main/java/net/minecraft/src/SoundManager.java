@@ -324,7 +324,7 @@ public class SoundManager {
 	private float titleMusicVol = 0.5F;
 	
 	public void playTheTitleMusic() {
-		if(EaglerAdapter._wisWebGL()){
+		if(EaglerAdapter.isWebGL){
 			if(titleMusic == -1 || !EaglerAdapter.playingTitleMusic()) {
 				titleMusic = 1;
 				EaglerAdapter.startTitleMusic(this.options.musicVolume);
@@ -340,7 +340,7 @@ public class SoundManager {
 	}
 	
 	public void stopTheTitleMusic() {
-		if(EaglerAdapter._wisWebGL()) {
+		if(EaglerAdapter.isWebGL) {
 			if (EaglerAdapter.playingTitleMusic()) {
 				EaglerAdapter.stopTitleMusic();
 			}

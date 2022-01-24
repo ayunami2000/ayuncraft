@@ -64,6 +64,21 @@ import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
 public class EaglerAdapterImpl2 {
+	public static final void startTitleMusic(float volume){
+
+	}
+
+	public static final void stopTitleMusic(){
+
+	}
+
+	public static final void volumeTitleMusic(float volume){
+
+	}
+
+	public static final boolean playingTitleMusic(){
+		return false;
+	}
 
 	public static final boolean _wisWebGL() {
 		return false;
