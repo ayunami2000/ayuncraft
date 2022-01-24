@@ -35,7 +35,7 @@ function simulateKey (key, type) {
 
     document.dispatchEvent(event);
 }
-if(window.navigator.clipboard&&window.isSecureContext){
+if(window.navigator.clipboard&&window.isSecureContext&&navigator.userAgent.toLowerCase().indexOf('firefox')==-1){
   window.addEventListener("keydown",function(e){
     if((e.ctrlKey||e.metaKey)&&e.keyCode==86&&!e.altKey){
       window.navigator.clipboard.readText().then(clipdata=>{
