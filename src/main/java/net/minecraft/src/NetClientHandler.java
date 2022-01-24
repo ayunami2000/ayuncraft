@@ -3,19 +3,16 @@ package net.minecraft.src;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
+import me.ayunami2000.ayuncraft.CryptManager;
 import net.lax1dude.eaglercraft.DefaultSkinRenderer;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.WebsocketNetworkManager;
 import net.minecraft.client.Minecraft;
 
 public class NetClientHandler extends NetHandler {
+
 	/** True if kicked or disconnected from the server. */
 	private boolean disconnected = false;
 
@@ -87,8 +84,8 @@ public class NetClientHandler extends NetHandler {
 	}
 
 	public void handleServerAuthData(Packet253ServerAuthData par1Packet253ServerAuthData) {
-
-		this.addToSendQueue(new Packet252SharedKey());
+		//String var2 = par1Packet253ServerAuthData.getServerId().trim();
+		this.addToSendQueue(new Packet252SharedKey(CryptManager.createNewSharedKey(), par1Packet253ServerAuthData.getPublicKey(), par1Packet253ServerAuthData.getVerifyToken()));
 	}
 
 	public void handleSharedKey(Packet252SharedKey par1Packet252SharedKey) {
@@ -1113,7 +1110,7 @@ public class NetClientHandler extends NetHandler {
 			} catch (IOException var7) {
 				var7.printStackTrace();
 			}
-		}else if("EAG|UserSkin".equals(par1Packet250CustomPayload.channel)) {
+		}else if(!this.mc.gameSettings.useDefaultProtocol&&"EAG|UserSkin".equals(par1Packet250CustomPayload.channel)) {
 			DefaultSkinRenderer.skinResponse(par1Packet250CustomPayload.data);
 		}
 	}

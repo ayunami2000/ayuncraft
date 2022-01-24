@@ -69,8 +69,12 @@ public class GuiConnecting extends GuiScreen {
 				}
 				
 				this.clientHandler = new NetClientHandler(this.mc, uri, 0);
-				this.clientHandler.addToSendQueue(new Packet2ClientProtocol(69, EaglerProfile.username, uria, port));
-				this.clientHandler.addToSendQueue(new Packet250CustomPayload("EAG|MySkin", EaglerProfile.getSkinPacket()));
+				if(this.mc.gameSettings.useDefaultProtocol) {
+					this.clientHandler.addToSendQueue(new Packet2ClientProtocol(61, EaglerProfile.username, uria, port));
+				}else{
+					this.clientHandler.addToSendQueue(new Packet2ClientProtocol(69, EaglerProfile.username, uria, port));
+					this.clientHandler.addToSendQueue(new Packet250CustomPayload("EAG|MySkin", EaglerProfile.getSkinPacket()));
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 				this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "connect.failed", "disconnect.genericReason", "could not connect to "+uri, e.toString()));

@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import net.minecraft.client.Minecraft;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -38,8 +40,12 @@ public class Packet250CustomPayload extends Packet {
 		this.length = par1DataInputStream.readShort();
 
 		if (this.length > 0 && this.length < 32767) {
-			this.data = new byte[this.length];
-			par1DataInputStream.readFully(this.data);
+			if(Minecraft.getMinecraft().gameSettings.useDefaultProtocol){
+				par1DataInputStream.skipBytes(this.length);
+			}else {
+				this.data = new byte[this.length];
+				par1DataInputStream.readFully(this.data);
+			}
 		}
 	}
 

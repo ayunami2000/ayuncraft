@@ -76,7 +76,7 @@ public class GuiMainMenu extends GuiScreen {
 		 * RunnableTitleScreen(this), "1.6 Update Check Thread")).start(); }
 		 */
 
-		this.field_92025_p = EaglerAdapter._wisWebGL() ? ("eaglercraft javascript runtime") : ("eaglercraft desktop runtime");
+		this.field_92025_p = EaglerAdapter._wisWebGL() ? ("ayuncraft javascript runtime") : ("ayuncraft desktop runtime");
 		this.start = System.currentTimeMillis() + System.currentTimeMillis() % 10000l;
 		this.ackLines = new ArrayList();
 		
@@ -133,7 +133,7 @@ public class GuiMainMenu extends GuiScreen {
 		Calendar var1 = Calendar.getInstance();
 		var1.setTime(new Date());
 
-		this.splashText = "darviglet!";
+		this.splashText = "fard!";
 
 		StringTranslate var2 = StringTranslate.getInstance();
 		int var4 = this.height / 4 + 48;
@@ -464,7 +464,7 @@ public class GuiMainMenu extends GuiScreen {
 			// 16777215);
 		}
 		
-		var10 = "eaglercraft readme.txt";
+		var10 = "ayuncraft readme.txt";
 		int w = this.fontRenderer.getStringWidth(var10) * 3 / 4;
 		if(!showAck && par1 >= (this.width - w - 4) && par1 <= this.width && par2 >= 0 && par2 <= 9) {
 			drawRect((this.width - w - 4), 0, this.width, 9, 0x55000099);

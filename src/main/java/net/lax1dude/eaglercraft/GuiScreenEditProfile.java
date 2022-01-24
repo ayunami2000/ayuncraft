@@ -66,7 +66,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 		this.dropDownOptions = EaglerProfile.concatArrays(EaglerProfile.skinNames.toArray(new String[0]), defaultOptions);
 	}
 	
-	private GuiButton button0, button1, button2;
+	private GuiButton button0, button1, button2, button3;
 
 	public void initGui() {
 		super.initGui();
@@ -81,6 +81,8 @@ public class GuiScreenEditProfile extends GuiScreen {
 		this.buttonList.add(button0 = new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, var1.translateKey("gui.done")));
 		this.buttonList.add(button1 = new GuiButton(2, this.width / 2 - 21, this.height / 6 + 110, 71, 20, var1.translateKey("profile.addSkin")));
 		this.buttonList.add(button2 = new GuiButton(3, this.width / 2 - 21 + 71, this.height / 6 + 110, 72, 20, var1.translateKey("profile.clearSkin")));
+
+		this.buttonList.add(button3 = new GuiButton(4, this.width / 2 - 21 + 71, this.height / 6 + 134, 72, 20, this.mc.gameSettings.useDefaultProtocol?"Switch to Eaglercraft":"Switch to Vanilla"));
 		//this.buttonList.add(new GuiButton(200, this.width / 2, this.height / 6 + 72, 150, 20, var1.translateKey("gui.done")));
 	}
 	
@@ -214,6 +216,10 @@ public class GuiScreenEditProfile extends GuiScreen {
 				EaglerProfile.glTex.clear();
 				this.dropDownOptions = defaultOptions;
 				this.selectedSlot = 0;
+			}else if (par1GuiButton.id == 4) {
+				//toggle version mode
+				this.mc.gameSettings.useDefaultProtocol=!this.mc.gameSettings.useDefaultProtocol;
+				button3.displayString=this.mc.gameSettings.useDefaultProtocol?"Switch to Eaglercraft":"Switch to Vanilla";
 			}
 		}
 	}
