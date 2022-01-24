@@ -1,10 +1,16 @@
 package net.lax1dude.eaglercraft;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 
 import java.security.Key;
+import java.util.regex.Pattern;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import me.ayunami2000.ayuncraft.CryptManager;
@@ -24,12 +30,58 @@ public class WebsocketNetworkManager implements INetworkManager {
 
 	private NetHandler netHandler;
 
+	Pattern ipPattern = Pattern.compile("^"
+			+ "(((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}" // Domain name
+			+ "|"
+			+ "localhost" // localhost
+			+ "|"
+			+ "(([0-9]{1,3}\\.){3})[0-9]{1,3})" // Ip
+			+ "(:"
+			+ "[0-9]{1,5})?$"); // Port
+
 	public WebsocketNetworkManager(String uri, String eagler, NetHandler netHandler) throws IOException {
 		this.netHandler = netHandler;
 		this.sharedKeyForEncryption = null;
 		this.isInputBeingDecrypted = false;
 		this.isOutputEncrypted = false;
-		if(!EaglerAdapter.startConnection(uri)) {
+		String proxyUrl=Minecraft.getMinecraft().gameSettings.proxy;
+		boolean stillConnect=true;
+		if(!proxyUrl.equals("")){
+			stillConnect=false;
+			if(uri.startsWith("ws://"))uri=uri.substring(5);
+			if(uri.startsWith("wss://"))uri=uri.substring(6);
+			if(uri.contains("/"))uri=uri.split("/",2)[0];
+			if (ipPattern.matcher(proxyUrl).matches()&&ipPattern.matcher(uri).matches()) {
+				String ip = uri;
+				String port = "25565";
+				if (uri.contains(":")) {
+					String[] ipPort = uri.split(":", 2);
+					ip = ipPort[0];
+					port = ipPort[1];
+				}
+				//send initial request (lag client)
+				URL url = new URL("http"+(EaglerAdapter.isSSLPage()?"s":"")+"://"+proxyUrl+"/api/vm/net/connect");
+				URLConnection con = url.openConnection();
+				HttpURLConnection http = (HttpURLConnection)con;
+				http.setRequestMethod("POST");
+				http.setDoOutput(true);
+				byte[] out = ("{\"port\":\""+port+"\",\"host\":\""+ip+"\"}").getBytes(StandardCharsets.UTF_8);
+				http.setFixedLengthStreamingMode(out.length);
+				http.setRequestProperty("Content-Type","application/json; charset=UTF-8");
+				http.connect();
+				http.getOutputStream().write(out);
+				Reader in = new BufferedReader(new InputStreamReader(http.getInputStream(), "UTF-8"));
+				StringBuilder sb = new StringBuilder();
+				for (int c; (c = in.read()) >= 0;)
+					sb.append((char)c);
+				String response = sb.toString();
+				response=response.substring(10);
+				response=response.split("\"",2)[0];
+				uri="ws"+(EaglerAdapter.isSSLPage()?"s":"")+"://"+proxyUrl+"/api/vm/net/socket?token="+response;
+				stillConnect=true;
+			}
+		}
+		if(!stillConnect||!EaglerAdapter.startConnection(uri)) {
 			throw new IOException("websocket to "+uri+" failed");
 		}
 		EaglerAdapter.setDebugVar("minecraftServer", uri);

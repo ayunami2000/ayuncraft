@@ -10,6 +10,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 	
 	private GuiScreen parent;
 	private GuiTextField username;
+	private GuiTextField proxy;
 	
 	private boolean dropDownOpen = false;
 	private String[] dropDownOptions;
@@ -76,6 +77,8 @@ public class GuiScreenEditProfile extends GuiScreen {
 		this.username = new GuiTextField(this.fontRenderer, this.width / 2 - 20 + 1, this.height / 6 + 24 + 1, 138, 20);
 		this.username.setFocused(true);
 		this.username.setText(EaglerProfile.username);
+		this.proxy = new GuiTextField(this.fontRenderer, this.width / 2 - 20 + 1, this.height / 6 + 1, 138, 20);
+		this.proxy.setText(this.mc.gameSettings.proxy);
 		selectedSlot = EaglerProfile.presetSkinId == -1 ? EaglerProfile.customSkinId : (EaglerProfile.presetSkinId + EaglerProfile.skinNames.size());
 		//this.buttonList.add(new GuiButton(0, this.width / 2 - 100, 140, "eeeee"));
 		this.buttonList.add(button0 = new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, var1.translateKey("gui.done")));
@@ -103,8 +106,9 @@ public class GuiScreenEditProfile extends GuiScreen {
 		
 		drawRect(skinX, skinY, skinX + skinWidth, skinY + skinHeight, -6250336);
 		drawRect(skinX + 1, skinY + 1, skinX + skinWidth - 1, skinY + skinHeight - 1, 0xff000015);
-		
+
 		this.username.drawTextBox();
+		this.proxy.drawTextBox();
 		if(dropDownOpen) {
 			super.drawScreen(0, 0, par3);
 		}else {
@@ -184,6 +188,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 		if(!dropDownOpen) {
 			if(par1GuiButton.id == 200) {
 				EaglerProfile.username = this.username.getText().length() == 0 ? "null" : this.username.getText();
+				this.mc.gameSettings.proxy=proxy.getText();
 				EaglerProfile.presetSkinId = selectedSlot - EaglerProfile.skinNames.size();
 				if(EaglerProfile.presetSkinId < 0) {
 					EaglerProfile.presetSkinId = -1;
@@ -226,6 +231,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 	
 	public void updateScreen() {
 		this.username.updateCursorCounter();
+		this.proxy.updateCursorCounter();
 		
 		if(dropDownOpen) {
 			if(EaglerAdapter.mouseIsButtonDown(0)) {
@@ -274,7 +280,8 @@ public class GuiScreenEditProfile extends GuiScreen {
 	
 	protected void keyTyped(char par1, int par2) {
 		this.username.textboxKeyTyped(par1, par2);
-		
+		this.proxy.textboxKeyTyped(par1, par2);
+
 		String text = username.getText();
 		if(text.length() > 16) text = text.substring(0, 16);
 		text = text.replaceAll("[^A-Za-z0-9\\-_]", "_");
@@ -293,6 +300,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 	protected void mouseClicked(int par1, int par2, int par3) {
 		super.mouseClicked(par1, par2, par3);
 		this.username.mouseClicked(par1, par2, par3);
+		this.proxy.mouseClicked(par1, par2, par3);
 		
 		if (par3 == 0) {
 			int skinX = this.width / 2 + 140 - 40;
@@ -330,7 +338,4 @@ public class GuiScreenEditProfile extends GuiScreen {
 			
 		}
 	}
-	
-	
-	
 }

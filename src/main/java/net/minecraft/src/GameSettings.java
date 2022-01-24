@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 
 public class GameSettings {
 	public static boolean useDefaultProtocol = false;
+	public static String proxy = "pproxy.rom1504.fr";
 
 
 	private static final String[] RENDER_DISTANCES = new String[] { "options.renderDistance.far", "options.renderDistance.normal", "options.renderDistance.short", "options.renderDistance.tiny" };
