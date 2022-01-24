@@ -3,7 +3,6 @@ package net.minecraft.src;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import me.ayunami2000.ayuncraft.java.security.PublicKey;
 import java.util.*;
 
 import me.ayunami2000.ayuncraft.CryptManager;
@@ -11,8 +10,6 @@ import net.lax1dude.eaglercraft.DefaultSkinRenderer;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.WebsocketNetworkManager;
 import net.minecraft.client.Minecraft;
-
-import me.ayunami2000.ayuncraft.javax.crypto.SecretKey;
 
 public class NetClientHandler extends NetHandler {
 

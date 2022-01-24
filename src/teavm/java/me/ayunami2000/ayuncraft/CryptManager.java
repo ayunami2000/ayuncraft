@@ -63,13 +63,17 @@ public class CryptManager
         return new SecretKeySpec(decryptData(par0PrivateKey, par1ArrayOfByte), "AES");
     }
 
-    ///*
-    @JSBody(params = {"pubkey", "mod", "indata"}, script = "var rsa=new RSAKey();rsa.setPublic(b64tohex(mod),b64tohex(pubkey));var res=hex2b64(rsa.encrypt(b64tohex(indata)));return res;")
+    @JSBody(params = {"pubkey", "mod", "indata"}, script =
+            "var rsa=new RSAKey();" +
+            "rsa.setPublic(b64tohex(mod),b64tohex(pubkey));" +
+            "return hex2b64(rsa.encrypt(b64tohex(indata)));")
     private static native String encryptDataNative(String pubkey, String mod, String indata);
 
-    @JSBody(params = {"privkey", "mod", "indata"}, script = "var rsa=new RSAKey();rsa.setPrivate(b64tohex(mod),b64tohex(privkey));var res=hex2b64(rsa.decrypt(b64tohex(indata)));return res;")
+    @JSBody(params = {"privkey", "mod", "indata"}, script =
+            "var rsa=new RSAKey();" +
+            "rsa.setPrivate(b64tohex(mod),b64tohex(privkey));" +
+            "return hex2b64(rsa.decrypt(b64tohex(indata)));")
     private static native String decryptDataNative(String pubkey, String mod, String indata);
-    //*/
 
     /**
      * Encrypt byte[] data with RSA public key
