@@ -5,7 +5,7 @@ import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.minecraft.client.Minecraft;
 
 public class GameSettings {
-	public static boolean useDefaultProtocol = false;
+	public static boolean useDefaultProtocol = true;
 	public static String proxy = "pproxy.rom1504.fr";
 
 
