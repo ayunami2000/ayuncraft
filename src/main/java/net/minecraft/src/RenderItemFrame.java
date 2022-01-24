@@ -104,7 +104,8 @@ public class RenderItemFrame extends Render {
 				Tessellator var4 = Tessellator.instance;
 				EaglerAdapter.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
 				EaglerAdapter.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-				EaglerAdapter.glScalef(0.00390625F, 0.00390625F, 0.00390625F);
+				//EaglerAdapter.glScalef(0.00390625F, 0.00390625F, 0.00390625F);
+				EaglerAdapter.glScalef(0.0078125F, 0.0078125F, 0.0078125F);
 				EaglerAdapter.glTranslatef(-65.0F, -107.0F, -3.0F);
 				EaglerAdapter.glNormal3f(0.0F, 0.0F, -1.0F);
 				var4.startDrawingQuads();
