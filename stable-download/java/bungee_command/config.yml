@@ -11,9 +11,7 @@ listeners:
   default_server: lobby
   force_default_server: true
 stats: 595698b3-9c36-4e86-b1ee-cb3027038f41
-groups:
-  lax1dude:
-  - admin
+groups: {}
 player_limit: -1
 permissions:
   default:

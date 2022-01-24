@@ -174,7 +174,6 @@ public class RenderPlayer extends RenderLiving {
 					EaglerAdapter.glDisable(EaglerAdapter.GL_CULL_FACE);
 					EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
 					EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE);
-					EaglerAdapter.glDisable(EaglerAdapter.GL_LIGHTING);
 					EaglerAdapter.glTranslatef((float)par2, (float)par4 - par1EntityPlayer.yOffset + 0.05f, (float)par6);
 					float var13 = this.handleRotationFloat(par1EntityPlayer, par9);
 					float var10 = par1EntityPlayer.prevRenderYawOffset + (par1EntityPlayer.renderYawOffset - par1EntityPlayer.prevRenderYawOffset) * par9;
@@ -195,6 +194,7 @@ public class RenderPlayer extends RenderLiving {
 					EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
 					EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
 					EaglerAdapter.glEnable(EaglerAdapter.GL_CULL_FACE);
+					EaglerAdapter.glEnable(EaglerAdapter.GL_LIGHTING);
 					EaglerAdapter.glPopMatrix();
 					EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 					
