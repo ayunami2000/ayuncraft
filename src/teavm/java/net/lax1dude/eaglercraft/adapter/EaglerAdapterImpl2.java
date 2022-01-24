@@ -61,6 +61,17 @@ import net.lax1dude.eaglercraft.adapter.teavm.WebGL2RenderingContext;
 import static net.lax1dude.eaglercraft.adapter.teavm.WebGL2RenderingContext.*;
 
 public class EaglerAdapterImpl2 {
+	@JSBody(params = {"volume"}, script = "window.startmusic(volume);")
+	public static native void startTitleMusic(float volume);
+
+	@JSBody(params = { }, script = "window.stopmusic();")
+	public static native void stopTitleMusic();
+
+	@JSBody(params = {"volume"}, script = "window.volmusic(volume);")
+	public static native void volumeTitleMusic(float volume);
+
+	@JSBody(params = { }, script = "return window.playingmusic();")
+	public static native boolean playingTitleMusic();
 
 	public static final boolean _wisWebGL() {
 		return true;

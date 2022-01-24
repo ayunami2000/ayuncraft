@@ -319,18 +319,35 @@ public class SoundManager {
 	public void func_92070_a(String par1Str, float par2, float par3, float par4, float par5, float par6, int par7) {
 		queuedsoundevents.add(new QueuedSoundEvent(par1Str, par2, par3, par4, par5, par6, par7));
 	}
-	
+
 	private int titleMusic = -1;
+	private float titleMusicVol = 0.5F;
 	
 	public void playTheTitleMusic() {
-		if(titleMusic == -1 || !EaglerAdapter.isPlaying(titleMusic)) {
-			titleMusic = EaglerAdapter.beginPlaybackStatic("/sounds/gta.mp3", this.options.musicVolume, 1.0f);
+		if(EaglerAdapter._wisWebGL()){
+			if(titleMusic == -1 || !EaglerAdapter.playingTitleMusic()) {
+				titleMusic = 1;
+				EaglerAdapter.startTitleMusic(this.options.musicVolume);
+			}else if(titleMusic == 1 && EaglerAdapter.playingTitleMusic() && titleMusicVol != this.options.musicVolume){
+				titleMusicVol = this.options.musicVolume;
+				EaglerAdapter.volumeTitleMusic(titleMusicVol);
+			}
+		}else{
+			if(titleMusic == -1 || !EaglerAdapter.isPlaying(titleMusic)) {
+				titleMusic = EaglerAdapter.beginPlaybackStatic("/sounds/gta.mp3", this.options.musicVolume, 1.0f);
+			}
 		}
 	}
 	
 	public void stopTheTitleMusic() {
-		if(EaglerAdapter.isPlaying(titleMusic)) {
-			EaglerAdapter.endSound(titleMusic);
+		if(EaglerAdapter._wisWebGL()) {
+			if (EaglerAdapter.playingTitleMusic()) {
+				EaglerAdapter.stopTitleMusic();
+			}
+		}else {
+			if (EaglerAdapter.isPlaying(titleMusic)) {
+				EaglerAdapter.endSound(titleMusic);
+			}
 		}
 		titleMusic = -1;
 	}
