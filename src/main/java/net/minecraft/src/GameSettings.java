@@ -21,7 +21,7 @@ public class GameSettings {
 	private static final String[] LIMIT_FRAMERATES = new String[] { "performance.max", "performance.balanced", "performance.powersaver" };
 	private static final String[] AMBIENT_OCCLUSIONS = new String[] { "options.ao.off", "options.ao.min", "options.ao.max" };
 	private static final String[] ANTIALIASING = new String[] { "options.framebufferAntialias.none", "options.framebufferAntialias.auto", "options.framebufferAntialias.fxaa" , "options.framebufferAntialias.msaa4", "options.framebufferAntialias.msaa8" };
-	public float musicVolume = 0.0F;
+	public float musicVolume = 0.25F;
 	public float soundVolume = 1.0F;
 	public float mouseSensitivity = 0.5F;
 	public boolean invertMouse = false;
