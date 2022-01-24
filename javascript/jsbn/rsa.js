@@ -26,13 +26,18 @@ function byte2Hex(b) {
 
 // PKCS#1 (type 2, random) pad input string s to n bytes, and return a bigint
 function pkcs1pad2(s,n) {
+  //var ba = b64toBA(hex2b64(s));
+  //n -= ba.length;
   if(n < s.length + 11) { // TODO: fix for utf-8
     alert("Message too long for RSA");
     return null;
   }
   var ba = new Array();
-  var i = s.length - 1;
+  var i = (s.length / 2) - 1;
   while(i >= 0 && n > 0) {
+    ba[--n] = parseInt(s.substring(2*i,2*i+2),16);
+    i--;
+    /*
     var c = s.charCodeAt(i--);
     if(c < 128) { // encode using utf-8
       ba[--n] = c;
@@ -46,6 +51,7 @@ function pkcs1pad2(s,n) {
       ba[--n] = ((c >> 6) & 63) | 128;
       ba[--n] = (c >> 12) | 224;
     }
+    */
   }
   ba[--n] = 0;
   var rng = new SecureRandom();
