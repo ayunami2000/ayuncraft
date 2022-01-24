@@ -1123,7 +1123,7 @@ public class EaglerAdapterImpl2 {
 		float var17 = 1.0F;
 		float var18 = 0.0F;
 		AudioListener l = audioctx.getListener();
-		l.setPosition(x, y, z);
+		if(!(Float.isInfinite(x) || Float.isInfinite(y) || Float.isInfinite(z)))l.setPosition(x, y, z);
 		l.setOrientation(var13, var14, var15, var16, var17, var18);
 		//l.setVelocity(vx, vy, vz);
 	}
@@ -1190,7 +1190,7 @@ public class EaglerAdapterImpl2 {
 		s.setBuffer(b);
 		s.getPlaybackRate().setValue(pitch);
 		PannerNode p = audioctx.createPanner();
-		p.setPosition(x, y, z);
+		if(!(Float.isInfinite(x) || Float.isInfinite(y) || Float.isInfinite(z)))p.setPosition(x, y, z);
 		p.setMaxDistance(volume * 16f + 0.1f);
 		p.setRolloffFactor(1f);
 		//p.setVelocity(0f, 0f, 0f);
@@ -1256,7 +1256,7 @@ public class EaglerAdapterImpl2 {
 	}
 	public static final void moveSound(int id, float x, float y, float z, float vx, float vy, float vz) {
 		AudioBufferSourceNodeX b = activeSoundEffects.get(id);
-		if(b != null && b.panner != null) {
+		if(b != null && b.panner != null && !(Float.isInfinite(x) || Float.isInfinite(y) || Float.isInfinite(z))) {
 			b.panner.setPosition(x, y, z);
 			//b.panner.setVelocity(vx, vy, vz);
 		}
