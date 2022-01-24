@@ -69,10 +69,7 @@ public class YamlConfig implements ConfigurationAdapter {
 			permissions.put("default", Arrays.asList("bungeecord.command.server", "bungeecord.command.list"));
 			permissions.put("admin", Arrays.asList("bungeecord.command.alert", "bungeecord.command.end", "bungeecord.command.ip", "bungeecord.command.reload"));
 		}
-		final Map<String, Object> groups = this.get("groups", new HashMap<String, Object>());
-		if (groups.isEmpty()) {
-			groups.put("lax1dude", Collections.singletonList("admin"));
-		}
+		this.get("groups", new HashMap<String, Object>());
 		/*
 		final Map<String, Object> auth = this.get("authservice", new HashMap<String, Object>());
 		if(auth.isEmpty()) {
