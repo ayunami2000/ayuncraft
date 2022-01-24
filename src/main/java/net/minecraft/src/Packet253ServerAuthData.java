@@ -5,17 +5,20 @@ import me.ayunami2000.ayuncraft.CryptManager;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
+
+import me.ayunami2000.ayuncraft.PubKey;
 import me.ayunami2000.ayuncraft.java.security.PublicKey;
 
 public class Packet253ServerAuthData extends Packet
 {
 	private String serverId;
-	private PublicKey publicKey;
+	private PubKey publicKey;
 	private byte[] verifyToken = new byte[0];
 
 	public Packet253ServerAuthData() {}
 
-	public Packet253ServerAuthData(String par1Str, PublicKey par2PublicKey, byte[] par3ArrayOfByte)
+	public Packet253ServerAuthData(String par1Str, PubKey par2PublicKey, byte[] par3ArrayOfByte)
 	{
 		this.serverId = par1Str;
 		this.publicKey = par2PublicKey;
@@ -63,7 +66,7 @@ public class Packet253ServerAuthData extends Packet
 		return this.serverId;
 	}
 
-	public PublicKey getPublicKey()
+	public PubKey getPublicKey()
 	{
 		return this.publicKey;
 	}

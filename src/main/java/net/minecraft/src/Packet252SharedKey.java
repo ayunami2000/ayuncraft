@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import me.ayunami2000.ayuncraft.PubKey;
 import me.ayunami2000.ayuncraft.java.security.Key;
 import me.ayunami2000.ayuncraft.java.security.PrivateKey;
 import me.ayunami2000.ayuncraft.java.security.PublicKey;
@@ -23,11 +24,11 @@ public class Packet252SharedKey extends Packet
 
 	public Packet252SharedKey() {}
 
-	public Packet252SharedKey(SecretKey par1SecretKey, PublicKey par2PublicKey, byte[] par3ArrayOfByte)
+	public Packet252SharedKey(SecretKey par1SecretKey, PubKey par2PublicKey, byte[] par3ArrayOfByte)
 	{
 		this.sharedKey = par1SecretKey;
-		this.sharedSecret = CryptManager.encryptData((Key) par2PublicKey, par1SecretKey.getEncoded());
-		this.verifyToken = CryptManager.encryptData((Key) par2PublicKey, par3ArrayOfByte);
+		this.sharedSecret = CryptManager.encryptData(par2PublicKey, par1SecretKey.getEncoded());
+		this.verifyToken = CryptManager.encryptData(par2PublicKey, par3ArrayOfByte);
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class Packet252SharedKey extends Packet
 	/**
 	 * Return secretKey, decrypting it from the sharedSecret byte array if needed
 	 */
-	public SecretKey getSharedKey(PrivateKey par1PrivateKey)
+	public SecretKey getSharedKey(PubKey par1PrivateKey)
 	{
 		return par1PrivateKey == null ? this.sharedKey : (this.sharedKey = CryptManager.decryptSharedKey(par1PrivateKey, this.sharedSecret));
 	}
@@ -83,8 +84,8 @@ public class Packet252SharedKey extends Packet
 	/**
 	 * Return verifyToken
 	 */
-	public byte[] getVerifyToken(PrivateKey par1PrivateKey)
+	public byte[] getVerifyToken(PubKey par1PrivateKey)
 	{
-		return par1PrivateKey == null ? this.verifyToken : CryptManager.decryptData((Key) par1PrivateKey, this.verifyToken);
+		return par1PrivateKey == null ? this.verifyToken : CryptManager.decryptData(par1PrivateKey, this.verifyToken);
 	}
 }

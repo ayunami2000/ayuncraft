@@ -87,11 +87,8 @@ public class NetClientHandler extends NetHandler {
 	}
 
 	public void handleServerAuthData(Packet253ServerAuthData par1Packet253ServerAuthData) {
-		String var2 = par1Packet253ServerAuthData.getServerId().trim();
-		PublicKey var3 = par1Packet253ServerAuthData.getPublicKey();
-		SecretKey var4 = CryptManager.createNewSharedKey();
-
-		this.addToSendQueue(new Packet252SharedKey(var4, var3, par1Packet253ServerAuthData.getVerifyToken()));
+		//String var2 = par1Packet253ServerAuthData.getServerId().trim();
+		this.addToSendQueue(new Packet252SharedKey(CryptManager.createNewSharedKey(), par1Packet253ServerAuthData.getPublicKey(), par1Packet253ServerAuthData.getVerifyToken()));
 	}
 
 	public void handleSharedKey(Packet252SharedKey par1Packet252SharedKey) {

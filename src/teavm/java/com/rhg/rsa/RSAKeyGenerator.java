@@ -1,7 +1,8 @@
 package com.rhg.rsa;
 
 import java.math.BigInteger;
-import java.security.SecureRandom;
+import java.util.Random;
+
 /**
  * Class representing private and public keys with the ability to generate new keys.
  * 
@@ -14,7 +15,7 @@ public class RSAKeyGenerator extends RSACompleteKey
     private static final int MIN_BIT_LENGTH = 1024;
     
     /** Source of securely (pseudo-) random bits. */
-    SecureRandom rand = new SecureRandom();
+    Random rand = new Random();
 
     /** The number of bits required in the modulus. */
     private int bitLength;

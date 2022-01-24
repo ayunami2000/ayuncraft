@@ -1,11 +1,9 @@
 package me.ayunami2000.ayuncraft;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.math.BigInteger;
 
 import me.ayunami2000.ayuncraft.java.security.Key;
-import me.ayunami2000.ayuncraft.java.security.PrivateKey;
-import me.ayunami2000.ayuncraft.java.security.PublicKey;
 
 import net.lax1dude.eaglercraft.Base64;
 import org.bouncycastle.crypto.BufferedBlockCipher;
@@ -19,6 +17,7 @@ import org.bouncycastle.crypto.params.ParametersWithIV;
 import me.ayunami2000.ayuncraft.javax.crypto.SecretKey;
 import me.ayunami2000.ayuncraft.javax.crypto.spec.SecretKeySpec;
 import org.teavm.jso.JSBody;
+import org.teavm.jso.typedarrays.Uint8Array;
 
 public class CryptManager
 {
@@ -31,128 +30,61 @@ public class CryptManager
         return new SecretKeySpec(baseSharedKey,"AES");
     }
 
-    /*
-    @JSBody(params = {"base64enc"}, script = "window.servercertraw=base64enc;window.servercert=new x509.X509Certificate(base64enc);")
-    private static native void setupDecode(String base64enc);
-
-    @JSBody(params = {}, script = "return window.servercert.publickey.algorithm.name;")
-    private static native String decodeAlgorithm();
-
-    @JSBody(params = {}, script = "return window.servercert.publickey.algorithm.publicExponent;")
-    private static native Uint8Array decodePublicExponent();
-
-    @JSBody(params = {}, script = "return window.servercert.publickey.algorithm.modulusLength;")
-    private static native int decodeModulusLength();
-
-    @JSBody(params = {}, script = "return new Uint8Array(window.servercert.publickey.rawData);")
-    private static native Uint8Array decodeData();
-    */
+    @JSBody(params = {"base64enc"}, script =
+            "var xd=window.ASN1.parse(window.PEM.parseBlock(base64enc).der);" +
+            "xd=xd.children.find(e=>{return e.type==3;});" +
+            "xd=xd.children.find(e=>{return e.type==48;});" +
+            "return [xd.children[0].value,xd.children[1].value];")
+    private static native Uint8Array[] x509decode(String base64enc);
 
     /**
      * Create a new PublicKey from encoded X.509 data
      */
-    public static PublicKey decodePublicKey(byte[] par0ArrayOfByte)
+    public static PubKey decodePublicKey(byte[] par0ArrayOfByte)
     {
-        /*
-        setupDecode(Base64.encodeBase64String(par0ArrayOfByte));
-        Uint8Array a = decodeData();
+        Uint8Array[] resarr=x509decode(Base64.encodeBase64String(par0ArrayOfByte));
+        PubKey results = new PubKey(par0ArrayOfByte,new BigInteger(uInt8toByteArr(resarr[0])),new BigInteger(uInt8toByteArr(resarr[1])));
+        return results;
+    }
+
+    private static byte[] uInt8toByteArr(Uint8Array a){
         byte[] b = new byte[a.getByteLength()];
         for(int i = 0; i < b.length; ++i) {
             b[i] = (byte) (a.get(i) & 0xFF);
         }
-        */
-
-        //ParseRSAPublicKey parser = new ParseRSAPublicKey(par0ArrayOfByte);
-        //BigInteger[] results = parser.parse();
-
-        //return new RSAPublicKeySpec(results[0],results[1]);
-        return new ModifiablePublicKey("RSA","X.509",par0ArrayOfByte);
+        return b;
     }
 
     /**
      * Decrypt shared secret AES key using RSA private key
      */
-    public static SecretKey decryptSharedKey(PrivateKey par0PrivateKey, byte[] par1ArrayOfByte)
+    public static SecretKey decryptSharedKey(PubKey par0PrivateKey, byte[] par1ArrayOfByte)
     {
         return new SecretKeySpec(decryptData(par0PrivateKey, par1ArrayOfByte), "AES");
     }
 
-    /*
-    private static RSA rsa=new RSA(1024);
+    ///*
+    @JSBody(params = {"pubkey", "mod", "indata"}, script = "var rsa=new RSAKey();rsa.setPublic(b64tohex(mod),b64tohex(pubkey));var res=hex2b64(rsa.encrypt(atob(indata)));return res;")
+    private static native String encryptDataNative(String pubkey, String mod, String indata);
 
-    static {
-        rsa.setModulus(BigInteger.valueOf(16));
-    }
-    */
-    //private static final BigInteger modu = new BigInteger("1000000000000000000000000000000");
-
-    @JSBody(params = {"pubkey", "indata"}, script = "var enc=new JSEncrypt();enc.setPublicKey(pubkey);var res=enc.encrypt(indata);return res;")
-    private static native String encryptDataNative(String pubkey, String indata);
-
-    @JSBody(params = {"privkey", "indata"}, script = "var dec=new JSEncrypt();dec.setPrivateKey(privkey);var res=dec.decrypt(indata);return res;")
-    private static native String decryptDataNative(String privkey, String indata);
+    @JSBody(params = {"privkey", "mod", "indata"}, script = "var rsa=new RSAKey();rsa.setPrivate(b64tohex(mod),b64tohex(privkey));var res=rsa.decrypt(b64tohex(indata));return res;")
+    private static native String decryptDataNative(String pubkey, String mod, String indata);
+    //*/
 
     /**
      * Encrypt byte[] data with RSA public key
      */
-    public static byte[] encryptData(Key par0Key, byte[] par1ArrayOfByte)
+    public static byte[] encryptData(PubKey par0Key, byte[] par1ArrayOfByte)
     {
-        return Base64.decodeBase64(encryptDataNative("-----BEGIN PUBLIC KEY-----\n"+Base64.encodeBase64String(par0Key.getEncoded()).replaceAll("(.{64})", "$1\n")+"\n-----END PUBLIC KEY-----",Base64.encodeBase64String(par1ArrayOfByte)));
-        /*
-        try {
-            //System.out.println(Arrays.toString(par0Key.getEncoded()));
-            //System.out.println(Arrays.toString(par1ArrayOfByte));
-            RSAPublicKey rsaPublicKey = new RSAPublicKey(modu, new BigInteger(par0Key.getEncoded()));
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            rsaPublicKey.use(par1ArrayOfByte, baos);
-            return baos.toByteArray();
-        }catch(Exception e){
-            System.err.println(e.getClass().getName() + "\n" + e.getMessage());
-            //e.printStackTrace();
-            return null;
-        }
-        */
-        /*
-        try {
-            rsa.setPublicKey(new BigInteger(par0Key.getEncoded()));
-            BigInteger res = rsa.encrypt(new BigInteger(par1ArrayOfByte));
-            return res.toByteArray();
-        }catch(Exception e){
-            System.err.println(e.getClass().getName() + "\n" + e.getMessage());
-            //e.printStackTrace();
-            return null;
-        }
-        */
+        return Base64.decodeBase64(encryptDataNative(Base64.encodeBase64String(par0Key.getPriExp().toByteArray()),Base64.encodeBase64String(par0Key.getModulus().toByteArray()),Base64.encodeBase64String(par1ArrayOfByte)));
     }
 
     /**
      * Decrypt byte[] data with RSA private key
      */
-    public static byte[] decryptData(Key par0Key, byte[] par1ArrayOfByte)
+    public static byte[] decryptData(PubKey par0Key, byte[] par1ArrayOfByte)
     {
-        return Base64.decodeBase64(decryptDataNative("-----BEGIN RSA PRIVATE KEY-----\n"+Base64.encodeBase64String(par0Key.getEncoded()).replaceAll("(.{64})", "$1\n")+"\n-----END RSA PRIVATE KEY-----",Base64.encodeBase64String(par1ArrayOfByte)));
-        /*
-        try{
-            RSAPrivateKey rsaPrivateKey = new RSAPrivateKey(modu,new BigInteger(par0Key.getEncoded()));
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            rsaPrivateKey.use(par1ArrayOfByte,baos);
-            return baos.toByteArray();
-        }catch(Exception e){
-            System.err.println(e.getClass().getName() + "\n" + e.getMessage());
-            return null;
-        }
-        */
-        /*
-        try {
-            rsa.setPrivateKey(new BigInteger(par0Key.getEncoded()));
-            BigInteger res = rsa.decrypt(new BigInteger(par1ArrayOfByte));
-            return res.toByteArray();
-        }catch(Exception e){
-            System.err.println(e.getClass().getName() + "\n" + e.getMessage());
-            //e.printStackTrace();
-            return null;
-        }
-        */
+        return Base64.decodeBase64(decryptDataNative(Base64.encodeBase64String(par0Key.getPriExp().toByteArray()),Base64.encodeBase64String(par0Key.getModulus().toByteArray()),Base64.encodeBase64String(par1ArrayOfByte)));
     }
 
     /**
