@@ -198,8 +198,8 @@ public class TextureTerrainMap implements IconRegister {
 	private int nextSlot = 0;
 	
 	public TextureTerrainMap(int size, String par2, String par3Str, EaglerImage par4BufferedImage) {
-		this.width = size / 48 * 48;
-		this.height = size / 48 * 48;
+		this.width = size;
+		this.height = size;
 		this.basePath = par3Str;
 		this.missingImage = new TerrainIcon(nextSlot++, this, null);
 		this.iconList = new ArrayList();
