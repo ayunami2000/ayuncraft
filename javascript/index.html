@@ -18,7 +18,10 @@
 <script type="text/javascript" src="classes.js?t=updateme1"></script>
 <script type="text/javascript">
 var name="PixelCraft",motd="A public 1.5.2 server",ip="pixelcraft.me";
-window.addEventListener("load", function(){ window.minecraftOpts = [
+window.addEventListener("load", function(){
+document.requestPointerLock=document.requestPointerLock||function(){};
+document.exitPointerLock=document.exitPointerLock||function(){};
+window.minecraftOpts = [
 "game_frame","assets.epk",
 btoa(atob("CgAACQAHc2VydmVycwoAAAABCAAKZm9yY2VkTU9URABtb3RkaGVyZQEAC2hpZGVBZGRyZXNzAQgAAmlwAGlwaGVyZQgABG5hbWUAbmFtZWhlcmUAAA==").replace("motdhere",String.fromCharCode(motd.length)+motd).replace("namehere",String.fromCharCode(name.length)+name).replace("iphere",String.fromCharCode(ip.length)+ip))
 ]; main(); });
