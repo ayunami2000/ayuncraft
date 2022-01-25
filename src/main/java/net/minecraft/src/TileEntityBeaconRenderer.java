@@ -4,6 +4,7 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
+import net.minecraft.client.Minecraft;
 
 public class TileEntityBeaconRenderer extends TileEntitySpecialRenderer {
 	
@@ -14,7 +15,7 @@ public class TileEntityBeaconRenderer extends TileEntitySpecialRenderer {
 	 */
 	public void renderTileEntityBeaconAt(TileEntityBeacon par1TileEntityBeacon, double par2, double par4, double par6, float par8) {
 		float var9 = par1TileEntityBeacon.func_82125_v_();
-
+		
 		if (var9 > 0.0F) {
 			Tessellator var10 = Tessellator.instance;
 			tex_beam.bindTexture();
@@ -23,9 +24,10 @@ public class TileEntityBeaconRenderer extends TileEntitySpecialRenderer {
 			EaglerAdapter.glDisable(EaglerAdapter.GL_LIGHTING);
 			EaglerAdapter.glDisable(EaglerAdapter.GL_CULL_FACE);
 			EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
+			EaglerAdapter.glDisable(EaglerAdapter.GL_ALPHA_TEST);
 			EaglerAdapter.glDepthMask(true);
 			EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE);
-			float var11 = (float) par1TileEntityBeacon.getWorldObj().getTotalWorldTime() + par8;
+			float var11 = ((System.currentTimeMillis() % 200000) / 50.0f);//par1TileEntityBeacon.getWorldObj().getWorldTime() + par8;
 			float var12 = -var11 * 0.2F - (float) MathHelper.floor_float(-var11 * 0.1F);
 			byte var13 = 1;
 			double var14 = (double) var11 * 0.025D * (1.0D - (double) (var13 & 1) * 2.5D);
@@ -99,6 +101,7 @@ public class TileEntityBeaconRenderer extends TileEntitySpecialRenderer {
 			var10.draw();
 			EaglerAdapter.glEnable(EaglerAdapter.GL_LIGHTING);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_TEXTURE_2D);
+			EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
 			EaglerAdapter.glDepthMask(true);
 		}
 	}
