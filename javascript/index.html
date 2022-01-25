@@ -1,13 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>eagler</title>
-<script type="text/javascript" src="classes.js"></script>
+<title>ayuncraft</title>
+
+<script type="text/javascript" src="jsbn/jsbn.js"></script>
+<script type="text/javascript" src="jsbn/jsbn2.js"></script>
+<script type="text/javascript" src="jsbn/base64.js"></script>
+<script type="text/javascript" src="jsbn/prng4.js"></script>
+<script type="text/javascript" src="jsbn/rng.js"></script>
+<script type="text/javascript" src="jsbn/rsa.js"></script>
+<script type="text/javascript" src="jsbn/rsa2.js"></script>
+
+<script type="text/javascript" src="asn1-parser.js"></script>
+
+<script type="text/javascript" src="music.js"></script>
+
+<script type="text/javascript" src="classes.js?t=updateme1"></script>
 <script type="text/javascript">
-window.addEventListener("load", function(){ window.minecraftOpts = [
+var name="PixelCraft",motd="A public 1.5.2 server",ip="pixelcraft.me";
+window.addEventListener("load", function(){
+document.requestPointerLock=document.requestPointerLock||function(){};
+document.exitPointerLock=document.exitPointerLock||function(){};
+window.minecraftOpts = [
 "game_frame","assets.epk",
-"CgAACQAHc2VydmVycwoAAAABCAACaXAAJHdzczovL2cuZWFncy51cy9lYWdsZXJjcmFmdC9jcmVhdGl2ZQgABG5hbWUAFGVhZ2xlcmNyYWZ0IGNyZWF0aXZlAQALaGlkZUFkZHJlc3MACAAKZm9yY2VkTU9URAAhdGhpcyBpcyBtZWFudCB0byBiZSBhIGRlbW8gc2VydmVyAAA="
+btoa(atob("CgAACQAHc2VydmVycwoAAAABCAAKZm9yY2VkTU9URABtb3RkaGVyZQEAC2hpZGVBZGRyZXNzAQgAAmlwAGlwaGVyZQgABG5hbWUAbmFtZWhlcmUAAA==").replace("motdhere",String.fromCharCode(motd.length)+motd).replace("namehere",String.fromCharCode(name.length)+name).replace("iphere",String.fromCharCode(ip.length)+ip))
 ]; main(); });
+//modified from https://gist.github.com/GlauberF/d8278ce3aa592389e6e3d4e758e6a0c2
+function simulateKey (key, type) {
+    var keyCode = key.charCodeAt(0);
+    var evtName = (typeof(type) === "string") ? "key" + type : "keydown";
+
+    var event = document.createEvent("HTMLEvents");
+    event.initEvent(evtName, true, false);
+    event.keyCode = event.which = keyCode;
+    event.key = key;
+    event.shiftKey = false;
+    event.ctrlKey = false;
+    event.metaKey = false;
+
+    document.dispatchEvent(event);
+}
+if(window.navigator.clipboard&&window.isSecureContext&&navigator.userAgent.toLowerCase().indexOf('firefox')==-1){
+  window.addEventListener("keydown",function(e){
+    if((e.ctrlKey||e.metaKey)&&e.keyCode==86&&!e.altKey){
+      window.navigator.clipboard.readText().then(clipdata=>{
+        if(clipdata==null||clipdata=="")return;
+        simulateKey("\u0011","up");
+        simulateKey("\u0011","press");
+        simulateKey("\b","down");
+        simulateKey("\b","up");
+        simulateKey("\b","press");
+        var clipchars=clipdata.split("");
+        for(var clipchar of clipchars){
+          simulateKey(clipchar,"down");
+          simulateKey(clipchar,"up");
+          simulateKey(clipchar,"press");
+        }
+      });
+    }
+  });
+}
 </script>
 </head>
 <body style="margin:0px;width:100vw;height:100vh;" id="game_frame">
