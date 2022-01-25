@@ -9,7 +9,9 @@ public class TileEntityMobSpawnerRenderer extends TileEntitySpecialRenderer {
 		TileEntityMobSpawner spawner = (TileEntityMobSpawner) var1;
 		if(spawner.mobObject == null) {
 			spawner.mobObject = EntityList.createEntityByName(spawner.mobID, spawner.worldObj);
-			spawner.mobObject.setWorld(spawner.worldObj);
+			if(spawner.mobObject != null) {
+				spawner.mobObject.setWorld(spawner.worldObj);
+			}
 		}
 		if(spawner.mobObject != null) {
 			EaglerAdapter.glPushMatrix();
