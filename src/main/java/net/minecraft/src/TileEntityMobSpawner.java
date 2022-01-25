@@ -1,11 +1,17 @@
 package net.minecraft.src;
 
 public class TileEntityMobSpawner extends TileEntity {
+	
+	public String mobID = "Pig";
+	public Entity mobObject = null;
+	public int rotateTicks = 0;
 
 	/**
 	 * Reads a tile entity from NBT.
 	 */
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
+		this.mobID = par1NBTTagCompound.getString("EntityId");
+		this.mobObject = null;
 		super.readFromNBT(par1NBTTagCompound);
 	}
 
@@ -21,16 +27,15 @@ public class TileEntityMobSpawner extends TileEntity {
 			worldObj.spawnParticle("flame", this.xCoord + worldObj.rand.nextFloat(), this.yCoord + worldObj.rand.nextFloat(), this.zCoord + worldObj.rand.nextFloat(), 0.0D, 0.0D, 0.0D);
 			worldObj.spawnParticle("flame", this.xCoord + worldObj.rand.nextFloat(), this.yCoord + worldObj.rand.nextFloat(), this.zCoord + worldObj.rand.nextFloat(), 0.0D, 0.0D, 0.0D);
 		}
+		
+		++rotateTicks;
 	}
 
 	/**
 	 * Overriden in a sign to provide the text.
 	 */
 	public Packet getDescriptionPacket() {
-		NBTTagCompound var1 = new NBTTagCompound();
-		this.writeToNBT(var1);
-		var1.removeTag("SpawnPotentials");
-		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, var1);
+		return null;
 	}
 
 }

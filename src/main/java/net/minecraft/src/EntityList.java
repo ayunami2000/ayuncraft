@@ -48,15 +48,18 @@ public class EntityList {
 	 */
 	public static Entity createEntityByName(String par0Str, World par1World) {
 		Entity var2 = null;
+		Class var3 = (Class) stringToClassMapping.get(par0Str);
 
-		try {
-			Class var3 = (Class) stringToClassMapping.get(par0Str);
-
-			if (var3 != null) {
+		if (var3 != null) {
+			try {
 				var2 = (Entity) var3.getConstructor(new Class[] { World.class }).newInstance(new Object[] { par1World });
+			} catch (Exception var4) {
+				try {
+					var2 = (Entity) var3.getConstructor(new Class[0]).newInstance(new Object[0]);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
-		} catch (Exception var4) {
-			var4.printStackTrace();
 		}
 
 		return var2;
