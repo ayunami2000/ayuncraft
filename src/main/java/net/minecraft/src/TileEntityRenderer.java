@@ -54,6 +54,7 @@ public class TileEntityRenderer {
 		this.specialRendererMap.put(TileEntityEndPortal.class, new RenderEndPortal());
 		this.specialRendererMap.put(TileEntityBeacon.class, new TileEntityBeaconRenderer());
 		this.specialRendererMap.put(TileEntitySkull.class, new TileEntitySkullRenderer());
+		this.specialRendererMap.put(TileEntityMobSpawner.class, new TileEntityMobSpawnerRenderer());
 		Iterator var1 = this.specialRendererMap.values().iterator();
 
 		while (var1.hasNext()) {
