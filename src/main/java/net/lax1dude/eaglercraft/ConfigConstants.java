@@ -13,7 +13,7 @@ public class ConfigConstants {
 
 	public static final boolean html5build = true;
 
-	public static String[] proxies = new String[]{"pproxy.rom1504.fr","webmcproxy.glitch.me"};
+	public static String[] proxies = new String[]{"pproxy.rom1504.fr","webmcproxy.glitch.me","net-browserify.glitch.me"};
 
 	public static Pattern ipPattern = Pattern.compile("^"
 			+ "(((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}" // Domain name
