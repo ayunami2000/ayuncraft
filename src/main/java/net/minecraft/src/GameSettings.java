@@ -5,16 +5,22 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.minecraft.client.Minecraft;
 
+import java.util.Arrays;
+
 public class GameSettings {
 	public static boolean useDefaultProtocol = true;
 	public static String proxy = "";
 	public static String getNewProxy(){
+		if(ConfigConstants.proxies.length==1)return ConfigConstants.proxies[0];
 		String res=proxy;
+		//inefficient but i dont care
 		while(res.equals(proxy)) res = ConfigConstants.proxies[(int) Math.floor(Math.random() * ConfigConstants.proxies.length)];
 		return res;
 	}
 	static {
-		proxy = getNewProxy();
+		String[] proxyList = EaglerAdapter.getCustomProxyList();
+		if(proxyList.length!=0&&!proxyList[0].equals(""))ConfigConstants.proxies=proxyList;
+		proxy = EaglerAdapter.getSelfProxy()?EaglerAdapter.getHostString():getNewProxy();
 	}
 
 

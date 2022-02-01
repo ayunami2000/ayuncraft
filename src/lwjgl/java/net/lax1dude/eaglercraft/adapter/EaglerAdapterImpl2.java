@@ -89,6 +89,19 @@ public class EaglerAdapterImpl2 {
 	public static final String _wgetShaderHeader() {
 		return "#version 150";
 	}
+
+	public static final boolean getSelfProxy(){
+		//todo: implement local proxy for desktop mode??
+		return true;
+	}
+
+	public static final String[] getCustomProxyList(){
+		return new String[]{};
+	}
+
+	public static final String getHostString(){
+		return "localhost";
+	}
 	
 	public static final InputStream loadResource(String path) {
 		byte[] file = loadResourceBytes(path);

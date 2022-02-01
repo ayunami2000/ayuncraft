@@ -83,7 +83,20 @@ public class EaglerAdapterImpl2 {
 	public static final String _wgetShaderHeader() {
 		return "#version 300 es";
 	}
-	
+
+	@JSBody(params = { }, script = "return !!window.eag_self_proxy;")
+	public static native boolean getSelfProxy();
+
+	@JSBody(params = { }, script = "return (window.eag_proxy_list+\"\")||\"\";")
+	private static native String getCustomProxyListString();
+
+	public static String[] getCustomProxyList(){
+		return getCustomProxyListString().split(",");
+	}
+
+	@JSBody(params = { }, script = "return window.location.host;")
+	public static native String getHostString();
+
 	@JSBody(params = { }, script = "return window.location.href;")
 	private static native String getLocationString();
 	

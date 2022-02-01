@@ -6,7 +6,10 @@ import net.minecraft.src.GuiTextField;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.StringTranslate;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -211,8 +214,9 @@ public class GuiScreenEditProfile extends GuiScreen {
 						URL url = new URL("http" + (EaglerAdapter.isSSLPage() ? "s" : "") + "://" + this.mc.gameSettings.proxy + "/api/vm/net/connect");
 						URLConnection con = url.openConnection();
 						HttpURLConnection http = (HttpURLConnection) con;
+						http.setConnectTimeout(5000);
 						http.connect();
-						if(http.getResponseCode()!=HttpURLConnection.HTTP_OK&&http.getResponseCode()!=HttpURLConnection.HTTP_NOT_FOUND){
+						if(http.getResponseCode()!=HttpURLConnection.HTTP_NOT_FOUND){
 							http.disconnect();
 							throw new IOException("lol");
 						}
