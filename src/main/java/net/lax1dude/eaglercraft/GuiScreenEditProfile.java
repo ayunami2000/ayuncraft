@@ -210,7 +210,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 					proxyInvalid=0;
 					this.drawCenteredString(this.fontRenderer, "checking proxy...", this.width / 2, 5, 16777215);
 					try {
-						if(!ConfigConstants.ipPattern.matcher(this.mc.gameSettings.proxy).matches())throw new IOException("lol");
+						if(!ConfigConstants.ipPattern.matcher(this.mc.gameSettings.proxy).matches())throw new IOException("lol");//for some reason, direct ip didnt match...
 						URL url = new URL("http" + (EaglerAdapter.isSSLPage() ? "s" : "") + "://" + this.mc.gameSettings.proxy + "/api/vm/net/connect");
 						URLConnection con = url.openConnection();
 						HttpURLConnection http = (HttpURLConnection) con;
