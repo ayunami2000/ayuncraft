@@ -10,7 +10,7 @@ public class GameSettings {
 	public static String proxy = "";
 	public static String getNewProxy(){
 		String res=proxy;
-		while(res.equals(proxy)) res = ConfigConstants.proxies[(int) Math.floor(Math.random() * 2)];
+		while(res.equals(proxy)) res = ConfigConstants.proxies[(int) Math.floor(Math.random() * ConfigConstants.proxies.length)];
 		return res;
 	}
 	static {
