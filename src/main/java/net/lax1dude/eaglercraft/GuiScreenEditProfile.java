@@ -215,6 +215,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 						URLConnection con = url.openConnection();
 						HttpURLConnection http = (HttpURLConnection) con;
 						http.setConnectTimeout(5000);
+						http.setReadTimeout(5000);
 						http.connect();
 						if(http.getResponseCode()!=HttpURLConnection.HTTP_NOT_FOUND){
 							http.disconnect();

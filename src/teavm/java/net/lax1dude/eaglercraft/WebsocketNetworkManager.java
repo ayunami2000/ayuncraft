@@ -58,6 +58,7 @@ public class WebsocketNetworkManager implements INetworkManager {
 				http.setFixedLengthStreamingMode(out.length);
 				http.setRequestProperty("Content-Type","application/json; charset=UTF-8");
 				http.setConnectTimeout(5000);
+				http.setReadTimeout(5000);
 				http.connect();
 				http.getOutputStream().write(out);
 				Reader in = new BufferedReader(new InputStreamReader(http.getInputStream(), "UTF-8"));
