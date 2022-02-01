@@ -12,7 +12,7 @@
 
 Note that the server may be down - if you want a gameplay demo download the files from here [https://github.com/LAX1DUDE/eaglercraft/tree/main/stable-download](https://github.com/LAX1DUDE/eaglercraft/tree/main/stable-download) and host the page locally yourself
 
-For any questions you can join the dead discord server and hit me up there [https://discord.gg/6yTNkypXWh](https://discord.gg/6yTNkypXWh)
+For any questions you can join the discord server and hit me up there [https://discord.gg/KMQW9Uvjyq](https://discord.gg/KMQW9Uvjyq)
 
 ## What is Eaglercraft?
 
