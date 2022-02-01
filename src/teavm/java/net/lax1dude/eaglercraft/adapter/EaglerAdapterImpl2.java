@@ -87,7 +87,7 @@ public class EaglerAdapterImpl2 {
 	@JSBody(params = { }, script = "return !!window.eag_self_proxy;")
 	public static native boolean getSelfProxy();
 
-	@JSBody(params = { }, script = "return (window.eag_proxy_list+\"\")||\"\";")
+	@JSBody(params = { }, script = "return \"\"+(window.eag_proxy_list||\"\");")
 	private static native String getCustomProxyListString();
 
 	public static String[] getCustomProxyList(){
