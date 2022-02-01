@@ -1,13 +1,21 @@
 package net.minecraft.src;
 
+import net.lax1dude.eaglercraft.ConfigConstants;
 import net.lax1dude.eaglercraft.EaglerAdapter;
-import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.minecraft.client.Minecraft;
 
 public class GameSettings {
 	public static boolean useDefaultProtocol = true;
-	public static String proxy = (new String[]{"pproxy.rom1504.fr","webmcproxy.glitch.me"})[(int)Math.floor(Math.random()*2)];
+	public static String proxy = "";
+	public static String getNewProxy(){
+		String res=proxy;
+		while(res.equals(proxy)) res = ConfigConstants.proxies[(int) Math.floor(Math.random() * 2)];
+		return res;
+	}
+	static {
+		proxy = getNewProxy();
+	}
 
 
 	private static final String[] RENDER_DISTANCES = new String[] { "options.renderDistance.far", "options.renderDistance.normal", "options.renderDistance.short", "options.renderDistance.tiny" };

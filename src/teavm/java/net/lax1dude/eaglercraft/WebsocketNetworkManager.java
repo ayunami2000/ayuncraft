@@ -31,15 +31,6 @@ public class WebsocketNetworkManager implements INetworkManager {
 
 	private NetHandler netHandler;
 
-	Pattern ipPattern = Pattern.compile("^"
-			+ "(((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}" // Domain name
-			+ "|"
-			+ "localhost" // localhost
-			+ "|"
-			+ "(([0-9]{1,3}\\.){3})[0-9]{1,3})" // Ip
-			+ "(:"
-			+ "[0-9]{1,5})?$"); // Port
-
 	public WebsocketNetworkManager(String uri, String eagler, NetHandler netHandler) throws IOException {
 		this.netHandler = netHandler;
 		this.sharedKeyForEncryption = null;
@@ -49,7 +40,7 @@ public class WebsocketNetworkManager implements INetworkManager {
 		boolean stillConnect=true;
 		if(!proxyUrl.equals("")&&!uri.contains("/")){
 			stillConnect=false;
-			if (ipPattern.matcher(proxyUrl).matches()&&ipPattern.matcher(uri).matches()) {
+			if (ConfigConstants.ipPattern.matcher(proxyUrl).matches()&&ConfigConstants.ipPattern.matcher(uri).matches()) {
 				String ip = uri;
 				String port = "25565";
 				if (uri.contains(":")) {

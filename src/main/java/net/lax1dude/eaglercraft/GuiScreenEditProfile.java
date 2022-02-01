@@ -6,6 +6,12 @@ import net.minecraft.src.GuiTextField;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.StringTranslate;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
+
 public class GuiScreenEditProfile extends GuiScreen {
 	
 	private GuiScreen parent;
@@ -21,6 +27,8 @@ public class GuiScreenEditProfile extends GuiScreen {
 	private boolean dragging = false;
 	private int mousex = 0;
 	private int mousey = 0;
+
+	private int proxyInvalid = 0;
 	
 	private static final TextureLocation gui = new TextureLocation("/gui/gui.png");
 	
@@ -92,6 +100,10 @@ public class GuiScreenEditProfile extends GuiScreen {
 	public void drawScreen(int mx, int my, float par3) {
 		StringTranslate var1 = StringTranslate.getInstance();
 		this.drawDefaultBackground();
+		if(proxyInvalid>0){
+			--proxyInvalid;
+			this.drawCenteredString(this.fontRenderer, "error: proxy is invalid! switching proxy... (if it fails too often, backspace out the proxy)", this.width / 2, 5, 16777215);
+		}
 		this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 15, 16777215);
 		this.drawString(this.fontRenderer, var1.translateKey("profile.screenname"), this.width / 2 - 20, this.height / 6 + 8, 10526880);
 		this.drawString(this.fontRenderer, var1.translateKey("profile.playerSkin"), this.width / 2 - 20, this.height / 6 + 66, 10526880);
@@ -189,6 +201,33 @@ public class GuiScreenEditProfile extends GuiScreen {
 			if(par1GuiButton.id == 200) {
 				EaglerProfile.username = this.username.getText().length() == 0 ? "null" : this.username.getText();
 				this.mc.gameSettings.proxy=proxy.getText();
+
+				//check proxy
+				if(!this.mc.gameSettings.proxy.equals("")) {
+					proxyInvalid=0;
+					this.drawCenteredString(this.fontRenderer, "checking proxy...", this.width / 2, 5, 16777215);
+					try {
+						if(!ConfigConstants.ipPattern.matcher(this.mc.gameSettings.proxy).matches())throw new IOException("lol");
+						URL url = new URL("http" + (EaglerAdapter.isSSLPage() ? "s" : "") + "://" + this.mc.gameSettings.proxy + "/api/vm/net/connect");
+						URLConnection con = url.openConnection();
+						HttpURLConnection http = (HttpURLConnection) con;
+						http.connect();
+						if(http.getResponseCode()!=HttpURLConnection.HTTP_OK&&http.getResponseCode()!=HttpURLConnection.HTTP_NOT_FOUND){
+							http.disconnect();
+							throw new IOException("lol");
+						}
+						http.disconnect();
+					} catch (IOException e) {
+						//change proxy and then do nothing else if it fails
+						this.mc.gameSettings.proxy=this.mc.gameSettings.getNewProxy();
+						proxy.setText(this.mc.gameSettings.proxy);
+						proxyInvalid = 300;
+						return;
+					}
+				}
+
+
+
 				EaglerProfile.presetSkinId = selectedSlot - EaglerProfile.skinNames.size();
 				if(EaglerProfile.presetSkinId < 0) {
 					EaglerProfile.presetSkinId = -1;
