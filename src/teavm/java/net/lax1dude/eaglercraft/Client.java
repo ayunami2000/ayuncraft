@@ -78,7 +78,7 @@ public class Client {
 			EaglerAdapterImpl2.removeEventHandlers();
 			
 			StringBuilder str = new StringBuilder();
-			str.append("Game Crashed! I have fallen and I can't get up! Send the following text to cgiacun@gmail.com or LAX1DUDE#6306 on discord or @calderyounggg on instagram\n\n");
+			str.append("Game Crashed! I have fallen and I can't get up! If this has happened more than once then please copy the text on this screen and publish it in the issues feed of this fork's GitHub repository.\n\nThe URL to this fork's GitHub repository is: " + ConfigConstants.forkMe + "\n\n");
 			str.append(t);
 			str.append('\n').append('\n');
 			str.append("eaglercraft.version = \"").append(ConfigConstants.version).append("\"\n");
