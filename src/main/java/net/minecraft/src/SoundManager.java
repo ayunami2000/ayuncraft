@@ -101,12 +101,18 @@ public class SoundManager {
 		if(par1EntityLiving == null) {
 			EaglerAdapter.setListenerPos(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f);
 		}else {
-			float x = (float)(par1EntityLiving.prevPosX + (par1EntityLiving.posX - par1EntityLiving.prevPosX) * par2); if(!Float.isFinite(x)) x = 0.0f;
-			float y = (float)(par1EntityLiving.prevPosY + (par1EntityLiving.posY - par1EntityLiving.prevPosY) * par2); if(!Float.isFinite(y)) y = 0.0f;
-			float z = (float)(par1EntityLiving.prevPosZ + (par1EntityLiving.posZ - par1EntityLiving.prevPosZ) * par2); if(!Float.isFinite(z)) z = 0.0f;
-			float pitch = (float)(par1EntityLiving.prevRotationPitch + (par1EntityLiving.rotationPitch - par1EntityLiving.prevRotationPitch) * par2); if(!Float.isFinite(pitch)) pitch = 0.0f;
-			float yaw = (float)(par1EntityLiving.prevRotationYaw + (par1EntityLiving.rotationYaw - par1EntityLiving.prevRotationYaw) * par2); if(!Float.isFinite(yaw)) yaw = 0.0f;
-			EaglerAdapter.setListenerPos(x, y, z, (float)par1EntityLiving.motionX, (float)par1EntityLiving.motionY, (float)par1EntityLiving.motionZ, pitch, yaw);
+			double x = par1EntityLiving.prevPosX + (par1EntityLiving.posX - par1EntityLiving.prevPosX) * par2;
+			double y = par1EntityLiving.prevPosY + (par1EntityLiving.posY - par1EntityLiving.prevPosY) * par2;
+			double z = par1EntityLiving.prevPosZ + (par1EntityLiving.posZ - par1EntityLiving.prevPosZ) * par2;
+			double pitch = par1EntityLiving.prevRotationPitch + (par1EntityLiving.rotationPitch - par1EntityLiving.prevRotationPitch) * par2;
+			double yaw = par1EntityLiving.prevRotationYaw + (par1EntityLiving.rotationYaw - par1EntityLiving.prevRotationYaw) * par2;
+			
+			// I don't want to talk about this lol
+			
+			if((!Double.isNaN(x) && Double.isFinite(x)) && (!Double.isNaN(y) && Double.isFinite(y)) && (!Double.isNaN(z) && Double.isFinite(z))
+					&& (!Double.isNaN(pitch) && Double.isFinite(pitch)) && (!Double.isNaN(yaw) && Double.isFinite(yaw))) {
+				EaglerAdapter.setListenerPos((float)x, (float)y, (float)z, (float)par1EntityLiving.motionX, (float)par1EntityLiving.motionY, (float)par1EntityLiving.motionZ, (float)pitch, (float)yaw);
+			}
 		}
 	}
 
