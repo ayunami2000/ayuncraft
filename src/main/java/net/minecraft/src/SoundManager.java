@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.Random;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
-import net.minecraft.client.Minecraft;
 
 public class SoundManager {
 	
@@ -107,11 +106,12 @@ public class SoundManager {
 			double pitch = par1EntityLiving.prevRotationPitch + (par1EntityLiving.rotationPitch - par1EntityLiving.prevRotationPitch) * par2;
 			double yaw = par1EntityLiving.prevRotationYaw + (par1EntityLiving.rotationYaw - par1EntityLiving.prevRotationYaw) * par2;
 			
-			// I don't want to talk about this lol
+			// suck my cock
 			
-			if((!Double.isNaN(x) && Double.isFinite(x)) && (!Double.isNaN(y) && Double.isFinite(y)) && (!Double.isNaN(z) && Double.isFinite(z))
-					&& (!Double.isNaN(pitch) && Double.isFinite(pitch)) && (!Double.isNaN(yaw) && Double.isFinite(yaw))) {
+			try {
 				EaglerAdapter.setListenerPos((float)x, (float)y, (float)z, (float)par1EntityLiving.motionX, (float)par1EntityLiving.motionY, (float)par1EntityLiving.motionZ, (float)pitch, (float)yaw);
+			}catch(Throwable t) {
+				System.err.println("AudioListener fucked up again");
 			}
 		}
 	}

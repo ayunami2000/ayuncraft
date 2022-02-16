@@ -3,6 +3,8 @@ package net.minecraft.src;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+
 
 
 public class EntityDragon extends EntityLiving implements IBossDisplayData, IEntityMultiPart {
@@ -634,8 +636,10 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
 		return this.dataWatcher.getWatchableObjectInt(16);
 	}
 
+	// eaglercraft is client only so this is ok
+	
 	public World func_82194_d() {
-		return this.worldObj;
+		return this.worldObj == null ? Minecraft.getMinecraft().theWorld : this.worldObj;
 	}
 
 	/**
