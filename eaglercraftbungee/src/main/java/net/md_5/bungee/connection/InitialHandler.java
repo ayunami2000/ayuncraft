@@ -115,12 +115,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection {
 		}else if(handshake.getProcolVersion() != 61) {
 			this.disconnect("minecraft 1.5.2 required for eaglercraft backdoor access");
 		}
-		if (handshake.getUsername().length() < 3) {
+		String un = handshake.getUsername();
+		if (un.length() < 3) {
 			this.disconnect("Username must be at least 3 characters");
 			return;
 		}
-		if (handshake.getUsername().length() > 16) {
+		if (un.length() > 16) {
 			this.disconnect("Cannot have username longer than 16 characters");
+			return;
+		}
+		if(!un.equals(un.replaceAll("[^A-Za-z0-9\\-_]", "_").trim())) {
+			this.disconnect("Go fuck yourself");
 			return;
 		}
 		final int limit = BungeeCord.getInstance().config.getPlayerLimit();
@@ -128,7 +133,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection {
 			this.disconnect(this.bungee.getTranslation("proxy_full"));
 			return;
 		}
-		if (!BungeeCord.getInstance().config.isOnlineMode() && this.bungee.getPlayer(handshake.getUsername()) != null) {
+		if (!BungeeCord.getInstance().config.isOnlineMode() && this.bungee.getPlayer(un) != null) {
 			this.disconnect(this.bungee.getTranslation("already_connected"));
 			return;
 		}

@@ -25,5 +25,5 @@ permissions:
 timeout: 30000
 servers:
   lobby:
-    address: localhost:25569
+    address: 127.0.0.1:25569
     restricted: false
