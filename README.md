@@ -20,9 +20,19 @@ Note that the server may be down - if you want a gameplay demo download the file
 
 Eaglercraft is real Minecraft 1.5.2 that you can play in any regular web browser. That includes school chromebooks, it works on all chromebooks. You can join real Minecraft 1.5.2 servers with it through a custom proxy based on Bungeecord.
 
+## Singleplayer?
+
+I successfully created Singleplayer for this version of eaglercraft and it works 100%, **but after many rounds of very thorough testing**, I found that TeaVM is unable to optimize certain aspects of terrain generation and world ticking as well as it can optimize the rendering for a multiplayer-only build. On an [i9-11900K]( https://www.cpubenchmark.net/cpu.php?cpu=Intel+Core+i9-11900K+%40+3.50GHz&id=3904) a render distance of 'Tiny' struggles to pass 12 TPS while standing still, and drops below 1 TPS as soon as a couple new chunks have to be generated and trigger lighting updates. The playerbase of this game **will bother me every f\*\*king day if what I release as singleplayer is not perfect** and therefore singleplayer will remain private indefinetly and I will not answer any further questions about it or share the source code unless you are just looking to repurpose some of the base OS emulation code.
+
+**Minecraft Alpha singleplayer will be ported in the coming weeks but that is not a promise I should be obligated to fulfill**
+
 ## How does it work?
 
 Eaglercraft uses the decompiled source code of the official build of Minecraft 1.5.2 direct from Mojang. It is decompiled by [MCP](http://www.modcoderpack.com/) and then recompiled to Javascript using [TeaVM](https://teavm.org/). Therefore it can join real Minecraft 1.5.2 servers, as it is really running Minecraft 1.5.2 in the browser. However, due to security limitations in modern browsers, it must use javascript Websocket objects for multiplayer instead of direct TCP connections to it's servers. A modified version of Bungeecord is included with Eaglercraft which accepts browser HTTP Websocket connections from Eaglercraft clients and unwraps the streams internally to regular TCP so they can be forwarded to regular Bukkit servers with no plugins. For graphics, a custom GPU compatibility layer allows Mojang's fixed function OpenGL 1.3 based rendering engine to render directly to an HTML5 WebGL 2.0 canvas on the page with minimal changes to the source, preserving the game's graphics to look exactly the same as desktop vanilla Minecraft 1.5.2.
+
+## Issues?
+
+I got tired of closing duplicate 'how to maek sever' and 'add single player' issues almost every day so I disabled it because honestly I don't really care anymore, [join discord](https://discord.gg/KMQW9Uvjyq) if you've got an issue to report that you are confident can be backed up with source code
 
 ## Installing
 
@@ -38,9 +48,9 @@ If you want SSL, set up [nginx](https://www.nginx.com/) as a reverse proxy from 
 
 **To change the default servers on the server list, download [stable-download/servers_template.dat](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/servers_template.dat) and open the file with NBTExplorer (the minecraft one). You will see the list of default servers in a 'servers' tag stored as NBT components, and you can edit them and add more as long as you follow the same format the existing servers have. When you're done, save the file and encode the file back to base64 using the upload option on [base64encode.org](base64encode.org), then download the encoded file and open it and replace the base64 between the quotes on line 8 of your index.html with the new base64 in the encoded file you downloaded.**
 
-There is a plugin hard coded into the bungeecord server to synchronize the eaglercraft profile skins, and also a plugin like authme for creating a secure isolated authentication lobby on the proxy. The authentication lobby plugin has not been implemented though, it is non-functional. For now you'll just have to use a different 3rd party bungeecord lobby authentication plugin like AuthMeBungee if you want authentication, which unfortunately is a must for any public server to prevent people from stealing each other's usernames. Just ignore the existing EaglerAuth plugin and it's configuration section in the main config.yml and just install and use some 3rd party plugin like AuthMeBungee instead.
+There is a plugin hard coded into the bungeecord server to auto synchronize the eaglercraft profile skins between players and worlds
 
-Someday I'll finish implementing EaglerAuth but right now I have bigger fish to fry
+You should probably use a plugin like [AuthMe](https://dev.bukkit.org/projects/authme-reloaded/files/682502) to keep griefers from logging in to other people's profiles
 
 ## Compiling
 
@@ -52,7 +62,7 @@ To complile to regular desktop Java for quick debugging, using native OpenGL for
 - Create a run configuration and add a jvm argument pointing to the lwjgl natives folder (lwjgl-rundir/natives) like this: `-Djava.library.path=natives`, and make sure the working directory for the run configuration is the lwjgl-rundir folder.
 
 
-To modify the game's assets repository (javascript/assets.epk), make your changes in lwjgl-runtime/resources/ and use the Eclipse project located in epkcompiler/ to regenerate the assets.epk file and copy it to the Javascript directory. 
+To modify the game's resource pack (javascript/assets.epk), view the readme in the [/epkcompiler](https://github.com/LAX1DUDE/eaglercraft/tree/main/epkcompiler) directory
 
 this project is just a proof of concept to show what can be accomplished when using TeaVM to cross compile an existing java program to javascript. It is not very fast or stable, and the only real useful portion is the emulator code which creates a makeshift fixed function OpenGL 1.3 context using webgl (based on OpenGL 3.3) operational in the browser. Maybe it can be used to port other games in the future.
 
