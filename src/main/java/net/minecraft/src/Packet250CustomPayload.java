@@ -25,7 +25,9 @@ public class Packet250CustomPayload extends Packet {
 			this.length = par2ArrayOfByte.length;
 
 			if (this.length > 32767) {
-				throw new IllegalArgumentException("Payload may not be larger than 32k");
+				System.err.println("Tried to send '" + this.channel + "' with size " + this.length + " which is larger than the 32k so it was truncated down to 1 byte");
+				this.length = 1;
+				this.data = new byte[] { (byte) 0xFF };
 			}
 		}
 	}

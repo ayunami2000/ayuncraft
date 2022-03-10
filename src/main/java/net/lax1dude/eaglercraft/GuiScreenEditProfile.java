@@ -256,9 +256,10 @@ public class GuiScreenEditProfile extends GuiScreen {
 			if(name.length() > 32) {
 				name = name.substring(0, 32);
 			}
-			EaglerProfile.addSkin(name, rawSkin);
-			selectedSlot = EaglerProfile.skinNames.size() - 1;
-			this.dropDownOptions = EaglerProfile.concatArrays(EaglerProfile.skinNames.toArray(new String[0]), defaultOptions);
+			if(EaglerProfile.addSkin(name, rawSkin) != -1) {
+				selectedSlot = EaglerProfile.skinNames.size() - 1;
+				this.dropDownOptions = EaglerProfile.concatArrays(EaglerProfile.skinNames.toArray(new String[0]), defaultOptions);
+			}
 		}
 	}
 	

@@ -41,27 +41,31 @@ public class PluginEaglerSkins extends Plugin implements Listener {
 		if(event.getSender() instanceof UserConnection && event.getData().length > 0) {
 			String user = ((UserConnection)event.getSender()).getName();
 			byte[] msg = event.getData();
-			if("EAG|MySkin".equals(event.getTag())) {
-				int t = (int)msg[0] & 0xFF;
-				if(t >= 0 && t < SKIN_DATA_SIZE.length && msg.length == (SKIN_DATA_SIZE[t] + 1)) {
-					if(msg.length == 2) {
-						if(((int)msg[1] & 0xFF) >= VALID_DEFAULT_SKINS) {
-							msg[1] = 0;
+			try {
+				if("EAG|MySkin".equals(event.getTag())) {
+					int t = (int)msg[0] & 0xFF;
+					if(t >= 0 && t < SKIN_DATA_SIZE.length && msg.length == (SKIN_DATA_SIZE[t] + 1)) {
+						if(msg.length == 2) {
+							if(((int)msg[1] & 0xFF) >= VALID_DEFAULT_SKINS) {
+								msg[1] = 0;
+							}
+						}
+						skinCollection.put(user, msg);
+					}
+				}else if("EAG|FetchSkin".equals(event.getTag())) {
+					if(msg.length > 2) {
+						String fetch = new String(msg, 2, msg.length - 2, StandardCharsets.UTF_8);
+						byte[] data;
+						if((data = skinCollection.get(fetch)) != null) {
+							byte[] conc = new byte[data.length + 2];
+							conc[0] = msg[0]; conc[1] = msg[1]; //synchronization cookie
+							System.arraycopy(data, 0, conc, 2, data.length);
+							((UserConnection)event.getSender()).sendData("EAG|UserSkin", conc);
 						}
 					}
-					skinCollection.put(user, msg);
 				}
-			}else if("EAG|FetchSkin".equals(event.getTag())) {
-				if(msg.length > 2) {
-					String fetch = new String(msg, 2, msg.length - 2, StandardCharsets.UTF_8);
-					byte[] data;
-					if((data = skinCollection.get(fetch)) != null) {
-						byte[] conc = new byte[data.length + 2];
-						conc[0] = msg[0]; conc[1] = msg[1]; //synchronization cookie
-						System.arraycopy(data, 0, conc, 2, data.length);
-						((UserConnection)event.getSender()).sendData("EAG|UserSkin", conc);
-					}
-				}
+			}catch(Throwable t) {
+				// hacker
 			}
 		}
 	}

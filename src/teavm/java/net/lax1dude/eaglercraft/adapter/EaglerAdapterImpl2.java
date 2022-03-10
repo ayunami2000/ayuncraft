@@ -17,7 +17,6 @@ import org.teavm.jso.ajax.ReadyStateChangeHandler;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
-import org.teavm.jso.core.JSNumber;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.KeyboardEvent;
 import org.teavm.jso.dom.events.MessageEvent;

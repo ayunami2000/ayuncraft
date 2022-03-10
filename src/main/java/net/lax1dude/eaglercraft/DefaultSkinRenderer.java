@@ -119,7 +119,9 @@ public class DefaultSkinRenderer {
 							break;
 						}
 						
-						skinGLUnits.put(pp, Minecraft.getMinecraft().renderEngine.setupTextureRaw(skinToLoad, w, h));
+						if(skinToLoad.length / 4 == w * h) {
+							skinGLUnits.put(pp, Minecraft.getMinecraft().renderEngine.setupTextureRaw(skinToLoad, w, h));
+						}
 					}
 					skinGLTimeout.put(pp, System.currentTimeMillis());
 					Integer i = skinGLUnits.get(pp);

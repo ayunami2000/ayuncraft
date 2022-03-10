@@ -60,6 +60,11 @@ public class EaglerProfile {
 		}
 		
 		int t = getSkinSize(data.length);
+		
+		if(t == -1) {
+			return -1;
+		}
+		
 		int w, h;
 		
 		switch(t) {

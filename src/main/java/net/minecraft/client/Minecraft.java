@@ -496,6 +496,9 @@ public class Minecraft implements Runnable {
 			this.currentScreen.onGuiClosed();
 		}
 
+		while(EaglerAdapter.keysNext());
+		while(EaglerAdapter.mouseNext());
+
 		if (par1GuiScreen == null && this.theWorld == null) {
 			par1GuiScreen = new GuiMainMenu();
 		} else if (par1GuiScreen == null && this.thePlayer.getHealth() <= 0) {
