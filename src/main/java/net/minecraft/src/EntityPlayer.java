@@ -222,6 +222,8 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 		}
 
 		super.onUpdate();
+		
+		--this.itemInUseCount;
 
 		if (this.isBurning() && this.capabilities.disableDamage) {
 			this.extinguish();

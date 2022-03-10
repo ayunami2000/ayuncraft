@@ -1750,7 +1750,7 @@ public abstract class EntityLiving extends Entity {
 			Integer var2 = (Integer) var1.next();
 			PotionEffect var3 = (PotionEffect) this.activePotionsMap.get(var2);
 
-			if (var3.onUpdate(this)) {
+			if (var3.onUpdate(this) && var3.getDuration() % 600 == 0) {
 				this.onChangedPotionEffect(var3);
 			}
 		}
