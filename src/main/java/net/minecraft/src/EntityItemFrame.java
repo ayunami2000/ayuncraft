@@ -110,20 +110,6 @@ public class EntityItemFrame extends EntityHanging {
 	 * into the saddle on a pig.
 	 */
 	public boolean interact(EntityPlayer par1EntityPlayer) {
-		if (this.getDisplayedItem() == null) {
-			ItemStack var2 = par1EntityPlayer.getHeldItem();
-
-			if (var2 != null && !this.worldObj.isRemote) {
-				this.setDisplayedItem(var2);
-
-				if (!par1EntityPlayer.capabilities.isCreativeMode && --var2.stackSize <= 0) {
-					par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack) null);
-				}
-			}
-		} else if (!this.worldObj.isRemote) {
-			this.setItemRotation(this.getRotation() + 1);
-		}
-
 		return true;
 	}
 }

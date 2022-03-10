@@ -281,11 +281,7 @@ public class BlockDoor extends Block {
 				}
 			}
 
-			if (var7) {
-				if (!par1World.isRemote) {
-					this.dropBlockAsItem(par1World, par2, par3, par4, var6, 0);
-				}
-			} else {
+			if (!var7) {
 				boolean var8 = par1World.isBlockIndirectlyGettingPowered(par2, par3, par4) || par1World.isBlockIndirectlyGettingPowered(par2, par3 + 1, par4);
 
 				if ((var8 || par5 > 0 && Block.blocksList[par5].canProvidePower()) && par5 != this.blockID) {

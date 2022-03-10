@@ -16,26 +16,6 @@ public class BlockCommandBlock extends BlockContainer {
 	}
 
 	/**
-	 * Lets the block know when one of its neighbor changes. Doesn't know which
-	 * neighbor changed (coordinates passed are their own) Args: x, y, z, neighbor
-	 * blockID
-	 */
-	public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5) {
-		if (!par1World.isRemote) {
-			boolean var6 = par1World.isBlockIndirectlyGettingPowered(par2, par3, par4);
-			int var7 = par1World.getBlockMetadata(par2, par3, par4);
-			boolean var8 = (var7 & 1) != 0;
-
-			if (var6 && !var8) {
-				par1World.setBlockMetadataWithNotify(par2, par3, par4, var7 | 1, 4);
-				par1World.scheduleBlockUpdate(par2, par3, par4, this.blockID, this.tickRate(par1World));
-			} else if (!var6 && var8) {
-				par1World.setBlockMetadataWithNotify(par2, par3, par4, var7 & -2, 4);
-			}
-		}
-	}
-
-	/**
 	 * Ticks the block if it's been scheduled
 	 */
 	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {

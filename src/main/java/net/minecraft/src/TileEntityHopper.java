@@ -188,32 +188,10 @@ public class TileEntityHopper extends TileEntity implements Hopper {
 	 * implementation.
 	 */
 	public void updateEntity() {
-		if (this.worldObj != null && !this.worldObj.isRemote) {
-			--this.transferCooldown;
-
-			if (!this.isCoolingDown()) {
-				this.setTransferCooldown(0);
-				this.func_98045_j();
-			}
-		}
 	}
 
 	public boolean func_98045_j() {
-		if (this.worldObj != null && !this.worldObj.isRemote) {
-			if (!this.isCoolingDown() && BlockHopper.getIsBlockNotPoweredFromMetadata(this.getBlockMetadata())) {
-				boolean var1 = this.insertItemToInventory() | suckItemsIntoHopper(this);
-
-				if (var1) {
-					this.setTransferCooldown(8);
-					this.onInventoryChanged();
-					return true;
-				}
-			}
-
-			return false;
-		} else {
-			return false;
-		}
+		return false;
 	}
 
 	/**

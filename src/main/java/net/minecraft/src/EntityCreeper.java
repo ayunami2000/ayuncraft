@@ -99,18 +99,6 @@ public class EntityCreeper extends EntityMob {
 
 			if (this.timeSinceIgnited >= this.fuseTime) {
 				this.timeSinceIgnited = this.fuseTime;
-
-				if (!this.worldObj.isRemote) {
-					boolean var2 = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
-
-					if (this.getPowered()) {
-						this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, (float) (this.explosionRadius * 2), var2);
-					} else {
-						this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, (float) this.explosionRadius, var2);
-					}
-
-					this.setDead();
-				}
 			}
 		}
 

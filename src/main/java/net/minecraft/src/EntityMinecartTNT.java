@@ -56,16 +56,6 @@ public class EntityMinecartTNT extends EntityMinecart {
 	 * Makes the minecart explode.
 	 */
 	protected void explodeCart(double par1) {
-		if (!this.worldObj.isRemote) {
-			double var3 = Math.sqrt(par1);
-
-			if (var3 > 5.0D) {
-				var3 = 5.0D;
-			}
-
-			this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, (float) (4.0D + this.rand.nextDouble() * 1.5D * var3), true);
-			this.setDead();
-		}
 	}
 
 	/**
@@ -102,11 +92,6 @@ public class EntityMinecartTNT extends EntityMinecart {
 	 */
 	public void ignite() {
 		this.minecartTNTFuse = 80;
-
-		if (!this.worldObj.isRemote) {
-			this.worldObj.setEntityState(this, (byte) 10);
-			this.worldObj.playSoundAtEntity(this, "random.fuse", 1.0F, 1.0F);
-		}
 	}
 
 	public int func_94104_d() {

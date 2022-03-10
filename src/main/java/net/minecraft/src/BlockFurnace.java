@@ -45,31 +45,6 @@ public class BlockFurnace extends BlockContainer {
 	 * set a blocks direction
 	 */
 	private void setDefaultDirection(World par1World, int par2, int par3, int par4) {
-		if (!par1World.isRemote) {
-			int var5 = par1World.getBlockId(par2, par3, par4 - 1);
-			int var6 = par1World.getBlockId(par2, par3, par4 + 1);
-			int var7 = par1World.getBlockId(par2 - 1, par3, par4);
-			int var8 = par1World.getBlockId(par2 + 1, par3, par4);
-			byte var9 = 3;
-
-			if (Block.opaqueCubeLookup[var5] && !Block.opaqueCubeLookup[var6]) {
-				var9 = 3;
-			}
-
-			if (Block.opaqueCubeLookup[var6] && !Block.opaqueCubeLookup[var5]) {
-				var9 = 2;
-			}
-
-			if (Block.opaqueCubeLookup[var7] && !Block.opaqueCubeLookup[var8]) {
-				var9 = 5;
-			}
-
-			if (Block.opaqueCubeLookup[var8] && !Block.opaqueCubeLookup[var7]) {
-				var9 = 4;
-			}
-
-			par1World.setBlockMetadataWithNotify(par2, par3, par4, var9, 2);
-		}
 	}
 
 	/**
@@ -124,17 +99,7 @@ public class BlockFurnace extends BlockContainer {
 	 * Called upon block activation (right click on the block.)
 	 */
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		if (par1World.isRemote) {
-			return true;
-		} else {
-			TileEntityFurnace var10 = (TileEntityFurnace) par1World.getBlockTileEntity(par2, par3, par4);
-
-			if (var10 != null) {
-				par5EntityPlayer.displayGUIFurnace(var10);
-			}
-
-			return true;
-		}
+		return true;
 	}
 
 	/**

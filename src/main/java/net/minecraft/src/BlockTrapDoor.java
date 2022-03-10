@@ -128,46 +128,6 @@ public class BlockTrapDoor extends Block {
 	}
 
 	/**
-	 * Lets the block know when one of its neighbor changes. Doesn't know which
-	 * neighbor changed (coordinates passed are their own) Args: x, y, z, neighbor
-	 * blockID
-	 */
-	public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5) {
-		if (!par1World.isRemote) {
-			int var6 = par1World.getBlockMetadata(par2, par3, par4);
-			int var7 = par2;
-			int var8 = par4;
-
-			if ((var6 & 3) == 0) {
-				var8 = par4 + 1;
-			}
-
-			if ((var6 & 3) == 1) {
-				--var8;
-			}
-
-			if ((var6 & 3) == 2) {
-				var7 = par2 + 1;
-			}
-
-			if ((var6 & 3) == 3) {
-				--var7;
-			}
-
-			if (!isValidSupportBlock(par1World.getBlockId(var7, par3, var8))) {
-				par1World.setBlockToAir(par2, par3, par4);
-				this.dropBlockAsItem(par1World, par2, par3, par4, var6, 0);
-			}
-
-			boolean var9 = par1World.isBlockIndirectlyGettingPowered(par2, par3, par4);
-
-			if (var9 || par5 > 0 && Block.blocksList[par5].canProvidePower()) {
-				this.onPoweredBlockChange(par1World, par2, par3, par4, var9);
-			}
-		}
-	}
-
-	/**
 	 * Ray traces through the blocks collision from start vector to end vector
 	 * returning a ray trace hit. Args: world, x, y, z, startVec, endVec
 	 */

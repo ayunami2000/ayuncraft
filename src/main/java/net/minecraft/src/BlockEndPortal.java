@@ -72,16 +72,6 @@ public class BlockEndPortal extends BlockContainer {
 	}
 
 	/**
-	 * Triggered whenever an entity collides with this block (enters into the
-	 * block). Args: world, x, y, z, entity
-	 */
-	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity) {
-		if (par5Entity.ridingEntity == null && par5Entity.riddenByEntity == null && !par1World.isRemote) {
-			par5Entity.travelToDimension(1);
-		}
-	}
-
-	/**
 	 * A randomly called display update to be able to add particles or other items
 	 * for display
 	 */

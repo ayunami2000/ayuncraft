@@ -160,36 +160,6 @@ public abstract class EntityThrowable extends Entity implements IProjectile {
 			var2 = this.worldObj.getWorldVec3Pool().getVecFromPool(var3.hitVec.xCoord, var3.hitVec.yCoord, var3.hitVec.zCoord);
 		}
 
-		if (!this.worldObj.isRemote) {
-			Entity var4 = null;
-			List var5 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
-			double var6 = 0.0D;
-			EntityLiving var8 = this.getThrower();
-
-			for (int var9 = 0; var9 < var5.size(); ++var9) {
-				Entity var10 = (Entity) var5.get(var9);
-
-				if (var10.canBeCollidedWith() && (var10 != var8 || this.ticksInAir >= 5)) {
-					float var11 = 0.3F;
-					AxisAlignedBB var12 = var10.boundingBox.expand((double) var11, (double) var11, (double) var11);
-					MovingObjectPosition var13 = var12.calculateIntercept(var16, var2);
-
-					if (var13 != null) {
-						double var14 = var16.distanceTo(var13.hitVec);
-
-						if (var14 < var6 || var6 == 0.0D) {
-							var4 = var10;
-							var6 = var14;
-						}
-					}
-				}
-			}
-
-			if (var4 != null) {
-				var3 = new MovingObjectPosition(var4);
-			}
-		}
-
 		if (var3 != null) {
 			if (var3.typeOfHit == EnumMovingObjectType.TILE && this.worldObj.getBlockId(var3.blockX, var3.blockY, var3.blockZ) == Block.portal.blockID) {
 				this.setInPortal();

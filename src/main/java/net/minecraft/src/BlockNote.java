@@ -30,31 +30,7 @@ public class BlockNote extends BlockContainer {
 	 * Called upon block activation (right click on the block.)
 	 */
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		if (par1World.isRemote) {
-			return true;
-		} else {
-			TileEntityNote var10 = (TileEntityNote) par1World.getBlockTileEntity(par2, par3, par4);
-
-			if (var10 != null) {
-				var10.changePitch();
-				var10.triggerNote(par1World, par2, par3, par4);
-			}
-
-			return true;
-		}
-	}
-
-	/**
-	 * Called when the block is clicked by a player. Args: x, y, z, entityPlayer
-	 */
-	public void onBlockClicked(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer) {
-		if (!par1World.isRemote) {
-			TileEntityNote var6 = (TileEntityNote) par1World.getBlockTileEntity(par2, par3, par4);
-
-			if (var6 != null) {
-				var6.triggerNote(par1World, par2, par3, par4);
-			}
-		}
+		return true;
 	}
 
 	/**

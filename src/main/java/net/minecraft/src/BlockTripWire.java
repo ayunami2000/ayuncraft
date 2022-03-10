@@ -123,17 +123,6 @@ public class BlockTripWire extends Block {
 		this.func_72149_e(par1World, par2, par3, par4, par6 | 1);
 	}
 
-	/**
-	 * Called when the block is attempted to be harvested
-	 */
-	public void onBlockHarvested(World par1World, int par2, int par3, int par4, int par5, EntityPlayer par6EntityPlayer) {
-		if (!par1World.isRemote) {
-			if (par6EntityPlayer.getCurrentEquippedItem() != null && par6EntityPlayer.getCurrentEquippedItem().itemID == Item.shears.itemID) {
-				par1World.setBlockMetadataWithNotify(par2, par3, par4, par5 | 8, 4);
-			}
-		}
-	}
-
 	private void func_72149_e(World par1World, int par2, int par3, int par4, int par5) {
 		int var6 = 0;
 
@@ -160,29 +149,6 @@ public class BlockTripWire extends Block {
 
 				++var6;
 				break;
-			}
-		}
-	}
-
-	/**
-	 * Triggered whenever an entity collides with this block (enters into the
-	 * block). Args: world, x, y, z, entity
-	 */
-	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity) {
-		if (!par1World.isRemote) {
-			if ((par1World.getBlockMetadata(par2, par3, par4) & 1) != 1) {
-				this.updateTripWireState(par1World, par2, par3, par4);
-			}
-		}
-	}
-
-	/**
-	 * Ticks the block if it's been scheduled
-	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-		if (!par1World.isRemote) {
-			if ((par1World.getBlockMetadata(par2, par3, par4) & 1) == 1) {
-				this.updateTripWireState(par1World, par2, par3, par4);
 			}
 		}
 	}

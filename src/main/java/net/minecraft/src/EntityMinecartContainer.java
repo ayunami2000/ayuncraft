@@ -240,10 +240,6 @@ public abstract class EntityMinecartContainer extends EntityMinecart implements 
 	 * into the saddle on a pig.
 	 */
 	public boolean interact(EntityPlayer par1EntityPlayer) {
-		if (!this.worldObj.isRemote) {
-			par1EntityPlayer.displayGUIChest(this);
-		}
-
 		return true;
 	}
 

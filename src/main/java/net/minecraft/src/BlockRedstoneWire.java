@@ -157,109 +157,6 @@ public class BlockRedstoneWire extends Block {
 	}
 
 	/**
-	 * Calls World.notifyBlocksOfNeighborChange() for all neighboring blocks, but
-	 * only if the given block is a redstone wire.
-	 */
-	private void notifyWireNeighborsOfNeighborChange(World par1World, int par2, int par3, int par4) {
-		if (par1World.getBlockId(par2, par3, par4) == this.blockID) {
-			par1World.notifyBlocksOfNeighborChange(par2, par3, par4, this.blockID);
-			par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, this.blockID);
-			par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, this.blockID);
-			par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, this.blockID);
-			par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, this.blockID);
-			par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, this.blockID);
-			par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, this.blockID);
-		}
-	}
-
-	/**
-	 * Called whenever the block is added into the world. Args: world, x, y, z
-	 */
-	public void onBlockAdded(World par1World, int par2, int par3, int par4) {
-		super.onBlockAdded(par1World, par2, par3, par4);
-
-		if (!par1World.isRemote) {
-			this.updateAndPropagateCurrentStrength(par1World, par2, par3, par4);
-			par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, this.blockID);
-			par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, this.blockID);
-			this.notifyWireNeighborsOfNeighborChange(par1World, par2 - 1, par3, par4);
-			this.notifyWireNeighborsOfNeighborChange(par1World, par2 + 1, par3, par4);
-			this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3, par4 - 1);
-			this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3, par4 + 1);
-
-			if (par1World.isBlockNormalCube(par2 - 1, par3, par4)) {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2 - 1, par3 + 1, par4);
-			} else {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2 - 1, par3 - 1, par4);
-			}
-
-			if (par1World.isBlockNormalCube(par2 + 1, par3, par4)) {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2 + 1, par3 + 1, par4);
-			} else {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2 + 1, par3 - 1, par4);
-			}
-
-			if (par1World.isBlockNormalCube(par2, par3, par4 - 1)) {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3 + 1, par4 - 1);
-			} else {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3 - 1, par4 - 1);
-			}
-
-			if (par1World.isBlockNormalCube(par2, par3, par4 + 1)) {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3 + 1, par4 + 1);
-			} else {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3 - 1, par4 + 1);
-			}
-		}
-	}
-
-	/**
-	 * ejects contained items into the world, and notifies neighbours of an update,
-	 * as appropriate
-	 */
-	public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6) {
-		super.breakBlock(par1World, par2, par3, par4, par5, par6);
-
-		if (!par1World.isRemote) {
-			par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, this.blockID);
-			par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, this.blockID);
-			par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, this.blockID);
-			par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, this.blockID);
-			par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, this.blockID);
-			par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, this.blockID);
-			this.updateAndPropagateCurrentStrength(par1World, par2, par3, par4);
-			this.notifyWireNeighborsOfNeighborChange(par1World, par2 - 1, par3, par4);
-			this.notifyWireNeighborsOfNeighborChange(par1World, par2 + 1, par3, par4);
-			this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3, par4 - 1);
-			this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3, par4 + 1);
-
-			if (par1World.isBlockNormalCube(par2 - 1, par3, par4)) {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2 - 1, par3 + 1, par4);
-			} else {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2 - 1, par3 - 1, par4);
-			}
-
-			if (par1World.isBlockNormalCube(par2 + 1, par3, par4)) {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2 + 1, par3 + 1, par4);
-			} else {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2 + 1, par3 - 1, par4);
-			}
-
-			if (par1World.isBlockNormalCube(par2, par3, par4 - 1)) {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3 + 1, par4 - 1);
-			} else {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3 - 1, par4 - 1);
-			}
-
-			if (par1World.isBlockNormalCube(par2, par3, par4 + 1)) {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3 + 1, par4 + 1);
-			} else {
-				this.notifyWireNeighborsOfNeighborChange(par1World, par2, par3 - 1, par4 + 1);
-			}
-		}
-	}
-
-	/**
 	 * Returns the current strength at the specified block if it is greater than the
 	 * passed value, or the passed value otherwise. Signature: (world, x, y, z,
 	 * strength)
@@ -270,26 +167,6 @@ public class BlockRedstoneWire extends Block {
 		} else {
 			int var6 = par1World.getBlockMetadata(par2, par3, par4);
 			return var6 > par5 ? var6 : par5;
-		}
-	}
-
-	/**
-	 * Lets the block know when one of its neighbor changes. Doesn't know which
-	 * neighbor changed (coordinates passed are their own) Args: x, y, z, neighbor
-	 * blockID
-	 */
-	public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5) {
-		if (!par1World.isRemote) {
-			boolean var6 = this.canPlaceBlockAt(par1World, par2, par3, par4);
-
-			if (var6) {
-				this.updateAndPropagateCurrentStrength(par1World, par2, par3, par4);
-			} else {
-				this.dropBlockAsItem(par1World, par2, par3, par4, 0, 0);
-				par1World.setBlockToAir(par2, par3, par4);
-			}
-
-			super.onNeighborBlockChange(par1World, par2, par3, par4, par5);
 		}
 	}
 

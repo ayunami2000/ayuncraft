@@ -394,23 +394,7 @@ public abstract class Entity {
 
 		this.handleWaterMovement();
 
-		if (this.worldObj.isRemote) {
-			this.fire = 0;
-		} else if (this.fire > 0) {
-			if (this.isImmuneToFire) {
-				this.fire -= 4;
-
-				if (this.fire < 0) {
-					this.fire = 0;
-				}
-			} else {
-				if (this.fire % 20 == 0) {
-					this.attackEntityFrom(DamageSource.onFire, 1);
-				}
-
-				--this.fire;
-			}
-		}
+		this.fire = 0;
 
 		if (this.handleLavaMovement()) {
 			this.setOnFireFromLava();
@@ -419,11 +403,6 @@ public abstract class Entity {
 
 		if (this.posY < -64.0D) {
 			this.kill();
-		}
-
-		if (!this.worldObj.isRemote) {
-			this.setFlag(0, this.fire > 0);
-			this.setFlag(2, this.ridingEntity != null);
 		}
 
 		this.firstUpdate = false;
@@ -1616,13 +1595,6 @@ public abstract class Entity {
 		if (this.timeUntilPortal > 0) {
 			this.timeUntilPortal = this.getPortalCooldown();
 		} else {
-			double var1 = this.prevPosX - this.posX;
-			double var3 = this.prevPosZ - this.posZ;
-
-			if (!this.worldObj.isRemote && !this.inPortal) {
-				this.teleportDirection = Direction.getMovementDirection(var1, var3);
-			}
-
 			this.inPortal = true;
 		}
 	}

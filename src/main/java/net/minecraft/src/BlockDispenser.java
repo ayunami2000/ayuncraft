@@ -34,31 +34,6 @@ public class BlockDispenser extends BlockContainer {
 	 * chooses west to be direction if all surrounding blocks are opaque.
 	 */
 	private void setDispenserDefaultDirection(World par1World, int par2, int par3, int par4) {
-		if (!par1World.isRemote) {
-			int var5 = par1World.getBlockId(par2, par3, par4 - 1);
-			int var6 = par1World.getBlockId(par2, par3, par4 + 1);
-			int var7 = par1World.getBlockId(par2 - 1, par3, par4);
-			int var8 = par1World.getBlockId(par2 + 1, par3, par4);
-			byte var9 = 3;
-
-			if (Block.opaqueCubeLookup[var5] && !Block.opaqueCubeLookup[var6]) {
-				var9 = 3;
-			}
-
-			if (Block.opaqueCubeLookup[var6] && !Block.opaqueCubeLookup[var5]) {
-				var9 = 2;
-			}
-
-			if (Block.opaqueCubeLookup[var7] && !Block.opaqueCubeLookup[var8]) {
-				var9 = 5;
-			}
-
-			if (Block.opaqueCubeLookup[var8] && !Block.opaqueCubeLookup[var7]) {
-				var9 = 4;
-			}
-
-			par1World.setBlockMetadataWithNotify(par2, par3, par4, var9, 2);
-		}
 	}
 
 	/**
@@ -86,17 +61,7 @@ public class BlockDispenser extends BlockContainer {
 	 * Called upon block activation (right click on the block.)
 	 */
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		if (par1World.isRemote) {
-			return true;
-		} else {
-			TileEntityDispenser var10 = (TileEntityDispenser) par1World.getBlockTileEntity(par2, par3, par4);
-
-			if (var10 != null) {
-				par5EntityPlayer.displayGUIDispenser(var10);
-			}
-
-			return true;
-		}
+		return true;
 	}
 
 	protected void dispense(World par1World, int par2, int par3, int par4) {
@@ -125,15 +90,6 @@ public class BlockDispenser extends BlockContainer {
 			par1World.setBlockMetadataWithNotify(par2, par3, par4, var7 | 8, 4);
 		} else if (!var6 && var8) {
 			par1World.setBlockMetadataWithNotify(par2, par3, par4, var7 & -9, 4);
-		}
-	}
-
-	/**
-	 * Ticks the block if it's been scheduled
-	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-		if (!par1World.isRemote) {
-			this.dispense(par1World, par2, par3, par4);
 		}
 	}
 

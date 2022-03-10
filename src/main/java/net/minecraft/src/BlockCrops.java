@@ -139,25 +139,6 @@ public class BlockCrops extends BlockFlower {
 	}
 
 	/**
-	 * Drops the block items with a specified chance of dropping the specified items
-	 */
-	public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {
-		super.dropBlockAsItemWithChance(par1World, par2, par3, par4, par5, par6, 0);
-
-		if (!par1World.isRemote) {
-			if (par5 >= 7) {
-				int var8 = 3 + par7;
-
-				for (int var9 = 0; var9 < var8; ++var9) {
-					if (par1World.rand.nextInt(15) <= par5) {
-						this.dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(this.getSeedItem(), 1, 0));
-					}
-				}
-			}
-		}
-	}
-
-	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
 	public int idDropped(int par1, Random par2Random, int par3) {

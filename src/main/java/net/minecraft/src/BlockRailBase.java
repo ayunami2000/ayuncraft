@@ -109,60 +109,8 @@ public abstract class BlockRailBase extends Block {
 	 * Called whenever the block is added into the world. Args: world, x, y, z
 	 */
 	public void onBlockAdded(World par1World, int par2, int par3, int par4) {
-		if (!par1World.isRemote) {
-			this.refreshTrackShape(par1World, par2, par3, par4, true);
-
-			if (this.isPowered) {
-				this.onNeighborBlockChange(par1World, par2, par3, par4, this.blockID);
-			}
-		}
 	}
-
-	/**
-	 * Lets the block know when one of its neighbor changes. Doesn't know which
-	 * neighbor changed (coordinates passed are their own) Args: x, y, z, neighbor
-	 * blockID
-	 */
-	public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5) {
-		if (!par1World.isRemote) {
-			int var6 = par1World.getBlockMetadata(par2, par3, par4);
-			int var7 = var6;
-
-			if (this.isPowered) {
-				var7 = var6 & 7;
-			}
-
-			boolean var8 = false;
-
-			if (!par1World.doesBlockHaveSolidTopSurface(par2, par3 - 1, par4)) {
-				var8 = true;
-			}
-
-			if (var7 == 2 && !par1World.doesBlockHaveSolidTopSurface(par2 + 1, par3, par4)) {
-				var8 = true;
-			}
-
-			if (var7 == 3 && !par1World.doesBlockHaveSolidTopSurface(par2 - 1, par3, par4)) {
-				var8 = true;
-			}
-
-			if (var7 == 4 && !par1World.doesBlockHaveSolidTopSurface(par2, par3, par4 - 1)) {
-				var8 = true;
-			}
-
-			if (var7 == 5 && !par1World.doesBlockHaveSolidTopSurface(par2, par3, par4 + 1)) {
-				var8 = true;
-			}
-
-			if (var8) {
-				this.dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
-				par1World.setBlockToAir(par2, par3, par4);
-			} else {
-				this.func_94358_a(par1World, par2, par3, par4, var6, var7, par5);
-			}
-		}
-	}
-
+	
 	protected void func_94358_a(World par1World, int par2, int par3, int par4, int par5, int par6, int par7) {
 	}
 
@@ -170,9 +118,6 @@ public abstract class BlockRailBase extends Block {
 	 * Completely recalculates the track shape based on neighboring tracks
 	 */
 	protected void refreshTrackShape(World par1World, int par2, int par3, int par4, boolean par5) {
-		if (!par1World.isRemote) {
-			(new BlockBaseRailLogic(this, par1World, par2, par3, par4)).func_94511_a(par1World.isBlockIndirectlyGettingPowered(par2, par3, par4), par5);
-		}
 	}
 
 	/**

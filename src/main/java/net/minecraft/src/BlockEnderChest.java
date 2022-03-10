@@ -85,22 +85,7 @@ public class BlockEnderChest extends BlockContainer {
 	 * Called upon block activation (right click on the block.)
 	 */
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		InventoryEnderChest var10 = par5EntityPlayer.getInventoryEnderChest();
-		TileEntityEnderChest var11 = (TileEntityEnderChest) par1World.getBlockTileEntity(par2, par3, par4);
-
-		if (var10 != null && var11 != null) {
-			if (par1World.isBlockNormalCube(par2, par3 + 1, par4)) {
-				return true;
-			} else if (par1World.isRemote) {
-				return true;
-			} else {
-				var10.setAssociatedChest(var11);
-				par5EntityPlayer.displayGUIChest(var10);
-				return true;
-			}
-		} else {
-			return true;
-		}
+		return true;
 	}
 
 	/**

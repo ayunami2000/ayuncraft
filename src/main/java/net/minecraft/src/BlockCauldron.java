@@ -91,51 +91,7 @@ public class BlockCauldron extends Block {
 	 * Called upon block activation (right click on the block.)
 	 */
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		if (par1World.isRemote) {
-			return true;
-		} else {
-			ItemStack var10 = par5EntityPlayer.inventory.getCurrentItem();
-
-			if (var10 == null) {
-				return true;
-			} else {
-				int var11 = par1World.getBlockMetadata(par2, par3, par4);
-
-				if (var10.itemID == Item.bucketWater.itemID) {
-					if (var11 < 3) {
-						if (!par5EntityPlayer.capabilities.isCreativeMode) {
-							par5EntityPlayer.inventory.setInventorySlotContents(par5EntityPlayer.inventory.currentItem, new ItemStack(Item.bucketEmpty));
-						}
-
-						par1World.setBlockMetadataWithNotify(par2, par3, par4, 3, 2);
-					}
-
-					return true;
-				} else {
-					if (var10.itemID == Item.glassBottle.itemID) {
-						if (var11 > 0) {
-							ItemStack var12 = new ItemStack(Item.potion, 1, 0);
-							par1World.spawnEntityInWorld(new EntityItem(par1World, (double) par2 + 0.5D, (double) par3 + 1.5D, (double) par4 + 0.5D, var12));
-
-							--var10.stackSize;
-
-							if (var10.stackSize <= 0) {
-								par5EntityPlayer.inventory.setInventorySlotContents(par5EntityPlayer.inventory.currentItem, (ItemStack) null);
-							}
-
-							par1World.setBlockMetadataWithNotify(par2, par3, par4, var11 - 1, 2);
-						}
-					} else if (var11 > 0 && var10.getItem() instanceof ItemArmor && ((ItemArmor) var10.getItem()).getArmorMaterial() == EnumArmorMaterial.CLOTH) {
-						ItemArmor var13 = (ItemArmor) var10.getItem();
-						var13.removeColor(var10);
-						par1World.setBlockMetadataWithNotify(par2, par3, par4, var11 - 1, 2);
-						return true;
-					}
-
-					return true;
-				}
-			}
-		}
+		return true;
 	}
 
 	/**

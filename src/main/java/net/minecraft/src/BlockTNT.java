@@ -54,11 +54,6 @@ public class BlockTNT extends Block {
 	 * Called upon the block being destroyed by an explosion
 	 */
 	public void onBlockDestroyedByExplosion(World par1World, int par2, int par3, int par4, Explosion par5Explosion) {
-		if (!par1World.isRemote) {
-			EntityTNTPrimed var6 = new EntityTNTPrimed(par1World, (double) ((float) par2 + 0.5F), (double) ((float) par3 + 0.5F), (double) ((float) par4 + 0.5F), par5Explosion.func_94613_c());
-			var6.fuse = par1World.rand.nextInt(var6.fuse / 4) + var6.fuse / 8;
-			par1World.spawnEntityInWorld(var6);
-		}
 	}
 
 	/**
@@ -70,13 +65,6 @@ public class BlockTNT extends Block {
 	}
 
 	public void func_94391_a(World par1World, int par2, int par3, int par4, int par5, EntityLiving par6EntityLiving) {
-		if (!par1World.isRemote) {
-			if ((par5 & 1) == 1) {
-				EntityTNTPrimed var7 = new EntityTNTPrimed(par1World, (double) ((float) par2 + 0.5F), (double) ((float) par3 + 0.5F), (double) ((float) par4 + 0.5F), par6EntityLiving);
-				par1World.spawnEntityInWorld(var7);
-				par1World.playSoundAtEntity(var7, "random.fuse", 1.0F, 1.0F);
-			}
-		}
 	}
 
 	/**
@@ -89,21 +77,6 @@ public class BlockTNT extends Block {
 			return true;
 		} else {
 			return super.onBlockActivated(par1World, par2, par3, par4, par5EntityPlayer, par6, par7, par8, par9);
-		}
-	}
-
-	/**
-	 * Triggered whenever an entity collides with this block (enters into the
-	 * block). Args: world, x, y, z, entity
-	 */
-	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity) {
-		if (par5Entity instanceof EntityArrow && !par1World.isRemote) {
-			EntityArrow var6 = (EntityArrow) par5Entity;
-
-			if (var6.isBurning()) {
-				this.func_94391_a(par1World, par2, par3, par4, 1, var6.shootingEntity instanceof EntityLiving ? (EntityLiving) var6.shootingEntity : null);
-				par1World.setBlockToAir(par2, par3, par4);
-			}
 		}
 	}
 

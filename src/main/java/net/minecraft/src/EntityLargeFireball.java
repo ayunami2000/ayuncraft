@@ -19,14 +19,6 @@ public class EntityLargeFireball extends EntityFireball {
 	 * Called when this EntityFireball hits a block or entity.
 	 */
 	protected void onImpact(MovingObjectPosition par1MovingObjectPosition) {
-		if (!this.worldObj.isRemote) {
-			if (par1MovingObjectPosition.entityHit != null) {
-				par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 6);
-			}
-
-			this.worldObj.newExplosion((Entity) null, this.posX, this.posY, this.posZ, (float) this.field_92057_e, true, this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"));
-			this.setDead();
-		}
 	}
 
 	/**

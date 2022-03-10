@@ -58,45 +58,6 @@ public class EntityBlaze extends EntityMob {
 	}
 
 	/**
-	 * Called frequently so the entity can update its state every tick as required.
-	 * For example, zombies and skeletons use this to react to sunlight and start to
-	 * burn.
-	 */
-	public void onLivingUpdate() {
-		if (!this.worldObj.isRemote) {
-			if (this.isWet()) {
-				this.attackEntityFrom(DamageSource.drown, 1);
-			}
-
-			--this.heightOffsetUpdateTime;
-
-			if (this.heightOffsetUpdateTime <= 0) {
-				this.heightOffsetUpdateTime = 100;
-				this.heightOffset = 0.5F + (float) this.rand.nextGaussian() * 3.0F;
-			}
-
-			if (this.getEntityToAttack() != null && this.getEntityToAttack().posY + (double) this.getEntityToAttack().getEyeHeight() > this.posY + (double) this.getEyeHeight() + (double) this.heightOffset) {
-				this.motionY += (0.30000001192092896D - this.motionY) * 0.30000001192092896D;
-			}
-		}
-
-		if (this.rand.nextInt(24) == 0) {
-			this.worldObj.playSoundEffect(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, "fire.fire", 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F);
-		}
-
-		if (!this.onGround && this.motionY < 0.0D) {
-			this.motionY *= 0.6D;
-		}
-
-		for (int var1 = 0; var1 < 2; ++var1) {
-			this.worldObj.spawnParticle("largesmoke", this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width, this.posY + this.rand.nextDouble() * (double) this.height,
-					this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, 0.0D, 0.0D, 0.0D);
-		}
-
-		super.onLivingUpdate();
-	}
-
-	/**
 	 * Basic mob attack. Default to touch of death in EntityCreature. Overridden by
 	 * each mob to define their attack.
 	 */

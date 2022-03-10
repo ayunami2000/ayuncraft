@@ -516,18 +516,10 @@ public class Chunk {
 			int var12 = this.xPosition * 16 + par1;
 			int var13 = this.zPosition * 16 + par3;
 
-			if (var8 != 0 && !this.worldObj.isRemote) {
-				Block.blocksList[var8].onSetBlockIDWithMetaData(this.worldObj, var12, par2, var13, var9);
-			}
-
 			var10.setExtBlockID(par1, par2 & 15, par3, par4);
 
 			if (var8 != 0) {
-				if (!this.worldObj.isRemote) {
-					Block.blocksList[var8].breakBlock(this.worldObj, var12, par2, var13, var8, var9);
-				} else if (Block.blocksList[var8] instanceof ITileEntityProvider && var8 != par4) {
-					this.worldObj.removeBlockTileEntity(var12, par2, var13);
-				}
+				this.worldObj.removeBlockTileEntity(var12, par2, var13);
 			}
 
 			if (var10.getExtBlockID(par1, par2 & 15, par3) != par4) {
@@ -552,10 +544,6 @@ public class Chunk {
 				TileEntity var14;
 
 				if (par4 != 0) {
-					if (!this.worldObj.isRemote) {
-						Block.blocksList[par4].onBlockAdded(this.worldObj, var12, par2, var13);
-					}
-
 					if (Block.blocksList[par4] instanceof ITileEntityProvider) {
 						var14 = this.getChunkBlockTileEntity(par1, par2, par3);
 

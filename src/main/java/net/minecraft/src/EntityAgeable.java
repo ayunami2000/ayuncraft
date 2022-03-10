@@ -6,42 +6,6 @@ public abstract class EntityAgeable extends EntityCreature {
 
 	public abstract EntityAgeable createChild(EntityAgeable var1);
 
-	/**
-	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets
-	 * into the saddle on a pig.
-	 */
-	public boolean interact(EntityPlayer par1EntityPlayer) {
-		ItemStack var2 = par1EntityPlayer.inventory.getCurrentItem();
-
-		if (var2 != null && var2.itemID == Item.monsterPlacer.itemID && !this.worldObj.isRemote) {
-			Class var3 = EntityList.getClassFromID(var2.getItemDamage());
-
-			if (var3 != null && var3.isAssignableFrom(this.getClass())) {
-				EntityAgeable var4 = this.createChild(this);
-
-				if (var4 != null) {
-					var4.setGrowingAge(-24000);
-					var4.setLocationAndAngles(this.posX, this.posY, this.posZ, 0.0F, 0.0F);
-					this.worldObj.spawnEntityInWorld(var4);
-
-					if (var2.hasDisplayName()) {
-						var4.func_94058_c(var2.getDisplayName());
-					}
-
-					if (!par1EntityPlayer.capabilities.isCreativeMode) {
-						--var2.stackSize;
-
-						if (var2.stackSize <= 0) {
-							par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack) null);
-						}
-					}
-				}
-			}
-		}
-
-		return super.interact(par1EntityPlayer);
-	}
-
 	protected void entityInit() {
 		super.entityInit();
 		this.dataWatcher.addObject(12, new Integer(0));
@@ -90,20 +54,7 @@ public abstract class EntityAgeable extends EntityCreature {
 	 */
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-
-		if (this.worldObj.isRemote) {
-			this.func_98054_a(this.isChild());
-		} else {
-			int var1 = this.getGrowingAge();
-
-			if (var1 < 0) {
-				++var1;
-				this.setGrowingAge(var1);
-			} else if (var1 > 0) {
-				--var1;
-				this.setGrowingAge(var1);
-			}
-		}
+		this.func_98054_a(this.isChild());
 	}
 
 	/**

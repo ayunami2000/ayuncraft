@@ -193,31 +193,6 @@ public class BlockStem extends BlockFlower {
 	}
 
 	/**
-	 * Drops the block items with a specified chance of dropping the specified items
-	 */
-	public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {
-		super.dropBlockAsItemWithChance(par1World, par2, par3, par4, par5, par6, par7);
-
-		if (!par1World.isRemote) {
-			Item var8 = null;
-
-			if (this.fruitType == Block.pumpkin) {
-				var8 = Item.pumpkinSeeds;
-			}
-
-			if (this.fruitType == Block.melon) {
-				var8 = Item.melonSeeds;
-			}
-
-			for (int var9 = 0; var9 < 3; ++var9) {
-				if (par1World.rand.nextInt(15) <= par5) {
-					this.dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(var8));
-				}
-			}
-		}
-	}
-
-	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
 	public int idDropped(int par1, Random par2Random, int par3) {

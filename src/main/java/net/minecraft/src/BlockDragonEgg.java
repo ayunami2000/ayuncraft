@@ -82,24 +82,18 @@ public class BlockDragonEgg extends Block {
 				int var8 = par4 + par1World.rand.nextInt(16) - par1World.rand.nextInt(16);
 
 				if (par1World.getBlockId(var6, var7, var8) == 0) {
-					if (!par1World.isRemote) {
-						par1World.setBlock(var6, var7, var8, this.blockID, par1World.getBlockMetadata(par2, par3, par4), 2);
-						par1World.setBlockToAir(par2, par3, par4);
-					} else {
-						short var9 = 128;
+					short var9 = 128;
 
-						for (int var10 = 0; var10 < var9; ++var10) {
-							double var11 = par1World.rand.nextDouble();
-							float var13 = (par1World.rand.nextFloat() - 0.5F) * 0.2F;
-							float var14 = (par1World.rand.nextFloat() - 0.5F) * 0.2F;
-							float var15 = (par1World.rand.nextFloat() - 0.5F) * 0.2F;
-							double var16 = (double) var6 + (double) (par2 - var6) * var11 + (par1World.rand.nextDouble() - 0.5D) * 1.0D + 0.5D;
-							double var18 = (double) var7 + (double) (par3 - var7) * var11 + par1World.rand.nextDouble() * 1.0D - 0.5D;
-							double var20 = (double) var8 + (double) (par4 - var8) * var11 + (par1World.rand.nextDouble() - 0.5D) * 1.0D + 0.5D;
-							par1World.spawnParticle("portal", var16, var18, var20, (double) var13, (double) var14, (double) var15);
-						}
+					for (int var10 = 0; var10 < var9; ++var10) {
+						double var11 = par1World.rand.nextDouble();
+						float var13 = (par1World.rand.nextFloat() - 0.5F) * 0.2F;
+						float var14 = (par1World.rand.nextFloat() - 0.5F) * 0.2F;
+						float var15 = (par1World.rand.nextFloat() - 0.5F) * 0.2F;
+						double var16 = (double) var6 + (double) (par2 - var6) * var11 + (par1World.rand.nextDouble() - 0.5D) * 1.0D + 0.5D;
+						double var18 = (double) var7 + (double) (par3 - var7) * var11 + par1World.rand.nextDouble() * 1.0D - 0.5D;
+						double var20 = (double) var8 + (double) (par4 - var8) * var11 + (par1World.rand.nextDouble() - 0.5D) * 1.0D + 0.5D;
+						par1World.spawnParticle("portal", var16, var18, var20, (double) var13, (double) var14, (double) var15);
 					}
-
 					return;
 				}
 			}

@@ -486,9 +486,7 @@ public abstract class EntityLiving extends Entity {
 			this.attackEntityFrom(DamageSource.inWall, 1);
 		}
 
-		if (this.isImmuneToFire() || this.worldObj.isRemote) {
-			this.extinguish();
-		}
+		this.extinguish();
 
 		boolean var1 = this instanceof EntityPlayer && ((EntityPlayer) this).capabilities.disableDamage;
 
@@ -568,16 +566,6 @@ public abstract class EntityLiving extends Entity {
 
 		if (this.deathTime == 20) {
 			int var1;
-
-			if (!this.worldObj.isRemote && (this.recentlyHit > 0 || this.isPlayer()) && !this.isChild() && this.worldObj.getGameRules().getGameRuleBooleanValue("doMobLoot")) {
-				var1 = this.getExperiencePoints(this.attackingPlayer);
-
-				while (var1 > 0) {
-					int var2 = EntityXPOrb.getXPSplit(var1);
-					var1 -= var2;
-					this.worldObj.spawnEntityInWorld(new EntityXPOrb(this.worldObj, this.posX, this.posY, this.posZ, var2));
-				}
-			}
 
 			this.setDead();
 
@@ -796,98 +784,7 @@ public abstract class EntityLiving extends Entity {
 	 * Called when the entity is attacked.
 	 */
 	public boolean attackEntityFrom(DamageSource par1DamageSource, int par2) {
-		if (this.isEntityInvulnerable()) {
-			return false;
-		} else if (this.worldObj.isRemote) {
-			return false;
-		} else {
-			this.entityAge = 0;
-
-			if (this.health <= 0) {
-				return false;
-			} else if (par1DamageSource.isFireDamage() && this.isPotionActive(Potion.fireResistance)) {
-				return false;
-			} else {
-				if ((par1DamageSource == DamageSource.anvil || par1DamageSource == DamageSource.fallingBlock) && this.getCurrentItemOrArmor(4) != null) {
-					this.getCurrentItemOrArmor(4).damageItem(par2 * 4 + this.rand.nextInt(par2 * 2), this);
-					par2 = (int) ((float) par2 * 0.75F);
-				}
-
-				this.limbYaw = 1.5F;
-				boolean var3 = true;
-
-				if ((float) this.hurtResistantTime > (float) this.maxHurtResistantTime / 2.0F) {
-					if (par2 <= this.lastDamage) {
-						return false;
-					}
-
-					this.damageEntity(par1DamageSource, par2 - this.lastDamage);
-					this.lastDamage = par2;
-					var3 = false;
-				} else {
-					this.lastDamage = par2;
-					this.prevHealth = this.health;
-					this.hurtResistantTime = this.maxHurtResistantTime;
-					this.damageEntity(par1DamageSource, par2);
-					this.hurtTime = this.maxHurtTime = 10;
-				}
-
-				this.attackedAtYaw = 0.0F;
-				Entity var4 = par1DamageSource.getEntity();
-
-				if (var4 != null) {
-					if (var4 instanceof EntityLiving) {
-						this.setRevengeTarget((EntityLiving) var4);
-					}
-
-					if (var4 instanceof EntityPlayer) {
-						this.recentlyHit = 100;
-						this.attackingPlayer = (EntityPlayer) var4;
-					} else if (var4 instanceof EntityWolf) {
-						EntityWolf var5 = (EntityWolf) var4;
-
-						if (var5.isTamed()) {
-							this.recentlyHit = 100;
-							this.attackingPlayer = null;
-						}
-					}
-				}
-
-				if (var3) {
-					this.worldObj.setEntityState(this, (byte) 2);
-
-					if (par1DamageSource != DamageSource.drown) {
-						this.setBeenAttacked();
-					}
-
-					if (var4 != null) {
-						double var9 = var4.posX - this.posX;
-						double var7;
-
-						for (var7 = var4.posZ - this.posZ; var9 * var9 + var7 * var7 < 1.0E-4D; var7 = (Math.random() - Math.random()) * 0.01D) {
-							var9 = (Math.random() - Math.random()) * 0.01D;
-						}
-
-						this.attackedAtYaw = (float) (Math.atan2(var7, var9) * 180.0D / Math.PI) - this.rotationYaw;
-						this.knockBack(var4, par2, var9, var7);
-					} else {
-						this.attackedAtYaw = (float) ((int) (Math.random() * 2.0D) * 180);
-					}
-				}
-
-				if (this.health <= 0) {
-					if (var3) {
-						this.playSound(this.getDeathSound(), this.getSoundVolume(), this.getSoundPitch());
-					}
-
-					this.onDeath(par1DamageSource);
-				} else if (var3) {
-					this.playSound(this.getHurtSound(), this.getSoundVolume(), this.getSoundPitch());
-				}
-
-				return true;
-			}
-		}
+		return false;
 	}
 
 	/**
@@ -1060,27 +957,6 @@ public abstract class EntityLiving extends Entity {
 
 		this.dead = true;
 
-		if (!this.worldObj.isRemote) {
-			int var4 = 0;
-
-			if (var2 instanceof EntityPlayer) {
-				var4 = EnchantmentHelper.getLootingModifier((EntityLiving) var2);
-			}
-
-			if (!this.isChild() && this.worldObj.getGameRules().getGameRuleBooleanValue("doMobLoot")) {
-				this.dropFewItems(this.recentlyHit > 0, var4);
-				this.dropEquipment(this.recentlyHit > 0, var4);
-
-				if (this.recentlyHit > 0) {
-					int var5 = this.rand.nextInt(200) - var4;
-
-					if (var5 < 5) {
-						this.dropRareDrop(var5 <= 0 ? 1 : 0);
-					}
-				}
-			}
-		}
-
 		this.worldObj.setEntityState(this, (byte) 3);
 	}
 
@@ -1246,7 +1122,7 @@ public abstract class EntityLiving extends Entity {
 				this.motionY = 0.2D;
 			}
 
-			if (this.worldObj.isRemote && (!this.worldObj.blockExists((int) this.posX, 0, (int) this.posZ) || !this.worldObj.getChunkFromBlockCoords((int) this.posX, (int) this.posZ).isChunkLoaded)) {
+			if ((!this.worldObj.blockExists((int) this.posX, 0, (int) this.posZ) || !this.worldObj.getChunkFromBlockCoords((int) this.posX, (int) this.posZ).isChunkLoaded)) {
 				if (this.posY > 0.0D) {
 					this.motionY = -0.1D;
 				} else {
@@ -1492,77 +1368,8 @@ public abstract class EntityLiving extends Entity {
 		this.landMovementFactor = var11;
 		this.worldObj.theProfiler.endSection();
 		this.worldObj.theProfiler.startSection("push");
-
-		if (!this.worldObj.isRemote) {
-			this.func_85033_bc();
-		}
-
 		this.worldObj.theProfiler.endSection();
 		this.worldObj.theProfiler.startSection("looting");
-
-		if (!this.worldObj.isRemote && this.canPickUpLoot() && !this.dead && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) {
-			List var2 = this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(1.0D, 0.0D, 1.0D));
-			Iterator var12 = var2.iterator();
-
-			while (var12.hasNext()) {
-				EntityItem var4 = (EntityItem) var12.next();
-
-				if (!var4.isDead && var4.getEntityItem() != null) {
-					ItemStack var13 = var4.getEntityItem();
-					int var6 = getArmorPosition(var13);
-
-					if (var6 > -1) {
-						boolean var14 = true;
-						ItemStack var8 = this.getCurrentItemOrArmor(var6);
-
-						if (var8 != null) {
-							if (var6 == 0) {
-								if (var13.getItem() instanceof ItemSword && !(var8.getItem() instanceof ItemSword)) {
-									var14 = true;
-								} else if (var13.getItem() instanceof ItemSword && var8.getItem() instanceof ItemSword) {
-									ItemSword var9 = (ItemSword) var13.getItem();
-									ItemSword var10 = (ItemSword) var8.getItem();
-
-									if (var9.func_82803_g() == var10.func_82803_g()) {
-										var14 = var13.getItemDamage() > var8.getItemDamage() || var13.hasTagCompound() && !var8.hasTagCompound();
-									} else {
-										var14 = var9.func_82803_g() > var10.func_82803_g();
-									}
-								} else {
-									var14 = false;
-								}
-							} else if (var13.getItem() instanceof ItemArmor && !(var8.getItem() instanceof ItemArmor)) {
-								var14 = true;
-							} else if (var13.getItem() instanceof ItemArmor && var8.getItem() instanceof ItemArmor) {
-								ItemArmor var15 = (ItemArmor) var13.getItem();
-								ItemArmor var16 = (ItemArmor) var8.getItem();
-
-								if (var15.damageReduceAmount == var16.damageReduceAmount) {
-									var14 = var13.getItemDamage() > var8.getItemDamage() || var13.hasTagCompound() && !var8.hasTagCompound();
-								} else {
-									var14 = var15.damageReduceAmount > var16.damageReduceAmount;
-								}
-							} else {
-								var14 = false;
-							}
-						}
-
-						if (var14) {
-							if (var8 != null && this.rand.nextFloat() - 0.1F < this.equipmentDropChances[var6]) {
-								this.entityDropItem(var8, 0.0F);
-							}
-
-							this.setCurrentItemOrArmor(var6, var13);
-							this.equipmentDropChances[var6] = 2.0F;
-							this.persistenceRequired = true;
-							this.onItemPickup(var4, 1);
-							var4.setDead();
-						}
-					}
-				}
-			}
-		}
-
 		this.worldObj.theProfiler.endSection();
 	}
 
@@ -1943,34 +1750,14 @@ public abstract class EntityLiving extends Entity {
 			Integer var2 = (Integer) var1.next();
 			PotionEffect var3 = (PotionEffect) this.activePotionsMap.get(var2);
 
-			if (!var3.onUpdate(this)) {
-				if (!this.worldObj.isRemote) {
-					var1.remove();
-					this.onFinishedPotionEffect(var3);
-				}
-			} else if (var3.getDuration() % 600 == 0) {
+			if (var3.onUpdate(this)) {
 				this.onChangedPotionEffect(var3);
 			}
 		}
 
 		int var12;
 
-		if (this.potionsNeedUpdate) {
-			if (!this.worldObj.isRemote) {
-				if (this.activePotionsMap.isEmpty()) {
-					this.dataWatcher.updateObject(9, Byte.valueOf((byte) 0));
-					this.dataWatcher.updateObject(8, Integer.valueOf(0));
-					this.setInvisible(false);
-				} else {
-					var12 = PotionHelper.calcPotionLiquidColor(this.activePotionsMap.values());
-					this.dataWatcher.updateObject(9, Byte.valueOf((byte) (PotionHelper.func_82817_b(this.activePotionsMap.values()) ? 1 : 0)));
-					this.dataWatcher.updateObject(8, Integer.valueOf(var12));
-					this.setInvisible(this.isPotionActive(Potion.invisibility.id));
-				}
-			}
-
-			this.potionsNeedUpdate = false;
-		}
+		this.potionsNeedUpdate = false;
 
 		var12 = this.dataWatcher.getWatchableObjectInt(8);
 		boolean var13 = this.dataWatcher.getWatchableObjectByte(9) > 0;
@@ -1999,17 +1786,6 @@ public abstract class EntityLiving extends Entity {
 	}
 
 	public void clearActivePotions() {
-		Iterator var1 = this.activePotionsMap.keySet().iterator();
-
-		while (var1.hasNext()) {
-			Integer var2 = (Integer) var1.next();
-			PotionEffect var3 = (PotionEffect) this.activePotionsMap.get(var2);
-
-			if (!this.worldObj.isRemote) {
-				var1.remove();
-				this.onFinishedPotionEffect(var3);
-			}
-		}
 	}
 
 	public Collection getActivePotionEffects() {

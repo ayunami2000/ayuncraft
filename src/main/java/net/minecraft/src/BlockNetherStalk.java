@@ -63,21 +63,6 @@ public class BlockNetherStalk extends BlockFlower {
 	 * Drops the block items with a specified chance of dropping the specified items
 	 */
 	public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {
-		if (!par1World.isRemote) {
-			int var8 = 1;
-
-			if (par5 >= 3) {
-				var8 = 2 + par1World.rand.nextInt(3);
-
-				if (par7 > 0) {
-					var8 += par1World.rand.nextInt(par7 + 1);
-				}
-			}
-
-			for (int var9 = 0; var9 < var8; ++var9) {
-				this.dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(Item.netherStalkSeeds));
-			}
-		}
 	}
 
 	/**
