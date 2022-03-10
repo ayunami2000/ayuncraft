@@ -138,11 +138,11 @@ public class GuiMainMenu extends GuiScreen {
 		StringTranslate var2 = StringTranslate.getInstance();
 		int var4 = this.height / 4 + 48;
 
-		GuiButton single;
-		this.buttonList.add(single = new GuiButton(1, this.width / 2 - 100, var4, var2.translateKey("menu.singleplayer")));
-		this.buttonList.add(new GuiButton(2, this.width / 2 - 100, var4 + 24 * 1, var2.translateKey("menu.multiplayer")));
-		this.buttonList.add(new GuiButton(3, this.width / 2 - 100, var4 + 24 * 2, var2.translateKey("menu.forkme")));
-		single.enabled = false;
+		//GuiButton single;
+		this.buttonList.add(new GuiButton(2, this.width / 2 - 100, var4, var2.translateKey("menu.multiplayer")));
+		this.buttonList.add(new GuiButton(3, this.width / 2 - 100, var4 + 24 * 1, var2.translateKey("menu.forkme")));
+		//this.buttonList.add(new GuiButton(3, this.width / 2 - 100, var4 + 24 * 2, var2.translateKey("menu.forkme")));
+		//single.enabled = false;
 
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, var4 + 72 + 12, 98, 20, var2.translateKey("menu.options")));
 		this.buttonList.add(new GuiButton(4, this.width / 2 + 2, var4 + 72 + 12, 98, 20, var2.translateKey("menu.editprofile")));
