@@ -429,6 +429,9 @@ public class Minecraft implements Runnable {
 		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
 		EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
 		EaglerAdapter.glAlphaFunc(EaglerAdapter.GL_GREATER, 0.1F);
+
+		while(EaglerAdapter.keysNext());
+		while(EaglerAdapter.mouseNext());
 	}
 
 	/**
@@ -495,9 +498,6 @@ public class Minecraft implements Runnable {
 		if (this.currentScreen != null) {
 			this.currentScreen.onGuiClosed();
 		}
-
-		while(EaglerAdapter.keysNext());
-		while(EaglerAdapter.mouseNext());
 
 		if (par1GuiScreen == null && this.theWorld == null) {
 			par1GuiScreen = new GuiMainMenu();
