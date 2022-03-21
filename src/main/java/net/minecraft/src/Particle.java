@@ -1,9 +1,9 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class Particle {
-	private static Random rand = new Random();
+	private static EaglercraftRandom rand = new EaglercraftRandom();
 	public double posX;
 	public double posY;
 	public double prevPosX;

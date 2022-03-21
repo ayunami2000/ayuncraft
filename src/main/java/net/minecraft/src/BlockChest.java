@@ -1,10 +1,11 @@
 package net.minecraft.src;
 
 import java.util.Iterator;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockChest extends BlockContainer {
-	private final Random random = new Random();
+	private final EaglercraftRandom random = new EaglercraftRandom();
 
 	/** Determines whether of not the chest is trapped. */
 	public final int isTrapped;

@@ -1,7 +1,6 @@
 package net.lax1dude.eaglercraft;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.NBTTagCompound;
@@ -19,7 +18,7 @@ public class EaglerProfile {
 	public static ArrayList<byte[]> skinDatas = new ArrayList();
 	public static ArrayList<Integer> glTex = new ArrayList();
 	
-	public static final Random rand;
+	public static final EaglercraftRandom rand;
 	
 	public static int getSkinSize(int len) {
 		for(int i = 0; i < SKIN_DATA_SIZE.length; ++i) {
@@ -156,7 +155,7 @@ public class EaglerProfile {
 				"Yeeg"
 		};
 		
-		rand = new Random();
+		rand = new EaglercraftRandom();
 		
 		do {
 			username = usernameDefaultWords[rand.nextInt(usernameDefaultWords.length)] + usernameDefaultWords[rand.nextInt(usernameDefaultWords.length)] + (10 + rand.nextInt(90));

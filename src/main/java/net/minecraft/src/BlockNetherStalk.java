@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockNetherStalk extends BlockFlower {
 	private static final String[] field_94373_a = new String[] { "netherStalk_0", "netherStalk_1", "netherStalk_2" };
@@ -33,7 +33,7 @@ public class BlockNetherStalk extends BlockFlower {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		int var6 = par1World.getBlockMetadata(par2, par3, par4);
 
 		if (var6 < 3 && par5Random.nextInt(10) == 0) {
@@ -68,14 +68,14 @@ public class BlockNetherStalk extends BlockFlower {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return 0;
 	}
 
 	/**
 	 * Returns the quantity of items to drop on block destruction.
 	 */
-	public int quantityDropped(Random par1Random) {
+	public int quantityDropped(EaglercraftRandom par1Random) {
 		return 0;
 	}
 

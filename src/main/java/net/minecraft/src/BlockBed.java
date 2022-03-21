@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Iterator;
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockBed extends BlockDirectional {
 	/** Maps the foot-of-bed block to the head-of-bed block. */
@@ -100,7 +99,7 @@ public class BlockBed extends BlockDirectional {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return isBlockHeadOfBed(par1) ? 0 : Item.bed.itemID;
 	}
 

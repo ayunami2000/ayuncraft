@@ -1,7 +1,8 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockEndPortal extends BlockContainer {
 	/**
@@ -67,7 +68,7 @@ public class BlockEndPortal extends BlockContainer {
 	/**
 	 * Returns the quantity of items to drop on block destruction.
 	 */
-	public int quantityDropped(Random par1Random) {
+	public int quantityDropped(EaglercraftRandom par1Random) {
 		return 0;
 	}
 
@@ -75,7 +76,7 @@ public class BlockEndPortal extends BlockContainer {
 	 * A randomly called display update to be able to add particles or other items
 	 * for display
 	 */
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void randomDisplayTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		double var6 = (double) ((float) par2 + par5Random.nextFloat());
 		double var8 = (double) ((float) par3 + 0.8F);
 		double var10 = (double) ((float) par4 + par5Random.nextFloat());

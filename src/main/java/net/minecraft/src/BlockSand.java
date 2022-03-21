@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
 public class BlockSand extends Block {
 	/** Do blocks fall instantly to where they stop or do they fall over time */
 	public static boolean fallInstantly = false;

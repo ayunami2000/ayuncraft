@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
 
 public abstract class BlockButton extends Block {
 	/** Whether this button is sensible to arrows, used by wooden buttons. */

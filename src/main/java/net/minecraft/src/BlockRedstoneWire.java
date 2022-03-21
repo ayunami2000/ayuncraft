@@ -2,8 +2,9 @@ package net.minecraft.src;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockRedstoneWire extends Block {
 	/**
@@ -173,7 +174,7 @@ public class BlockRedstoneWire extends Block {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return Item.redstone.itemID;
 	}
 
@@ -245,7 +246,7 @@ public class BlockRedstoneWire extends Block {
 	 * A randomly called display update to be able to add particles or other items
 	 * for display
 	 */
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void randomDisplayTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		int var6 = par1World.getBlockMetadata(par2, par3, par4);
 
 		if (var6 > 0) {

@@ -3,21 +3,18 @@ package net.minecraft.src;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
 import net.lax1dude.eaglercraft.ConfigConstants;
 import net.lax1dude.eaglercraft.EaglerAdapter;
-import net.lax1dude.eaglercraft.EaglerImage;
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.GuiScreenEditProfile;
-import net.lax1dude.eaglercraft.GuiScreenVoiceChannel;
 import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 public class GuiMainMenu extends GuiScreen {
 	/** The RNG used by the Main Menu Screen. */
-	private static final Random rand = new Random();
+	private static final EaglercraftRandom rand = new EaglercraftRandom();
 
 	/** The splash message. */
 	private String splashText = "missingno";

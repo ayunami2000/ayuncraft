@@ -2,9 +2,9 @@ package net.minecraft.src;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
@@ -15,7 +15,7 @@ public class EffectRenderer {
 	private RenderEngine renderer;
 
 	/** RNG. */
-	private Random rand = new Random();
+	private EaglercraftRandom rand = new EaglercraftRandom();
 
 	public EffectRenderer(World par1World, RenderEngine par2RenderEngine) {
 		if (par1World != null) {

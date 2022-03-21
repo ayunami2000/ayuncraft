@@ -1,8 +1,7 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 public class RenderLightningBolt extends Render {
@@ -20,7 +19,7 @@ public class RenderLightningBolt extends Render {
 		double[] var12 = new double[8];
 		double var13 = 0.0D;
 		double var15 = 0.0D;
-		Random var17 = new Random(par1EntityLightningBolt.boltVertex);
+		EaglercraftRandom var17 = new EaglercraftRandom(par1EntityLightningBolt.boltVertex);
 
 		for (int var18 = 7; var18 >= 0; --var18) {
 			var11[var18] = var13;
@@ -30,7 +29,7 @@ public class RenderLightningBolt extends Render {
 		}
 
 		for (int var45 = 0; var45 < 4; ++var45) {
-			Random var46 = new Random(par1EntityLightningBolt.boltVertex);
+			EaglercraftRandom var46 = new EaglercraftRandom(par1EntityLightningBolt.boltVertex);
 
 			for (int var19 = 0; var19 < 3; ++var19) {
 				int var20 = 7;

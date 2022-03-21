@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class Chunk {
 	/**
@@ -926,8 +925,8 @@ public class Chunk {
 		return this.isModified;
 	}
 
-	public Random getRandomWithSeed(long par1) {
-		return new Random(this.worldObj.getSeed() + (long) (this.xPosition * this.xPosition * 4987142) + (long) (this.xPosition * 5947611) + (long) (this.zPosition * this.zPosition) * 4392871L + (long) (this.zPosition * 389711) ^ par1);
+	public EaglercraftRandom getRandomWithSeed(long par1) {
+		return new EaglercraftRandom(this.worldObj.getSeed() + (long) (this.xPosition * this.xPosition * 4987142) + (long) (this.xPosition * 5947611) + (long) (this.zPosition * this.zPosition) * 4392871L + (long) (this.zPosition * 389711) ^ par1);
 	}
 
 	public boolean isEmpty() {
