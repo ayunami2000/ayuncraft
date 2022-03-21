@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockFlower extends Block {
 	protected BlockFlower(int par1, Material par2Material) {
@@ -44,7 +44,7 @@ public class BlockFlower extends Block {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		this.checkFlowerChange(par1World, par2, par3, par4);
 	}
 

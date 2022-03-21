@@ -1,15 +1,14 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
 
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class Item {
 	private CreativeTabs tabToDisplayOn = null;
 
 	/** The RNG used by the Item subclasses. */
-	protected static Random itemRand = new Random();
+	protected static EaglercraftRandom itemRand = new EaglercraftRandom();
 
 	/** A 32000 elements Item array. */
 	public static Item[] itemsList = new Item[32000];

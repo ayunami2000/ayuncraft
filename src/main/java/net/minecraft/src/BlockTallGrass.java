@@ -1,7 +1,8 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockTallGrass extends BlockFlower {
 	private static final String[] grassTypes = new String[] { "deadbush", "tallgrass", "fern" };
@@ -59,7 +60,7 @@ public class BlockTallGrass extends BlockFlower {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return par2Random.nextInt(8) == 0 ? Item.seeds.itemID : -1;
 	}
 
@@ -67,7 +68,7 @@ public class BlockTallGrass extends BlockFlower {
 	 * Returns the usual quantity dropped by the block plus a bonus of 1 to 'i'
 	 * (inclusive).
 	 */
-	public int quantityDroppedWithBonus(int par1, Random par2Random) {
+	public int quantityDroppedWithBonus(int par1, EaglercraftRandom par2Random) {
 		return 1 + par2Random.nextInt(par1 * 2 + 1);
 	}
 

@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockDragonEgg extends Block {
 	public BlockDragonEgg(int par1) {
@@ -27,7 +27,7 @@ public class BlockDragonEgg extends Block {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		this.fallIfPossible(par1World, par2, par3, par4);
 	}
 

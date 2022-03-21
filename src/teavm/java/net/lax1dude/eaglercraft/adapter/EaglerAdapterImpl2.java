@@ -1082,6 +1082,9 @@ public class EaglerAdapterImpl2 {
 	public static final void openLink(String url) {
 		win.open(url, "_blank");
 	}
+	public static final void redirectTo(String url) {
+		Window.current().getLocation().setFullURL(url);
+	}
 
 	@JSBody(params = { "str" }, script = "window.eval(str);")
 	private static native void execute(String str);
@@ -1565,6 +1568,14 @@ public class EaglerAdapterImpl2 {
 	
 	private static int remapKey(int k) {
 		return (k > LWJGLKeyCodes.length || k < 0) ? -1 : LWJGLKeyCodes[k];
+	}
+	
+	public static final String getClipboard() {
+		return ""; //TODO: html5 clipboard
+	}
+	
+	public static final void setClipboard(String str) {
+		
 	}
 
 }

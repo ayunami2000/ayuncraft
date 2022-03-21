@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockStem extends BlockFlower {
 	/** Defines if it is a Melon or a Pumpkin that the stem is producing. */
@@ -27,7 +27,7 @@ public class BlockStem extends BlockFlower {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		super.updateTick(par1World, par2, par3, par4, par5Random);
 
 		if (par1World.getBlockLightValue(par2, par3 + 1, par4) >= 9) {
@@ -195,14 +195,14 @@ public class BlockStem extends BlockFlower {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return -1;
 	}
 
 	/**
 	 * Returns the quantity of items to drop on block destruction.
 	 */
-	public int quantityDropped(Random par1Random) {
+	public int quantityDropped(EaglercraftRandom par1Random) {
 		return 1;
 	}
 

@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import net.lax1dude.eaglercraft.DefaultSkinRenderer;
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.WebsocketNetworkManager;
 import net.minecraft.client.Minecraft;
 
@@ -46,7 +46,7 @@ public class NetClientHandler extends NetHandler {
 	private GuiScreen field_98183_l = null;
 
 	/** RNG. */
-	Random rand = new Random();
+	EaglercraftRandom rand = new EaglercraftRandom();
 
 	public NetClientHandler(Minecraft par1Minecraft, String par2Str, int par3) throws IOException {
 		this.mc = par1Minecraft;

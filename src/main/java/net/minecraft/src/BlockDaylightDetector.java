@@ -1,8 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockDaylightDetector extends BlockContainer {
 	private Icon[] iconArray = new Icon[2];
@@ -34,7 +32,7 @@ public class BlockDaylightDetector extends BlockContainer {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 	}
 
 	/**

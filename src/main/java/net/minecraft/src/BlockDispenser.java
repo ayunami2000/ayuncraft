@@ -1,10 +1,10 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockDispenser extends BlockContainer {
 	/** Registry for all dispense behaviors. */
-	protected Random random = new Random();
+	protected EaglercraftRandom random = new EaglercraftRandom();
 	protected Icon furnaceTopIcon;
 	protected Icon furnaceFrontIcon;
 	protected Icon field_96473_e;

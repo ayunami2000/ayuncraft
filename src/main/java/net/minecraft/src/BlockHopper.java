@@ -1,10 +1,11 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockHopper extends BlockContainer {
-	private final Random field_94457_a = new Random();
+	private final EaglercraftRandom field_94457_a = new EaglercraftRandom();
 	private Icon hopperIcon;
 	private Icon hopperTopIcon;
 	private Icon hopperInsideIcon;

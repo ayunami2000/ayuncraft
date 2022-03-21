@@ -1,14 +1,13 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 
 public class RenderEnderman extends RenderLiving {
 	/** The model of the enderman */
 	private ModelEnderman endermanModel;
-	private Random rnd = new Random();
+	private EaglercraftRandom rnd = new EaglercraftRandom();
 
 	public RenderEnderman() {
 		super(new ModelEnderman(), 0.5F);

@@ -1,9 +1,7 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
 import net.lax1dude.eaglercraft.EaglerAdapter;
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
@@ -158,7 +156,7 @@ public class RenderDragon extends RenderLiving {
 				var5 = (var4 - 0.8F) / 0.2F;
 			}
 
-			Random var6 = new Random(432L);
+			EaglercraftRandom var6 = new EaglercraftRandom(432L);
 			EaglerAdapter.glDisable(EaglerAdapter.GL_TEXTURE_2D);
 			EaglerAdapter.glShadeModel(EaglerAdapter.GL_SMOOTH);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);

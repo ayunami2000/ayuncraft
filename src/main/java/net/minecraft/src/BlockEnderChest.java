@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockEnderChest extends BlockContainer {
 	protected BlockEnderChest(int par1) {
@@ -36,14 +36,14 @@ public class BlockEnderChest extends BlockContainer {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return Block.obsidian.blockID;
 	}
 
 	/**
 	 * Returns the quantity of items to drop on block destruction.
 	 */
-	public int quantityDropped(Random par1Random) {
+	public int quantityDropped(EaglercraftRandom par1Random) {
 		return 8;
 	}
 
@@ -100,7 +100,7 @@ public class BlockEnderChest extends BlockContainer {
 	 * A randomly called display update to be able to add particles or other items
 	 * for display
 	 */
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void randomDisplayTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		for (int var6 = 0; var6 < 3; ++var6) {
 			double var10000 = (double) ((float) par2 + par5Random.nextFloat());
 			double var9 = (double) ((float) par3 + par5Random.nextFloat());

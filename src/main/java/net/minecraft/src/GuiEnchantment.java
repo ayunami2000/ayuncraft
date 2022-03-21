@@ -1,14 +1,13 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 
 public class GuiEnchantment extends GuiContainer {
 	/** The book model used on the GUI. */
 	private static ModelBook bookModel = new ModelBook();
-	private Random rand = new Random();
+	private EaglercraftRandom rand = new EaglercraftRandom();
 
 	/** ContainerEnchantment object associated with this gui */
 	private ContainerEnchantment containerEnchantment;

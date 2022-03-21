@@ -1,8 +1,7 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class ModelGhast extends ModelBase {
 	ModelRenderer body;
@@ -13,7 +12,7 @@ public class ModelGhast extends ModelBase {
 		this.body = new ModelRenderer(this, 0, 0);
 		this.body.addBox(-8.0F, -8.0F, -8.0F, 16, 16, 16);
 		this.body.rotationPointY += (float) (24 + var1);
-		Random var2 = new Random(1660L);
+		EaglercraftRandom var2 = new EaglercraftRandom(1660L);
 
 		for (int var3 = 0; var3 < this.tentacles.length; ++var3) {
 			this.tentacles[var3] = new ModelRenderer(this, 0, 0);

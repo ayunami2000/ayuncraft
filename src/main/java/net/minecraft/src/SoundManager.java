@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Random;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class SoundManager {
 	
@@ -42,13 +42,13 @@ public class SoundManager {
 	private ArrayList<EntitySoundEvent> soundevents;
 	private ArrayList<QueuedSoundEvent> queuedsoundevents;
 	private HashMap<String,Integer> sounddefinitions;
-	private Random soundrandom;
+	private EaglercraftRandom soundrandom;
 
 	public SoundManager() {
 		this.soundevents = new ArrayList();
 		this.queuedsoundevents = new ArrayList();
 		this.sounddefinitions = null;
-		this.soundrandom = new Random();
+		this.soundrandom = new EaglercraftRandom();
 	}
 
 	/**
@@ -106,12 +106,10 @@ public class SoundManager {
 			double pitch = par1EntityLiving.prevRotationPitch + (par1EntityLiving.rotationPitch - par1EntityLiving.prevRotationPitch) * par2;
 			double yaw = par1EntityLiving.prevRotationYaw + (par1EntityLiving.rotationYaw - par1EntityLiving.prevRotationYaw) * par2;
 			
-			// suck my cock
-			
 			try {
 				EaglerAdapter.setListenerPos((float)x, (float)y, (float)z, (float)par1EntityLiving.motionX, (float)par1EntityLiving.motionY, (float)par1EntityLiving.motionZ, (float)pitch, (float)yaw);
 			}catch(Throwable t) {
-				System.err.println("AudioListener fucked up again");
+				System.err.println("AudioListener f***ed up again");
 			}
 		}
 	}
