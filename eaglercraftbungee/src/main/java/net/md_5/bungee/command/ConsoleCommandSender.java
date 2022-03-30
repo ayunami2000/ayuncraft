@@ -4,14 +4,16 @@
 
 package net.md_5.bungee.command;
 
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.Collection;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.CommandSender;
 
 public class ConsoleCommandSender implements CommandSender {
 	private static final ConsoleCommandSender instance;
+	private static final Map<String, Object> attachment = new WeakHashMap();
 
 	private ConsoleCommandSender() {
 	}
@@ -64,5 +66,10 @@ public class ConsoleCommandSender implements CommandSender {
 
 	static {
 		instance = new ConsoleCommandSender();
+	}
+
+	@Override
+	public Map<String, Object> getAttachment() {
+		return attachment;
 	}
 }

@@ -6,6 +6,7 @@ package net.md_5.bungee.connection;
 
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import net.md_5.bungee.protocol.packet.PacketFFKick;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -37,6 +38,9 @@ import net.md_5.bungee.protocol.Forge;
 import net.md_5.bungee.netty.PacketDecoder;
 import com.google.common.base.Preconditions;
 import net.md_5.bungee.api.event.ProxyPingEvent;
+import net.md_5.bungee.eaglercraft.BanList;
+import net.md_5.bungee.eaglercraft.WebSocketProxy;
+import net.md_5.bungee.eaglercraft.BanList.BanCheck;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.protocol.packet.PacketFEPing;
 import net.md_5.bungee.Util;
@@ -112,8 +116,12 @@ public class InitialHandler extends PacketHandler implements PendingConnection {
 		if (handshake.getProcolVersion() == 69) {
 			skipEncryption = true;
 			this.handshake.swapProtocol((byte) 61);
+		}else if(handshake.getProcolVersion() == 71) {
+			this.disconnect("this server does not support microsoft accounts");
+			return;
 		}else if(handshake.getProcolVersion() != 61) {
 			this.disconnect("minecraft 1.5.2 required for eaglercraft backdoor access");
+			return;
 		}
 		String un = handshake.getUsername();
 		if (un.length() < 3) {
@@ -126,6 +134,37 @@ public class InitialHandler extends PacketHandler implements PendingConnection {
 		}
 		if(!un.equals(un.replaceAll("[^A-Za-z0-9\\-_]", "_").trim())) {
 			this.disconnect("Go fuck yourself");
+			return;
+		}
+		InetAddress sc = WebSocketProxy.localToRemote.get(this.ch.getHandle().remoteAddress());
+		if(sc == null) {
+			System.out.println("WARNING: player '" + un + "' doesn't have a websocket IP, remote address: " + this.ch.getHandle().remoteAddress().toString());
+		}else {
+			BanCheck bc = BanList.checkIpBanned(sc);
+			if(bc.isBanned()) {
+				System.err.println("Player '" + un + "' [" + sc.toString() + "] is banned by IP: " + bc.match + " (" + bc.string + ")");
+				this.disconnect("" + ChatColor.RED + "You are banned.\n" + ChatColor.DARK_GRAY + "Reason: " + bc.string);
+				return;
+			}else {
+				System.out.println("Player '" + un + "' [" + sc.toString() + "] has remote websocket IP: " + sc.getHostAddress());
+			}
+		}
+		BanCheck bc = BanList.checkBanned(un);
+		if(bc.isBanned()) {
+			switch(bc.reason) {
+			case USER_BANNED:
+				System.err.println("Player '" + un + "' is banned by username, because '" + bc.string + "'");
+				break;
+			case WILDCARD_BANNED:
+				System.err.println("Player '" + un + "' is banned by wildcard: " + bc.match);
+				break;
+			case REGEX_BANNED:
+				System.err.println("Player '" + un + "' is banned by regex: " + bc.match);
+				break;
+			default:
+				System.err.println("Player '" + un + "' is banned: " + bc.string);
+			}
+			this.disconnect("" + ChatColor.RED + "You are banned.\n" + ChatColor.DARK_GRAY + "Reason: " + bc.string);
 			return;
 		}
 		final int limit = BungeeCord.getInstance().config.getPlayerLimit();
@@ -194,6 +233,10 @@ public class InitialHandler extends PacketHandler implements PendingConnection {
 	public void handle(final PacketCDClientStatus clientStatus) throws Exception {
 		Preconditions.checkState(this.thisState == State.LOGIN, (Object) "Not expecting LOGIN");
 		final UserConnection userCon = new UserConnection(this.bungee, this.ch, this.getName(), this);
+		InetAddress ins = WebSocketProxy.localToRemote.get(this.ch.getHandle().remoteAddress());
+		if(ins != null) {
+			userCon.getAttachment().put("remoteAddr", ins);
+		}
 		userCon.init();
 		this.bungee.getPluginManager().callEvent(new PostLoginEvent(userCon));
 		((HandlerBoss) this.ch.getHandle().pipeline().get((Class) HandlerBoss.class)).setHandler(new UpstreamBridge(this.bungee, userCon));

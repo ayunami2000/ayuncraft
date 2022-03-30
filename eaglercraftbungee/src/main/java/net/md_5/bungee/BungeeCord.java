@@ -19,7 +19,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import java.util.MissingResourceException;
 import net.md_5.bungee.protocol.packet.DefinedPacket;
 import io.netty.channel.ChannelException;
-import java.util.Iterator;
 import io.netty.util.concurrent.GenericFutureListener;
 import java.net.SocketAddress;
 import io.netty.channel.EventLoopGroup;
@@ -28,7 +27,6 @@ import io.netty.util.AttributeKey;
 import net.md_5.bungee.netty.PipelineUtils;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.util.concurrent.Future;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import net.md_5.bungee.api.config.ListenerInfo;
@@ -38,7 +36,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.command.ConsoleCommandSender;
 import java.util.concurrent.TimeUnit;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.io.IOException;
 import jline.UnsupportedTerminal;
 import java.io.OutputStream;
@@ -50,6 +48,14 @@ import jline.internal.Log;
 import java.io.PrintStream;
 import com.google.common.io.ByteStreams;
 import net.md_5.bungee.command.CommandFind;
+import net.md_5.bungee.command.CommandGlobalBan;
+import net.md_5.bungee.command.CommandGlobalBanIP;
+import net.md_5.bungee.command.CommandGlobalBanRegex;
+import net.md_5.bungee.command.CommandGlobalBanReload;
+import net.md_5.bungee.command.CommandGlobalBanWildcard;
+import net.md_5.bungee.command.CommandGlobalCheckBan;
+import net.md_5.bungee.command.CommandGlobalListBan;
+import net.md_5.bungee.command.CommandGlobalUnban;
 import net.md_5.bungee.command.CommandSend;
 import net.md_5.bungee.command.CommandPerms;
 import net.md_5.bungee.command.CommandBungee;
@@ -61,10 +67,9 @@ import net.md_5.bungee.command.CommandEnd;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.command.CommandReload;
-import java.util.concurrent.ExecutorService;
 import net.md_5.bungee.scheduler.BungeeScheduler;
 import net.md_5.bungee.config.YamlConfig;
-import net.md_5.bungee.eaglercraft.PluginEaglerAuth;
+import net.md_5.bungee.eaglercraft.BanList;
 import net.md_5.bungee.eaglercraft.PluginEaglerSkins;
 import net.md_5.bungee.eaglercraft.WebSocketListener;
 
@@ -99,6 +104,8 @@ public class BungeeCord extends ProxyServer {
 	public final ScheduledThreadPoolExecutor executors;
 	public final MultithreadEventLoopGroup eventLoops;
 	private final Timer saveThread;
+	private final Timer reloadBanThread;
+	private final Timer closeInactiveSockets;
 	private Collection<Channel> listeners;
 	private Collection<WebSocketListener> wsListeners;
 	private final Map<String, UserConnection> connections;
@@ -111,6 +118,7 @@ public class BungeeCord extends ProxyServer {
 	private final TaskScheduler scheduler;
 	private ConsoleReader consoleReader;
 	private final Logger logger;
+	private Collection<Command> banCommands;
 
 	public static BungeeCord getInstance() {
 		return (BungeeCord) ProxyServer.getInstance();
@@ -122,6 +130,8 @@ public class BungeeCord extends ProxyServer {
 		this.executors = new BungeeThreadPool(new ThreadFactoryBuilder().setNameFormat("Bungee Pool Thread #%1$d").build());
 		this.eventLoops = (MultithreadEventLoopGroup) new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(), new ThreadFactoryBuilder().setNameFormat("Netty IO Thread #%1$d").build());
 		this.saveThread = new Timer("Reconnect Saver");
+		this.reloadBanThread = new Timer("Ban List Reload");
+		this.closeInactiveSockets = new Timer("close Inactive WebSockets");
 		this.listeners = new HashSet<Channel>();
 		this.wsListeners = new HashSet<WebSocketListener>();
 		this.connections = (Map<String, UserConnection>) new CaseInsensitiveMap();
@@ -131,6 +141,7 @@ public class BungeeCord extends ProxyServer {
 		this.pluginChannels = new HashSet<String>();
 		this.pluginsFolder = new File("plugins");
 		this.scheduler = new BungeeScheduler();
+		this.banCommands = new ArrayList();
 		this.getPluginManager().registerCommand(null, new CommandReload());
 		this.getPluginManager().registerCommand(null, new CommandEnd());
 		this.getPluginManager().registerCommand(null, new CommandList());
@@ -152,6 +163,42 @@ public class BungeeCord extends ProxyServer {
 			this.logger.info("Unable to initialize fancy terminal. To fix this on Windows, install the correct Microsoft Visual C++ 2008 Runtime");
 			this.logger.info("NOTE: This error is non crucial, and BungeeCord will still function correctly! Do not bug the author about it unless you are still unable to get it working");
 		}
+	}
+	
+	public void reconfigureBanCommands(boolean replaceBukkit) {
+		if(banCommands.size() > 0) {
+			for(Command c : banCommands) {
+				this.getPluginManager().unregisterCommand(c);
+			}
+			banCommands.clear();
+		}
+		
+		Command cBan = new CommandGlobalBan(replaceBukkit);
+		Command cUnban = new CommandGlobalUnban(replaceBukkit);
+		Command cBanReload = new CommandGlobalBanReload(replaceBukkit);
+		Command cBanIP = new CommandGlobalBanIP(replaceBukkit);
+		Command cBanWildcard = new CommandGlobalBanWildcard(replaceBukkit);
+		Command cBanRegex = new CommandGlobalBanRegex(replaceBukkit);
+		Command cBanCheck = new CommandGlobalCheckBan(replaceBukkit);
+		Command cBanList = new CommandGlobalListBan(replaceBukkit);
+
+		banCommands.add(cBan);
+		banCommands.add(cUnban);
+		banCommands.add(cBanReload);
+		banCommands.add(cBanIP);
+		banCommands.add(cBanWildcard);
+		banCommands.add(cBanRegex);
+		banCommands.add(cBanCheck);
+		banCommands.add(cBanList);
+
+		this.getPluginManager().registerCommand(null, cBan);
+		this.getPluginManager().registerCommand(null, cUnban);
+		this.getPluginManager().registerCommand(null, cBanReload);
+		this.getPluginManager().registerCommand(null, cBanIP);
+		this.getPluginManager().registerCommand(null, cBanWildcard);
+		this.getPluginManager().registerCommand(null, cBanRegex);
+		this.getPluginManager().registerCommand(null, cBanCheck);
+		this.getPluginManager().registerCommand(null, cBanList);
 	}
 
 	public static void main(final String[] args) throws Exception {
@@ -186,6 +233,20 @@ public class BungeeCord extends ProxyServer {
 				BungeeCord.this.getReconnectHandler().save();
 			}
 		}, 0L, TimeUnit.MINUTES.toMillis(5L));
+		this.reloadBanThread.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				BanList.maybeReloadBans(null);
+			}
+		}, 0L, TimeUnit.SECONDS.toMillis(3L));
+		this.closeInactiveSockets.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				for(WebSocketListener lst : BungeeCord.this.wsListeners) {
+					lst.closeInactiveSockets();
+				}
+			}
+		}, 0L, TimeUnit.SECONDS.toMillis(10L));
 	}
 
 	public void startListeners() {

@@ -5,6 +5,7 @@
 package net.md_5.bungee.api;
 
 import java.util.Collection;
+import java.util.Map;
 
 public interface CommandSender {
 	String getName();
@@ -22,4 +23,6 @@ public interface CommandSender {
 	boolean hasPermission(final String p0);
 
 	void setPermission(final String p0, final boolean p1);
+	
+	Map<String, Object> getAttachment();
 }

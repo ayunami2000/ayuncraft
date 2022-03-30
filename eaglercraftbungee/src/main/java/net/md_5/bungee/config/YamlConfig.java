@@ -67,18 +67,11 @@ public class YamlConfig implements ConfigurationAdapter {
 		final Map<String, Object> permissions = this.get("permissions", new HashMap<String, Object>());
 		if (permissions.isEmpty()) {
 			permissions.put("default", Arrays.asList("bungeecord.command.server", "bungeecord.command.list"));
-			permissions.put("admin", Arrays.asList("bungeecord.command.alert", "bungeecord.command.end", "bungeecord.command.ip", "bungeecord.command.reload"));
+			permissions.put("admin", Arrays.asList("bungeecord.command.alert", "bungeecord.command.end", "bungeecord.command.ip", "bungeecord.command.reload",
+			"bungeecord.command.eag.ban", "bungeecord.command.eag.banwildcard", "bungeecord.command.eag.banip", "bungeecord.command.eag.banregex",
+			"bungeecord.command.eag.reloadban", "bungeecord.command.eag.banned", "bungeecord.command.eag.banlist", "bungeecord.command.eag.unban"));
 		}
 		this.get("groups", new HashMap<String, Object>());
-		/*
-		final Map<String, Object> auth = this.get("authservice", new HashMap<String, Object>());
-		if(auth.isEmpty()) {
-			auth.put("enabled", false);
-			auth.put("limbo", "lobby");
-			auth.put("authfile", "passwords.yml");
-			auth.put("timeout", 30);
-		}
-		*/
 	}
 
 	private <T> T get(final String path, final T def) {
@@ -159,6 +152,7 @@ public class YamlConfig implements ConfigurationAdapter {
 			final String fallbackServer = this.get("fallback_server", defaultServer, val);
 			final boolean forceDefault = this.get("force_default_server", true, val);
 			final boolean websocket = this.get("websocket", true, val);
+			final boolean forwardIp = this.get("forward_ip", false, val);
 			final String host = this.get("host", "0.0.0.0:25565", val);
 			final int tabListSize = this.get("tab_size", 60, val);
 			final InetSocketAddress address = Util.getAddr(host);
@@ -167,11 +161,12 @@ public class YamlConfig implements ConfigurationAdapter {
 			final int textureSize = this.get("texture_size", 16, val);
 			final TexturePackInfo texture = (textureURL == null) ? null : new TexturePackInfo(textureURL, textureSize);
 			final String tabListName = this.get("tab_list", "GLOBAL_PING", val);
+			final String serverIcon = this.get("server_icon", "server-icon.png", val);
 			DefaultTabList value = DefaultTabList.valueOf(tabListName.toUpperCase());
 			if (value == null) {
 				value = DefaultTabList.GLOBAL_PING;
 			}
-			final ListenerInfo info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, websocket, forced, texture, value.clazz);
+			final ListenerInfo info = new ListenerInfo(address, motd, maxPlayers, tabListSize, defaultServer, fallbackServer, forceDefault, websocket, forwardIp, forced, texture, value.clazz, serverIcon);
 			ret.add(info);
 		}
 		return ret;

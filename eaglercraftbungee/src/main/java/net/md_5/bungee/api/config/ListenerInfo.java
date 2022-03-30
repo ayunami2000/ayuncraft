@@ -5,6 +5,9 @@
 package net.md_5.bungee.api.config;
 
 import java.beans.ConstructorProperties;
+import java.io.File;
+
+import net.md_5.bungee.api.ServerIcon;
 import net.md_5.bungee.api.tab.TabListHandler;
 import java.util.Map;
 import java.net.InetSocketAddress;
@@ -18,13 +21,18 @@ public class ListenerInfo {
 	private final String fallbackServer;
 	private final boolean forceDefault;
 	private final boolean websocket;
+	private final boolean forwardIp;
 	private final Map<String, String> forcedHosts;
 	private final TexturePackInfo texturePack;
 	private final Class<? extends TabListHandler> tabList;
+	private final String serverIcon;
+	private final int[] serverIconCache;
+	private boolean serverIconLoaded;
+	private boolean serverIconSet;
 
-	@ConstructorProperties({ "host", "motd", "maxPlayers", "tabListSize", "defaultServer", "fallbackServer", "forceDefault", "websocket", "forcedHosts", "texturePack", "tabList" })
+	@ConstructorProperties({ "host", "motd", "maxPlayers", "tabListSize", "defaultServer", "fallbackServer", "forceDefault", "websocket", "forwardIp", "forcedHosts", "texturePack", "tabList", "serverIcon" })
 	public ListenerInfo(final InetSocketAddress host, final String motd, final int maxPlayers, final int tabListSize, final String defaultServer, final String fallbackServer, final boolean forceDefault, final boolean websocket,
-			final Map<String, String> forcedHosts, final TexturePackInfo texturePack, final Class<? extends TabListHandler> tabList) {
+			final boolean forwardIp, final Map<String, String> forcedHosts, final TexturePackInfo texturePack, final Class<? extends TabListHandler> tabList, final String serverIcon) {
 		this.host = host;
 		this.motd = motd;
 		this.maxPlayers = maxPlayers;
@@ -33,9 +41,14 @@ public class ListenerInfo {
 		this.fallbackServer = fallbackServer;
 		this.forceDefault = forceDefault;
 		this.websocket = websocket;
+		this.forwardIp = forwardIp;
 		this.forcedHosts = forcedHosts;
 		this.texturePack = texturePack;
 		this.tabList = tabList;
+		this.serverIcon = serverIcon;
+		this.serverIconCache = new int[4096];
+		this.serverIconLoaded = false;
+		this.serverIconSet = false;
 	}
 
 	public InetSocketAddress getHost() {
@@ -120,6 +133,9 @@ public class ListenerInfo {
 		if (this.getTabListSize() != other.getTabListSize()) {
 			return false;
 		}
+		if (this.isWebsocket() != other.isWebsocket()) {
+			return false;
+		}
 		final Object this$defaultServer = this.getDefaultServer();
 		final Object other$defaultServer = other.getDefaultServer();
 		Label_0165: {
@@ -180,6 +196,15 @@ public class ListenerInfo {
 		} else if (this$tabList.equals(other$tabList)) {
 			return true;
 		}
+		final Object this$getServerIcon = this.getServerIcon();
+		final Object other$getServerIcon = other.getServerIcon();
+		if (this$getServerIcon == null) {
+			if (other$getServerIcon == null) {
+				return true;
+			}
+		} else if (this$getServerIcon.equals(other$getServerIcon)) {
+			return true;
+		}
 		return false;
 	}
 
@@ -208,6 +233,8 @@ public class ListenerInfo {
 		result = result * 31 + (($texturePack == null) ? 0 : $texturePack.hashCode());
 		final Object $tabList = this.getTabList();
 		result = result * 31 + (($tabList == null) ? 0 : $tabList.hashCode());
+		final Object $serverIconCache = this.getTabList();
+		result = result * 31 + (($serverIconCache == null) ? 0 : $serverIconCache.hashCode());
 		return result;
 	}
 
@@ -220,4 +247,9 @@ public class ListenerInfo {
 	public boolean isWebsocket() {
 		return websocket;
 	}
+
+	public boolean hasForwardedHeaders() {
+		return forwardIp;
+	}
+
 }

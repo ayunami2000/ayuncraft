@@ -12,6 +12,7 @@ import com.google.common.base.Preconditions;
 import net.md_5.bungee.api.ProxyServer;
 import java.util.UUID;
 import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.eaglercraft.EaglercraftBungee;
 import gnu.trove.map.TMap;
 import net.md_5.bungee.api.config.ListenerInfo;
 import java.util.Collection;
@@ -24,6 +25,7 @@ public class Configuration {
 	private AuthServiceInfo authInfo;
 	private boolean onlineMode;
 	private int playerLimit;
+	private String name;
 
 	public Configuration() {
 		this.timeout = 30000;
@@ -41,6 +43,7 @@ public class Configuration {
 		this.authInfo = adapter.getAuthSettings();
 		this.onlineMode = false;
 		this.playerLimit = adapter.getInt("player_limit", this.playerLimit);
+		this.name = adapter.getString("server_name", EaglercraftBungee.brand + " Server");
 		Preconditions.checkArgument(this.listeners != null && !this.listeners.isEmpty(), (Object) "No listeners defined.");
 		final Map<String, ServerInfo> newServers = adapter.getServers();
 		Preconditions.checkArgument(newServers != null && !newServers.isEmpty(), (Object) "No servers defined");
@@ -87,5 +90,9 @@ public class Configuration {
 	
 	public AuthServiceInfo getAuthInfo() {
 		return authInfo;
+	}
+
+	public String getServerName() {
+		return name;
 	}
 }
