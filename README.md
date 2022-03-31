@@ -22,7 +22,7 @@ Eaglercraft is real Minecraft 1.5.2 that you can play in any regular web browser
 
 **Manual setup instructions:**
 1. **Check if Java is installed.** You can download it from [https://www.java.com/en/download/](https://www.java.com/en/download/)
-2. Download the [stable-download/stable-download.zip](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/stable-download.zip) file from this repository
+2. Download the [stable-download/stable-download-new.zip](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/stable-download-new.zip) file from this repository
 4. Extract the ZIP file you downloaded to a new folder
 5. Open the new folder, go into the `java/bungee_command` folder
 6. In Windows, double-click `run.bat`. It should open a new terminal window  
@@ -38,8 +38,8 @@ Keep both the first and second terminal window you opened, just minimize them do
 12. Go to 'Multiplayer' from the main menu. Select 'Direct Connect', type `127.0.0.1:25565` and press 'Join Server'
 13. **It should allow you to connect, if not, check the two terminal windows for errors**
 14. If you are okay with regularly checking for updates to [Offline_Download_Version.html](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/Offline_Download_Version.html), you are now finished
-15. If you are playing with friends and want a shared website that can be updated, see the `stable-download/web_folder` folder
-16. To install, create a website and upload the contents of `stable-download/web_folder` to the URL you want to have Eaglercraft on.  
+15. If you are playing with friends and want a shared website that can be updated, see the `stable-download/web` folder
+16. To install, create a website and upload the contents of `stable-download/web` to the URL you want to have Eaglercraft on.  
 Edit `index.html`, remove line 19 containing the `alert(` stuff, then search the file for `https://g.eags.us/eaglercraft/` and replace it everywhere with the URL to your own site instead of g.eags.us.
 17. To modify the default list of servers, download [servers_template.dat](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/servers_template.dat) and open it in [NBTExplorer](https://github.com/jaquadro/NBTExplorer/releases). Make your changes and then save
 18. Upload your modified `servers_template.dat` to [base64encode.org](https://www.base64encode.org/) and press 'Encode'.
@@ -75,9 +75,9 @@ I got tired of closing duplicate 'how to maek sever' and 'add single player' iss
 
 ## Installing (detailed)
 
-If you want to use this project but don't want to compile it from scratch, download [stable-download/stable-download.zip](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/stable-download.zip) and extract
+If you want to use this project but don't want to compile it from scratch, download [stable-download/stable-download-new.zip](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/stable-download-new.zip) and extract
 
-Within stable-download.zip there is a 'java' and a 'web_folder' folder. Upload the contents of the web folder to your web server. **The web folder will not work if it is opened locally via file:///, it needs to be opened on an http:// or https:// page. Try [this extention](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb/) if you are on chrome or if that's not possible then download the alternative single-file html [offline version](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/Offline_Download_Version.html) that does work on file URLs.** If you use this alternative version, please make sure you and your peers keep your copies up to date by regularly downloading any newer versions of the html file at [this link](https://github.com/LAX1DUDE/eaglercraft/blob/main/stable-download/Offline_Download_Version.html) to avoid getting stuck with a version that has a game-breaking glitch or mistake. The eaglercraft bungeecord executable is in the java/bungee_command folder along with the sample configuration file and a run.bat script to launch it. CraftBukkit for minecraft 1.5.2 configured to work with the eaglercraft bungee executable is in java/bukkit_command. The available version of Spigot 1.5.2 has a bug when used with bungee so you are limited to CraftBukkit and CraftBukkit plugins only on your servers
+Within stable-download-new.zip there is a 'java' and a 'web' folder. Upload the contents of the web folder to your web server. **The web folder will not work if it is opened locally via file:///, it needs to be opened on an http:// or https:// page. Try [this extention](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb/) if you are on chrome or if that's not possible then download the alternative single-file html [offline version](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/Offline_Download_Version.html) that does work on file URLs.** If you use this alternative version, please make sure you and your peers keep your copies up to date by regularly downloading any newer versions of the html file at [this link](https://github.com/LAX1DUDE/eaglercraft/blob/main/stable-download/Offline_Download_Version.html) to avoid getting stuck with a version that has a game-breaking glitch or mistake. The eaglercraft bungeecord executable is in the java/bungee_command folder along with the sample configuration file and a run.bat script to launch it. CraftBukkit for minecraft 1.5.2 configured to work with the eaglercraft bungee executable is in java/bukkit_command. The available version of Spigot 1.5.2 has a bug when used with bungee so you are limited to CraftBukkit and CraftBukkit plugins only on your servers
 
 **Here are some Bukkit plugins compatible with Eaglercraft: [https://github.com/LAX1DUDE/eaglercraft-plugins](https://github.com/LAX1DUDE/eaglercraft-plugins)**
 

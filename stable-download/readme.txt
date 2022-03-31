@@ -1,5 +1,5 @@
 
-Download 'stable-download.zip' to get started quickly
+Download 'stable-download-new.zip' to get started quickly
 
 Downloading 'Offline_Download_Version.html' will allow you to play without hosting an HTTP server
 
