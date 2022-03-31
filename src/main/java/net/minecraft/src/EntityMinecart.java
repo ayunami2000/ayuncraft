@@ -61,9 +61,12 @@ public abstract class EntityMinecart extends Entity {
 		}
 	}
 	
-	public void setWorld(World w) {
+	public Entity setWorld(World w) {
 		super.setWorld(w);
-		this.field_82344_g = w.func_82735_a(this);
+		if(w != null) {
+			this.field_82344_g = w.func_82735_a(this);
+		}
+		return this;
 	}
 
 	/**

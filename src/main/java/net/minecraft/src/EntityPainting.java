@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 public class EntityPainting extends EntityHanging {
 	public EnumArt art;
+	
+	public EntityPainting(World par1World) {
+		super();
+		this.setWorld(par1World);
+	}
 
 	public EntityPainting(World par1World, int par2, int par3, int par4, int par5) {
 		super(par1World, par2, par3, par4, par5);

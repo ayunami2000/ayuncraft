@@ -991,10 +991,14 @@ public abstract class Entity {
 
 	/**
 	 * Sets the reference to the World object.
+	 * @return TODO
 	 */
-	public void setWorld(World par1World) {
+	public Entity setWorld(World par1World) {
 		this.worldObj = par1World;
-		this.dimension = par1World.provider.dimensionId;
+		if(par1World != null) {
+			this.dimension = par1World.provider.dimensionId;
+		}
+		return this;
 	}
 
 	/**

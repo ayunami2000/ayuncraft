@@ -2,7 +2,10 @@ package net.minecraft.src;
 
 public class EntityMinecartMobSpawner extends EntityMinecart {
 	/** Mob spawner logic for this spawner minecart. */
-
+	public EntityMinecartMobSpawner(World par1World) {
+		super();
+		setWorld(par1World);
+	}
 	public EntityMinecartMobSpawner(World par1World, double par2, double par4, double par6) {
 		super(par1World, par2, par4, par6);
 	}

@@ -6,7 +6,11 @@ public class EntityMinecartHopper extends EntityMinecartContainer implements Hop
 	/** Whether this hopper minecart is being blocked by an activator rail. */
 	private boolean isBlocked = true;
 	private int transferTicker = -1;
-
+	
+	public EntityMinecartHopper(World par1World) {
+		super();
+		setWorld(par1World);
+	}
 	public EntityMinecartHopper(World par1World, double par2, double par4, double par6) {
 		super(par1World, par2, par4, par6);
 	}

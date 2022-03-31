@@ -52,8 +52,12 @@ public class GuiConnecting extends GuiScreen {
 					this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "connect.failed", "disconnect.genericReason", "invalid uri websocket protocol", ""));
 					return;
 				}
-				int i = uria.indexOf(':');
+				int i = uria.lastIndexOf(':');
 				int port = -1;
+				
+				if(i > 0 && uria.startsWith("[") && uria.charAt(i - 1) != ']') {
+					i = -1;
+				}
 				
 				if(i == -1) port = uri.startsWith("wss") ? 443 : 80;
 				if(uria.endsWith("/")) uria = uria.substring(0, uria.length() - 1);

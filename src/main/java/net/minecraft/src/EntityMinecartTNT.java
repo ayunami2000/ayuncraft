@@ -5,6 +5,10 @@ package net.minecraft.src;
 public class EntityMinecartTNT extends EntityMinecart {
 	private int minecartTNTFuse = -1;
 
+	public EntityMinecartTNT(World par1) {
+		super();
+		setWorld(par1);
+	}
 	public EntityMinecartTNT(World par1, double par2, double par4, double par6) {
 		super(par1, par2, par4, par6);
 	}
