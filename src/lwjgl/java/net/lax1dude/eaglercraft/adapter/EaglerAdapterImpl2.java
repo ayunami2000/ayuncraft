@@ -60,6 +60,7 @@ import de.cuina.fireandfuel.CodecJLayerMP3;
 import net.lax1dude.eaglercraft.AssetRepository;
 import net.lax1dude.eaglercraft.EarlyLoadScreen;
 import net.lax1dude.eaglercraft.ServerQuery;
+import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.ProgramGL;
 import net.lax1dude.eaglercraft.adapter.lwjgl.GameWindowListener;
 import net.minecraft.src.MathHelper;
 import paulscode.sound.SoundSystem;
@@ -592,6 +593,9 @@ public class EaglerAdapterImpl2 {
 	}
 	public static final float _wglGetTexParameterf(int p1) {
 		return GL11.glGetTexParameterf(GL11.GL_TEXTURE_2D, p1);
+	}
+	public static final int _wglGetAttribLocation(ProgramGL p1, String p2) {
+		return GL20.glGetAttribLocation(p1.obj, p2);
 	}
 	
 

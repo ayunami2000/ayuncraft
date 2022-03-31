@@ -426,6 +426,7 @@ public class EffectPipeline {
 
 				_wglAttachShader(prog, pvert_shader);
 				_wglAttachShader(prog, f);
+				_wglBindAttributeLocation(prog, 0, "a_pos");
 				_wglLinkProgram(prog);
 				_wglDetachShader(prog, pvert_shader);
 				_wglDetachShader(prog, f);
@@ -444,7 +445,6 @@ public class EffectPipeline {
 				UniformGL d = _wglGetUniformLocation(prog, "f_depth");
 				if(d != null) _wglUniform1i(d, 1);
 				
-				_wglBindAttributeLocation(prog, 0, "a_pos");
 				
 				if(_wglGetUniformLocation(prog, "ssao_kernel[0]") != null) {
 					EaglercraftRandom r = new EaglercraftRandom("eeeaglerrENOPHILEr".hashCode());
