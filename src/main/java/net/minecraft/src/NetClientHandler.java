@@ -44,6 +44,8 @@ public class NetClientHandler extends NetHandler {
 	public List playerInfoList = new ArrayList();
 	public int currentServerMaxPlayers = 20;
 	private GuiScreen field_98183_l = null;
+	private int updateCounter = 0;
+	private int lastKeepAlive = 0;
 
 	/** RNG. */
 	EaglercraftRandom rand = new EaglercraftRandom();
@@ -77,6 +79,14 @@ public class NetClientHandler extends NetHandler {
 	 * function.
 	 */
 	public void processReadPackets() {
+		++this.updateCounter;
+		if(updateCounter - lastKeepAlive > 500 || !EaglerAdapter.connectionOpen()) {
+			this.mc.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new GuiMainMenu()), "disconnect.disconnected", "disconnect." + (EaglerAdapter.connectionOpen() ? "endOfStream" :" timeout"), null));
+			this.netManager.closeConnections();
+			this.disconnected = true;
+			this.mc.loadWorld((WorldClient) null);
+			return;
+		}
 		if (!this.disconnected && this.netManager != null) {
 			this.netManager.processReadPackets();
 		}
@@ -87,7 +97,6 @@ public class NetClientHandler extends NetHandler {
 	}
 
 	public void handleServerAuthData(Packet253ServerAuthData par1Packet253ServerAuthData) {
-
 		this.addToSendQueue(new Packet252SharedKey());
 	}
 
@@ -1067,6 +1076,7 @@ public class NetClientHandler extends NetHandler {
 	 * Handle a keep alive packet.
 	 */
 	public void handleKeepAlive(Packet0KeepAlive par1Packet0KeepAlive) {
+		lastKeepAlive = updateCounter;
 		this.addToSendQueue(new Packet0KeepAlive(par1Packet0KeepAlive.randomId));
 	}
 
