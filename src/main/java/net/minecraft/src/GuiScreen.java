@@ -58,14 +58,22 @@ public class GuiScreen extends Gui {
 	 * Returns a string stored in the system clipboard.
 	 */
 	public static String getClipboardString() {
-		return EaglerAdapter.getClipboard();
+		try {
+			String s = EaglerAdapter.getClipboard();
+			return s == null ? "" : s;
+		}catch(Throwable t) {
+			return "";
+		}
 	}
 
 	/**
 	 * store a string in the system clipboard
 	 */
 	public static void setClipboardString(String par0Str) {
-		EaglerAdapter.setClipboard(par0Str);
+		try {
+			EaglerAdapter.setClipboard(par0Str);
+		}catch(Throwable t) {
+		}
 	}
 
 	/**

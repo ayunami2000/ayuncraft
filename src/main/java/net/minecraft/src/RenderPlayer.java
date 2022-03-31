@@ -233,13 +233,14 @@ public class RenderPlayer extends RenderLiving {
 		super.renderEquippedItems(par1EntityPlayer, par2);
 		super.renderArrowsStuckInEntity(par1EntityPlayer, par2);
 		ItemStack var4 = par1EntityPlayer.inventory.armorItemInSlot(3);
-		
+
 		boolean isNew = DefaultSkinRenderer.isPlayerNewSkin(par1EntityPlayer);
+		boolean isSlim = DefaultSkinRenderer.isPlayerNewSkinSlim(par1EntityPlayer);
 		int renderType = DefaultSkinRenderer.getPlayerRenderer(par1EntityPlayer);
 
 		if (var4 != null) {
 			EaglerAdapter.glPushMatrix();
-			(isNew ? this.modelBipedMainNewSkin : this.modelBipedMain).bipedHead.postRender(0.0625F);
+			(isNew ? (isSlim ? this.modelBipedMainNewSkinSlim : this.modelBipedMainNewSkin) : this.modelBipedMain).bipedHead.postRender(0.0625F);
 			float var5;
 
 			if (var4.getItem().itemID < 256) {
@@ -345,7 +346,7 @@ public class RenderPlayer extends RenderLiving {
 			if(DefaultSkinRenderer.isZombieModel(renderType) || renderType == 20) {
 				((ModelBiped)this.mainModel).bipedRightArm.postRender(0.0625F);
 			}else {
-				(isNew ? this.modelBipedMainNewSkin : this.modelBipedMain).bipedRightArm.postRender(0.0625F);
+				(isNew ? (isSlim ? this.modelBipedMainNewSkinSlim : this.modelBipedMainNewSkin) : this.modelBipedMain).bipedRightArm.postRender(0.0625F);
 			}
 			
 			EaglerAdapter.glTranslatef(-0.0625F, 0.4375F, 0.0625F);
@@ -460,9 +461,10 @@ public class RenderPlayer extends RenderLiving {
 		int i = DefaultSkinRenderer.getPlayerRenderer(par1EntityPlayer);
 		if(DefaultSkinRenderer.isStandardModel(i) || DefaultSkinRenderer.isZombieModel(i)) {
 			boolean isNew = DefaultSkinRenderer.isPlayerNewSkin(par1EntityPlayer);
-			(isNew ? this.modelBipedMainNewSkin : this.modelBipedMain).onGround = 0.0F;
-			(isNew ? this.modelBipedMainNewSkin : this.modelBipedMain).setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, par1EntityPlayer);
-			(isNew ? this.modelBipedMainNewSkin : this.modelBipedMain).bipedRightArm.render(0.0625F);
+			boolean isSlim = DefaultSkinRenderer.isPlayerNewSkinSlim(par1EntityPlayer);
+			(isNew ? (isSlim ? this.modelBipedMainNewSkinSlim : this.modelBipedMainNewSkin) : this.modelBipedMain).onGround = 0.0F;
+			(isNew ? (isSlim ? this.modelBipedMainNewSkinSlim : this.modelBipedMainNewSkin) : this.modelBipedMain).setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, par1EntityPlayer);
+			(isNew ? (isSlim ? this.modelBipedMainNewSkinSlim : this.modelBipedMainNewSkin) : this.modelBipedMain).bipedRightArm.render(0.0625F);
 		}
 	}
 

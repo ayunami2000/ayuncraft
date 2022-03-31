@@ -311,6 +311,9 @@ public abstract class GuiSlot {
 
 		int var14;
 
+		EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
+		EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
+		
 		for (var11 = 0; var11 < var4; ++var11) {
 			var20 = var10 + var11 * this.slotHeight + this.field_77242_t;
 			var13 = this.slotHeight - 4;

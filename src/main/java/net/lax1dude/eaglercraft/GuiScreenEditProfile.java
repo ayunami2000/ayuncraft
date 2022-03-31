@@ -399,8 +399,11 @@ public class GuiScreenEditProfile extends GuiScreen {
 			int skinHeight = 130;
 			if(par1 >= skinX && par2 >= skinY && par1 < skinX + skinWidth && par2 < skinY + skinHeight) {
 				if(selectedSlot < EaglerProfile.skins.size()) {
-					newSkinWaitSteveOrAlex = true;
-					return;
+					int type = EaglerProfile.getSkinSize(EaglerProfile.skins.get(selectedSlot).data.length);
+					if(type == 1 || type == 3) {
+						newSkinWaitSteveOrAlex = true;
+						return;
+					}
 				}
 			}
 		}

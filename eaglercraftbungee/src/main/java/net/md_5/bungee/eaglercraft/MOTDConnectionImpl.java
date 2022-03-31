@@ -30,10 +30,10 @@ public class MOTDConnectionImpl extends QueryConnectionImpl implements MOTD {
 		super(listener, addr, socket, "motd");
 		String[] lns = listener.getMotd().split("\n");
 		if(lns.length >= 1) {
-			line1 = lns[0].trim();
+			line1 = lns[0];
 		}
 		if(lns.length >= 2) {
-			line2 = lns[1].trim();
+			line2 = lns[1];
 		}
 		maxPlayers = listener.getMaxPlayers();
 		onlinePlayers = BungeeCord.getInstance().getOnlineCount();

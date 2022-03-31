@@ -86,7 +86,9 @@ public class DefaultSkinRenderer {
 				Entry<EntityOtherPlayerMP,Long> ee = itr.next();
 				if(System.currentTimeMillis() - ee.getValue() > 80000l) {
 					itr.remove();
-					Minecraft.getMinecraft().renderEngine.deleteTexture(skinGLUnits.remove(ee.getKey()));
+					if(skinGLUnits.containsKey(ee.getKey())) {
+						Minecraft.getMinecraft().renderEngine.deleteTexture(skinGLUnits.remove(ee.getKey()));
+					}
 				}
 			}
 			Iterator<Entry<Integer, EntityOtherPlayerMP>> itr2 = skinCookies.entrySet().iterator();
@@ -105,7 +107,7 @@ public class DefaultSkinRenderer {
 		}else if(p instanceof EntityOtherPlayerMP) {
 			EntityOtherPlayerMP pp = (EntityOtherPlayerMP) p;
 			if(pp.skinPacket != null) {
-				if(((int)pp.skinPacket[0] & 0xFF) < 6) {
+				if(((int)pp.skinPacket[0] & 0xFF) != 4) {
 					if(!skinGLUnits.containsKey(pp)) {
 						byte[] skinToLoad = new byte[pp.skinPacket.length - 1];
 						System.arraycopy(pp.skinPacket, 1, skinToLoad, 0, skinToLoad.length);
@@ -118,7 +120,7 @@ public class DefaultSkinRenderer {
 							h = 32;
 							break;
 						case 1:
-						case 4:
+						case 5:
 							w = 64;
 							h = 64;
 							break;
@@ -127,7 +129,7 @@ public class DefaultSkinRenderer {
 							h = 64;
 							break;
 						case 3:
-						case 5:
+						case 6:
 							w = 128;
 							h = 128;
 							break;
@@ -205,8 +207,8 @@ public class DefaultSkinRenderer {
 		}else if(p instanceof EntityOtherPlayerMP) {
 			EntityOtherPlayerMP pp = (EntityOtherPlayerMP) p;
 			if(pp.skinPacket != null) {
-				if(pp.skinPacket[0] < (byte)6) {
-					return (pp.skinPacket[0] == (byte)1) || (pp.skinPacket[0] == (byte)3) || (pp.skinPacket[0] == (byte)4) || (pp.skinPacket[0] == (byte)5);
+				if(pp.skinPacket[0] != (byte)4) {
+					return (pp.skinPacket[0] == (byte)1) || (pp.skinPacket[0] == (byte)3) || (pp.skinPacket[0] == (byte)5) || (pp.skinPacket[0] == (byte)6);
 				}else {
 					return isNewSkin((int)pp.skinPacket[1] & 0xFF);
 				}
@@ -225,8 +227,8 @@ public class DefaultSkinRenderer {
 		}else if(p instanceof EntityOtherPlayerMP) {
 			EntityOtherPlayerMP pp = (EntityOtherPlayerMP) p;
 			if(pp.skinPacket != null) {
-				if(pp.skinPacket[0] < (byte)6) {
-					return (pp.skinPacket[0] == (byte)4) || (pp.skinPacket[0] == (byte)5);
+				if(pp.skinPacket[0] != (byte)4) {
+					return (pp.skinPacket[0] == (byte)5) || (pp.skinPacket[0] == (byte)6);
 				}else {
 					return isAlexSkin((int)pp.skinPacket[1] & 0xFF);
 				}
@@ -245,7 +247,7 @@ public class DefaultSkinRenderer {
 		}else if(p instanceof EntityOtherPlayerMP) {
 			EntityOtherPlayerMP pp = (EntityOtherPlayerMP) p;
 			if(pp.skinPacket != null) {
-				if(pp.skinPacket[0] < (byte)6) {
+				if(pp.skinPacket[0] != (byte)4) {
 					return true;
 				}else {
 					return isStandardModel((int)pp.skinPacket[1] & 0xFF);
@@ -265,7 +267,7 @@ public class DefaultSkinRenderer {
 		}else if(p instanceof EntityOtherPlayerMP) {
 			EntityOtherPlayerMP pp = (EntityOtherPlayerMP) p;
 			if(pp.skinPacket != null) {
-				if(pp.skinPacket[0] < (byte)6) {
+				if(pp.skinPacket[0] != (byte)4) {
 					return 0;
 				}else {
 					return (int)pp.skinPacket[1] & 0xFF;

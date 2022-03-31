@@ -28,7 +28,7 @@ public class EaglerProfile {
 	
 	public static String myChannel;
 	
-	public static final int[] SKIN_DATA_SIZE = new int[] { 64*32*4, 64*64*4, 128*64*4, 128*128*4, 64*64*4, 128*128*4, 2 };
+	public static final int[] SKIN_DATA_SIZE = new int[] { 64*32*4, 64*64*4, 128*64*4, 128*128*4, 2, 64*64*4, 128*128*4 };
 	public static ArrayList<EaglerProfileSkin> skins = new ArrayList();
 	
 	public static final EaglercraftRandom rand;
@@ -48,15 +48,15 @@ public class EaglerProfile {
 			byte[] d2 = new byte[1 + d.length];
 			d2[0] = (byte) getSkinSize(d.length);
 			if(d2[0] == (byte)1 && skins.get(customSkinId).slim) {
-				d2[0] = (byte)4;
+				d2[0] = (byte)5;
 			}
 			if(d2[0] == (byte)3 && skins.get(customSkinId).slim) {
-				d2[0] = (byte)5;
+				d2[0] = (byte)6;
 			}
 			System.arraycopy(d, 0, d2, 1, d.length);
 			return d2;
 		}else {
-			return new byte[] { (byte)6, (byte)presetSkinId };
+			return new byte[] { (byte)4, (byte)presetSkinId };
 		}
 	}
 	
@@ -90,7 +90,7 @@ public class EaglerProfile {
 			h = 32;
 			break;
 		case 1:
-		case 4:
+		case 5:
 			w = 64;
 			h = 64;
 			break;
@@ -99,7 +99,7 @@ public class EaglerProfile {
 			h = 64;
 			break;
 		case 3:
-		case 5:
+		case 6:
 			w = 128;
 			h = 128;
 			break;

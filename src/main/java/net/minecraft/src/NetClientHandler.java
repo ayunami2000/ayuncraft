@@ -46,6 +46,7 @@ public class NetClientHandler extends NetHandler {
 	private GuiScreen field_98183_l = null;
 	private int updateCounter = 0;
 	private int lastKeepAlive = 0;
+	private int focusTimer = 0;
 
 	/** RNG. */
 	EaglercraftRandom rand = new EaglercraftRandom();
@@ -73,6 +74,8 @@ public class NetClientHandler extends NetHandler {
 		this.netManager = null;
 		this.worldClient = null;
 	}
+	
+	
 
 	/**
 	 * Processes the packets that have been read since the last call to this
@@ -80,12 +83,17 @@ public class NetClientHandler extends NetHandler {
 	 */
 	public void processReadPackets() {
 		++this.updateCounter;
-		if(updateCounter - lastKeepAlive > 500 || !EaglerAdapter.connectionOpen()) {
-			this.mc.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new GuiMainMenu()), "disconnect.disconnected", "disconnect." + (EaglerAdapter.connectionOpen() ? "endOfStream" :" timeout"), null));
-			this.netManager.closeConnections();
-			this.disconnected = true;
-			this.mc.loadWorld((WorldClient) null);
-			return;
+		if(EaglerAdapter.isFocused()) {
+			--focusTimer;
+			if((focusTimer < 0 && updateCounter - lastKeepAlive > 200) || !EaglerAdapter.connectionOpen()) {
+				this.mc.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new GuiMainMenu()), "disconnect.disconnected", "disconnect." + (EaglerAdapter.connectionOpen() ? "endOfStream" :" timeout"), null));
+				this.netManager.closeConnections();
+				this.disconnected = true;
+				this.mc.loadWorld((WorldClient) null);
+				return;
+			}
+		}else {
+			focusTimer = 60;
 		}
 		if (!this.disconnected && this.netManager != null) {
 			this.netManager.processReadPackets();
@@ -1076,6 +1084,7 @@ public class NetClientHandler extends NetHandler {
 	 * Handle a keep alive packet.
 	 */
 	public void handleKeepAlive(Packet0KeepAlive par1Packet0KeepAlive) {
+		//System.out.println(updateCounter - lastKeepAlive);
 		lastKeepAlive = updateCounter;
 		this.addToSendQueue(new Packet0KeepAlive(par1Packet0KeepAlive.randomId));
 	}

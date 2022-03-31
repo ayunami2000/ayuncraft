@@ -274,7 +274,7 @@ public class GuiTextField extends Gui {
 				this.setCursorPositionEnd();
 				this.setSelectionPos(0);
 				return true;
-
+/*
 			case 3:
 				String s = this.getSelectedtext();
 				if(s != null && s.length() > 0) {
@@ -296,7 +296,7 @@ public class GuiTextField extends Gui {
 				}
 				this.writeText("");
 				return true;
-
+*/
 			default:
 				switch (par2) {
 				case 14:
