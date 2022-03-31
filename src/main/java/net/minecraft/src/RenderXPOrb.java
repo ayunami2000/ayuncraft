@@ -18,6 +18,8 @@ public class RenderXPOrb extends Render {
 	public void renderTheXPOrb(EntityXPOrb par1EntityXPOrb, double par2, double par4, double par6, float par8, float par9) {
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glTranslatef((float) par2, (float) par4, (float) par6);
+		EaglerAdapter.glDisable(EaglerAdapter.GL_LIGHTING);
+		EaglerAdapter.glAlphaFunc(0, 0.003921569f);
 		int var10 = par1EntityXPOrb.getTextureByXP();
 		tex_xporb.bindTexture();
 		Tessellator var11 = Tessellator.instance;
@@ -53,6 +55,7 @@ public class RenderXPOrb extends Render {
 		var11.draw();
 		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_RESCALE_NORMAL);
+		EaglerAdapter.glEnable(EaglerAdapter.GL_LIGHTING);
 		EaglerAdapter.glPopMatrix();
 	}
 

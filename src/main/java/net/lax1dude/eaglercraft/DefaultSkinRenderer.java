@@ -59,6 +59,18 @@ public class DefaultSkinRenderer {
 			new TextureLocation("/skins/30.longarms.png"),
 			new TextureLocation("/skins/31.laxdude.png")
 	};
+	
+	public static final boolean[] defaultVanillaSkinClassicOrSlimVariants = new boolean[] {
+			false, true,
+			false, true,
+			false, true,
+			false, true,
+			false, true,
+			false, true,
+			false, true,
+			false, true,
+			false, true
+	};
 
 	private static final HashMap<Integer,EntityOtherPlayerMP> skinCookies = new HashMap();
 	private static final HashMap<EntityOtherPlayerMP,Integer> skinGLUnits = new HashMap();
@@ -93,7 +105,7 @@ public class DefaultSkinRenderer {
 		}else if(p instanceof EntityOtherPlayerMP) {
 			EntityOtherPlayerMP pp = (EntityOtherPlayerMP) p;
 			if(pp.skinPacket != null) {
-				if(((int)pp.skinPacket[0] & 0xFF) < 4) {
+				if(((int)pp.skinPacket[0] & 0xFF) < 6) {
 					if(!skinGLUnits.containsKey(pp)) {
 						byte[] skinToLoad = new byte[pp.skinPacket.length - 1];
 						System.arraycopy(pp.skinPacket, 1, skinToLoad, 0, skinToLoad.length);
@@ -106,6 +118,7 @@ public class DefaultSkinRenderer {
 							h = 32;
 							break;
 						case 1:
+						case 4:
 							w = 64;
 							h = 64;
 							break;
@@ -114,6 +127,7 @@ public class DefaultSkinRenderer {
 							h = 64;
 							break;
 						case 3:
+						case 5:
 							w = 128;
 							h = 128;
 							break;
@@ -168,6 +182,10 @@ public class DefaultSkinRenderer {
 		return !(id == 0 || id == 2 || id == 4 || id == 6 || id == 8 || id == 10 || id == 12 || id == 14 || id == 18 || id == 28);
 	}
 	
+	public static boolean isAlexSkin(int id) {
+		return id < defaultVanillaSkinClassicOrSlimVariants.length && defaultVanillaSkinClassicOrSlimVariants[id];
+	}
+	
 	public static boolean isStandardModel(int id) {
 		return !isZombieModel(id) && !(id == 19 || id == 20 || id == 21 || id == 32 || id == 33 || id == 34);
 	}
@@ -178,8 +196,8 @@ public class DefaultSkinRenderer {
 	
 	public static boolean isPlayerNewSkin(EntityPlayer p) {
 		if(p instanceof EntityClientPlayerMP) {
-			if(EaglerProfile.presetSkinId == -1) {
-				int type = EaglerProfile.getSkinSize(EaglerProfile.skinDatas.get(EaglerProfile.customSkinId).length);
+			if(EaglerProfile.presetSkinId <= -1) {
+				int type = EaglerProfile.getSkinSize(EaglerProfile.skins.get(EaglerProfile.customSkinId).data.length);
 				return (type == 1 || type == 3);
 			}else {
 				return isNewSkin(EaglerProfile.presetSkinId);
@@ -187,10 +205,30 @@ public class DefaultSkinRenderer {
 		}else if(p instanceof EntityOtherPlayerMP) {
 			EntityOtherPlayerMP pp = (EntityOtherPlayerMP) p;
 			if(pp.skinPacket != null) {
-				if(pp.skinPacket[0] < (byte)4) {
-					return (pp.skinPacket[0] == (byte)1) || (pp.skinPacket[0] == (byte)3);
+				if(pp.skinPacket[0] < (byte)6) {
+					return (pp.skinPacket[0] == (byte)1) || (pp.skinPacket[0] == (byte)3) || (pp.skinPacket[0] == (byte)4) || (pp.skinPacket[0] == (byte)5);
 				}else {
 					return isNewSkin((int)pp.skinPacket[1] & 0xFF);
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isPlayerNewSkinSlim(EntityPlayer p) {
+		if(p instanceof EntityClientPlayerMP) {
+			if(EaglerProfile.presetSkinId == -1) {
+				return EaglerProfile.skins.get(EaglerProfile.customSkinId).slim;
+			}else {
+				return isAlexSkin(EaglerProfile.presetSkinId);
+			}
+		}else if(p instanceof EntityOtherPlayerMP) {
+			EntityOtherPlayerMP pp = (EntityOtherPlayerMP) p;
+			if(pp.skinPacket != null) {
+				if(pp.skinPacket[0] < (byte)6) {
+					return (pp.skinPacket[0] == (byte)4) || (pp.skinPacket[0] == (byte)5);
+				}else {
+					return isAlexSkin((int)pp.skinPacket[1] & 0xFF);
 				}
 			}
 		}
@@ -207,7 +245,7 @@ public class DefaultSkinRenderer {
 		}else if(p instanceof EntityOtherPlayerMP) {
 			EntityOtherPlayerMP pp = (EntityOtherPlayerMP) p;
 			if(pp.skinPacket != null) {
-				if(pp.skinPacket[0] < (byte)4) {
+				if(pp.skinPacket[0] < (byte)6) {
 					return true;
 				}else {
 					return isStandardModel((int)pp.skinPacket[1] & 0xFF);
@@ -227,7 +265,7 @@ public class DefaultSkinRenderer {
 		}else if(p instanceof EntityOtherPlayerMP) {
 			EntityOtherPlayerMP pp = (EntityOtherPlayerMP) p;
 			if(pp.skinPacket != null) {
-				if(pp.skinPacket[0] < (byte)4) {
+				if(pp.skinPacket[0] < (byte)6) {
 					return 0;
 				}else {
 					return (int)pp.skinPacket[1] & 0xFF;
@@ -239,6 +277,7 @@ public class DefaultSkinRenderer {
 
 	public static ModelBiped oldSkinRenderer = null;
 	public static ModelBipedNewSkins newSkinRenderer = null;
+	public static ModelBipedNewSkins newSkinRendererSlim = null;
 	public static ModelZombie zombieRenderer = null;
 	public static ModelVillager villagerRenderer = null;
 	public static ModelEnderman endermanRenderer = null;
@@ -246,7 +285,7 @@ public class DefaultSkinRenderer {
 	public static ModelSkeleton skeletonRenderer = null;
 	
 	public static void renderPlayerPreview(int x, int y, int mx, int my, int id2) {
-		int id = id2 - EaglerProfile.skinNames.size();
+		int id = id2 - EaglerProfile.skins.size();
 		
 		EaglerAdapter.glEnable(EaglerAdapter.GL_TEXTURE_2D);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
@@ -265,7 +304,7 @@ public class DefaultSkinRenderer {
 		EaglerAdapter.glTranslatef(0.0F, -1.0F, 0.0F);
 		
 		if(id < 0) {
-			Minecraft.getMinecraft().renderEngine.bindTexture(EaglerProfile.glTex.get(id2));
+			Minecraft.getMinecraft().renderEngine.bindTexture(EaglerProfile.skins.get(id2).glTex);
 		}else {
 			defaultVanillaSkins[id].bindTexture();
 		}
@@ -273,15 +312,21 @@ public class DefaultSkinRenderer {
 		if(isStandardModel(id) || id < 0) {
 			if(oldSkinRenderer == null) oldSkinRenderer = new ModelBiped(0.0F, 0.0F, 64, 32);
 			if(newSkinRenderer == null) newSkinRenderer = new ModelBipedNewSkins(0.0F, false);
-			newSkinRenderer.isChild = false;
+			if(newSkinRendererSlim == null) newSkinRendererSlim = new ModelBipedNewSkins(0.0F, true);
 			oldSkinRenderer.isChild = false;
+			newSkinRenderer.isChild = false;
+			newSkinRendererSlim.isChild = false;
 			boolean isNew = isNewSkin(id);
 			if(id < 0) {
-				int type = EaglerProfile.getSkinSize(EaglerProfile.skinDatas.get(id2).length);
+				int type = EaglerProfile.getSkinSize(EaglerProfile.skins.get(id2).data.length);
 				isNew = (type == 1 || type == 3);
 			}
 			if(isNew) {
-				newSkinRenderer.render(null, 0.0f, 0.0f, (float)(System.currentTimeMillis() % 100000) / 50f, ((x - mx) * 0.06f), ((y - my) * -0.1f), 0.0625F);
+				if((id < 0 && EaglerProfile.skins.get(id2).slim) || (id >= 0 && isAlexSkin(id))) {
+					newSkinRendererSlim.render(null, 0.0f, 0.0f, (float)(System.currentTimeMillis() % 100000) / 50f, ((x - mx) * 0.06f), ((y - my) * -0.1f), 0.0625F);
+				}else {
+					newSkinRenderer.render(null, 0.0f, 0.0f, (float)(System.currentTimeMillis() % 100000) / 50f, ((x - mx) * 0.06f), ((y - my) * -0.1f), 0.0625F);
+				}
 			}else {
 				oldSkinRenderer.render(null, 0.0f, 0.0f, (float)(System.currentTimeMillis() % 100000) / 50f, ((x - mx) * 0.06f), ((y - my) * -0.1f), 0.0625F);
 			}
@@ -323,6 +368,47 @@ public class DefaultSkinRenderer {
 		}
 		
 		EaglerAdapter.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		
+		EaglerAdapter.glPopMatrix();
+		EaglerAdapter.glDisable(EaglerAdapter.GL_RESCALE_NORMAL);
+		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		EaglerAdapter.glDisable(EaglerAdapter.GL_TEXTURE_2D);
+		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+		EaglerAdapter.glDisable(EaglerAdapter.GL_LIGHTING);
+	}
+	
+	public static void renderAlexOrSteve(int x, int y, int mx, int my, boolean alex) {
+		ModelBipedNewSkins bp;
+		if(alex) {
+			if(newSkinRendererSlim == null) {
+				newSkinRendererSlim = new ModelBipedNewSkins(0.0F, true);
+			}
+			bp = newSkinRendererSlim;
+		}else {
+			if(newSkinRenderer == null) {
+				newSkinRenderer = new ModelBipedNewSkins(0.0F, false);
+			}
+			bp = newSkinRenderer;
+		}
+		
+		EaglerAdapter.glEnable(EaglerAdapter.GL_TEXTURE_2D);
+		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
+		EaglerAdapter.glDisable(EaglerAdapter.GL_CULL_FACE);
+		EaglerAdapter.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		EaglerAdapter.glPushMatrix();
+		EaglerAdapter.glTranslatef((float) x, (float) (y - 80), 100.0F);
+		EaglerAdapter.glScalef(50.0f, 50.0f, 50.0f);
+		EaglerAdapter.glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
+		EaglerAdapter.glEnable(EaglerAdapter.GL_RESCALE_NORMAL);
+		EaglerAdapter.glScalef(1.0F, -1.0F, 1.0F);
+		RenderHelper.enableGUIStandardItemLighting();
+		EaglerAdapter.glTranslatef(0.0F, 1.0F, 0.0F);
+		EaglerAdapter.glRotatef(((y - my) * -0.06f), 1.0f, 0.0f, 0.0f);
+		EaglerAdapter.glRotatef(((x - mx) * 0.06f), 0.0f, 1.0f, 0.0f);
+		EaglerAdapter.glTranslatef(0.0F, -1.0F, 0.0F);
+		
+		bp.isChild = false;
+		bp.render(null, 0.0f, 0.0f, (float)(System.currentTimeMillis() % 100000) / 50f, ((x - mx) * 0.06f), ((y - my) * -0.1f), 0.0625F);
 		
 		EaglerAdapter.glPopMatrix();
 		EaglerAdapter.glDisable(EaglerAdapter.GL_RESCALE_NORMAL);

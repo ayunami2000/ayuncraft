@@ -12,13 +12,12 @@ public class ModelBipedNewSkins extends ModelBiped {
 	public ModelRenderer field_178730_v;
 	private ModelRenderer field_178729_w;
 	private ModelRenderer field_178736_x;
-	private boolean field_178735_y;
-	private static final String __OBFID = "CL_00002626";
+	private boolean isAlex;
 
 	public ModelBipedNewSkins(float p_i46304_1_, boolean p_i46304_2_)
     {
         super(p_i46304_1_, 0.0F, 64, 64);
-        this.field_178735_y = p_i46304_2_;
+        this.isAlex = p_i46304_2_;
         this.field_178736_x = new ModelRenderer(this, 24, 0);
         this.field_178736_x.addBox(-3.0F, -6.0F, -1.0F, 6, 6, 1, p_i46304_1_);
         this.field_178729_w = new ModelRenderer(this, 0, 0);
@@ -124,7 +123,7 @@ public class ModelBipedNewSkins extends ModelBiped {
 	}
 
 	public void postRenderHiddenArm(float p_178718_1_) {
-		if (this.field_178735_y) {
+		if (this.isAlex) {
 			++this.bipedRightArm.rotationPointX;
 			this.bipedRightArm.postRender(p_178718_1_);
 			--this.bipedRightArm.rotationPointX;

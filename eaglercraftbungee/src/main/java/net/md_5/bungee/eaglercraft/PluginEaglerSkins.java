@@ -16,7 +16,7 @@ public class PluginEaglerSkins extends Plugin implements Listener {
 	
 	private final HashMap<String,byte[]> skinCollection = new HashMap();
 	
-	private static final int[] SKIN_DATA_SIZE = new int[] { 64*32*4, 64*64*4, 128*64*4, 128*128*4, 1 };
+	private static final int[] SKIN_DATA_SIZE = new int[] { 64*32*4, 64*64*4, 128*64*4, 128*128*4, 64*64*4, 128*128*4, 1 };
 	
 	private static final int VALID_DEFAULT_SKINS = 33;
 	
