@@ -1,5 +1,5 @@
 listeners:
-- motd: '&6&lbungeecord eaglercraft server |>'
+- motd: '&6An Eaglercraft server'
   fallback_server: lobby
   tab_list: GLOBAL_PING
   websocket: true
@@ -10,9 +10,16 @@ listeners:
   tab_size: 60
   default_server: lobby
   force_default_server: true
-stats: 595698b3-9c36-4e86-b1ee-cb3027038f41
-groups: {}
+  forward_ip: false
+  server_icon: server-icon.png
 player_limit: -1
+timeout: 30000
+stats: 595698b3-9c36-4e86-b1ee-cb3027038f41
+servers:
+  lobby:
+    address: localhost:25569
+    restricted: false
+server_name: EaglercraftBungee Server
 permissions:
   default:
   - bungeecord.command.server
@@ -22,8 +29,12 @@ permissions:
   - bungeecord.command.end
   - bungeecord.command.ip
   - bungeecord.command.reload
-timeout: 30000
-servers:
-  lobby:
-    address: 127.0.0.1:25569
-    restricted: false
+  - bungeecord.command.eag.ban
+  - bungeecord.command.eag.banwildcard
+  - bungeecord.command.eag.banip
+  - bungeecord.command.eag.banregex
+  - bungeecord.command.eag.reloadban
+  - bungeecord.command.eag.banned
+  - bungeecord.command.eag.banlist
+  - bungeecord.command.eag.unban
+groups: {}

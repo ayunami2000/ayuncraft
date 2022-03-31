@@ -33,6 +33,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONObject;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -57,6 +58,7 @@ import org.lwjgl.util.glu.GLU;
 import de.cuina.fireandfuel.CodecJLayerMP3;
 import net.lax1dude.eaglercraft.AssetRepository;
 import net.lax1dude.eaglercraft.EarlyLoadScreen;
+import net.lax1dude.eaglercraft.ServerQuery;
 import net.lax1dude.eaglercraft.adapter.lwjgl.GameWindowListener;
 import net.minecraft.src.MathHelper;
 import paulscode.sound.SoundSystem;
@@ -889,17 +891,18 @@ public class EaglerAdapterImpl2 {
 	}
 	
 	public static final boolean startConnection(String uri) {
-		if(clientSocket == null) {
-			try {
-				clientSocket = new EaglerSocketClient(new URI(uri));
-				return true;
-			}catch(InterruptedException e) {
-				clientSocket = null;
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if(clientSocket != null) {
+			clientSocket.close();
+		}
+		try {
+			clientSocket = new EaglerSocketClient(new URI(uri));
+			return true;
+		}catch(InterruptedException e) {
+			clientSocket = null;
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -1174,5 +1177,101 @@ public class EaglerAdapterImpl2 {
 		appendbuffer.flip();
 		return appendbuffer;
 	}
+	private static class ServerQueryImpl extends WebSocketClient implements ServerQuery {
+		
+		private final LinkedList<QueryResponse> queryResponses = new LinkedList();
+		private final LinkedList<byte[]> queryResponsesBytes = new LinkedList();
+		private final String type;
+		private boolean open;
 
+		private ServerQueryImpl(String type, URI serverUri) {
+			super(serverUri);
+			this.type = type;
+			this.open = true;
+			this.setConnectionLostTimeout(5);
+			this.setTcpNoDelay(true);
+			this.connect();
+		}
+
+		@Override
+		public int responseAvailable() {
+			synchronized(queryResponses) {
+				return queryResponses.size();
+			}
+		}
+
+		@Override
+		public int responseBinaryAvailable() {
+			synchronized(queryResponsesBytes) {
+				return queryResponsesBytes.size();
+			}
+		}
+
+		@Override
+		public QueryResponse getResponse() {
+			synchronized(queryResponses) {
+				return queryResponses.size() > 0 ? queryResponses.remove(0) : null;
+			}
+		}
+
+		@Override
+		public byte[] getBinaryResponse() {
+			synchronized(queryResponsesBytes) {
+				return queryResponsesBytes.size() > 0 ? queryResponsesBytes.remove(0) : null;
+			}
+		}
+
+		@Override
+		public void onClose(int arg0, String arg1, boolean arg2) {
+			open = false;
+		}
+
+		@Override
+		public void onError(Exception arg0) {
+			System.err.println("WebSocket query error: " + arg0.toString());
+			open = false;
+			this.close();
+		}
+
+		@Override
+		public void onMessage(String arg0) {
+			synchronized(queryResponses) {
+				try {
+					queryResponses.add(new QueryResponse(new JSONObject(arg0)));
+				}catch(Throwable t) {
+					System.err.println("Query response parse error: " + t.toString());
+				}
+			}
+		}
+
+		@Override
+		public void onMessage(ByteBuffer arg0) {
+			synchronized(queryResponsesBytes) {
+				byte[] pkt = new byte[arg0.limit()];
+				arg0.get(pkt);
+				queryResponsesBytes.add(pkt);
+			}
+		}
+
+		@Override
+		public void onOpen(ServerHandshake arg0) {
+			send("Accept: " + type);
+		}
+
+		@Override
+		public boolean isQueryOpen() {
+			return open;
+		}
+		
+	}
+	
+	public static final ServerQuery openQuery(String type, String uri) {
+		try {
+			return new ServerQueryImpl(type, new URI(uri));
+		}catch(Throwable t) {
+			System.err.println("WebSocket query error: " + t.toString());
+			return null;
+		}
+	}
+	
 }

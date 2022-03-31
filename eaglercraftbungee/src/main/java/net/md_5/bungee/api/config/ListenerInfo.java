@@ -252,4 +252,30 @@ public class ListenerInfo {
 		return forwardIp;
 	}
 
+	public String getServerIcon() {
+		return serverIcon;
+	}
+
+	public int[] getServerIconCache() {
+		if(!serverIconLoaded) {
+			if(serverIcon != null) {
+				int[] img = ServerIcon.createServerIcon(new File(serverIcon));
+				if(img != null) {
+					System.arraycopy(img, 0, serverIconCache, 0, img.length);
+					serverIconSet = true;
+				}else {
+					serverIconSet = false;
+				}
+			}else {
+				serverIconSet = false;
+			}
+			serverIconLoaded = true;
+		}
+		return serverIconCache;
+	}
+	
+	public boolean isIconSet() {
+		getServerIconCache();
+		return serverIconSet;
+	}
 }

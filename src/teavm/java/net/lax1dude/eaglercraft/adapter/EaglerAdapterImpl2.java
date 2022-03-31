@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import org.json.JSONObject;
 import org.teavm.interop.Async;
 import org.teavm.interop.AsyncCallback;
 import org.teavm.jso.JSBody;
@@ -52,6 +53,8 @@ import net.lax1dude.eaglercraft.AssetRepository;
 import net.lax1dude.eaglercraft.Base64;
 import net.lax1dude.eaglercraft.EarlyLoadScreen;
 import net.lax1dude.eaglercraft.LocalStorageManager;
+import net.lax1dude.eaglercraft.ServerQuery;
+import net.lax1dude.eaglercraft.ServerQuery.QueryResponse;
 import net.lax1dude.eaglercraft.adapter.teavm.WebGLQuery;
 import net.lax1dude.eaglercraft.adapter.teavm.WebGLVertexArray;
 import net.minecraft.src.MathHelper;
@@ -1032,6 +1035,7 @@ public class EaglerAdapterImpl2 {
 		sock.onMessage(new EventListener<MessageEvent>() {
 			@Override
 			public void handleEvent(MessageEvent evt) {
+				if(isString(evt.getData())) return;
 				Uint8Array a = Uint8Array.create(evt.getDataAsArray());
 				byte[] b = new byte[a.getByteLength()];
 				for(int i = 0; i < b.length; ++i) {
@@ -1575,7 +1579,115 @@ public class EaglerAdapterImpl2 {
 	}
 	
 	public static final void setClipboard(String str) {
+	@JSBody(params = { "obj" }, script = "return typeof obj === \"string\";")
+	private static native boolean isString(JSObject obj);
+	
+	private static class ServerQueryImpl implements ServerQuery {
+		
+		private final LinkedList<QueryResponse> queryResponses = new LinkedList();
+		private final LinkedList<byte[]> queryResponsesBytes = new LinkedList();
+		private final String type;
+		private boolean open;
+		
+		private final WebSocket sock;
+		
+		private ServerQueryImpl(String type_, String uri) {
+			type = type_;
+			WebSocket s = null;
+			try {
+				s = WebSocket.create(uri);
+				s.setBinaryType("arraybuffer");
+				open = true;
+			}catch(Throwable t) {
+				open = false;
+			}
+			sock = s;
+			if(open) {
+				sock.onOpen(new EventListener<MessageEvent>() {
+					@Override
+					public void handleEvent(MessageEvent evt) {
+						sock.send("Accept: " + type);
+					}
+				});
+				sock.onClose(new EventListener<CloseEvent>() {
+					@Override
+					public void handleEvent(CloseEvent evt) {
+						open = false;
+					}
+				});
+				sock.onMessage(new EventListener<MessageEvent>() {
+					@Override
+					public void handleEvent(MessageEvent evt) {
+						if(isString(evt.getData())) {
+							try {
+								queryResponses.add(new QueryResponse(new JSONObject(evt.getDataAsString())));
+							}catch(Throwable t) {
+								System.err.println("Query response could not be parsed: " + t.toString());
+							}
+						}else {
+							Uint8Array a = Uint8Array.create(evt.getDataAsArray());
+							byte[] b = new byte[a.getByteLength()];
+							for(int i = 0; i < b.length; ++i) {
+								b[i] = (byte) (a.get(i) & 0xFF);
+							}
+							queryResponsesBytes.add(b);
+						}
+					}
+				});
+				Window.setTimeout(new TimerHandler() {
+					@Override
+					public void onTimer() {
+						if(open && sock.getReadyState() != 1) {
+							if(sock.getReadyState() == 0) {
+								sock.close();
+							}
+							open = false;
+						}
+					}
+				}, 5000l);
+			}
+		}
+
+		@Override
+		public boolean isQueryOpen() {
+			return open;
+		}
+
+		@Override
+		public void close() {
+			open = false;
+			sock.close();
+		}
+
+		@Override
+		public void send(String str) {
+			sock.send(str);
+		}
+
+		@Override
+		public int responseAvailable() {
+			return queryResponses.size();
+		}
+
+		@Override
+		public int responseBinaryAvailable() {
+			return queryResponsesBytes.size();
+		}
+
+		@Override
+		public QueryResponse getResponse() {
+			return queryResponses.size() > 0 ? queryResponses.remove(0) : null;
+		}
+
+		@Override
+		public byte[] getBinaryResponse() {
+			return queryResponsesBytes.size() > 0 ? queryResponsesBytes.remove(0) : null;
+		}
 		
 	}
 
+	public static final ServerQuery openQuery(String type, String uri) {
+		return new ServerQueryImpl(type, uri);
+	}
+	
 }

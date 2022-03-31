@@ -8,10 +8,13 @@ import net.lax1dude.eaglercraft.adapter.Tessellator;
 class GuiSlotServer extends GuiSlot {
 	/** Instance to the GUI this list is on. */
 	final GuiMultiplayer parentGui;
+	
+	private static final TextureLocation defaultServerIcon = new TextureLocation("/gui/unknown_pack.png");
 
 	public GuiSlotServer(GuiMultiplayer par1GuiMultiplayer) {
 		super(par1GuiMultiplayer.mc, par1GuiMultiplayer.width, par1GuiMultiplayer.height, 32, par1GuiMultiplayer.height - 64, 36);
 		this.parentGui = par1GuiMultiplayer;
+		this.elementWidth = 128;
 	}
 
 	/**
@@ -76,22 +79,55 @@ class GuiSlotServer extends GuiSlot {
 		boolean var7 = var6.field_82821_f > 61;
 		boolean var8 = var6.field_82821_f < 61;
 		boolean var9 = var7 || var8;
-		this.parentGui.drawString(this.parentGui.fontRenderer, var6.serverName, par2 + 2, par3 + 1, 16777215);
-		this.parentGui.drawString(this.parentGui.fontRenderer, var6.serverMOTD, par2 + 2, par3 + 12, 8421504);
-		this.parentGui.drawString(this.parentGui.fontRenderer, var6.populationInfo, par2 + 215 - this.parentGui.fontRenderer.getStringWidth(var6.populationInfo), par3 + 12, 8421504);
+		this.parentGui.drawString(this.parentGui.fontRenderer, var6.serverName, par2 + 38, par3 + 1, 16777215);
+		if(var6.hasPing && var6.pingToServer > 0) {
+			int i = var6.serverMOTD.indexOf('\n');
+			if(i > 0) {
+				this.parentGui.drawString(this.parentGui.fontRenderer, var6.serverMOTD.substring(0, i), par2 + 38, par3 + 12, 8421504);
+				this.parentGui.drawString(this.parentGui.fontRenderer, var6.serverMOTD.substring(i + 1), par2 + 38, par3 + 12 + 11, 8421504);
+			}else {
+				this.parentGui.drawString(this.parentGui.fontRenderer, var6.serverMOTD, par2 + 38, par3 + 12, 8421504);
+				if (!this.parentGui.mc.gameSettings.hideServerAddress && !var6.isHidingAddress()) {
+					this.parentGui.drawString(this.parentGui.fontRenderer, var6.serverIP, par2 + 38, par3 + 12 + 11, 3158064);
+				} else {
+					this.parentGui.drawString(this.parentGui.fontRenderer, StatCollector.translateToLocal("selectServer.hiddenAddress"), par2 + 38, par3 + 12 + 11, 3158064);
+				}
+			}
+			this.parentGui.drawString(this.parentGui.fontRenderer, var6.populationInfo, par2 + 251 - this.parentGui.fontRenderer.getStringWidth(var6.populationInfo), par3 + 12, 8421504);
+		}else {
+			if (!this.parentGui.mc.gameSettings.hideServerAddress && !var6.isHidingAddress()) {
+				this.parentGui.drawString(this.parentGui.fontRenderer, var6.serverIP, par2 + 38, par3 + 12 + 11, 3158064);
+			} else {
+				this.parentGui.drawString(this.parentGui.fontRenderer, StatCollector.translateToLocal("selectServer.hiddenAddress"), par2 + 38, par3 + 12 + 11, 3158064);
+			}
+		}
 
 		if (var9) {
 			String var10 = EnumChatFormatting.DARK_RED + var6.gameVersion;
-			this.parentGui.drawString(this.parentGui.fontRenderer, var10, par2 + 200 - this.parentGui.fontRenderer.getStringWidth(var10), par3 + 1, 8421504);
-		}
-
-		if (!this.parentGui.mc.gameSettings.hideServerAddress && !var6.isHidingAddress()) {
-			this.parentGui.drawString(this.parentGui.fontRenderer, var6.serverIP, par2 + 2, par3 + 12 + 11, 3158064);
-		} else {
-			this.parentGui.drawString(this.parentGui.fontRenderer, StatCollector.translateToLocal("selectServer.hiddenAddress"), par2 + 2, par3 + 12 + 11, 3158064);
+			this.parentGui.drawString(this.parentGui.fontRenderer, var10, par2 + 240 - this.parentGui.fontRenderer.getStringWidth(var10), par3 + 1, 8421504);
 		}
 
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		
+		var6.refreshIcon();
+		if(var6.serverIconEnabled && var6.serverIconGL != -1) {
+			this.mc.renderEngine.bindTexture(var6.serverIconGL);
+		}else {
+			defaultServerIcon.bindTexture();
+		}
+		
+		int iconX = par2 + 2;
+		int iconY = par3 + 2;
+		int iconSize = 28;
+		
+		Tessellator var14 = Tessellator.instance;
+		var14.startDrawingQuads();
+		var14.addVertexWithUV((double) (iconX + 0), (double) (iconY + iconSize), 0.0d, 0.0d, 1.0d);
+		var14.addVertexWithUV((double) (iconX + iconSize), (double) (iconY + iconSize), 0.0d, 1.0d, 1.0d);
+		var14.addVertexWithUV((double) (iconX + iconSize), (double) (iconY + 0), 0.0d, 1.0d, 0.0d);
+		var14.addVertexWithUV((double) (iconX + 0), (double) (iconY + 0), 0.0d, 0.0d, 0.0d);
+		var14.draw();
+		
 		icons.bindTexture();
 		byte var15 = 0;
 		boolean var11 = false;
@@ -101,7 +137,7 @@ class GuiSlotServer extends GuiSlot {
 		if (var9) {
 			var12 = var7 ? "Client out of date!" : "Server out of date!";
 			var16 = 5;
-		} else if (var6.field_78841_f && var6.pingToServer != -2L) {
+		} else if (var6.hasPing && var6.pingToServer != -2L) {
 			if (var6.pingToServer < 0L) {
 				var16 = 5;
 			} else if (var6.pingToServer < 150L) {
@@ -119,7 +155,7 @@ class GuiSlotServer extends GuiSlot {
 			if (var6.pingToServer < 0L) {
 				var12 = "(no connection)";
 			} else {
-				var12 = "default"; //var6.pingToServer + "ms";
+				var12 = var6.pingToServer + "ms";
 			}
 		} else {
 			var15 = 1;
@@ -129,14 +165,22 @@ class GuiSlotServer extends GuiSlot {
 				var16 = 8 - var16;
 			}
 
-			var12 = "3rd party";
+			var12 = "Polling..";
 		}
 
-		this.parentGui.drawTexturedModalRect(par2 + 205, par3, 0 + var15 * 10, 176 + var16 * 8, 10, 8);
+		this.parentGui.drawTexturedModalRect(par2 + 241, par3, 0 + var15 * 10, 176 + var16 * 8, 10, 8);
 		byte var13 = 4;
 
-		if (this.mouseX >= par2 + 205 - var13 && this.mouseY >= par3 - var13 && this.mouseX <= par2 + 205 + 10 + var13 && this.mouseY <= par3 + 8 + var13) {
+		if (this.mouseX >= par2 + 245 - var13 && this.mouseY >= par3 - var13 && this.mouseX <= par2 + 245 + 10 + var13 && this.mouseY <= par3 + 4 + var13) {
 			GuiMultiplayer.getAndSetLagTooltip(this.parentGui, var12);
+		}else if (this.mouseX >= par2 + 230 - var13 && this.mouseY >= par3 - var13 + 4 && this.mouseX <= par2 + 245 + 10 + var13 && this.mouseY <= par3 + 8 + var13 + 8) {
+			if(var6.playerList.size() > 0) {
+				var12 = "";
+				for(String s : var6.playerList) {
+					var12 += (s + "\n");
+				}
+				GuiMultiplayer.getAndSetLagTooltip(this.parentGui, var12);
+			}
 		}
 	}
 }

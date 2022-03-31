@@ -10,8 +10,11 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.MOTD;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ListenerInfo;
+import net.md_5.bungee.api.event.WebsocketMOTDEvent;
+import net.md_5.bungee.api.event.WebsocketQueryEvent;
 
 public class WebSocketListener extends WebSocketServer {
 	
@@ -56,6 +59,46 @@ public class WebSocketListener extends WebSocketServer {
 
 	@Override
 	public void onMessage(WebSocket arg0, String arg1) {
+		Object o = arg0.getAttachment();
+		if(o != null) {
+			if(o instanceof PendingSocket) {
+				InetAddress realAddr = ((PendingSocket)o).realAddress;
+				arg1 = arg1.trim().toLowerCase();
+				if(arg1.startsWith("accept:")) {
+					arg1 = arg1.substring(7).trim();
+					QueryConnectionImpl con;
+					WebsocketQueryEvent evt;
+					if(arg1.equals("motd")) {
+						System.out.println("requested motd - " + realAddr);
+						con = new MOTDConnectionImpl(info, realAddr, arg0);
+						evt = new WebsocketMOTDEvent((MOTD)con);
+					}else {
+						System.out.println("connection is query - accepts '" + arg1 + "' - " + realAddr);
+						con = new QueryConnectionImpl(info, realAddr, arg0, arg1);
+						evt = new WebsocketQueryEvent(con);
+					}
+					BungeeCord.getInstance().getPluginManager().callEvent(evt);
+					if(con instanceof MOTDConnectionImpl) {
+						((MOTDConnectionImpl)con).sendToUser();
+					}
+					if(!con.shouldKeepAlive() && !con.isClosed()) {
+						con.close();
+					}else {
+						arg0.setAttachment(con);
+					}
+				}else {
+					System.err.println("unknown accept type - " + arg0.getRemoteSocketAddress());
+					arg0.close();
+				}
+				return;
+			}else if(o instanceof QueryConnectionImpl) {
+				((QueryConnectionImpl)o).postMessage(arg1);
+			}else {
+				System.out.println("error: recieved text data on binary websocket - " + arg0.getRemoteSocketAddress());
+			}
+		}else {
+			arg0.close();
+		}
 	}
 
 	@Override
