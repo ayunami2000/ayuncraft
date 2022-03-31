@@ -19,7 +19,11 @@ public class MinecraftMain {
 		
 		EaglerAdapter.initializeContext();
 		LocalStorageManager.loadStorage();
-		ServerList.loadDefaultServers(Base64.encodeBase64String(EaglerAdapter.loadLocalStorage("forced")));
+		
+		byte[] b = EaglerAdapter.loadLocalStorage("forced");
+		if(b != null) {
+			ServerList.loadDefaultServers(Base64.encodeBase64String(b));
+		}
 		
 		Minecraft mc = new Minecraft();
 		mc.run();

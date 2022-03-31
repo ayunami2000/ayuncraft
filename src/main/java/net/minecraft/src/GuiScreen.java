@@ -250,8 +250,7 @@ public class GuiScreen extends Gui {
 	}
 
 	public static boolean isCtrlKeyDown() {
-		boolean var0 = EaglerAdapter.isKeyDown(28) && EaglerAdapter.getEventChar() == 0;
-		return EaglerAdapter.isKeyDown(29) || EaglerAdapter.isKeyDown(157) || isMacOs && (var0 || EaglerAdapter.isKeyDown(219) || EaglerAdapter.isKeyDown(220));
+		return EaglerAdapter.isKeyDown(29) || EaglerAdapter.isKeyDown(157) || (isMacOs && EaglerAdapter.isKeyDown(28) || EaglerAdapter.isKeyDown(219) || EaglerAdapter.isKeyDown(220));
 	}
 
 	public static boolean isShiftKeyDown() {

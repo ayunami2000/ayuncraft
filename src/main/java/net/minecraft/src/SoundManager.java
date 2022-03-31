@@ -60,6 +60,7 @@ public class SoundManager {
 			this.sounddefinitions = new HashMap();
 			try {
 				NBTTagCompound file = CompressedStreamTools.readUncompressed(EaglerAdapter.loadResourceBytes("/sounds/sounds.dat"));
+				EaglerAdapter.setPlaybackOffsetDelay(file.hasKey("playbackOffset") ? file.getFloat("playbackOffset") : 0.03f);
 				NBTTagList l = file.getTagList("sounds");
 				int c = l.tagCount();
 				for(int i = 0; i < c; i++) {

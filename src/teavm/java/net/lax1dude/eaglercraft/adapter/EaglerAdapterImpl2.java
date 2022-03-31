@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -13,6 +16,7 @@ import org.json.JSONObject;
 import org.teavm.interop.Async;
 import org.teavm.interop.AsyncCallback;
 import org.teavm.jso.JSBody;
+import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.ajax.ReadyStateChangeHandler;
 import org.teavm.jso.ajax.XMLHttpRequest;
@@ -173,6 +177,12 @@ public class EaglerAdapterImpl2 {
 		LocalStorageManager.saveStorageG();
 		LocalStorageManager.saveStorageP();
 	}
+
+	@JSBody(params = { "m" }, script = "return m.offsetX;")
+	private static native int getOffsetX(MouseEvent m);
+	
+	@JSBody(params = { "m" }, script = "return m.offsetY;")
+	private static native int getOffsetY(MouseEvent m);
 	
 	public static final void initializeContext(HTMLElement rootElement, String assetPackageURI) {
 		parent = rootElement;
@@ -224,8 +234,8 @@ public class EaglerAdapterImpl2 {
 		canvas.addEventListener("mousemove", mousemove = new EventListener<MouseEvent>() {
 			@Override
 			public void handleEvent(MouseEvent evt) {
-				mouseX = evt.getClientX();
-				mouseY = canvas.getClientHeight() - evt.getClientY();
+				mouseX = getOffsetX(evt);
+				mouseY = canvas.getClientHeight() - getOffsetY(evt);
 				mouseDX += evt.getMovementX();
 				mouseDY += -evt.getMovementY();
 				evt.preventDefault();
@@ -832,6 +842,10 @@ public class EaglerAdapterImpl2 {
 	public static final void _wglBlitFramebuffer(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9, int p10) {
 		webgl.blitFramebuffer(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10);
 	}
+	public static final int _wglGetAttribLocation(ProgramGL p1, String p2) {
+		return webgl.getAttribLocation(p1.obj, p2);
+	}
+	
 	@JSBody(params = { "ctx", "p" }, script = "return ctx.getTexParameter(0x0DE1, p) | 0;")
 	private static final native int __wglGetTexParameteri(WebGL2RenderingContext ctx, int p);
 	public static final int _wglGetTexParameteri(int p1) {
@@ -997,6 +1011,14 @@ public class EaglerAdapterImpl2 {
 	public static final void syncDisplay(int performanceToFps) {
 		
 	}
+	
+	private static final DateFormat dateFormatSS = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
+	public static final void saveScreenshot() {
+		saveScreenshot("screenshot_" + dateFormatSS.format(new Date()).toString() + ".png", canvas);
+	}
+	
+	@JSBody(params = { "name", "cvs" }, script = "var a=document.createElement(\"a\");a.href=cvs.toDataURL(\"image/png\");a.download=name;a.click();")
+	private static native void saveScreenshot(String name, HTMLCanvasElement cvs);
 
 	private static WebSocket sock = null;
 	private static boolean sockIsConnecting = false;
@@ -1131,11 +1153,14 @@ public class EaglerAdapterImpl2 {
 		//l.setVelocity(vx, vy, vz);
 	}
 	
-	
-	
 	private static int playbackId = 0;
 	private static final HashMap<String,AudioBufferX> loadedSoundFiles = new HashMap();
-	private static AudioContext audioctx = null; 
+	private static AudioContext audioctx = null;
+	private static float playbackOffsetDelay = 0.03f;
+	
+	public static final void setPlaybackOffsetDelay(float f) {
+		playbackOffsetDelay = f;
+	}
 	
 	@Async
 	public static native AudioBuffer decodeAudioAsync(ArrayBuffer buffer);
@@ -1208,7 +1233,7 @@ public class EaglerAdapterImpl2 {
 		s.connect(g);
 		g.connect(p);
 		p.connect(audioctx.getDestination());
-		s.start(0.0d, 0.03d);
+		s.start(0.0d, playbackOffsetDelay);
 		final int theId = ++playbackId;
 		activeSoundEffects.put(theId, new AudioBufferSourceNodeX(s, p, g));
 		s.setOnEnded(new EventListener<MediaEvent>() {
@@ -1231,7 +1256,7 @@ public class EaglerAdapterImpl2 {
 		g.getGain().setValue(volume > 1.0f ? 1.0f : volume);
 		s.connect(g);
 		g.connect(audioctx.getDestination());
-		s.start(0.0d, 0.03d);
+		s.start(0.0d, playbackOffsetDelay);
 		final int theId = ++playbackId;
 		activeSoundEffects.put(theId, new AudioBufferSourceNodeX(s, null, g));
 		s.setOnEnded(new EventListener<MediaEvent>() {
@@ -1315,6 +1340,9 @@ public class EaglerAdapterImpl2 {
 	public static final void exit() {
 		
 	}
+	
+	@JSBody(params = { }, script = "return window.navigator.userAgent;")
+	public static native String getUserAgent();
 	
 	private static String[] LWJGLKeyNames = new String[] {"NONE", "ESCAPE", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "MINUS", "EQUALS", "BACK", "TAB", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "LBRACKET", "RBRACKET", "RETURN", "LCONTROL", "A", "S", "D", "F", "G", "H", "J", "K", "L", "SEMICOLON", "APOSTROPHE", "GRAVE", "LSHIFT", "BACKSLASH", "Z", "X", "C", "V", "B", "N", "M", "COMMA", "PERIOD", "SLASH", "RSHIFT", "MULTIPLY", "LMENU", "SPACE", "CAPITAL", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "NUMLOCK", "SCROLL", "NUMPAD7", "NUMPAD8", "NUMPAD9", "SUBTRACT", "NUMPAD4", "NUMPAD5", "NUMPAD6", "ADD", "NUMPAD1", "NUMPAD2", "NUMPAD3", "NUMPAD0", "DECIMAL", "null", "null", "null", "F11", "F12", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "F13", "F14", "F15", "F16", "F17", "F18", "null", "null", "null", "null", "null", "null", "KANA", "F19", "null", "null", "null", "null", "null", "null", "null", "CONVERT", "null", "NOCONVERT", "null", "YEN", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "NUMPADEQUALS", "null", "null", "CIRCUMFLEX", "AT", "COLON", "UNDERLINE", "KANJI", "STOP", "AX", "UNLABELED", "null", "null", "null", "null", "NUMPADENTER", "RCONTROL", "null", "null", "null", "null", "null", "null", "null", "null", "null", "SECTION", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "NUMPADCOMMA", "null", "DIVIDE", "null", "SYSRQ", "RMENU", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "FUNCTION", "PAUSE", "null", "HOME", "UP", "PRIOR", "null", "LEFT", "null", "RIGHT", "null", "END", "DOWN", "NEXT", "INSERT", "DELETE", "null", "null", "null", "null", "null", "null", "CLEAR", "LMETA", "RMETA", "APPS", "POWER", "SLEEP", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"};
 	
@@ -1574,11 +1602,29 @@ public class EaglerAdapterImpl2 {
 		return (k > LWJGLKeyCodes.length || k < 0) ? -1 : LWJGLKeyCodes[k];
 	}
 	
-	public static final String getClipboard() {
-		return ""; //TODO: html5 clipboard
+	@JSFunctor
+	private static interface StupidFunctionResolveString extends JSObject {
+		void resolveStr(String s);
 	}
 	
-	public static final void setClipboard(String str) {
+	@Async
+	public static native String getClipboard();
+	
+	private static void getClipboard(final AsyncCallback<String> cb) {
+		getClipboard0(new StupidFunctionResolveString() {
+			@Override
+			public void resolveStr(String s) {
+				cb.complete(s);
+			}
+		});
+	}
+	
+	@JSBody(params = { "cb" }, script = "window.navigator.clipboard.readText().then(function(s) { cb(s); }, function(s) { cb(null); });")
+	private static native void getClipboard0(StupidFunctionResolveString cb);
+	
+	@JSBody(params = { "str" }, script = "window.navigator.clipboard.writeText(str);")
+	public static native void setClipboard(String str);
+	
 	@JSBody(params = { "obj" }, script = "return typeof obj === \"string\";")
 	private static native boolean isString(JSObject obj);
 	

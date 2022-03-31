@@ -38,6 +38,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.ARBDebugOutput;
 import org.lwjgl.opengl.ARBDebugOutputCallback;
 import org.lwjgl.opengl.ARBOcclusionQuery2;
@@ -726,10 +727,16 @@ public class EaglerAdapterImpl2 {
 		Display.destroy();
 		Keyboard.destroy();
 		Mouse.destroy();
-		eagler.dispose();
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				eagler.dispose();
+			}
+		});
 		if(ss != null) {
 			ss.cleanup();
 		}
+		AL.destroy();
 	}
 	public static final boolean isWindows() {
 		return System.getProperty("os.name").toLowerCase().contains("windows");
@@ -1035,6 +1042,9 @@ public class EaglerAdapterImpl2 {
 		ss.setListenerOrientation(var13, var14, var15, var16, var17, var18);
 		ss.setListenerVelocity(vx, vy, vz);
 	}
+	public static final void setPlaybackOffsetDelay(float f) {
+		// nah
+	}
 	private static int playbackId = 0;
 	public static final int beginPlayback(String fileName, float x, float y, float z, float volume, float pitch) {
 		int id = ++playbackId;
@@ -1154,7 +1164,7 @@ public class EaglerAdapterImpl2 {
 		return Runtime.getRuntime().freeMemory();
 	}
 	public static final void exit() {
-		System.exit(0);
+		Runtime.getRuntime().halt(0);
 	}
 	public static final int _wArrayByteLength(Object obj) {
 		return ((IntBuffer)obj).remaining() * 4;
@@ -1177,6 +1187,23 @@ public class EaglerAdapterImpl2 {
 		appendbuffer.flip();
 		return appendbuffer;
 	}
+	
+	public static final String getUserAgent() {
+		return System.getProperty("os.name");
+	}
+	
+	public static final String getClipboard() {
+		return "<err>";
+	}
+	
+	public static final void setClipboard(String str) {
+		// todo
+	}
+	
+	public static final void saveScreenshot() {
+		
+	}
+	
 	private static class ServerQueryImpl extends WebSocketClient implements ServerQuery {
 		
 		private final LinkedList<QueryResponse> queryResponses = new LinkedList();

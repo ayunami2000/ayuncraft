@@ -26,6 +26,7 @@ public class Minecraft implements Runnable {
 	public PlayerControllerMP playerController;
 	private boolean fullscreen = false;
 	private boolean hasCrashed = false;
+	private boolean isGonnaTakeDatScreenShot = false;
 	
 	public int displayWidth;
 	public int displayHeight;
@@ -485,7 +486,7 @@ public class Minecraft implements Runnable {
 	}
 
 	public static EnumOS getOs() {
-		String var0 = System.getProperty("os.name").toLowerCase();
+		String var0 = EaglerAdapter.getUserAgent().toLowerCase();
 		return var0.contains("win") ? EnumOS.WINDOWS
 				: (var0.contains("mac") ? EnumOS.MACOS
 						: (var0.contains("solaris") ? EnumOS.SOLARIS : (var0.contains("sunos") ? EnumOS.SOLARIS : (var0.contains("linux") ? EnumOS.LINUX : (var0.contains("unix") ? EnumOS.LINUX : EnumOS.UNKNOWN)))));
@@ -522,6 +523,14 @@ public class Minecraft implements Runnable {
 		} else {
 			if(!this.inGameHasFocus) this.setIngameFocus();
 		}
+	}
+	
+	public boolean isChatOpen() {
+		return this.currentScreen != null && (this.currentScreen instanceof GuiChat);
+	}
+	
+	public String getServerURI() {
+		return this.getNetHandler() != null ? this.getNetHandler().getNetManager().getServerURI() : "[not connected]";
 	}
 
 	/**
@@ -575,36 +584,10 @@ public class Minecraft implements Runnable {
 
 	public void run() {
 		this.running = true;
-
-		//try {
-			this.startGame();
-		//} catch (Exception var11) {
-		//	var11.printStackTrace();
-		//	return;
-		//}
-
-		//try {
-			while (this.running) {
-
-				if (this.refreshTexturePacksScheduled) {
-					this.refreshTexturePacksScheduled = false;
-					this.renderEngine.refreshTextures();
-				}
-
-				try {
-					this.runGameLoop();
-				} catch (OutOfMemoryError var10) {
-					this.freeMemory();
-					this.displayGuiScreen(new GuiMemoryErrorScreen());
-					System.gc();
-				}
-			}
-		//} catch (MinecraftError var12) {
-		//	;
-		//} catch (Throwable var14) {
-		//	var14.printStackTrace();
-		//}
-		
+		this.startGame();
+		while (this.running) {
+			this.runGameLoop();
+		}
 		EaglerAdapter.destroyContext();
 		EaglerAdapter.exit();
 	}
@@ -613,6 +596,11 @@ public class Minecraft implements Runnable {
 	 * Called repeatedly from run()
 	 */
 	private void runGameLoop() {
+		if (this.refreshTexturePacksScheduled) {
+			this.refreshTexturePacksScheduled = false;
+			this.renderEngine.refreshTextures();
+		}
+
 		AxisAlignedBB.getAABBPool().cleanPool();
 
 		if (this.theWorld != null) {
@@ -696,8 +684,6 @@ public class Minecraft implements Runnable {
 		this.guiAchievement.updateAchievementWindow();
 		this.mcProfiler.startSection("root");
 
-		this.screenshotListener();
-
 		if (!this.fullscreen && (EaglerAdapter.getCanvasWidth() != this.displayWidth || EaglerAdapter.getCanvasHeight() != this.displayHeight)) {
 			this.displayWidth = EaglerAdapter.getCanvasWidth();
 			this.displayHeight = EaglerAdapter.getCanvasHeight();
@@ -731,6 +717,11 @@ public class Minecraft implements Runnable {
 			EaglerAdapter.syncDisplay(EntityRenderer.performanceToFps(this.func_90020_K()));
 		}
 		
+		if(isGonnaTakeDatScreenShot) {
+			isGonnaTakeDatScreenShot = false;
+			EaglerAdapter.saveScreenshot();
+		}
+		
 		EaglerAdapter.doJavascriptCoroutines();
 
 		this.mcProfiler.endSection();
@@ -739,47 +730,6 @@ public class Minecraft implements Runnable {
 
 	private int func_90020_K() {
 		return this.currentScreen != null && this.currentScreen instanceof GuiMainMenu ? 2 : this.gameSettings.limitFramerate;
-	}
-
-	public void freeMemory() {
-		try {
-			this.renderGlobal.deleteAllDisplayLists();
-		} catch (Throwable var4) {
-			;
-		}
-
-		try {
-			System.gc();
-			AxisAlignedBB.getAABBPool().clearPool();
-			this.theWorld.getWorldVec3Pool().clearAndFreeCache();
-		} catch (Throwable var3) {
-			;
-		}
-
-		try {
-			System.gc();
-			this.loadWorld((WorldClient) null);
-		} catch (Throwable var2) {
-			;
-		}
-
-		System.gc();
-	}
-
-	/**
-	 * checks if keys are down
-	 */
-	private void screenshotListener() {
-		/*
-		if (EaglerAdapter.isKeyDown(60)) {
-			if (!this.isTakingScreenshot) {
-				this.isTakingScreenshot = true;
-				this.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(minecraftDir, this.displayWidth, this.displayHeight));
-			}
-		} else {
-			this.isTakingScreenshot = false;
-		}
-		*/
 	}
 
 	/**
@@ -1190,7 +1140,7 @@ public class Minecraft implements Runnable {
 				if (EaglerAdapter.getEventKeyState()) {
 					KeyBinding.onTick(EaglerAdapter.getEventKey());
 				}
-				
+
 				boolean F3down = (this.gameSettings.keyBindFunction.pressed && EaglerAdapter.isKeyDown(4));
 
 				if (this.field_83002_am > 0L) {
@@ -1206,6 +1156,7 @@ public class Minecraft implements Runnable {
 				}
 
 				if (EaglerAdapter.getEventKeyState()) {
+					isGonnaTakeDatScreenShot |= (this.gameSettings.keyBindFunction.pressed && EaglerAdapter.getEventKey() == 3);
 					if (EaglerAdapter.getEventKey() == 87) {
 						this.toggleFullscreen();
 					} else {
