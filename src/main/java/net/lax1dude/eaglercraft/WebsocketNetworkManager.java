@@ -16,8 +16,10 @@ import net.minecraft.src.Packet;
 public class WebsocketNetworkManager implements INetworkManager {
 	
 	private NetHandler netHandler;
+	private String serverURI;
 	
 	public WebsocketNetworkManager(String uri, String eagler, NetHandler netHandler) throws IOException {
+		this.serverURI = uri;
 		this.netHandler = netHandler;
 		if(!EaglerAdapter.startConnection(uri)) {
 			throw new IOException("websocket to "+uri+" failed");
@@ -135,6 +137,10 @@ public class WebsocketNetworkManager implements INetworkManager {
 			EaglerAdapter.endConnection();
 			EaglerAdapter.setDebugVar("minecraftServer", "null");
 		}
+	}
+	
+	public String getServerURI() {
+		return this.serverURI;
 	}
 
 }
