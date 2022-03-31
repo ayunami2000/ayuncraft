@@ -1351,7 +1351,7 @@ public class RenderGlobal implements IWorldAccess {
 			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
 			EaglerAdapter.glPushMatrix();
 			EaglerAdapter.glDisable(EaglerAdapter.GL_ALPHA_TEST);
-			EaglerAdapter.glPolygonOffset(-3.0F, -3.0F);
+			EaglerAdapter.glPolygonOffset(3.0F, 3.0F);
 			EaglerAdapter.glDepthMask(false);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_POLYGON_OFFSET_FILL);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);

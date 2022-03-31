@@ -308,6 +308,8 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		case GL_TEXTURE_GEN_Q:
 			enableTexGen = true;
 			break;
+		case GL_POLYGON_OFFSET_FILL:
+			_wglEnable(_wGL_POLYGON_OFFSET_FILL);
 		default:
 			break;
 		}
@@ -442,6 +444,8 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		case GL_TEXTURE_GEN_Q:
 			enableTexGen = false;
 			break;
+		case GL_POLYGON_OFFSET_FILL:
+			_wglDisable(_wGL_POLYGON_OFFSET_FILL);
 		default:
 			break;
 		}

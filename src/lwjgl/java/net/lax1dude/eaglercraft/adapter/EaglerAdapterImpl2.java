@@ -233,6 +233,7 @@ public class EaglerAdapterImpl2 {
 	public static final int _wGL_DRAW_FRAMEBUFFER = GL30.GL_DRAW_FRAMEBUFFER;
 	public static final int _wGL_READ_FRAMEBUFFER = GL30.GL_READ_FRAMEBUFFER;
 	public static final int _wGL_FRAMEBUFFER = GL30.GL_FRAMEBUFFER;
+	public static final int _wGL_POLYGON_OFFSET_FILL = GL11.GL_POLYGON_OFFSET_FILL;
 
 	public static final class TextureGL {
 		protected final int obj;

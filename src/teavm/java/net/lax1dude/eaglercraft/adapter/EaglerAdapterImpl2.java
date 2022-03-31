@@ -460,6 +460,7 @@ public class EaglerAdapterImpl2 {
 	public static final int _wGL_READ_FRAMEBUFFER = READ_FRAMEBUFFER;
 	public static final int _wGL_DRAW_FRAMEBUFFER = DRAW_FRAMEBUFFER;
 	public static final int _wGL_FRAMEBUFFER = FRAMEBUFFER;
+	public static final int _wGL_POLYGON_OFFSET_FILL = POLYGON_OFFSET_FILL;
 	
 	public static final class TextureGL { 
 		protected final WebGLTexture obj;
