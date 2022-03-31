@@ -4,7 +4,7 @@ public class ConfigConstants {
 	
 	public static boolean profanity = false;
 
-	public static final String version = "22w10d";
+	public static final String version = "22w13a";
 	public static final String mainMenuString = "eaglercraft " + version;
 	
 	public static final String forkMe = "https://github.com/LAX1DUDE/eaglercraft";

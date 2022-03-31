@@ -13,7 +13,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'io.github.zebalu.teavm-gradle-plugin'
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 sourceSets {
@@ -50,7 +50,7 @@ teavm {
    targetDirectory = file("javascript");
    
    /** The directory to monitor to decide if compile is up-to-date or not */
-   //sourceDirectory = [file("src/main/java"),file("../minecrafthtml5mcp/src")];
+   sourceDirectory = file("src");
    
    /** How to name the result file. */
    targetFileName = "classes.js";
