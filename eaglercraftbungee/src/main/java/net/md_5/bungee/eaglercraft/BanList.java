@@ -657,9 +657,9 @@ public class BanList {
 					p.println("# Java regex syntax: https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html");
 					p.println("#");
 					p.println();
-					p.println("# set this to false to use \"/eag-ban\" to ban on bungee instead of just \"/ban\"");
+					p.println("# set this to to true to use \"/ban\" to ban on bungee instead of \"/eag-ban\"");
 					p.println("# (most likely needs a restart to take effect)");
-					p.println("replace-bukkit=true");
+					p.println("replace-bukkit=false");
 					p.println();
 					p.println();
 					p.println("[Usernames]");

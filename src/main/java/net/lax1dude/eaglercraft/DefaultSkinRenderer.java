@@ -420,4 +420,13 @@ public class DefaultSkinRenderer {
 		EaglerAdapter.glDisable(EaglerAdapter.GL_LIGHTING);
 	}
 
+	public static boolean isPlayerPreviewNew(int id2) {
+		int id = id2 - EaglerProfile.skins.size();
+		if(id < 0) {
+			return EaglerProfile.skins.get(id2).data.length == EaglerProfile.SKIN_DATA_SIZE[1] || EaglerProfile.skins.get(id2).data.length == EaglerProfile.SKIN_DATA_SIZE[3];
+		}else {
+			return isNewSkin(id);
+		}
+	}
+	
 }

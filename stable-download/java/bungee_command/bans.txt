@@ -15,7 +15,7 @@
 
 # set this to false to use "/eag-ban" to ban on bungee instead of just "/ban"
 # (most likely needs a restart to take effect)
-replace-bukkit=true
+replace-bukkit=false
 
 
 [Usernames]

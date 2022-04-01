@@ -930,6 +930,17 @@ public class EaglerAdapterImpl2 {
 		return currentEvent == null ? -1 : canvas.getClientHeight() - currentEvent.getClientY();
 	}
 	public static final boolean keysNext() {
+		if(unpressCTRL) { //un-press ctrl after copy/paste permission
+			keyEvents.clear();
+			currentEventK = null;
+			keyStates[29] = false;
+			keyStates[157] = false;
+			keyStates[28] = false;
+			keyStates[219] = false;
+			keyStates[220] = false;
+			unpressCTRL = false;
+			return false;
+		}
 		currentEventK = null;
 		return !keyEvents.isEmpty() && (currentEventK = keyEvents.remove(0)) != null;
 	}
@@ -945,6 +956,16 @@ public class EaglerAdapterImpl2 {
 		return currentEventK == null? false : !currentEventK.getType().equals("keyup");
 	}
 	public static final boolean isKeyDown(int p1) {
+		if(unpressCTRL) { //un-press ctrl after copy/paste permission
+			keyStates[28] = false;
+			keyStates[29] = false;
+			keyStates[157] = false;
+			keyStates[219] = false;
+			keyStates[220] = false;
+		}
+		if(p1 == 28 || p1 == 29 || p1 == 157 || p1 == 219 || p1 == 220) {
+			System.out.println("" + p1 + ": " + keyStates[220]);
+		}
 		return keyStates[p1];
 	}
 	public static final String getKeyName(int p1) {
@@ -1608,6 +1629,8 @@ public class EaglerAdapterImpl2 {
 		void resolveStr(String s);
 	}
 	
+	private static boolean unpressCTRL = false;
+	
 	@Async
 	public static native String getClipboard();
 	
@@ -1617,7 +1640,7 @@ public class EaglerAdapterImpl2 {
 			@Override
 			public void resolveStr(String s) {
 				if(System.currentTimeMillis() - start > 500l) {
-					keyStates[28] = false; //un-press ctrl
+					unpressCTRL = true;
 				}
 				cb.complete(s);
 			}

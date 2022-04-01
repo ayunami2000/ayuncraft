@@ -232,6 +232,17 @@ public class GuiScreenEditProfile extends GuiScreen {
 			this.mc.renderEngine.bindTexture(eee.glTex);
 			DefaultSkinRenderer.renderAlexOrSteve(xx, yy, mx, my, true);
 		}else {
+			skinX = this.width / 2 - 120;
+			skinY = this.height / 6 + 8;
+			skinWidth = 80;
+			skinHeight = 130;
+			if(DefaultSkinRenderer.isPlayerPreviewNew(selectedSlot)) {
+				int w = fontRenderer.getStringWidth("1.8") + 4;
+				EaglerAdapter.glPushMatrix();
+				EaglerAdapter.glScalef(0.75f, 0.75f, 0.75f);
+				drawString(fontRenderer, "1.8", (int)((skinX + skinWidth) / 0.75f) - w, (int)((skinY + skinHeight) / 0.75f) - 12, 0xFFBBBB66);
+				EaglerAdapter.glPopMatrix();
+			}
 			DefaultSkinRenderer.renderPlayerPreview(xx, yy, newSkinWaitSteveOrAlex ? width / 2 : mx, newSkinWaitSteveOrAlex ? height / 2 : my, selectedSlot);
 		}
 		
