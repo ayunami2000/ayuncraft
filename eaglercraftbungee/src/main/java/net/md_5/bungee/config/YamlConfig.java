@@ -145,8 +145,19 @@ public class YamlConfig implements ConfigurationAdapter {
 		//forcedDef.put("pvp.md-5.net", "pvp");
 		final Collection<ListenerInfo> ret = new HashSet<ListenerInfo>();
 		for (final Map<String, Object> val : base) {
-			String motd = this.get("motd", "&6&lbungeecord eaglercraft server |>", val);
+			String motd = this.get("motd", null, val);
+			if(motd != null) {
+				val.remove("motd");
+			}
+			motd = this.get("motd1", motd, val);
+			if(motd == null) {
+				motd = this.get("motd1", "&6An Eaglercraft server", val);
+			}
 			motd = ChatColor.translateAlternateColorCodes('&', motd);
+			String motd2 = this.get("motd2", null, val);
+			if(motd2 != null && motd2.length() > 0) {
+				motd = motd + "\n" + ChatColor.translateAlternateColorCodes('&', motd2);
+			}
 			final int maxPlayers = this.get("max_players", 60, val);
 			final String defaultServer = this.get("default_server", "lobby", val);
 			final String fallbackServer = this.get("fallback_server", defaultServer, val);

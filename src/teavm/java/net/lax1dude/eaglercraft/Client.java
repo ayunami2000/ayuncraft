@@ -1,9 +1,6 @@
 package net.lax1dude.eaglercraft;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import org.teavm.jso.JSBody;
-import org.teavm.jso.JSExceptions;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.core.JSError;
 import org.teavm.jso.dom.html.HTMLDocument;
@@ -24,8 +21,11 @@ public class Client {
 	    	String[] e = getOpts();
 	    	EaglerAdapterImpl2.initializeContext(rootElement = Window.current().getDocument().getElementById(e[0]), e[1]);
 	    	LocalStorageManager.loadStorage();
-	    	if(e.length > 2) {
+	    	if(e.length > 2 && e[2].length() > 0) {
 	    		ServerList.loadDefaultServers(e[2]);
+	    	}
+	    	if(e.length > 3) {
+	    		EaglerAdapterImpl2.setServerToJoinOnLaunch(e[3]);
 	    	}
 	    	run0();
 		//}catch(Throwable t) {

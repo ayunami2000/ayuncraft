@@ -246,7 +246,12 @@ public class Minecraft implements Runnable {
 		this.sndManager.playTheTitleMusic();
 		showIntroAnimation();
 		
-		this.displayGuiScreen(new GuiScreenEditProfile(new GuiMainMenu()));
+		String s = EaglerAdapter.getServerToJoinOnLaunch();
+		if(s != null) {
+			this.displayGuiScreen(new GuiScreenEditProfile(new GuiConnecting(new GuiMainMenu(), this, new ServerData("Eaglercraft Server", s))));
+		}else {
+			this.displayGuiScreen(new GuiScreenEditProfile(new GuiMainMenu()));
+		}
 
 		this.loadingScreen = new LoadingScreenRenderer(this);
 

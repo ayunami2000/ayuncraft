@@ -71,11 +71,11 @@ public class ModelBipedNewSkins extends ModelBiped {
 	 */
 	public void render(Entity p_78088_1_, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float p_78088_7_) {
 		super.render(p_78088_1_, p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_);
-		EaglerAdapter.glPushMatrix();
+		//EaglerAdapter.glPushMatrix();
 		
-		if (p_78088_1_ != null && p_78088_1_.isSneaking()) {
-			EaglerAdapter.glTranslatef(0.0F, 0.2F, 0.0F);
-		}
+		//if (p_78088_1_ != null && p_78088_1_.isSneaking()) {
+		//	EaglerAdapter.glTranslatef(0.0F, 0.2F, 0.0F);
+		//}
 
 		this.field_178733_c.render(p_78088_7_);
 		this.field_178731_d.render(p_78088_7_);
@@ -83,7 +83,7 @@ public class ModelBipedNewSkins extends ModelBiped {
 		this.field_178732_b.render(p_78088_7_);
 		this.field_178730_v.render(p_78088_7_);
 
-		EaglerAdapter.glPopMatrix();
+		//EaglerAdapter.glPopMatrix();
 	}
 
 	public void func_178727_b(float p_178727_1_) {

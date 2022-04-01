@@ -1306,4 +1306,14 @@ public class EaglerAdapterImpl2 {
 		}
 	}
 	
+	private static String serverToJoinOnLaunch = null;
+	
+	public static final void setServerToJoinOnLaunch(String s) {
+		serverToJoinOnLaunch = s;
+	}
+	
+	public static final String getServerToJoinOnLaunch() {
+		return serverToJoinOnLaunch;
+	}
+	
 }
