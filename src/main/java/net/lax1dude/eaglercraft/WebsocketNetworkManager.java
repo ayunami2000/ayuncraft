@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.util.LinkedList;
 
 import net.minecraft.src.INetworkManager;
+import net.minecraft.src.NetClientHandler;
 import net.minecraft.src.NetHandler;
 import net.minecraft.src.Packet;
 
@@ -79,6 +80,9 @@ public class WebsocketNetworkManager implements INetworkManager {
 			readChunks.add(ByteBuffer.wrap(packet));
 		}
 		if(!readChunks.isEmpty()) {
+			if(this.netHandler instanceof NetClientHandler) {
+				((NetClientHandler)this.netHandler).lastKeepAlive = ((NetClientHandler)this.netHandler).updateCounter;
+			}
 			
 			int cap = 0;
 			for(ByteBuffer b : readChunks) {

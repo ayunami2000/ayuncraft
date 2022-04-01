@@ -1612,9 +1612,13 @@ public class EaglerAdapterImpl2 {
 	public static native String getClipboard();
 	
 	private static void getClipboard(final AsyncCallback<String> cb) {
+		final long start = System.currentTimeMillis();
 		getClipboard0(new StupidFunctionResolveString() {
 			@Override
 			public void resolveStr(String s) {
+				if(System.currentTimeMillis() - start > 500l) {
+					keyStates[28] = false; //un-press ctrl
+				}
 				cb.complete(s);
 			}
 		});

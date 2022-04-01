@@ -44,8 +44,8 @@ public class NetClientHandler extends NetHandler {
 	public List playerInfoList = new ArrayList();
 	public int currentServerMaxPlayers = 20;
 	private GuiScreen field_98183_l = null;
-	private int updateCounter = 0;
-	private int lastKeepAlive = 0;
+	public int updateCounter = 0;
+	public int lastKeepAlive = 0;
 	private int focusTimer = 0;
 
 	/** RNG. */
@@ -83,9 +83,14 @@ public class NetClientHandler extends NetHandler {
 	 */
 	public void processReadPackets() {
 		++this.updateCounter;
+		
+		if (!this.disconnected && this.netManager != null) {
+			this.netManager.processReadPackets();
+		}
+		
 		if(EaglerAdapter.isFocused()) {
 			--focusTimer;
-			if((focusTimer < 0 && updateCounter - lastKeepAlive > 200) || !EaglerAdapter.connectionOpen()) {
+			if((focusTimer < 0 && updateCounter - lastKeepAlive > 400) || !EaglerAdapter.connectionOpen()) {
 				this.mc.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new GuiMainMenu()), "disconnect.disconnected", "disconnect." + (EaglerAdapter.connectionOpen() ? "endOfStream" :" timeout"), null));
 				this.netManager.closeConnections();
 				this.disconnected = true;
@@ -93,14 +98,7 @@ public class NetClientHandler extends NetHandler {
 				return;
 			}
 		}else {
-			focusTimer = 60;
-		}
-		if (!this.disconnected && this.netManager != null) {
-			this.netManager.processReadPackets();
-		}
-
-		if (this.netManager != null) {
-			this.netManager.wakeThreads();
+			focusTimer = 100;
 		}
 	}
 

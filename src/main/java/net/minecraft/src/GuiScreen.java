@@ -189,9 +189,9 @@ public class GuiScreen extends Gui {
 				return;
 			}
 
-			if (isMacOs && var1 == 28 && var2 == 0) {
-				var1 = 29;
-			}
+			//if (isMacOs && var1 == 28 && var2 == 0) {
+			//	var1 = 29;
+			//}
 
 			this.keyTyped(var2, var1);
 		}
