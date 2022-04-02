@@ -1,5 +1,7 @@
 # Eaglercraft
 
+**Note:** we will be transitioning away from Eaglercraft being standalone 'free browser minecraft' to Eaglercraft being a bukkit/bungee plugin for servers to allow 'online access' to players who register with a command as their real online-mode Minecraft account on the server. Server owners can still elect to set `online-mode=false` in their server.properties to allow free login but now that's their legal screw up instead of mine
+
 ![eaglercraft](https://cdn.discordapp.com/attachments/378764518081429506/932053915061587978/thumbnail2.png)
 
 ### Official Demo URL: [https://g.eags.us/eaglercraft/](https://g.eags.us/eaglercraft/)
@@ -16,11 +18,15 @@
 
 Eaglercraft is real Minecraft 1.5.2 that you can play in any regular web browser. That includes school chromebooks, it works on all chromebooks. You can join real Minecraft 1.5.2 servers with it through a custom proxy based on Bungeecord.
 
+### Ayonull runs a FAQ site: [https://eagler.nully.tech/](https://eagler.nully.tech/)
+
 ## How to make a server
 
-### If replit is acceptable, you can use this: [https://replit.com/@ayunami2000/eaglercraft-server](https://replit.com/@ayunami2000/eaglercraft-server)
+### If replit is acceptable, you can use this:
 
-**Manual setup instructions:**
+### [https://replit.com/@ayunami2000/eaglercraft-server](https://replit.com/@ayunami2000/eaglercraft-server)
+
+### Manual setup instructions:
 1. **Check if Java is installed.** You can download it from [https://www.java.com/en/download/](https://www.java.com/en/download/)
 2. Download the [stable-download/stable-download-new.zip](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/stable-download-new.zip) file from this repository
 4. Extract the ZIP file you downloaded to a new folder
@@ -45,20 +51,26 @@ Keep both the first and second terminal window you opened, just minimize them do
 19. Upload your modified `servers_template.dat` to [base64encode.org](https://www.base64encode.org/) and press 'Encode'.
 20. Download and open the encoded file, copy and paste the text in the file back between the quotes in `index.html` at line 21 (or 22) in place of the old text that also begins with `CgAACQAHc2Vydm` between the quotes
 21. **To create a link to your site that automatically joins the server,** add a `?server=` variable to the URL, like (for example): [https://g.eags.us/eaglercraft/?server=127.0.0.1:25565](https://g.eags.us/eaglercraft/?server=127.0.0.1:25565) will automatically join `ws://127.0.0.1:25565/` as soon as the player finishes setting their username and skin
-22. To change your server's MOTD and icon, edit the `motd1:` tag of the listener config in `java/bungee_command/config.yml`, and replace `server-icon.png` in the folder where the config file is. Use `&` instead of `§` to add color/formatting codes
+22. To change your server's MOTD and icon, edit the `motd1:` tag of the listener config in `java/bungee_command/config.yml`, and replace `server-icon.png` in the folder where the config file is. Use `&` instead of `` to add color/formatting codes
 23. You can give your MOTD multiple lines, add a `motd2:` to define a second line
-24. For an animated MOTD and icon, see: [eaglercraft-plugins/EaglerMOTD](https://github.com/LAX1DUDE/eaglercraft-plugins/tree/main/EaglerMOTD) (WIP, may not be complete)
+24. **For an animated MOTD and icon, install EaglerMOTD: [https://github.com/LAX1DUDE/eaglercraft-motd/](https://github.com/LAX1DUDE/eaglercraft-motd/)**
 25. To add some bukkit plugins, download the plugin's JAR file for CraftBukkit 1.5.2 and place it in `java/bukkit_command/plugins`
 26. To add some bungee plugins, download the plugin's JAR file and place it in `java/bungee_command/plugins`
 27. See [https://github.com/LAX1DUDE/eaglercraft-plugins/](https://github.com/LAX1DUDE/eaglercraft-plugins/) to download some supported plugins
 28. To add `/login` and `/register`, install [AuthMe](https://github.com/LAX1DUDE/eaglercraft-plugins/tree/main/AuthMe) and carefully [read it's documentation](https://github.com/AuthMe/AuthMeReloaded/wiki) to set it up correctly
-29. **If you use /op on your server, keep in mind that if you "/op LAX1DUDE", a player joining as 'laX1DUDE' or 'LaX1dUdE' or 'lax1dude' will all have /op too. To solve this problem, force all operators to only be able to join with all lowercase ('lax1dude') letters in their usernames by moving 'BitchFilterPlugin.jar" into "java/bukkit_command/plugins" and then register every op username lowercase**
-30. To connect to your server through a `ws://` or `wss://` URL instead of `ip:port`, set up [nginx](https://nginx.org/) as a reverse proxy to the `ip:port` of you EaglercraftBungee server you want the URL to connect to. Use a location URL template with the `proxy_pass` directive.
-31. Eaglercraft uses port 80 for IP connections by default, typing `127.0.0.1` is the same as typing `ws://127.0.0.1:80/`
-32. To forward a client's remote IP address from a request on nginx to EaglercraftBungee for enforcing IP bans, set the `X-Real-IP` header on the request to websocket when it is proxied
-33. To make a custom resource pack for your site, clone this repository and edit the files in [lwjgl-rundir/resources](https://github.com/LAX1DUDE/eaglercraft/tree/main/lwjgl-rundir/resources).
-34. When you are done, navigate to [epkcompiler/](https://github.com/LAX1DUDE/eaglercraft/tree/main/epkcompiler) and double-click `run.bat`. Wait for the window to say `Press any key to continue...` and close it. Then, go to `../javascript` in the repository and copy `javascript/assets.epk` to the `assets.epk` on your website
-35. If you're on mac or linux, navigate to the epkcompiler folder via `cd` and run `chmod +x run_unix.sh` and then `./run_unix.sh` to do this, then copy the same `javascript/assets.epk` to the `assets.epk` on your website
+29. **To ban a username on Eaglercraftbungee, use:** `eag-ban <username>`
+30. **To ban an IP on Eaglercraftbungee, use:** `eag-ban-ip <ip>`, or `eag-ban-ip <name>` to ban the IP of a player automatically
+31. To ban a range of IP addresses, use slash notation to define a subnet. Example: `eag-ban-ip 192.168.0.0/8`
+32. To ban users by wildcard (\*) use: `eag-ban-wildcard <text>*` or `eag-ban-wildcard *<text>` or `eag-ban-wildcard *<text>*`
+33. **You can edit bans.txt in your EaglercraftBungee folder, the server automatically reloads the file when it is saved**
+34. To ban users by regular expression, use: `eag-ban-regex <regex>` with a regular expression to match the username in **lowercase**
+35. **If you use /op on your server, keep in mind that if you "/op LAX1DUDE", a player joining as 'laX1DUDE' or 'LaX1dUdE' or 'lax1dude' will all have /op too. To solve this problem, force all operators to only be able to join with all lowercase ('lax1dude') letters in their usernames by moving 'BitchFilterPlugin.jar" into "java/bukkit_command/plugins" and then register every op username lowercase**
+36. To connect to your server through a `ws://` or `wss://` URL instead of `ip:port`, set up [nginx](https://nginx.org/) as a reverse proxy to the `ip:port` of you EaglercraftBungee server you want the URL to connect to. Use a location URL template with the `proxy_pass` directive.
+37. Eaglercraft uses port 80 for IP connections by default, typing `127.0.0.1` is the same as typing `ws://127.0.0.1:80/`
+38. To forward a client's remote IP address from a request on nginx to EaglercraftBungee for enforcing IP bans, set the `X-Real-IP` header on the request to websocket when it is proxied
+39. To make a custom resource pack for your site, clone this repository and edit the files in [lwjgl-rundir/resources](https://github.com/LAX1DUDE/eaglercraft/tree/main/lwjgl-rundir/resources).
+40. When you are done, navigate to [epkcompiler/](https://github.com/LAX1DUDE/eaglercraft/tree/main/epkcompiler) and double-click `run.bat`. Wait for the window to say `Press any key to continue...` and close it. Then, go to `../javascript` in the repository and copy `javascript/assets.epk` to the `assets.epk` on your website
+41. If you're on mac or linux, navigate to the epkcompiler folder via `cd` and run `chmod +x run_unix.sh` and then `./run_unix.sh` to do this, then copy the same `javascript/assets.epk` to the `assets.epk` on your website
 
 ## Singleplayer?
 

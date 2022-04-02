@@ -1,5 +1,6 @@
 package net.md_5.bungee.eaglercraft;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -78,13 +79,15 @@ public class WebSocketListener extends WebSocketServer {
 						evt = new WebsocketQueryEvent(con);
 					}
 					BungeeCord.getInstance().getPluginManager().callEvent(evt);
-					if(con instanceof MOTDConnectionImpl) {
+					if(!con.isClosed() && (con instanceof MOTDConnectionImpl)) {
 						((MOTDConnectionImpl)con).sendToUser();
 					}
 					if(!con.shouldKeepAlive() && !con.isClosed()) {
 						con.close();
 					}else {
-						arg0.setAttachment(con);
+						if(!arg0.isClosed()) {
+							arg0.setAttachment(con);
+						}
 					}
 				}else {
 					System.err.println("unknown accept type - " + arg0.getRemoteSocketAddress());
@@ -170,6 +173,17 @@ public class WebSocketListener extends WebSocketServer {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void stop() throws IOException, InterruptedException {
+		for(WebSocket w : this.getConnections()) {
+			Object o = w.getAttachment();
+			if(o != null && o instanceof WebSocketProxy) {
+				((WebSocketProxy)o).killConnection();
+			}
+		}
+		super.stop();
 	}
 
 }

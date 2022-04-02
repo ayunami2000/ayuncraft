@@ -425,7 +425,7 @@ public class DefaultSkinRenderer {
 		if(id < 0) {
 			return EaglerProfile.skins.get(id2).data.length == EaglerProfile.SKIN_DATA_SIZE[1] || EaglerProfile.skins.get(id2).data.length == EaglerProfile.SKIN_DATA_SIZE[3];
 		}else {
-			return isNewSkin(id);
+			return false;
 		}
 	}
 	
