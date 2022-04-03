@@ -86,6 +86,22 @@ Eaglercraft uses the decompiled source code of the official build of Minecraft 1
 
 I got tired of closing duplicate 'how to maek sever' and 'add single player' issues almost every day so I disabled it because honestly I don't really care anymore, [join discord](https://discord.gg/KMQW9Uvjyq) if you've got an issue to report that you are confident can be backed up with source code
 
+## EaglercraftBungee
+
+EaglercraftBungee translates WebSockets to a raw Minecraft 1.5.2 TCP connection. It is just regular BungeeCord with more `config.yml` options, and a built in plugin for syncing people's custom skins between clients so people can see each other's skins
+
+**To develop a plugin, download [stable-download/java/bungee_command/bungee_dist.jar](https://github.com/LAX1DUDE/eaglercraft/blob/main/stable-download/java/bungee_command/bungee-dist.jar) and add it to the Build Path of your Java IDE. Develop the plugin just like a regular BungeeCord plugin, see [EaglerMOTD](https://github.com/LAX1DUDE/eaglercraft-motd/) for an example.**
+
+**Test your plugin by exporting it as a jar and putting it in the '/plugins' directory of EaglercraftBungee and then clicking 'run.bat'**
+
+### New Events:
+
+- **[net.md_5.bungee.api.event.WebsocketMOTDEvent](https://github.com/LAX1DUDE/eaglercraft/blob/main/eaglercraftbungee/src/main/java/net/md_5/bungee/api/event/WebsocketMOTDEvent.java)**: Triggered when a client or website requests the MOTD
+
+- **[net.md_5.bungee.api.event.WebsocketQueryEvent](https://github.com/LAX1DUDE/eaglercraft/blob/main/eaglercraftbungee/src/main/java/net/md_5/bungee/api/event/WebsocketQueryEvent.java)**: Triggered when a client or website requests a query. This happens when a site opens a text WebSocket to a listener and sends a single string `Accept: <query>` packet. Can be used to provide additional custom statistics to server list sites supporting integrated WebSocket queries
+
+**Register event handlers using the standard BungeeCord** `@EventHandler` **annotation in your** `Listener` **class**
+
 ## Installing (detailed)
 
 If you want to use this project but don't want to compile it from scratch, download [stable-download/stable-download-new.zip](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/stable-download-new.zip) and extract
