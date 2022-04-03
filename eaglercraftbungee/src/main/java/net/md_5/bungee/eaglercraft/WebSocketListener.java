@@ -35,7 +35,7 @@ public class WebSocketListener extends WebSocketServer {
 	public WebSocketListener(ListenerInfo info, InetSocketAddress sock, ProxyServer bungeeCord) {
 		super(info.getHost());
 		this.setTcpNoDelay(true);
-		this.setConnectionLostTimeout(5);
+		this.setConnectionLostTimeout(20);
 		this.start();
 		this.info = info;
 		this.bungeeProxy = sock;
