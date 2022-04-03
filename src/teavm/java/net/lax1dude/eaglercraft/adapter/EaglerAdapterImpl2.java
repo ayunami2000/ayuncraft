@@ -963,9 +963,6 @@ public class EaglerAdapterImpl2 {
 			keyStates[219] = false;
 			keyStates[220] = false;
 		}
-		if(p1 == 28 || p1 == 29 || p1 == 157 || p1 == 219 || p1 == 220) {
-			System.out.println("" + p1 + ": " + keyStates[220]);
-		}
 		return keyStates[p1];
 	}
 	public static final String getKeyName(int p1) {
