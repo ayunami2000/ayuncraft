@@ -43,6 +43,7 @@ public class ServerData {
 	public int[] serverIcon = null;
 	public boolean serverIconDirty = false;
 	public boolean serverIconEnabled = false;
+	public boolean hasError = false;
 	public List<String> playerList = new ArrayList();
 	public int serverIconGL = -1;
 
@@ -99,16 +100,6 @@ public class ServerData {
 	}
 
 	public void setMOTDFromQuery(QueryResponse pkt) {
-		if(!pkt.serverCracked) {
-			this.gameVersion = "";
-			this.serverIconEnabled = false;
-			this.serverMOTD = "" + EnumChatFormatting.RED + "Error: account required";
-			this.populationInfo = "";
-			if(pingSentTime > 0l) {
-				pingToServer = pkt.clientTime - pingSentTime;
-				pingSentTime = 0l;
-			}
-		}
 		JSONObject motdData = pkt.getResponseJSON();
 		JSONArray motd = motdData.getJSONArray("motd");
 		this.serverMOTD = motd.length() > 0 ? (motd.length() > 1 ? motd.getString(0) + "\n" + motd.getString(1) : motd.getString(0)) : "";
@@ -125,7 +116,23 @@ public class ServerData {
 				serverIconGL = -1;
 			}
 		}
-		
+		hasError = false;
+	}
+	
+	public void setRateLimitError(boolean lock, boolean isTcp) {
+		if(lock) {
+			serverMOTD = EnumChatFormatting.RED + "Your IP is banned for DoS\n" + EnumChatFormatting.GRAY + "Try again in an hour";
+		}else {
+			if(isTcp) {
+				serverMOTD = EnumChatFormatting.RED + "Connection Blocked\n" + EnumChatFormatting.GRAY + "Try again in a minute";
+			}else {
+				serverMOTD = EnumChatFormatting.RED + "Query Was Blocked\n" + EnumChatFormatting.GRAY + "Try again in a minute";
+			}
+		}
+		this.populationInfo = "";
+		this.playerList.clear();
+		this.serverIconEnabled = false;
+		this.hasError = true;
 	}
 	
 	public void refreshIcon() {

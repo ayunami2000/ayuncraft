@@ -21,7 +21,9 @@ public class RenderItemFrame extends Render {
 		int var14 = par1EntityItemFrame.yPosition;
 		int var15 = par1EntityItemFrame.zPosition + Direction.offsetZ[par1EntityItemFrame.hangingDirection];
 		EaglerAdapter.glTranslatef((float) var13 - var10, (float) var14 - var11, (float) var15 - var12);
-		this.renderFrameItemAsBlock(par1EntityItemFrame);
+		if (par1EntityItemFrame.getDisplayedItem() == null || par1EntityItemFrame.getDisplayedItem().getItem() != Item.map) {
+			this.renderFrameItemAsBlock(par1EntityItemFrame);
+		}
 		this.func_82402_b(par1EntityItemFrame);
 		EaglerAdapter.glPopMatrix();
 	}
@@ -104,9 +106,11 @@ public class RenderItemFrame extends Render {
 				Tessellator var4 = Tessellator.instance;
 				EaglerAdapter.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
 				EaglerAdapter.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-				EaglerAdapter.glScalef(0.00390625F, 0.00390625F, 0.00390625F);
-				EaglerAdapter.glTranslatef(-65.0F, -107.0F, -3.0F);
+				//EaglerAdapter.glScalef(0.00390625F, 0.00390625F, 0.00390625F);
+				EaglerAdapter.glScalef(0.0078125F, 0.0078125F, 0.0078125F);
+				EaglerAdapter.glTranslatef(-65.0F, -85.0F, 1.0F);
 				EaglerAdapter.glNormal3f(0.0F, 0.0F, -1.0F);
+				EaglerAdapter.glDisable(EaglerAdapter.GL_CULL_FACE);
 				var4.startDrawingQuads();
 				byte var5 = 7;
 				var4.addVertexWithUV((double) (0 - var5), (double) (128 + var5), 0.0D, 0.0D, 1.0D);
@@ -114,6 +118,8 @@ public class RenderItemFrame extends Render {
 				var4.addVertexWithUV((double) (128 + var5), (double) (0 - var5), 0.0D, 1.0D, 0.0D);
 				var4.addVertexWithUV((double) (0 - var5), (double) (0 - var5), 0.0D, 0.0D, 0.0D);
 				var4.draw();
+				EaglerAdapter.glEnable(EaglerAdapter.GL_CULL_FACE);
+				EaglerAdapter.glTranslatef(0.0F, 0.0F, -2.0F);
 				MapData var6 = Item.map.getMapData(var3.getEntityItem(), par1EntityItemFrame.worldObj);
 				EaglerAdapter.glTranslatef(0.0F, 0.0F, -1.0F);
 

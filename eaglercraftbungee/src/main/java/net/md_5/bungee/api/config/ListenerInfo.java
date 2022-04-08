@@ -4,15 +4,17 @@
 
 package net.md_5.bungee.api.config;
 
-import java.beans.ConstructorProperties;
 import java.io.File;
 
 import net.md_5.bungee.api.ServerIcon;
 import net.md_5.bungee.api.tab.TabListHandler;
+import net.md_5.bungee.eaglercraft.WebSocketRateLimiter;
+
 import java.util.Map;
 import java.net.InetSocketAddress;
 
 public class ListenerInfo {
+	private final String hostString;
 	private final InetSocketAddress host;
 	private final String motd;
 	private final int maxPlayers;
@@ -29,10 +31,19 @@ public class ListenerInfo {
 	private final int[] serverIconCache;
 	private boolean serverIconLoaded;
 	private boolean serverIconSet;
+	private final boolean allowMOTD;
+	private final boolean allowQuery;
+	private final MOTDCacheConfiguration cacheConfig;
+	private final WebSocketRateLimiter rateLimitIP;
+	private final WebSocketRateLimiter rateLimitLogin;
+	private final WebSocketRateLimiter rateLimitMOTD;
+	private final WebSocketRateLimiter rateLimitQuery;
+	
 
-	@ConstructorProperties({ "host", "motd", "maxPlayers", "tabListSize", "defaultServer", "fallbackServer", "forceDefault", "websocket", "forwardIp", "forcedHosts", "texturePack", "tabList", "serverIcon" })
-	public ListenerInfo(final InetSocketAddress host, final String motd, final int maxPlayers, final int tabListSize, final String defaultServer, final String fallbackServer, final boolean forceDefault, final boolean websocket,
-			final boolean forwardIp, final Map<String, String> forcedHosts, final TexturePackInfo texturePack, final Class<? extends TabListHandler> tabList, final String serverIcon) {
+	public ListenerInfo(final String hostString, final InetSocketAddress host, final String motd, final int maxPlayers, final int tabListSize, final String defaultServer, final String fallbackServer, final boolean forceDefault, final boolean websocket,
+			final boolean forwardIp, final Map<String, String> forcedHosts, final TexturePackInfo texturePack, final Class<? extends TabListHandler> tabList, final String serverIcon, final MOTDCacheConfiguration cacheConfig,
+			final boolean allowMOTD, final boolean allowQuery, 	final WebSocketRateLimiter rateLimitIP, final WebSocketRateLimiter rateLimitLogin, final WebSocketRateLimiter rateLimitMOTD, final WebSocketRateLimiter rateLimitQuery) {
+		this.hostString = hostString;
 		this.host = host;
 		this.motd = motd;
 		this.maxPlayers = maxPlayers;
@@ -49,6 +60,17 @@ public class ListenerInfo {
 		this.serverIconCache = new int[4096];
 		this.serverIconLoaded = false;
 		this.serverIconSet = false;
+		this.allowMOTD = allowMOTD;
+		this.allowQuery = allowQuery;
+		this.cacheConfig = cacheConfig;
+		this.rateLimitIP = rateLimitIP;
+		this.rateLimitLogin = rateLimitLogin;
+		this.rateLimitMOTD = rateLimitMOTD;
+		this.rateLimitQuery = rateLimitQuery;
+	}
+
+	public String getHostString() {
+		return this.hostString;
 	}
 
 	public InetSocketAddress getHost() {
@@ -278,4 +300,45 @@ public class ListenerInfo {
 		getServerIconCache();
 		return serverIconSet;
 	}
+
+	public boolean isForwardIp() {
+		return forwardIp;
+	}
+
+	public boolean isServerIconLoaded() {
+		return serverIconLoaded;
+	}
+
+	public boolean isServerIconSet() {
+		return serverIconSet;
+	}
+
+	public boolean isAllowMOTD() {
+		return allowMOTD;
+	}
+
+	public boolean isAllowQuery() {
+		return allowQuery;
+	}
+
+	public MOTDCacheConfiguration getCacheConfig() {
+		return cacheConfig;
+	}
+
+	public WebSocketRateLimiter getRateLimitIP() {
+		return rateLimitIP;
+	}
+
+	public WebSocketRateLimiter getRateLimitLogin() {
+		return rateLimitLogin;
+	}
+
+	public WebSocketRateLimiter getRateLimitMOTD() {
+		return rateLimitMOTD;
+	}
+
+	public WebSocketRateLimiter getRateLimitQuery() {
+		return rateLimitQuery;
+	}
+
 }

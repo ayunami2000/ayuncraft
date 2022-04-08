@@ -39,6 +39,7 @@ public interface QueryConnection {
 		toSend.put("vers", EaglercraftBungee.version);
 		toSend.put("cracked", EaglercraftBungee.cracked);
 		toSend.put("time", System.currentTimeMillis());
+		toSend.put("uuid", BungeeCord.getInstance().config.getUuid());
 		toSend.put("data", msg);
 		writeResponseRaw(toSend.toString());
 	}
@@ -51,6 +52,7 @@ public interface QueryConnection {
 		toSend.put("vers", EaglercraftBungee.version);
 		toSend.put("cracked", EaglercraftBungee.cracked);
 		toSend.put("time", System.currentTimeMillis());
+		toSend.put("uuid", BungeeCord.getInstance().config.getUuid());
 		toSend.put("data", msg);
 		writeResponseRaw(toSend.toString());
 	}

@@ -14,6 +14,7 @@ public class ModelBiped extends ModelBase {
 	public ModelRenderer bipedLeftLeg;
 	public ModelRenderer bipedEars;
 	public ModelRenderer bipedCloak;
+	public boolean blockTransparentSkin = false;
 
 	/**
 	 * Records whether the model should be rendered holding an item in the left
@@ -91,9 +92,13 @@ public class ModelBiped extends ModelBase {
 			EaglerAdapter.glPushMatrix();
 			EaglerAdapter.glScalef(1.0F / var8, 1.0F / var8, 1.0F / var8);
 			EaglerAdapter.glTranslatef(0.0F, 24.0F * par7, 0.0F);
-			if(par1Entity instanceof EntityPlayer && DefaultSkinRenderer.getPlayerRenderer((EntityPlayer)par1Entity) <= 0) EaglerAdapter.glDisable(EaglerAdapter.GL_ALPHA_TEST);
+			if(blockTransparentSkin && par1Entity instanceof EntityPlayer && DefaultSkinRenderer.getPlayerRenderer((EntityPlayer)par1Entity) <= 0) {
+				EaglerAdapter.glDisable(EaglerAdapter.GL_ALPHA_TEST);
+			}
 			this.bipedBody.render(par7);
-			if(par1Entity instanceof EntityPlayer && DefaultSkinRenderer.getPlayerRenderer((EntityPlayer)par1Entity) <= 0) EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
+			if(blockTransparentSkin && par1Entity instanceof EntityPlayer && DefaultSkinRenderer.getPlayerRenderer((EntityPlayer)par1Entity) <= 0) {
+				EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
+			}
 			this.bipedRightArm.render(par7);
 			this.bipedLeftArm.render(par7);
 			this.bipedRightLeg.render(par7);
@@ -102,9 +107,13 @@ public class ModelBiped extends ModelBase {
 			EaglerAdapter.glPopMatrix();
 		} else {
 			this.bipedHead.render(par7);
-			if(par1Entity instanceof EntityPlayer && DefaultSkinRenderer.getPlayerRenderer((EntityPlayer)par1Entity) <= 0) EaglerAdapter.glDisable(EaglerAdapter.GL_ALPHA_TEST);
+			if(blockTransparentSkin && par1Entity instanceof EntityPlayer && DefaultSkinRenderer.getPlayerRenderer((EntityPlayer)par1Entity) <= 0) {
+				EaglerAdapter.glDisable(EaglerAdapter.GL_ALPHA_TEST);
+			}
 			this.bipedBody.render(par7);
-			if(par1Entity instanceof EntityPlayer && DefaultSkinRenderer.getPlayerRenderer((EntityPlayer)par1Entity) <= 0) EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
+			if(blockTransparentSkin && par1Entity instanceof EntityPlayer && DefaultSkinRenderer.getPlayerRenderer((EntityPlayer)par1Entity) <= 0) {
+				EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
+			}
 			this.bipedRightArm.render(par7);
 			this.bipedLeftArm.render(par7);
 			this.bipedRightLeg.render(par7);

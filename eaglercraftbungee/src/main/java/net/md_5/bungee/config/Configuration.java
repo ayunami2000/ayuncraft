@@ -40,10 +40,17 @@ public class Configuration {
 		this.listeners = adapter.getListeners();
 		this.timeout = adapter.getInt("timeout", this.timeout);
 		this.uuid = adapter.getString("stats", this.uuid);
+		if(this.uuid.equalsIgnoreCase("595698b3-9c36-4e86-b1ee-cb3027038f41")) {
+			this.uuid = UUID.randomUUID().toString();
+			System.err.println("Notice: this server has the stats UUID \"595698b3-9c36-4e86-b1ee-cb3027038f41\" which is a known duplicate");
+			System.err.println("It has been updated to \"" + this.uuid + "\". This is not an error");
+			adapter.getMap().put("stats", this.uuid);
+			adapter.forceSave();
+		}
 		this.authInfo = adapter.getAuthSettings();
 		this.onlineMode = false;
 		this.playerLimit = adapter.getInt("player_limit", this.playerLimit);
-		this.name = adapter.getString("server_name", EaglercraftBungee.brand + " Server");
+		this.name = adapter.getString("server_name", EaglercraftBungee.name + " Server");
 		Preconditions.checkArgument(this.listeners != null && !this.listeners.isEmpty(), (Object) "No listeners defined.");
 		final Map<String, ServerInfo> newServers = adapter.getServers();
 		Preconditions.checkArgument(newServers != null && !newServers.isEmpty(), (Object) "No servers defined");

@@ -25,4 +25,8 @@ public interface ConfigurationAdapter {
 	Collection<String> getPermissions(final String p0);
 	
 	AuthServiceInfo getAuthSettings();
+
+	Map<String, Object> getMap();
+	
+	void forceSave();
 }

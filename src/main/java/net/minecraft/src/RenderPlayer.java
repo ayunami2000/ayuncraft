@@ -135,7 +135,9 @@ public class RenderPlayer extends RenderLiving {
 			
 			this.mainModel = (DefaultSkinRenderer.isPlayerNewSkin(par1EntityPlayer) ? (DefaultSkinRenderer.isPlayerNewSkinSlim(par1EntityPlayer) ? this.modelBipedMainNewSkinSlim : this.modelBipedMainNewSkin) : this.modelBipedMain);
 			this.mainModel.isChild = false;
+			((ModelBiped)this.mainModel).blockTransparentSkin = true;
 			super.doRenderLiving(par1EntityPlayer, par2, var14, par6, par8, par9);
+			((ModelBiped)this.mainModel).blockTransparentSkin = false;
 			//this.mainModel = this.modelBipedMain;
 			this.modelArmorChestplate.aimedBow = this.modelArmor.aimedBow = this.modelBipedMain.aimedBow = this.modelBipedMainNewSkin.aimedBow = this.modelBipedMainNewSkinSlim.aimedBow = false;
 			this.modelArmorChestplate.isSneak = this.modelArmor.isSneak = this.modelBipedMain.isSneak = this.modelBipedMainNewSkin.isSneak = this.modelBipedMainNewSkinSlim.isSneak = false;

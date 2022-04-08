@@ -10,7 +10,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 import org.json.JSONObject;
 import org.teavm.interop.Async;
@@ -62,7 +64,7 @@ import net.lax1dude.eaglercraft.ServerQuery.QueryResponse;
 import net.lax1dude.eaglercraft.adapter.teavm.WebGLQuery;
 import net.lax1dude.eaglercraft.adapter.teavm.WebGLVertexArray;
 import net.minecraft.src.MathHelper;
-
+import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.RateLimit;
 import net.lax1dude.eaglercraft.adapter.teavm.WebGL2RenderingContext;
 import static net.lax1dude.eaglercraft.adapter.teavm.WebGL2RenderingContext.*;
 
@@ -184,6 +186,9 @@ public class EaglerAdapterImpl2 {
 	@JSBody(params = { "m" }, script = "return m.offsetY;")
 	private static native int getOffsetY(MouseEvent m);
 	
+	@JSBody(params = { "e" }, script = "return e.which;")
+	private static native int getWhich(KeyboardEvent e);
+	
 	public static final void initializeContext(HTMLElement rootElement, String assetPackageURI) {
 		parent = rootElement;
 		String s = parent.getAttribute("style");
@@ -245,7 +250,8 @@ public class EaglerAdapterImpl2 {
 		win.addEventListener("keydown", keydown = new EventListener<KeyboardEvent>() {
 			@Override
 			public void handleEvent(KeyboardEvent evt) {
-				keyStates[remapKey(evt.getKeyCode())] = true;
+				//keyStates[remapKey(evt.getKeyCode())] = true;
+				keyStates[remapKey(getWhich(evt))] = true;
 				keyEvents.add(evt);
 				evt.preventDefault();
 				evt.stopPropagation();
@@ -254,7 +260,8 @@ public class EaglerAdapterImpl2 {
 		win.addEventListener("keyup", keyup = new EventListener<KeyboardEvent>() {
 			@Override
 			public void handleEvent(KeyboardEvent evt) {
-				keyStates[remapKey(evt.getKeyCode())] = false;
+				//keyStates[remapKey(evt.getKeyCode())] = false;
+				keyStates[remapKey(getWhich(evt))] = false;
 				keyEvents.add(evt);
 				evt.preventDefault();
 				evt.stopPropagation();
@@ -945,7 +952,7 @@ public class EaglerAdapterImpl2 {
 		return !keyEvents.isEmpty() && (currentEventK = keyEvents.remove(0)) != null;
 	}
 	public static final int getEventKey() {
-		return currentEventK == null ? -1 : remapKey(currentEventK.getKeyCode());
+		return currentEventK == null ? -1 : remapKey(getWhich(currentEventK));
 	}
 	public static final char getEventChar() {
 		if(currentEventK == null) return '\0';
@@ -1039,19 +1046,57 @@ public class EaglerAdapterImpl2 {
 	@JSBody(params = { "name", "cvs" }, script = "var a=document.createElement(\"a\");a.href=cvs.toDataURL(\"image/png\");a.download=name;a.click();")
 	private static native void saveScreenshot(String name, HTMLCanvasElement cvs);
 
+	public static enum RateLimit {
+		NONE, FAILED, BLOCKED, FAILED_POSSIBLY_LOCKED, LOCKED, NOW_LOCKED;
+	}
+
+	private static final Set<String> rateLimitedAddresses = new HashSet();
+	private static final Set<String> blockedAddresses = new HashSet();
+	
 	private static WebSocket sock = null;
 	private static boolean sockIsConnecting = false;
+	private static boolean sockIsConnected = false;
+	private static boolean sockIsAlive = false;
 	private static LinkedList<byte[]> readPackets = new LinkedList();
+	private static RateLimit rateLimitStatus = null;
+	private static String currentSockURI = null;
+	
+	public static final RateLimit getRateLimitStatus() {
+		RateLimit l = rateLimitStatus;
+		rateLimitStatus = null;
+		return l;
+	}
+	public static final void logRateLimit(String addr, RateLimit l) {
+		if(l == RateLimit.BLOCKED) {
+			blockedAddresses.add(addr);
+		}else {
+			rateLimitedAddresses.add(addr);
+		}
+	}
+	public static final RateLimit checkRateLimitHistory(String addr) {
+		if(blockedAddresses.contains(addr)) {
+			return RateLimit.LOCKED;
+		}else if(rateLimitedAddresses.contains(addr)) {
+			return RateLimit.BLOCKED;
+		}else {
+			return RateLimit.NONE;
+		}
+	}
 	
 	@Async
 	public static native String connectWebSocket(String sockURI);
 	
 	private static void connectWebSocket(String sockURI, final AsyncCallback<String> cb) {
 		sockIsConnecting = true;
+		sockIsConnected = false;
+		sockIsAlive = false;
+		rateLimitStatus = null;
+		currentSockURI = sockURI;
 		try {
 			sock = WebSocket.create(sockURI);
 		} catch(Throwable t) {
 			sockIsConnecting = false;
+			sockIsAlive = false;
 			return;
 		}
 		sock.setBinaryType("arraybuffer");
@@ -1059,6 +1104,8 @@ public class EaglerAdapterImpl2 {
 			@Override
 			public void handleEvent(MessageEvent evt) {
 				sockIsConnecting = false;
+				sockIsAlive = false;
+				sockIsConnected = true;
 				readPackets.clear();
 				cb.complete("okay");
 			}
@@ -1067,16 +1114,55 @@ public class EaglerAdapterImpl2 {
 			@Override
 			public void handleEvent(CloseEvent evt) {
 				sock = null;
-				readPackets.clear();
+				if(sockIsConnecting) {
+					if(rateLimitStatus == null) {
+						if(blockedAddresses.contains(currentSockURI)) {
+							rateLimitStatus = RateLimit.LOCKED;
+						}else if(rateLimitedAddresses.contains(currentSockURI)) {
+							rateLimitStatus = RateLimit.FAILED_POSSIBLY_LOCKED;
+						}else {
+							rateLimitStatus = RateLimit.FAILED;
+						}
+					}
+				}else if(!sockIsAlive) {
+					if(rateLimitStatus == null) {
+						if(blockedAddresses.contains(currentSockURI)) {
+							rateLimitStatus = RateLimit.LOCKED;
+						}else if(rateLimitedAddresses.contains(currentSockURI)) {
+							rateLimitStatus = RateLimit.BLOCKED;
+						}
+					}
+				}
 				boolean b = sockIsConnecting;
 				sockIsConnecting = false;
+				sockIsConnected = false;
+				sockIsAlive = false;
 				if(b) cb.complete("fail");
 			}
 		});
 		sock.onMessage(new EventListener<MessageEvent>() {
 			@Override
 			public void handleEvent(MessageEvent evt) {
-				if(isString(evt.getData())) return;
+				sockIsAlive = true;
+				if(isString(evt.getData())) {
+					String stat = evt.getDataAsString();
+					if(stat.equalsIgnoreCase("BLOCKED")) {
+						if(rateLimitStatus == null) {
+							rateLimitStatus = RateLimit.BLOCKED;
+						}
+						rateLimitedAddresses.add(currentSockURI);
+					}else if(stat.equalsIgnoreCase("LOCKED")) {
+						if(rateLimitStatus == null) {
+							rateLimitStatus = RateLimit.NOW_LOCKED;
+						}
+						rateLimitedAddresses.add(currentSockURI);
+						blockedAddresses.add(currentSockURI);
+					}
+					sockIsConnecting = false;
+					sockIsConnected = false;
+					sock.close();
+					return;
+				}
 				Uint8Array a = Uint8Array.create(evt.getDataAsArray());
 				byte[] b = new byte[a.getByteLength()];
 				for(int i = 0; i < b.length; ++i) {
@@ -1092,10 +1178,16 @@ public class EaglerAdapterImpl2 {
 		return "fail".equals(res) ? false : true;
 	}
 	public static final void endConnection() {
+		if(sock == null || sock.getReadyState() == 3) {
+			sockIsConnecting = false;
+		}
 		if(sock != null && !sockIsConnecting) sock.close();
 	}
 	public static final boolean connectionOpen() {
-		return sock != null && !sockIsConnecting;
+		if(sock == null || sock.getReadyState() == 3) {
+			sockIsConnecting = false;
+		}
+		return sock != null && !sockIsConnecting && sock.getReadyState() != 3;
 	}
 	@JSBody(params = { "sock", "buffer" }, script = "sock.send(buffer);")
 	private static native void nativeBinarySend(WebSocket sock, ArrayBuffer buffer);
@@ -1659,11 +1751,15 @@ public class EaglerAdapterImpl2 {
 		private final LinkedList<byte[]> queryResponsesBytes = new LinkedList();
 		private final String type;
 		private boolean open;
+		private boolean alive;
+		private String uriString;
 		
 		private final WebSocket sock;
 		
 		private ServerQueryImpl(String type_, String uri) {
 			type = type_;
+			uriString = uri;
+			alive = false;
 			WebSocket s = null;
 			try {
 				s = WebSocket.create(uri);
@@ -1671,6 +1767,13 @@ public class EaglerAdapterImpl2 {
 				open = true;
 			}catch(Throwable t) {
 				open = false;
+				if(EaglerAdapterImpl2.blockedAddresses.contains(uriString)) {
+					queryResponses.add(new QueryResponse(true));
+				}else if(EaglerAdapterImpl2.rateLimitedAddresses.contains(uriString)) {
+					queryResponses.add(new QueryResponse(false));
+				}
+				sock = null;
+				return;
 			}
 			sock = s;
 			if(open) {
@@ -1684,14 +1787,44 @@ public class EaglerAdapterImpl2 {
 					@Override
 					public void handleEvent(CloseEvent evt) {
 						open = false;
+						if(!alive) {
+							if(EaglerAdapterImpl2.blockedAddresses.contains(uriString)) {
+								queryResponses.add(new QueryResponse(true));
+							}else if(EaglerAdapterImpl2.rateLimitedAddresses.contains(uriString)) {
+								queryResponses.add(new QueryResponse(false));
+							}
+						}
 					}
 				});
 				sock.onMessage(new EventListener<MessageEvent>() {
 					@Override
 					public void handleEvent(MessageEvent evt) {
+						alive = true;
 						if(isString(evt.getData())) {
 							try {
-								queryResponses.add(new QueryResponse(new JSONObject(evt.getDataAsString())));
+								String str = evt.getDataAsString();
+								if(str.equalsIgnoreCase("BLOCKED")) {
+									EaglerAdapterImpl2.rateLimitedAddresses.add(uriString);
+									queryResponses.add(new QueryResponse(false));
+									sock.close();
+									return;
+								}else if(str.equalsIgnoreCase("LOCKED")) {
+									EaglerAdapterImpl2.blockedAddresses.add(uriString);
+									queryResponses.add(new QueryResponse(true));
+									sock.close();
+									return;
+								}else {
+									QueryResponse q = new QueryResponse(new JSONObject(str));
+									if(q.rateLimitStatus != null) {
+										if(q.rateLimitStatus == RateLimit.BLOCKED) {
+											EaglerAdapterImpl2.rateLimitedAddresses.add(uriString);
+										}else if(q.rateLimitStatus == RateLimit.LOCKED) {
+											EaglerAdapterImpl2.blockedAddresses.add(uriString);
+										}
+										sock.close();
+									}
+									queryResponses.add(q);
+								}
 							}catch(Throwable t) {
 								System.err.println("Query response could not be parsed: " + t.toString());
 							}

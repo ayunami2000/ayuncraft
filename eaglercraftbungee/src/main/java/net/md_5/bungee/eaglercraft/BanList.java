@@ -234,6 +234,15 @@ public class BanList {
 		}
 	}
 	
+	public static boolean isBlockedBan(InetAddress addr) {
+		for(IPBan b : BanList.blockedBans) {
+			if(b.checkBan(addr)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private static long lastListTest = 0l;
 	private static long lastListLoad = 0l;
 	private static boolean fileIsBroken = false;
@@ -684,7 +693,7 @@ public class BanList {
 					p.println("[Wildcards]");
 					p.println();
 					p.println("# *fuck*");
-					p.println("# nigg*");
+					p.println("# shi*");
 					p.println();
 					p.println();
 					p.println("[Regex]");

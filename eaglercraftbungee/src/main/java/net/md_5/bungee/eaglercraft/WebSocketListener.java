@@ -1,5 +1,7 @@
 package net.md_5.bungee.eaglercraft;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -16,21 +18,34 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ListenerInfo;
 import net.md_5.bungee.api.event.WebsocketMOTDEvent;
 import net.md_5.bungee.api.event.WebsocketQueryEvent;
+import net.md_5.bungee.eaglercraft.WebSocketRateLimiter.RateLimit;
 
 public class WebSocketListener extends WebSocketServer {
+
+	public static final String queryResponseBlocked = "{\"type\":\"blocked\"}";
+	public static final String queryResponseLockout = "{\"type\":\"locked\"}";
+
+	public static final String ipBlockedString = "BLOCKED";
+	public static final String ipLockedString = "LOCKED";
 	
 	public static class PendingSocket {
 		public long openTime;
 		public InetAddress realAddress;
-		protected PendingSocket(long openTime, InetAddress realAddress) {
+		public boolean bypassBan;
+		protected PendingSocket(long openTime, InetAddress realAddress, boolean bypassBan) {
 			this.openTime = openTime;
 			this.realAddress = realAddress;
+			this.bypassBan = bypassBan;
 		}
 	}
 
 	private InetSocketAddress bungeeProxy;
 	private ProxyServer bungeeCord;
 	private ListenerInfo info;
+	private final WebSocketRateLimiter ratelimitIP;
+	private final WebSocketRateLimiter ratelimitLogin;
+	private final WebSocketRateLimiter ratelimitMOTD;
+	private final WebSocketRateLimiter ratelimitQuery;
 	
 	public WebSocketListener(ListenerInfo info, InetSocketAddress sock, ProxyServer bungeeCord) {
 		super(info.getHost());
@@ -40,6 +55,22 @@ public class WebSocketListener extends WebSocketServer {
 		this.info = info;
 		this.bungeeProxy = sock;
 		this.bungeeCord = bungeeCord;
+		this.ratelimitIP = info.getRateLimitIP();
+		this.ratelimitLogin = info.getRateLimitLogin();
+		this.ratelimitMOTD = info.getRateLimitMOTD();
+		this.ratelimitQuery = info.getRateLimitQuery();
+		if(this.ratelimitIP != null) {
+			this.ratelimitIP.resetLimiters();
+		}
+		if(this.ratelimitLogin != null) {
+			this.ratelimitLogin.resetLimiters();
+		}
+		if(this.ratelimitMOTD != null) {
+			this.ratelimitMOTD.resetLimiters();
+		}
+		if(this.ratelimitQuery != null) {
+			this.ratelimitQuery.resetLimiters();
+		}
 	}
 
 	@Override
@@ -50,7 +81,6 @@ public class WebSocketListener extends WebSocketServer {
 				((WebSocketProxy)arg0.getAttachment()).killConnection();
 			}
 		}
-		System.out.println("websocket closed - " + arg0.getRemoteSocketAddress());
 	}
 
 	@Override
@@ -69,14 +99,48 @@ public class WebSocketListener extends WebSocketServer {
 					arg1 = arg1.substring(7).trim();
 					QueryConnectionImpl con;
 					WebsocketQueryEvent evt;
-					if(arg1.equals("motd")) {
-						System.out.println("requested motd - " + realAddr);
-						con = new MOTDConnectionImpl(info, realAddr, arg0);
-						evt = new WebsocketMOTDEvent((MOTD)con);
+					if(arg1.startsWith("motd")) {
+						if(info.isAllowMOTD()) {
+							if(ratelimitMOTD != null && !BanList.isBlockedBan(realAddr)) {
+								RateLimit l = ratelimitMOTD.rateLimit(realAddr);
+								if(l.blocked()) {
+									if(l == RateLimit.LIMIT) {
+										arg0.send(queryResponseBlocked);
+									}else if(l == RateLimit.NOW_LOCKED_OUT) {
+										arg0.send(queryResponseLockout);
+									}
+									arg0.close();
+									return;
+								}
+							}
+							con = new MOTDConnectionImpl(info, realAddr, arg0, arg1);
+							evt = new WebsocketMOTDEvent((MOTD)con);
+						}else {
+							arg0.send(queryResponseBlocked);
+							arg0.close();
+							return;
+						}
 					}else {
-						System.out.println("connection is query - accepts '" + arg1 + "' - " + realAddr);
-						con = new QueryConnectionImpl(info, realAddr, arg0, arg1);
-						evt = new WebsocketQueryEvent(con);
+						if(info.isAllowQuery()) {
+							if(ratelimitQuery != null && !BanList.isBlockedBan(realAddr)) {
+								RateLimit l = ratelimitQuery.rateLimit(realAddr);
+								if(l.blocked()) {
+									if(l == RateLimit.LIMIT) {
+										arg0.send(queryResponseBlocked);
+									}else if(l == RateLimit.NOW_LOCKED_OUT) {
+										arg0.send(queryResponseLockout);
+									}
+									arg0.close();
+									return;
+								}
+							}
+							con = new QueryConnectionImpl(info, realAddr, arg0, arg1);
+							evt = new WebsocketQueryEvent(con);
+						}else {
+							arg0.send(queryResponseBlocked);
+							arg0.close();
+							return;
+						}
 					}
 					BungeeCord.getInstance().getPluginManager().callEvent(evt);
 					if(!con.isClosed() && (con instanceof MOTDConnectionImpl)) {
@@ -90,14 +154,11 @@ public class WebSocketListener extends WebSocketServer {
 						}
 					}
 				}else {
-					System.err.println("unknown accept type - " + arg0.getRemoteSocketAddress());
 					arg0.close();
 				}
 				return;
 			}else if(o instanceof QueryConnectionImpl) {
 				((QueryConnectionImpl)o).postMessage(arg1);
-			}else {
-				System.out.println("error: recieved text data on binary websocket - " + arg0.getRemoteSocketAddress());
 			}
 		}else {
 			arg0.close();
@@ -114,7 +175,18 @@ public class WebSocketListener extends WebSocketServer {
 			}else {
 				realAddr = ((PendingSocket)o).realAddress;
 			}
-			System.out.println("connection is binary - " + realAddr);
+			if(ratelimitLogin != null && !BanList.isBlockedBan(realAddr)) {
+				RateLimit l = ratelimitLogin.rateLimit(realAddr);
+				if(l.blocked()) {
+					if(l == RateLimit.LIMIT) {
+						arg0.send(createRawKickPacket("BLOCKED"));
+					}else if(l == RateLimit.NOW_LOCKED_OUT) {
+						arg0.send(createRawKickPacket("LOCKED"));
+					}
+					arg0.close();
+					return;
+				}
+			}
 			WebSocketProxy proxyObj = new WebSocketProxy(arg0, realAddr, bungeeProxy);
 			arg0.setAttachment(proxyObj);
 			if(!proxyObj.connect()) {
@@ -128,7 +200,6 @@ public class WebSocketListener extends WebSocketServer {
 			if(o instanceof WebSocketProxy) {
 				((WebSocketProxy)o).sendPacket(arg1);
 			}else {
-				System.out.println("error: recieved binary data on text websocket - " + arg0.getRemoteSocketAddress());
 				arg0.close();
 			}
 		}
@@ -136,24 +207,37 @@ public class WebSocketListener extends WebSocketServer {
 
 	@Override
 	public void onOpen(WebSocket arg0, ClientHandshake arg1) {
-		System.out.println("websocket opened - " + arg0.getRemoteSocketAddress());
+		InetAddress addr;
 		if(info.hasForwardedHeaders()) {
 			String s = arg1.getFieldValue("X-Real-IP");
 			if(s != null) {
 				try {
-					InetAddress addr = InetAddress.getByName(s);
-					arg0.setAttachment(new PendingSocket(System.currentTimeMillis(), addr));
-					System.out.println("real IP of '" + arg0.getRemoteSocketAddress().toString() + "' is '" + addr.getHostAddress() + "'");
+					addr = InetAddress.getByName(s);
 				}catch(UnknownHostException e) {
 					System.out.println("invalid 'X-Real-IP' header - " + e.toString());
 					arg0.close();
+					return;
 				}
 			}else {
-				arg0.setAttachment(new PendingSocket(System.currentTimeMillis(), arg0.getRemoteSocketAddress().getAddress()));
+				addr = arg0.getRemoteSocketAddress().getAddress();
 			}
 		}else {
-			arg0.setAttachment(new PendingSocket(System.currentTimeMillis(), arg0.getRemoteSocketAddress().getAddress()));
+			addr = arg0.getRemoteSocketAddress().getAddress();
 		}
+		boolean bypassBan = BanList.isBlockedBan(addr);
+		if(!bypassBan && ratelimitIP != null) {
+			RateLimit l = ratelimitIP.rateLimit(addr);
+			if(l.blocked()) {
+				if(l == RateLimit.LIMIT) {
+					arg0.send(ipBlockedString);
+				}else if(l == RateLimit.NOW_LOCKED_OUT) {
+					arg0.send(ipLockedString);
+				}
+				arg0.close();
+				return;
+			}
+		}
+		arg0.setAttachment(new PendingSocket(System.currentTimeMillis(), addr, bypassBan));
 	}
 
 	@Override
@@ -164,11 +248,9 @@ public class WebSocketListener extends WebSocketServer {
 		for(WebSocket w : this.getConnections()) {
 			Object o = w.getAttachment();
 			if(o == null) {
-				System.out.println("close inactive websocket - " + w.getRemoteSocketAddress());
 				w.close();
 			}else if(o instanceof PendingSocket) {
-				if(System.currentTimeMillis() - ((PendingSocket)o).openTime > 5000l) {
-					System.out.println("close inactive websocket - " + ((PendingSocket)o).realAddress);
+				if(System.currentTimeMillis() - ((PendingSocket)o).openTime > 1500l) {
 					w.close();
 				}
 			}
@@ -184,6 +266,23 @@ public class WebSocketListener extends WebSocketServer {
 			}
 		}
 		super.stop();
+	}
+	
+	private byte[] createRawKickPacket(String str) {
+		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		DataOutputStream dout = new DataOutputStream(bao);
+		try {
+			dout.write(255);
+			dout.writeShort(str.length());
+			dout.writeChars(str);
+			return bao.toByteArray();
+		}catch(IOException e) {
+			return new byte[] { (byte)255, 0, 0 };
+		}
+	}
+	
+	public ListenerInfo getInfo() {
+		return info;
 	}
 
 }

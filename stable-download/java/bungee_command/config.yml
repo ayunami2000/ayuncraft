@@ -1,6 +1,5 @@
 listeners:
-- motd: '&6An Eaglercraft server'
-  fallback_server: lobby
+- fallback_server: lobby
   tab_list: GLOBAL_PING
   websocket: true
   texture_size: 16
@@ -12,9 +11,46 @@ listeners:
   force_default_server: true
   forward_ip: false
   server_icon: server-icon.png
+  motd1: '&6An Eaglercraft server'
+  allow_motd: true
+  allow_query: true
+  request_motd_cache:
+    cache_ttl: 7200
+    online_server_list_animation: false
+    online_server_list_results: true
+    online_server_list_trending: true
+    online_server_list_portfolios: false
+  ratelimit:
+    ip:
+      enable: true
+      period: 90
+      limit: 60
+      limit_lockout: 80
+      lockout_duration: 1200
+      exceptions: []
+    login:
+      enable: true
+      period: 50
+      limit: 5
+      limit_lockout: 10
+      lockout_duration: 300
+      exceptions: []
+    motd:
+      enable: true
+      period: 30
+      limit: 5
+      limit_lockout: 15
+      lockout_duration: 300
+      exceptions: []
+    query:
+      enable: true
+      period: 30
+      limit: 15
+      limit_lockout: 25
+      lockout_duration: 900
+      exceptions: []
 player_limit: -1
 timeout: 30000
-stats: 595698b3-9c36-4e86-b1ee-cb3027038f41
 servers:
   lobby:
     address: localhost:25569
@@ -37,4 +73,5 @@ permissions:
   - bungeecord.command.eag.banned
   - bungeecord.command.eag.banlist
   - bungeecord.command.eag.unban
+  - bungeecord.command.eag.ratelimit
 groups: {}

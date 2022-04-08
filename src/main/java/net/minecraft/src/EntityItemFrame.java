@@ -3,6 +3,7 @@ package net.minecraft.src;
 public class EntityItemFrame extends EntityHanging {
 	/** Chance for this item frame's item to drop from the frame. */
 	private float itemDropChance = 1.0F;
+	private boolean hasMapItem = false;
 
 	public EntityItemFrame() {
 		super();
@@ -19,11 +20,11 @@ public class EntityItemFrame extends EntityHanging {
 	}
 
 	public int func_82329_d() {
-		return 9;
+		return hasMapItem ? 17 : 10;
 	}
 
 	public int func_82330_g() {
-		return 9;
+		return hasMapItem ? 17 : 10;
 	}
 
 	/**
@@ -52,7 +53,13 @@ public class EntityItemFrame extends EntityHanging {
 	}
 
 	public ItemStack getDisplayedItem() {
-		return this.getDataWatcher().getWatchableObjectItemStack(2);
+		ItemStack stack = this.getDataWatcher().getWatchableObjectItemStack(2);
+		boolean isStackMap = stack != null && stack.getItem() == Item.map;
+		if(isStackMap != hasMapItem) {
+			hasMapItem = isStackMap;
+			this.setDirection(this.hangingDirection);
+		}
+		return stack;
 	}
 
 	public void setDisplayedItem(ItemStack par1ItemStack) {

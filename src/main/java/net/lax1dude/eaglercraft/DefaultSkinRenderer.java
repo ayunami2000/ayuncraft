@@ -325,12 +325,18 @@ public class DefaultSkinRenderer {
 			}
 			if(isNew) {
 				if((id < 0 && EaglerProfile.skins.get(id2).slim) || (id >= 0 && isAlexSkin(id))) {
+					newSkinRendererSlim.blockTransparentSkin = true;
 					newSkinRendererSlim.render(null, 0.0f, 0.0f, (float)(System.currentTimeMillis() % 100000) / 50f, ((x - mx) * 0.06f), ((y - my) * -0.1f), 0.0625F);
+					newSkinRendererSlim.blockTransparentSkin = false;
 				}else {
+					newSkinRenderer.blockTransparentSkin = true;
 					newSkinRenderer.render(null, 0.0f, 0.0f, (float)(System.currentTimeMillis() % 100000) / 50f, ((x - mx) * 0.06f), ((y - my) * -0.1f), 0.0625F);
+					newSkinRenderer.blockTransparentSkin = false;
 				}
 			}else {
+				oldSkinRenderer.blockTransparentSkin = true;
 				oldSkinRenderer.render(null, 0.0f, 0.0f, (float)(System.currentTimeMillis() % 100000) / 50f, ((x - mx) * 0.06f), ((y - my) * -0.1f), 0.0625F);
+				oldSkinRenderer.blockTransparentSkin = false;
 			}
 		}else if(isZombieModel(id)) {
 			if(zombieRenderer == null) zombieRenderer = new ModelZombie(0.0F, true);

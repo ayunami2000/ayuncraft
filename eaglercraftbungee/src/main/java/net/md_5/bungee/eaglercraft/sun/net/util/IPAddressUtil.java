@@ -205,8 +205,6 @@ public class IPAddressUtil {
 	public static boolean match(char paramChar, long paramLong1, long paramLong2) {
 		if (paramChar < '@')
 			return ((1L << paramChar & paramLong1) != 0L);
-		if (paramChar < '')
-			return ((1L << paramChar - 64 & paramLong2) != 0L);
 		return false;
 	}
 

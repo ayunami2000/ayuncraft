@@ -20,7 +20,7 @@ public class GuiMultiplayer extends GuiScreen {
 
 	/** Slot container for the server list */
 	private GuiSlotServer serverSlotContainer;
-	private ServerList internetServerList;
+	private static ServerList internetServerList = null;
 
 	/** Index of the currently selected server */
 	private int selectedServer = -1;
@@ -49,14 +49,48 @@ public class GuiMultiplayer extends GuiScreen {
 
 	/** Instance of ServerData. */
 	private ServerData theServerData = null;
+	
+	private boolean hasInitialRefresh = false;
 
 	/** How many ticks this Gui is already opened */
 	private int ticksOpened;
-	private boolean field_74024_A;
 	private List listofLanServers = Collections.emptyList();
+
+	private static long lastCooldown = 0l;
+	private static long lastRefresh = 0l;
+	private static int cooldownTimer = 0;
+	private static boolean isLockedOut = false;
 
 	public GuiMultiplayer(GuiScreen par1GuiScreen) {
 		this.parentScreen = par1GuiScreen;
+		isLockedOut = false;
+	}
+	
+	public static void tickRefreshCooldown() {
+		if(cooldownTimer > 0) {
+			long t = System.currentTimeMillis();
+			if(t - lastCooldown > 5000l) {
+				--cooldownTimer;
+				lastCooldown = t;
+			}
+		}
+	}
+	
+	private static boolean testIfCanRefresh() {
+		long t = System.currentTimeMillis();
+		if(t - lastRefresh > 1000l) {
+			lastRefresh = t;
+			if(cooldownTimer < 8) {
+				++cooldownTimer;
+			}else {
+				isLockedOut = true;
+			}
+			if(cooldownTimer < 5) {
+				isLockedOut = false;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -66,12 +100,15 @@ public class GuiMultiplayer extends GuiScreen {
 		EaglerAdapter.enableRepeatEvents(true);
 		this.buttonList.clear();
 
-		if (!this.field_74024_A) {
-			this.field_74024_A = true;
-			this.internetServerList = new ServerList(this.mc);
-			this.internetServerList.loadServerList();
-			
-
+		if (!hasInitialRefresh) {
+			hasInitialRefresh = true;
+			if(internetServerList == null) {
+				internetServerList = new ServerList(this.mc);
+			}else {
+				if(testIfCanRefresh()) {
+					internetServerList.loadServerList();
+				}
+			}
 			this.serverSlotContainer = new GuiSlotServer(this);
 		} else {
 			this.serverSlotContainer.func_77207_a(this.width, this.height, 32, this.height - 64);
@@ -112,10 +149,6 @@ public class GuiMultiplayer extends GuiScreen {
 	 */
 	public void onGuiClosed() {
 		EaglerAdapter.enableRepeatEvents(false);
-		if(field_74024_A) {
-			internetServerList.freeServerIcons();
-			field_74024_A = false;
-		}
 	}
 
 	/**
@@ -154,7 +187,11 @@ public class GuiMultiplayer extends GuiScreen {
 			} else if (par1GuiButton.id == 0) {
 				this.mc.displayGuiScreen(this.parentScreen);
 			} else if (par1GuiButton.id == 8) {
-				this.mc.displayGuiScreen(new GuiMultiplayer(this.parentScreen));
+				if(testIfCanRefresh()) {
+					lastRefresh = 0;
+					--cooldownTimer;
+					this.mc.displayGuiScreen(new GuiMultiplayer(this.parentScreen));
+				}
 			} else {
 				this.serverSlotContainer.actionPerformed(par1GuiButton);
 			}
@@ -166,8 +203,8 @@ public class GuiMultiplayer extends GuiScreen {
 			this.deleteClicked = false;
 
 			if (par1) {
-				this.internetServerList.removeServerData(par2);
-				this.internetServerList.saveServerList();
+				internetServerList.removeServerData(par2);
+				internetServerList.saveServerList();
 				this.selectedServer = -1;
 			}
 
@@ -184,8 +221,8 @@ public class GuiMultiplayer extends GuiScreen {
 			this.addClicked = false;
 
 			if (par1) {
-				this.internetServerList.addServerData(this.theServerData);
-				this.internetServerList.saveServerList();
+				internetServerList.addServerData(this.theServerData);
+				internetServerList.saveServerList();
 				this.selectedServer = -1;
 			}
 
@@ -256,6 +293,16 @@ public class GuiMultiplayer extends GuiScreen {
 
 		if (this.lagTooltip != null) {
 			this.func_74007_a(this.lagTooltip, par1, par2);
+		}
+		
+		if(isLockedOut) {
+			String canYouNot = "can you not";
+			int w = this.fontRenderer.getStringWidth(canYouNot);
+			drawRect((this.width - w - 4) / 2, this.height - 80, (this.width + w + 4) / 2, this.height - 70, 0xCC000000);
+			fontRenderer.drawStringWithShadow(canYouNot, (this.width - w) / 2, this.height - 79, 0xFFDD2222);
+			if(cooldownTimer < 3) {
+				isLockedOut = false;
+			}
 		}
 	}
 

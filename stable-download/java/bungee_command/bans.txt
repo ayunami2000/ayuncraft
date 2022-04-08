@@ -39,7 +39,7 @@ replace-bukkit=false
 [Wildcards]
 
 # *fuck*
-# nigg*
+# shi*
 
 
 [Regex]

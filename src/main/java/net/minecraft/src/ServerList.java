@@ -2,13 +2,16 @@ package net.minecraft.src;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.lax1dude.eaglercraft.Base64;
 import net.lax1dude.eaglercraft.ConfigConstants;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.lax1dude.eaglercraft.ServerQuery.QueryResponse;
+import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.RateLimit;
 import net.minecraft.client.Minecraft;
 
 public class ServerList {
@@ -19,6 +22,7 @@ public class ServerList {
 	private final List<ServerData> servers = new ArrayList();
 	
 	public static final List<ServerData> forcedServers = new ArrayList();
+	private static final Set<String> motdLocks = new HashSet();
 
 	public ServerList(Minecraft par1Minecraft) {
 		this.mc = par1Minecraft;
@@ -176,11 +180,22 @@ public class ServerList {
 					do {
 						pkt = dat.currentQuery.getResponse();
 					}while(dat.currentQuery.responseAvailable() > 0);
-					if(pkt.responseType.equalsIgnoreCase("MOTD") && pkt.isResponseJSON()) {
-						dat.setMOTDFromQuery(pkt);
-						if(!dat.hasPing) {
-							dat.pingToServer = pkt.clientTime - dat.pingSentTime;
-							dat.hasPing = true;
+					if(pkt.rateLimitStatus != null) {
+						if(pkt.rateLimitStatus == RateLimit.LOCKED) {
+							dat.setRateLimitError(true, pkt.rateLimitIsTCP);
+						}else if(pkt.rateLimitStatus == RateLimit.BLOCKED) {
+							dat.setRateLimitError(false, pkt.rateLimitIsTCP);
+						}
+						dat.currentQuery.close();
+						dat.pingToServer = -1l;
+						dat.hasPing = true;
+					}else {
+						if(pkt.responseType.equalsIgnoreCase("MOTD") && pkt.isResponseJSON()) {
+							dat.setMOTDFromQuery(pkt);
+							if(!dat.hasPing) {
+								dat.pingToServer = pkt.clientTime - dat.pingSentTime;
+								dat.hasPing = true;
+							}
 						}
 					}
 				}

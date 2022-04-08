@@ -12,6 +12,11 @@ public class GuiDisconnected extends GuiScreen {
 
 	/** The details about the error. */
 	private String errorDetail;
+
+	private String errorDetail2;
+	private String errorDetailTryAgain;
+	private boolean kickForDoS;
+	
 	private Object[] field_74247_c;
 	private List field_74245_d;
 	private final GuiScreen field_98095_n;
@@ -19,8 +24,19 @@ public class GuiDisconnected extends GuiScreen {
 	public GuiDisconnected(GuiScreen par1GuiScreen, String par2Str, String par3Str, Object... par4ArrayOfObj) {
 		StringTranslate var5 = StringTranslate.getInstance();
 		this.field_98095_n = par1GuiScreen;
-		this.errorMessage = par2Str.equals("disconnect.requiresAuth") ? par2Str : var5.translateKey(par2Str);
-		this.errorDetail = par3Str;
+		if(par2Str.startsWith("disconnect.ratelimit")) {
+			this.errorMessage = var5.translateKey(par2Str + ".title");
+			this.errorDetail = var5.translateKey(par2Str + ".description0");
+			this.errorDetail2 = var5.translateKey(par2Str + ".description1");
+			this.errorDetailTryAgain = var5.translateKey(par2Str + ".tryAgain");
+			this.kickForDoS = true;
+		}else {
+			this.errorMessage = par2Str.equals("disconnect.requiresAuth") ? par2Str : var5.translateKey(par2Str);
+			this.errorDetail = par3Str;
+			this.errorDetail2 = null;
+			this.errorDetailTryAgain = null;
+			this.kickForDoS = false;
+		}
 		this.field_74247_c = par4ArrayOfObj;
 	}
 
@@ -37,15 +53,25 @@ public class GuiDisconnected extends GuiScreen {
 	public void initGui() {
 		StringTranslate var1 = StringTranslate.getInstance();
 		this.buttonList.clear();
-		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, !"disconnect.requiresAuth".equals(this.errorMessage) ? this.height / 4 + 120 + 12 : this.height - this.height / 5 - 40, var1.translateKey("gui.toMenu")));
 		
-		if(!"disconnect.requiresAuth".equals(this.errorMessage)) {
+		if(!kickForDoS && !"disconnect.requiresAuth".equals(this.errorMessage)) {
 			if (this.field_74247_c != null) {
 				this.field_74245_d = this.fontRenderer.listFormattedStringToWidth(var1.translateKeyFormat(this.errorDetail, this.field_74247_c), this.width - 50);
 			} else {
 				this.field_74245_d = this.fontRenderer.listFormattedStringToWidth(var1.translateKey(this.errorDetail), this.width - 50);
 			}
 		}
+		
+		int i = 0;
+		if(kickForDoS) {
+			this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 2 + this.height / 7, var1.translateKey("gui.toMenu")));
+		}else if("disconnect.requiresAuth".equals(this.errorMessage)){
+			this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 120 + 12, var1.translateKey("gui.toMenu")));
+		}else {
+			this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height - this.height / 5 - 40, var1.translateKey("gui.toMenu")));
+		}
+			
+		
 	}
 
 	/**
@@ -65,7 +91,19 @@ public class GuiDisconnected extends GuiScreen {
 		this.drawDefaultBackground();
 		int var4 = this.height / 2 - 30;
 		
-		if("disconnect.requiresAuth".equals(this.errorMessage)) {//22w12a
+		if(kickForDoS) {
+			var4 -= 20;
+			this.drawCenteredString(this.fontRenderer, this.errorMessage, this.width / 2, var4 - 20, 11184810);
+			this.drawCenteredString(this.fontRenderer, this.errorDetail, this.width / 2, var4 + 10, 16777215);
+			String s = this.errorDetail2;
+			boolean b = s.startsWith("$");
+			if(b) {
+				s = s.substring(1);
+				var4 -= 2;
+			}
+			this.drawCenteredString(this.fontRenderer, s, this.width / 2, var4 + 24, b ? 16777215 : 0xFF5555);
+			this.drawCenteredString(this.fontRenderer, this.errorDetailTryAgain, this.width / 2, var4 + 50, 0x777777);
+		}else if("disconnect.requiresAuth".equals(this.errorMessage)) {//22w12a
 			EaglerAdapter.glPushMatrix();
 			EaglerAdapter.glScalef(1.5f, 1.5f, 1.5f);
 			this.drawCenteredString(this.fontRenderer, "Authentication Required", this.width / 3, this.height / 4 - 30, 0xDD5555);

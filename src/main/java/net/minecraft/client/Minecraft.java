@@ -1089,6 +1089,7 @@ public class Minecraft implements Runnable {
 			}
 		}
 		
+		GuiMultiplayer.tickRefreshCooldown();
 		GuiScreenVoiceChannel.tickVoiceConnection();
 
 		if (this.currentScreen == null || this.currentScreen.allowUserInput) {

@@ -1,6 +1,6 @@
 # Eaglercraft
 
-**Note:** we will be transitioning away from Eaglercraft being standalone 'free browser minecraft' to Eaglercraft being a bukkit/bungee plugin for servers to allow 'online access' to players who register with a command as their real online-mode Minecraft account on the server. Server owners can still elect to set `online-mode=false` in their server.properties to allow free login but now that's their legal screw up instead of mine
+### Note: we will be transitioning away from Eaglercraft being standalone 'free browser minecraft' to Eaglercraft being a bukkit/bungee plugin for servers to allow 'online access' to players who register with a command as their real online-mode Minecraft account on the server. Server owners can still elect to set `online-mode=false` in their server.properties to allow free login but now that's their legal screw up instead of mine
 
 ![eaglercraft](https://cdn.discordapp.com/attachments/378764518081429506/932053915061587978/thumbnail2.png)
 
@@ -10,7 +10,7 @@
 
 (right click the link and press 'Save link as...' to download the file)
 
-### Visit this site for a list of servers: [https://g.eags.us/eaglercraft/servers/](https://g.eags.us/eaglercraft/servers/)
+### A new server list site is under construction
 
 **For any questions you can join the discord server and hit me up there [https://discord.gg/KMQW9Uvjyq](https://discord.gg/KMQW9Uvjyq)**
 
@@ -76,7 +76,7 @@ Keep both the first and second terminal window you opened, just minimize them do
 
 I successfully created Singleplayer for this version of eaglercraft and it works 100%, **but after many rounds of very thorough testing**, I found that TeaVM is unable to optimize certain aspects of terrain generation and world ticking as well as it can optimize the rendering for a multiplayer-only build. On an [i9-11900K]( https://www.cpubenchmark.net/cpu.php?cpu=Intel+Core+i9-11900K+%40+3.50GHz&id=3904) a render distance of 'Tiny' struggles to pass 12 TPS while standing still, and drops below 1 TPS as soon as a couple new chunks have to be generated and trigger lighting updates. The playerbase of this game **will bother me every f\*\*king day if what I release as singleplayer is not perfect** and therefore singleplayer will remain private indefinetly and I will not answer any further questions about it or share the source code unless you are just looking to repurpose some of the base OS emulation code.
 
-**Minecraft Alpha singleplayer will be ported in the coming weeks but that is not a promise I should be obligated to fulfill**
+**Minecraft Beta singleplayer will be ported sometime soon**
 
 ## How does it work?
 
@@ -89,6 +89,29 @@ I got tired of closing duplicate 'how to maek sever' and 'add single player' iss
 ## EaglercraftBungee
 
 EaglercraftBungee translates WebSockets to a raw Minecraft 1.5.2 TCP connection. It is just regular BungeeCord with more `config.yml` options, and a built in plugin for syncing people's custom skins between clients so people can see each other's skins
+
+**Enable** `forward_ip` **and pass a X-Real-IP header from your proxy to use rate limiting and IP bans on a URL**
+
+**The server has built in DoS protection, reset it via typing 'eag-ratelimit reset' in the bungee console**
+
+```yaml
+ratelimit:
+  ip:
+    enable: true
+    period: 90
+    limit: 60
+    limit_lockout: 80
+    lockout_duration: 1200
+    exceptions: []
+```
+
+- `enable` enable rate limiting
+
+- `period` and `limit` set the number of requests (`limit`) can be made in (`period`) number of seconds
+
+- `limit_lockout` and `lockout_duration` set the number of requests (`limit_lockout`) that can be made in (`period`) seconds before the IP is blocked for `lockout_duration` number of seconds
+
+- `exceptions` a list of IP addresses that should never get rate limited. **Local IPs like 127.0.0.1 and 192.168.\*.\* and such are set as exceptions by default**
 
 **To develop a plugin, download [stable-download/java/bungee_command/bungee_dist.jar](https://github.com/LAX1DUDE/eaglercraft/blob/main/stable-download/java/bungee_command/bungee-dist.jar) and add it to the Build Path of your Java IDE. Develop the plugin just like a regular BungeeCord plugin, see [EaglerMOTD](https://github.com/LAX1DUDE/eaglercraft-motd/) for an example.**
 

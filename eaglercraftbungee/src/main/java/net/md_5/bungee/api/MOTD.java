@@ -12,6 +12,7 @@ public interface MOTD extends QueryConnection {
 	public int[] getBitmap();
 	public int getOnlinePlayers();
 	public int getMaxPlayers();
+	public String getSubType();
 	
 	public void setLine1(String p);
 	public void setLine2(String p);

@@ -2,6 +2,8 @@ package net.lax1dude.eaglercraft;
 
 import org.json.JSONObject;
 
+import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.RateLimit;
+
 public interface ServerQuery {
 	
 	public static final long defaultTimeout = 10000l;
@@ -15,15 +17,43 @@ public interface ServerQuery {
 		public final long serverTime;
 		public final long clientTime;
 		public final boolean serverCracked;
+		public final RateLimit rateLimitStatus;
+		public final boolean rateLimitIsTCP;
 		public QueryResponse(JSONObject obj) {
 			this.responseType = obj.getString("type").toLowerCase();
-			this.responseData = obj.get("data");
-			this.serverVersion = obj.getString("vers");
-			this.serverBrand = obj.getString("brand");
-			this.serverName = obj.getString("name");
-			this.serverTime = obj.getLong("time");
+			if(this.responseType.equals("blocked") || this.responseType.equals("locked")) {
+				this.responseData = null;
+				this.serverVersion = "Unknown";
+				this.serverBrand = "Unknown";
+				this.serverName = "Unknown";
+				this.serverTime = 0l;
+				this.clientTime = System.currentTimeMillis();
+				this.serverCracked = false;
+				this.rateLimitStatus = this.responseType.equals("locked") ? RateLimit.LOCKED : RateLimit.BLOCKED;
+				this.rateLimitIsTCP = false;
+			}else {
+				this.responseData = obj.get("data");
+				this.serverVersion = obj.getString("vers");
+				this.serverBrand = obj.getString("brand");
+				this.serverName = obj.getString("name");
+				this.serverTime = obj.getLong("time");
+				this.clientTime = System.currentTimeMillis();
+				this.serverCracked = obj.optBoolean("cracked", false);
+				this.rateLimitStatus = null;
+				this.rateLimitIsTCP = false;
+			}
+		}
+		public QueryResponse(boolean lockedNotBlocked) {
+			this.responseType = lockedNotBlocked ? "locked" : "blocked";
+			this.responseData = null;
+			this.serverVersion = "Unknown";
+			this.serverBrand = "Unknown";
+			this.serverName = "Unknown";
+			this.serverTime = 0l;
 			this.clientTime = System.currentTimeMillis();
-			this.serverCracked = obj.has("cracked") ? obj.getBoolean("cracked") : false;
+			this.serverCracked = false;
+			this.rateLimitStatus = lockedNotBlocked ? RateLimit.LOCKED : RateLimit.BLOCKED;
+			this.rateLimitIsTCP = true;
 		}
 		public boolean isResponseString() {
 			return responseData instanceof String;

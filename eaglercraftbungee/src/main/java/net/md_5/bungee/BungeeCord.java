@@ -59,6 +59,7 @@ import net.md_5.bungee.command.CommandGlobalUnban;
 import net.md_5.bungee.command.CommandSend;
 import net.md_5.bungee.command.CommandPerms;
 import net.md_5.bungee.command.CommandBungee;
+import net.md_5.bungee.command.CommandClearRatelimit;
 import net.md_5.bungee.command.CommandAlert;
 import net.md_5.bungee.command.CommandIP;
 import net.md_5.bungee.command.CommandServer;
@@ -152,6 +153,7 @@ public class BungeeCord extends ProxyServer {
 		this.getPluginManager().registerCommand(null, new CommandPerms());
 		this.getPluginManager().registerCommand(null, new CommandSend());
 		this.getPluginManager().registerCommand(null, new CommandFind());
+		this.getPluginManager().registerCommand(null, new CommandClearRatelimit());
 		this.registerChannel("BungeeCord");
 		Log.setOutput(new PrintStream(ByteStreams.nullOutputStream()));
 		AnsiConsole.systemInstall();
@@ -244,6 +246,11 @@ public class BungeeCord extends ProxyServer {
 			public void run() {
 				for(WebSocketListener lst : BungeeCord.this.wsListeners) {
 					lst.closeInactiveSockets();
+					ListenerInfo info = lst.getInfo();
+					if(info.getRateLimitIP() != null) info.getRateLimitIP().deleteClearLimiters();
+					if(info.getRateLimitLogin() != null) info.getRateLimitLogin().deleteClearLimiters();
+					if(info.getRateLimitMOTD() != null) info.getRateLimitMOTD().deleteClearLimiters();
+					if(info.getRateLimitQuery() != null) info.getRateLimitQuery().deleteClearLimiters();
 				}
 			}
 		}, 0L, TimeUnit.SECONDS.toMillis(10L));

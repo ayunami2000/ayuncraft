@@ -2,7 +2,9 @@ package net.minecraft.src;
 
 import java.io.IOException;
 
+import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglerProfile;
+import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.RateLimit;
 import net.minecraft.client.Minecraft;
 
 public class GuiConnecting extends GuiScreen {
@@ -76,15 +78,38 @@ public class GuiConnecting extends GuiScreen {
 				this.clientHandler.addToSendQueue(new Packet2ClientProtocol(69, EaglerProfile.username, uria, port));
 				this.clientHandler.addToSendQueue(new Packet250CustomPayload("EAG|MySkin", EaglerProfile.getSkinPacket()));
 			} catch (IOException e) {
+				try {
+					this.clientHandler.disconnect();
+				}catch(Throwable t) {
+				}
 				e.printStackTrace();
-				this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "connect.failed", "disconnect.genericReason", "could not connect to "+uri, e.toString()));
-				
+				showDisconnectScreen(e.toString());
 			}
 		}
 		if(this.clientHandler != null) {
 			this.clientHandler.processReadPackets();
 		}
+		if(timer > 5) {
+			if(!EaglerAdapter.connectionOpen() && this.mc.currentScreen == this) {
+				showDisconnectScreen("");
+			}
+		}
 		++timer;
+	}
+	
+	private void showDisconnectScreen(String e) {
+		RateLimit l = EaglerAdapter.getRateLimitStatus();
+		if(l == RateLimit.NOW_LOCKED) {
+			this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "disconnect.ipNowLocked", "disconnect.endOfStream", null));
+		}else if(l == RateLimit.LOCKED) {
+			this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "disconnect.ipLocked", "disconnect.endOfStream", null));
+		}else if(l == RateLimit.BLOCKED) {
+			this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "disconnect.ipBlocked", "disconnect.endOfStream", null));
+		}else if(l == RateLimit.FAILED_POSSIBLY_LOCKED) {
+			this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "disconnect.ipFailedPossiblyLocked", "disconnect.endOfStream", null));
+		}else {
+			this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "connect.failed", "disconnect.genericReason", "could not connect to "+uri, e));
+		}
 	}
 
 	/**

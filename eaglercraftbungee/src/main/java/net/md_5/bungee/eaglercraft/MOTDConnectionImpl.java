@@ -13,6 +13,7 @@ import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.MOTD;
 import net.md_5.bungee.api.config.ListenerInfo;
+import net.md_5.bungee.api.config.MOTDCacheConfiguration;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class MOTDConnectionImpl extends QueryConnectionImpl implements MOTD {
@@ -25,8 +26,9 @@ public class MOTDConnectionImpl extends QueryConnectionImpl implements MOTD {
 	private int maxPlayers;
 	private boolean hasIcon;
 	private boolean iconDirty;
+	private String subType;
 	
-	public MOTDConnectionImpl(ListenerInfo listener, InetAddress addr, WebSocket socket) {
+	public MOTDConnectionImpl(ListenerInfo listener, InetAddress addr, WebSocket socket, String arg1) {
 		super(listener, addr, socket, "motd");
 		String[] lns = listener.getMotd().split("\n");
 		if(lns.length >= 1) {
@@ -46,11 +48,22 @@ public class MOTDConnectionImpl extends QueryConnectionImpl implements MOTD {
 			}
 		}
 		bitmap = new int[4096];
-		iconDirty = hasIcon = listener.isIconSet();
-		if(hasIcon) {
-			System.arraycopy(listener.getServerIconCache(), 0, bitmap, 0, 4096);
-		}
 		setReturnType("motd");
+		int i = arg1.indexOf('.');
+		if(i > 0) {
+			subType = arg1.substring(i + 1);
+			if(subType.length() == 0) {
+				subType = "motd";
+			}
+		}else {
+			subType = "motd";
+		}
+		if(!subType.startsWith("noicon") && !subType.startsWith("cache.noicon")) {
+			iconDirty = hasIcon = listener.isIconSet();
+			if(hasIcon) {
+				System.arraycopy(listener.getServerIconCache(), 0, bitmap, 0, 4096);
+			}
+		}
 	}
 
 	@Override
@@ -81,6 +94,11 @@ public class MOTDConnectionImpl extends QueryConnectionImpl implements MOTD {
 	@Override
 	public int getMaxPlayers() {
 		return maxPlayers;
+	}
+	
+	@Override
+	public String getSubType() {
+		return subType;
 	}
 
 	@Override
@@ -123,11 +141,39 @@ public class MOTDConnectionImpl extends QueryConnectionImpl implements MOTD {
 	public void sendToUser() {
 		if(!isClosed()) {
 			JSONObject obj = new JSONObject();
+			if(subType.startsWith("cache.anim")) {
+				obj.put("unsupported", true);
+				writeResponse(obj);
+				close();
+				return;
+			}else if(subType.startsWith("cache")) {
+				JSONArray cacheControl = new JSONArray();
+				MOTDCacheConfiguration cc = listener.getCacheConfig();
+				if(cc.cacheServerListAnimation) {
+					cacheControl.put("animation");
+				}
+				if(cc.cacheServerListResults) {
+					cacheControl.put("results");
+				}
+				if(cc.cacheServerListTrending) {
+					cacheControl.put("trending");
+				}
+				if(cc.cacheServerListPortfolios) {
+					cacheControl.put("portfolio");
+				}
+				obj.put("cache", cacheControl);
+				obj.put("ttl", cc.cacheTTL);
+			}else {
+				MOTDCacheConfiguration cc = listener.getCacheConfig();
+				obj.put("cache", cc.cacheServerListAnimation || cc.cacheServerListResults ||
+						cc.cacheServerListTrending || cc.cacheServerListPortfolios);
+			}
+			boolean noIcon = subType.startsWith("noicon") || subType.startsWith("cache.noicon");
 			JSONArray motd = new JSONArray();
 			if(line1 != null && line1.length() > 0) motd.put(line1);
 			if(line2 != null && line2.length() > 0) motd.put(line2);
 			obj.put("motd", motd);
-			obj.put("icon", hasIcon);
+			obj.put("icon", hasIcon && !noIcon);
 			obj.put("online", onlinePlayers);
 			obj.put("max", maxPlayers);
 			JSONArray playerz = new JSONArray();
@@ -136,7 +182,7 @@ public class MOTDConnectionImpl extends QueryConnectionImpl implements MOTD {
 			}
 			obj.put("players", playerz);
 			writeResponse(obj);
-			if(hasIcon && iconDirty && bitmap != null) {
+			if(hasIcon && !noIcon && iconDirty && bitmap != null) {
 				byte[] iconPixels = new byte[16384];
 				for(int i = 0; i < 4096; ++i) {
 					iconPixels[i * 4] = (byte)((bitmap[i] >> 16) & 0xFF);
@@ -146,6 +192,9 @@ public class MOTDConnectionImpl extends QueryConnectionImpl implements MOTD {
 				}
 				writeResponseBinary(iconPixels);
 				iconDirty = false;
+			}
+			if(subType.startsWith("cache")) {
+				close();
 			}
 		}
 	}

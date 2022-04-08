@@ -80,7 +80,7 @@ class GuiSlotServer extends GuiSlot {
 		boolean var8 = var6.field_82821_f < 61;
 		boolean var9 = var7 || var8;
 		this.parentGui.drawString(this.parentGui.fontRenderer, var6.serverName, par2 + 38, par3 + 1, 16777215);
-		if(var6.hasPing && var6.pingToServer > 0) {
+		if(var6.hasPing && (var6.pingToServer > 0 || var6.hasError)) {
 			int i = var6.serverMOTD.indexOf('\n');
 			if(i > 0) {
 				this.parentGui.drawString(this.parentGui.fontRenderer, var6.serverMOTD.substring(0, i), par2 + 38, par3 + 12, 8421504);
