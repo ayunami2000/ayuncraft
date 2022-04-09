@@ -284,7 +284,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 		this.mc.gameSettings.proxy=proxy.getText();
 
 		//check proxy
-		if(!this.mc.gameSettings.proxy.equals("")) {
+		if(this.mc.gameSettings.useProxy&&!this.mc.gameSettings.proxy.equals("")) {
 			proxyInvalid=0;
 			this.drawCenteredString(this.fontRenderer, "checking proxy...", this.width / 2, 5, 16777215);
 			try {
@@ -355,7 +355,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 			}else if (par1GuiButton.id == 5) {
 				//toggle using proxy
 				this.mc.gameSettings.useProxy=!this.mc.gameSettings.useProxy;
-				button4.displayString=(this.mc.gameSettings.useProxy?"Dis":"En")+"able Proxy Mode";
+				button4.displayString=(this.mc.gameSettings.useProxy?"Dis":"En")+"able Proxy";
 			}
 		}
 	}
