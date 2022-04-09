@@ -20,11 +20,11 @@ public class EntityItemFrame extends EntityHanging {
 	}
 
 	public int func_82329_d() {
-		return hasMapItem ? 17 : 10;
+		return hasMapItem ? 16 : 10;
 	}
 
 	public int func_82330_g() {
-		return hasMapItem ? 17 : 10;
+		return hasMapItem ? 16 : 10;
 	}
 
 	/**

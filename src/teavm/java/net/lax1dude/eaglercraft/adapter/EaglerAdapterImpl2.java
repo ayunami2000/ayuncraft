@@ -1736,10 +1736,10 @@ public class EaglerAdapterImpl2 {
 		});
 	}
 	
-	@JSBody(params = { "cb" }, script = "window.navigator.clipboard.readText().then(function(s) { cb(s); }, function(s) { cb(null); });")
+	@JSBody(params = { "cb" }, script = "if(!window.navigator.clipboard) cb(null); else window.navigator.clipboard.readText().then(function(s) { cb(s); }, function(s) { cb(null); });")
 	private static native void getClipboard0(StupidFunctionResolveString cb);
 	
-	@JSBody(params = { "str" }, script = "window.navigator.clipboard.writeText(str);")
+	@JSBody(params = { "str" }, script = "if(window.navigator.clipboard) window.navigator.clipboard.writeText(str);")
 	public static native void setClipboard(String str);
 	
 	@JSBody(params = { "obj" }, script = "return typeof obj === \"string\";")
