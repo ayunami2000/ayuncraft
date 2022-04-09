@@ -1,10 +1,5 @@
 package net.minecraft.src;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,7 +20,7 @@ public class GuiMultiplayer extends GuiScreen {
 
 	/** Slot container for the server list */
 	private GuiSlotServer serverSlotContainer;
-	private ServerList internetServerList;
+	private static ServerList internetServerList = null;
 
 	/** Index of the currently selected server */
 	private int selectedServer = -1;
@@ -54,14 +49,48 @@ public class GuiMultiplayer extends GuiScreen {
 
 	/** Instance of ServerData. */
 	private ServerData theServerData = null;
+	
+	private boolean hasInitialRefresh = false;
 
 	/** How many ticks this Gui is already opened */
 	private int ticksOpened;
-	private boolean field_74024_A;
 	private List listofLanServers = Collections.emptyList();
+
+	private static long lastCooldown = 0l;
+	private static long lastRefresh = 0l;
+	private static int cooldownTimer = 0;
+	private static boolean isLockedOut = false;
 
 	public GuiMultiplayer(GuiScreen par1GuiScreen) {
 		this.parentScreen = par1GuiScreen;
+		isLockedOut = false;
+	}
+	
+	public static void tickRefreshCooldown() {
+		if(cooldownTimer > 0) {
+			long t = System.currentTimeMillis();
+			if(t - lastCooldown > 5000l) {
+				--cooldownTimer;
+				lastCooldown = t;
+			}
+		}
+	}
+	
+	private static boolean testIfCanRefresh() {
+		long t = System.currentTimeMillis();
+		if(t - lastRefresh > 1000l) {
+			lastRefresh = t;
+			if(cooldownTimer < 8) {
+				++cooldownTimer;
+			}else {
+				isLockedOut = true;
+			}
+			if(cooldownTimer < 5) {
+				isLockedOut = false;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -71,12 +100,15 @@ public class GuiMultiplayer extends GuiScreen {
 		EaglerAdapter.enableRepeatEvents(true);
 		this.buttonList.clear();
 
-		if (!this.field_74024_A) {
-			this.field_74024_A = true;
-			this.internetServerList = new ServerList(this.mc);
-			this.internetServerList.loadServerList();
-			
-
+		if (!hasInitialRefresh) {
+			hasInitialRefresh = true;
+			if(internetServerList == null) {
+				internetServerList = new ServerList(this.mc);
+			}else {
+				if(testIfCanRefresh()) {
+					internetServerList.loadServerList();
+				}
+			}
 			this.serverSlotContainer = new GuiSlotServer(this);
 		} else {
 			this.serverSlotContainer.func_77207_a(this.width, this.height, 32, this.height - 64);
@@ -108,6 +140,7 @@ public class GuiMultiplayer extends GuiScreen {
 	 */
 	public void updateScreen() {
 		super.updateScreen();
+		internetServerList.updateServerPing();
 		++this.ticksOpened;
 	}
 
@@ -154,7 +187,11 @@ public class GuiMultiplayer extends GuiScreen {
 			} else if (par1GuiButton.id == 0) {
 				this.mc.displayGuiScreen(this.parentScreen);
 			} else if (par1GuiButton.id == 8) {
-				this.mc.displayGuiScreen(new GuiMultiplayer(this.parentScreen));
+				if(testIfCanRefresh()) {
+					lastRefresh = 0;
+					--cooldownTimer;
+					this.mc.displayGuiScreen(new GuiMultiplayer(this.parentScreen));
+				}
 			} else {
 				this.serverSlotContainer.actionPerformed(par1GuiButton);
 			}
@@ -166,8 +203,8 @@ public class GuiMultiplayer extends GuiScreen {
 			this.deleteClicked = false;
 
 			if (par1) {
-				this.internetServerList.removeServerData(par2);
-				this.internetServerList.saveServerList();
+				internetServerList.removeServerData(par2);
+				internetServerList.saveServerList();
 				this.selectedServer = -1;
 			}
 
@@ -184,8 +221,8 @@ public class GuiMultiplayer extends GuiScreen {
 			this.addClicked = false;
 
 			if (par1) {
-				this.internetServerList.addServerData(this.theServerData);
-				this.internetServerList.saveServerList();
+				internetServerList.addServerData(this.theServerData);
+				internetServerList.saveServerList();
 				this.selectedServer = -1;
 			}
 
@@ -198,6 +235,7 @@ public class GuiMultiplayer extends GuiScreen {
 				var3.serverName = this.theServerData.serverName;
 				var3.serverIP = this.theServerData.serverIP;
 				var3.setHideAddress(this.theServerData.isHidingAddress());
+				var3.pingSentTime = -1l;
 				this.internetServerList.saveServerList();
 			}
 
@@ -256,6 +294,16 @@ public class GuiMultiplayer extends GuiScreen {
 		if (this.lagTooltip != null) {
 			this.func_74007_a(this.lagTooltip, par1, par2);
 		}
+		
+		if(isLockedOut) {
+			String canYouNot = "can you not";
+			int w = this.fontRenderer.getStringWidth(canYouNot);
+			drawRect((this.width - w - 4) / 2, this.height - 80, (this.width + w + 4) / 2, this.height - 70, 0xCC000000);
+			fontRenderer.drawStringWithShadow(canYouNot, (this.width - w) / 2, this.height - 79, 0xFFDD2222);
+			if(cooldownTimer < 3) {
+				isLockedOut = false;
+			}
+		}
 	}
 
 	/**
@@ -269,120 +317,38 @@ public class GuiMultiplayer extends GuiScreen {
 		this.mc.displayGuiScreen(new GuiConnecting(this, this.mc, par1ServerData));
 	}
 
-	private static void func_74017_b(ServerData par1ServerData) throws IOException {
-		ServerAddress var1 = ServerAddress.func_78860_a(par1ServerData.serverIP);
-		Socket var2 = null;
-		DataInputStream var3 = null;
-		DataOutputStream var4 = null;
-
-		try {
-			var2 = new Socket();
-			var2.setSoTimeout(3000);
-			var2.setTcpNoDelay(true);
-			var2.setTrafficClass(18);
-			var2.connect(new InetSocketAddress(var1.getIP(), var1.getPort()), 3000);
-			var3 = new DataInputStream(var2.getInputStream());
-			var4 = new DataOutputStream(var2.getOutputStream());
-			var4.write(254);
-			var4.write(1);
-
-			if (var3.read() != 255) {
-				throw new IOException("Bad message");
-			}
-
-			String var5 = Packet.readString(var3, 256);
-			char[] var6 = var5.toCharArray();
-
-			for (int var7 = 0; var7 < var6.length; ++var7) {
-				if (var6[var7] != 167 && var6[var7] != 0 && ChatAllowedCharacters.allowedCharacters.indexOf(var6[var7]) < 0) {
-					var6[var7] = 63;
-				}
-			}
-
-			var5 = new String(var6);
-			int var8;
-			int var9;
-			String[] var26;
-
-			if (var5.startsWith("\u00a7") && var5.length() > 1) {
-				var26 = var5.substring(1).split("\u0000");
-
-				if (MathHelper.parseIntWithDefault(var26[0], 0) == 1) {
-					par1ServerData.serverMOTD = var26[3];
-					par1ServerData.field_82821_f = MathHelper.parseIntWithDefault(var26[1], par1ServerData.field_82821_f);
-					par1ServerData.gameVersion = var26[2];
-					var8 = MathHelper.parseIntWithDefault(var26[4], 0);
-					var9 = MathHelper.parseIntWithDefault(var26[5], 0);
-
-					if (var8 >= 0 && var9 >= 0) {
-						par1ServerData.populationInfo = EnumChatFormatting.GRAY + "" + var8 + "" + EnumChatFormatting.DARK_GRAY + "/" + EnumChatFormatting.GRAY + var9;
-					} else {
-						par1ServerData.populationInfo = "" + EnumChatFormatting.DARK_GRAY + "???";
-					}
-				} else {
-					par1ServerData.gameVersion = "???";
-					par1ServerData.serverMOTD = "" + EnumChatFormatting.DARK_GRAY + "???";
-					par1ServerData.field_82821_f = 62;
-					par1ServerData.populationInfo = "" + EnumChatFormatting.DARK_GRAY + "???";
-				}
-			} else {
-				var26 = var5.split("\u00a7");
-				var5 = var26[0];
-				var8 = -1;
-				var9 = -1;
-
-				try {
-					var8 = Integer.parseInt(var26[1]);
-					var9 = Integer.parseInt(var26[2]);
-				} catch (Exception var24) {
-					;
-				}
-
-				par1ServerData.serverMOTD = EnumChatFormatting.GRAY + var5;
-
-				if (var8 >= 0 && var9 > 0) {
-					par1ServerData.populationInfo = EnumChatFormatting.GRAY + "" + var8 + "" + EnumChatFormatting.DARK_GRAY + "/" + EnumChatFormatting.GRAY + var9;
-				} else {
-					par1ServerData.populationInfo = "" + EnumChatFormatting.DARK_GRAY + "???";
-				}
-
-				par1ServerData.gameVersion = "1.3";
-				par1ServerData.field_82821_f = 60;
-			}
-		} finally {
-			try {
-				if (var3 != null) {
-					var3.close();
-				}
-			} catch (Throwable var23) {
-				;
-			}
-
-			try {
-				if (var4 != null) {
-					var4.close();
-				}
-			} catch (Throwable var22) {
-				;
-			}
-
-			try {
-				if (var2 != null) {
-					var2.close();
-				}
-			} catch (Throwable var21) {
-				;
-			}
-		}
-	}
-
 	protected void func_74007_a(String par1Str, int par2, int par3) {
 		if (par1Str != null) {
-			int var4 = par2 + 12;
-			int var5 = par3 - 12;
-			int var6 = this.fontRenderer.getStringWidth(par1Str);
-			this.drawGradientRect(var4 - 3, var5 - 3, var4 + var6 + 3, var5 + 8 + 3, -1073741824, -1073741824);
-			this.fontRenderer.drawStringWithShadow(par1Str, var4, var5, -1);
+			if(par1Str.indexOf('\n') >= 0) {
+				String[] strs = par1Str.split("\n");
+				int var6 = 0;
+				int full = 0;
+				for(int i = 0; i < strs.length; ++i) {
+					strs[i] = strs[i].replace('\r', ' ').trim();
+					if(strs[i].length() > 0) {
+						int w = this.fontRenderer.getStringWidth(strs[i]);
+						if(w > var6) {
+							var6 = w;
+						}
+						++full;
+					}
+				}
+				int var4 = par2 + 12;
+				int var5 = par3 - 12;
+				this.drawGradientRect(var4 - 3, var5 - 3, var4 + var6 + 3, var5 + full * 9 + 2, -1073741824, -1073741824);
+				full = 0;
+				for(int i = 0; i < strs.length; ++i) {
+					if(strs[i].length() > 0) {
+						this.fontRenderer.drawStringWithShadow(strs[i], var4, var5 + 9 * full++, -1);
+					}
+				}
+			}else {
+				int var4 = par2 + 12;
+				int var5 = par3 - 12;
+				int var6 = this.fontRenderer.getStringWidth(par1Str);
+				this.drawGradientRect(var4 - 3, var5 - 3, var4 + var6 + 3, var5 + 8 + 3, -1073741824, -1073741824);
+				this.fontRenderer.drawStringWithShadow(par1Str, var4, var5, -1);
+			}
 		}
 	}
 
@@ -444,10 +410,6 @@ public class GuiMultiplayer extends GuiScreen {
 
 	static int increaseThreadsPending() {
 		return threadsPending++;
-	}
-
-	static void func_82291_a(ServerData par0ServerData) throws IOException {
-		func_74017_b(par0ServerData);
 	}
 
 	static int decreaseThreadsPending() {

@@ -57,22 +57,5 @@ class SlotRepair extends Slot {
 		}
 
 		this.anvil.maximumCost = 0;
-
-		if (!par1EntityPlayer.capabilities.isCreativeMode && !this.theWorld.isRemote && this.theWorld.getBlockId(this.blockPosX, this.blockPosY, this.blockPosZ) == Block.anvil.blockID && par1EntityPlayer.getRNG().nextFloat() < 0.12F) {
-			int var6 = this.theWorld.getBlockMetadata(this.blockPosX, this.blockPosY, this.blockPosZ);
-			int var4 = var6 & 3;
-			int var5 = var6 >> 2;
-			++var5;
-
-			if (var5 > 2) {
-				this.theWorld.setBlockToAir(this.blockPosX, this.blockPosY, this.blockPosZ);
-				this.theWorld.playAuxSFX(1020, this.blockPosX, this.blockPosY, this.blockPosZ, 0);
-			} else {
-				this.theWorld.setBlockMetadataWithNotify(this.blockPosX, this.blockPosY, this.blockPosZ, var4 | var5 << 2, 2);
-				this.theWorld.playAuxSFX(1021, this.blockPosX, this.blockPosY, this.blockPosZ, 0);
-			}
-		} else if (!this.theWorld.isRemote) {
-			this.theWorld.playAuxSFX(1021, this.blockPosX, this.blockPosY, this.blockPosZ, 0);
-		}
 	}
 }

@@ -80,10 +80,6 @@ public class EntitySlime extends EntityLiving implements IMob {
 	 * Called to update the entity's position/logic.
 	 */
 	public void onUpdate() {
-		if (!this.worldObj.isRemote && this.worldObj.difficultySetting == 0 && this.getSlimeSize() > 0) {
-			this.isDead = true;
-		}
-
 		this.field_70811_b += (this.field_70813_a - this.field_70811_b) * 0.5F;
 		this.field_70812_c = this.field_70811_b;
 		boolean var1 = this.onGround;
@@ -112,10 +108,8 @@ public class EntitySlime extends EntityLiving implements IMob {
 
 		this.func_70808_l();
 
-		if (this.worldObj.isRemote) {
-			var2 = this.getSlimeSize();
-			this.setSize(0.6F * (float) var2, 0.6F * (float) var2);
-		}
+		var2 = this.getSlimeSize();
+		this.setSize(0.6F * (float) var2, 0.6F * (float) var2);
 	}
 
 	protected void updateEntityActionState() {
@@ -165,28 +159,6 @@ public class EntitySlime extends EntityLiving implements IMob {
 		EntitySlime s = new EntitySlime();
 		s.setWorld(worldObj);
 		return s;
-	}
-
-	/**
-	 * Will get destroyed next tick.
-	 */
-	public void setDead() {
-		int var1 = this.getSlimeSize();
-
-		if (!this.worldObj.isRemote && var1 > 1 && this.getHealth() <= 0) {
-			int var2 = 2 + this.rand.nextInt(3);
-
-			for (int var3 = 0; var3 < var2; ++var3) {
-				float var4 = ((float) (var3 % 2) - 0.5F) * (float) var1 / 4.0F;
-				float var5 = ((float) (var3 / 2) - 0.5F) * (float) var1 / 4.0F;
-				EntitySlime var6 = this.createInstance();
-				var6.setSlimeSize(var1 / 2);
-				var6.setLocationAndAngles(this.posX + (double) var4, this.posY + 0.5D, this.posZ + (double) var5, this.rand.nextFloat() * 360.0F, 0.0F);
-				this.worldObj.spawnEntityInWorld(var6);
-			}
-		}
-
-		super.setDead();
 	}
 
 	/**

@@ -39,7 +39,7 @@ public class EaglerImage {
 	public static final EaglerImage loadImage(byte[] file) {
 		try {
 			PNG p = (new Decoder(new ByteArrayInputStream(file))).readInPNG();
-			return new EaglerImage(p.getColor(), (int)p.getWidth(), (int)p.getHeight(), p.ihdr.getBpp() == 4);
+			return new EaglerImage(p.getColor(), (int)p.getWidth(), (int)p.getHeight(), p.isAlpha());
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

@@ -115,19 +115,5 @@ public class ContainerMerchant extends Container {
 		super.onCraftGuiClosed(par1EntityPlayer);
 		this.theMerchant.setCustomer((EntityPlayer) null);
 		super.onCraftGuiClosed(par1EntityPlayer);
-
-		if (!this.theWorld.isRemote) {
-			ItemStack var2 = this.merchantInventory.getStackInSlotOnClosing(0);
-
-			if (var2 != null) {
-				par1EntityPlayer.dropPlayerItem(var2);
-			}
-
-			var2 = this.merchantInventory.getStackInSlotOnClosing(1);
-
-			if (var2 != null) {
-				par1EntityPlayer.dropPlayerItem(var2);
-			}
-		}
 	}
 }

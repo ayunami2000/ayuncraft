@@ -1,7 +1,8 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockWoodSlab extends BlockHalfSlab {
 	/** The type of tree this slab came from. */
@@ -23,7 +24,7 @@ public class BlockWoodSlab extends BlockHalfSlab {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return Block.woodSingleSlab.blockID;
 	}
 

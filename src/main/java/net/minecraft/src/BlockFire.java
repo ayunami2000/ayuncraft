@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockFire extends Block {
 	/** The chance this block will encourage nearby blocks to catch on fire */
@@ -87,7 +87,7 @@ public class BlockFire extends Block {
 	/**
 	 * Returns the quantity of items to drop on block destruction.
 	 */
-	public int quantityDropped(Random par1Random) {
+	public int quantityDropped(EaglercraftRandom par1Random) {
 		return 0;
 	}
 
@@ -101,7 +101,7 @@ public class BlockFire extends Block {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		if (par1World.getGameRules().getGameRuleBooleanValue("doFireTick")) {
 			boolean var6 = par1World.getBlockId(par2, par3 - 1, par4) == Block.netherrack.blockID;
 
@@ -189,7 +189,7 @@ public class BlockFire extends Block {
 		return false;
 	}
 
-	private void tryToCatchBlockOnFire(World par1World, int par2, int par3, int par4, int par5, Random par6Random, int par7) {
+	private void tryToCatchBlockOnFire(World par1World, int par2, int par3, int par4, int par5, EaglercraftRandom par6Random, int par7) {
 		int var8 = this.abilityToCatchFire[par1World.getBlockId(par2, par3, par4)];
 
 		if (par6Random.nextInt(par5) < var8) {
@@ -305,7 +305,7 @@ public class BlockFire extends Block {
 	 * A randomly called display update to be able to add particles or other items
 	 * for display
 	 */
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void randomDisplayTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		if (par5Random.nextInt(24) == 0) {
 			par1World.playSound((double) ((float) par2 + 0.5F), (double) ((float) par3 + 0.5F), (double) ((float) par4 + 0.5F), "fire.fire", 1.0F + par5Random.nextFloat(), par5Random.nextFloat() * 0.7F + 0.3F, false);
 		}

@@ -13,7 +13,7 @@ eaglercraft makes use of baislsl's java PNG decoder, which is available at §nht
 
 all graphical assets in this project were ripped from mojang's official minecraft.jar for minecraft version 1.5.2 and they are mojang's intellectual property. assets ommitted include the minecraft soundtrack and music disks and all software references to the mojang/minecraft api.
 
-eaglercraft servers are powered by md_5's BungeeCord and the CraftBukkit project available at §nhttp://www.spigotmc.org/§r. BungeeCord has been modified to accept eaglercraft's strange login packets and to host a websocket server to translate browser connections to raw TCP that vanilla minecraft servers can understand. All java plugins designed for CraftBukkit 1.5.2 are compatible with this configuration.
+eaglercraft servers are powered by md_5's BungeeCord and the CraftBukkit project available at §nhttps://bukkit.org/§r. BungeeCord has been modified to accept eaglercraft's strange login packets and to host a websocket server to translate browser connections to raw TCP that vanilla minecraft servers can understand. All java plugins designed for CraftBukkit 1.5.2 are compatible with this configuration.
 
 scroll down for the detailed license statements
 

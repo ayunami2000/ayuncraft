@@ -271,10 +271,6 @@ public class EntityArrow extends Entity implements IProjectile {
 						if (var4.entityHit instanceof EntityLiving) {
 							EntityLiving var25 = (EntityLiving) var4.entityHit;
 
-							if (!this.worldObj.isRemote) {
-								var25.setArrowCountInEntity(var25.getArrowCountInEntity() + 1);
-							}
-
 							if (this.knockbackStrength > 0) {
 								var27 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
 
@@ -413,25 +409,6 @@ public class EntityArrow extends Entity implements IProjectile {
 			this.canBePickedUp = par1NBTTagCompound.getByte("pickup");
 		} else if (par1NBTTagCompound.hasKey("player")) {
 			this.canBePickedUp = par1NBTTagCompound.getBoolean("player") ? 1 : 0;
-		}
-	}
-
-	/**
-	 * Called by a player entity when they collide with an entity
-	 */
-	public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {
-		if (!this.worldObj.isRemote && this.inGround && this.arrowShake <= 0) {
-			boolean var2 = this.canBePickedUp == 1 || this.canBePickedUp == 2 && par1EntityPlayer.capabilities.isCreativeMode;
-
-			if (this.canBePickedUp == 1 && !par1EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.arrow, 1))) {
-				var2 = false;
-			}
-
-			if (var2) {
-				this.playSound("random.pop", 0.2F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-				par1EntityPlayer.onItemPickup(this, 1);
-				this.setDead();
-			}
 		}
 	}
 

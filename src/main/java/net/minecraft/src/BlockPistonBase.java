@@ -94,30 +94,12 @@ public class BlockPistonBase extends Block {
 	public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving, ItemStack par6ItemStack) {
 		int var7 = determineOrientation(par1World, par2, par3, par4, par5EntityLiving);
 		par1World.setBlockMetadataWithNotify(par2, par3, par4, var7, 2);
-
-		if (!par1World.isRemote) {
-			this.updatePistonState(par1World, par2, par3, par4);
-		}
-	}
-
-	/**
-	 * Lets the block know when one of its neighbor changes. Doesn't know which
-	 * neighbor changed (coordinates passed are their own) Args: x, y, z, neighbor
-	 * blockID
-	 */
-	public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5) {
-		if (!par1World.isRemote) {
-			this.updatePistonState(par1World, par2, par3, par4);
-		}
 	}
 
 	/**
 	 * Called whenever the block is added into the world. Args: world, x, y, z
 	 */
 	public void onBlockAdded(World par1World, int par2, int par3, int par4) {
-		if (!par1World.isRemote && par1World.getBlockTileEntity(par2, par3, par4) == null) {
-			this.updatePistonState(par1World, par2, par3, par4);
-		}
 	}
 
 	/**
@@ -164,19 +146,6 @@ public class BlockPistonBase extends Block {
 	 * z, blockID, EventID, event parameter
 	 */
 	public boolean onBlockEventReceived(World par1World, int par2, int par3, int par4, int par5, int par6) {
-		if (!par1World.isRemote) {
-			boolean var7 = this.isIndirectlyPowered(par1World, par2, par3, par4, par6);
-
-			if (var7 && par5 == 1) {
-				par1World.setBlockMetadataWithNotify(par2, par3, par4, par6 | 8, 2);
-				return false;
-			}
-
-			if (!var7 && par5 == 0) {
-				return false;
-			}
-		}
-
 		if (par5 == 0) {
 			if (!this.tryExtend(par1World, par2, par3, par4, par6)) {
 				return false;

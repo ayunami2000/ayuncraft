@@ -20,48 +20,6 @@ public class EntitySmallFireball extends EntityFireball {
 	 * Called when this EntityFireball hits a block or entity.
 	 */
 	protected void onImpact(MovingObjectPosition par1MovingObjectPosition) {
-		if (!this.worldObj.isRemote) {
-			if (par1MovingObjectPosition.entityHit != null) {
-				if (!par1MovingObjectPosition.entityHit.isImmuneToFire() && par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 5)) {
-					par1MovingObjectPosition.entityHit.setFire(5);
-				}
-			} else {
-				int var2 = par1MovingObjectPosition.blockX;
-				int var3 = par1MovingObjectPosition.blockY;
-				int var4 = par1MovingObjectPosition.blockZ;
-
-				switch (par1MovingObjectPosition.sideHit) {
-				case 0:
-					--var3;
-					break;
-
-				case 1:
-					++var3;
-					break;
-
-				case 2:
-					--var4;
-					break;
-
-				case 3:
-					++var4;
-					break;
-
-				case 4:
-					--var2;
-					break;
-
-				case 5:
-					++var2;
-				}
-
-				if (this.worldObj.isAirBlock(var2, var3, var4)) {
-					this.worldObj.setBlock(var2, var3, var4, Block.fire.blockID);
-				}
-			}
-
-			this.setDead();
-		}
 	}
 
 	/**

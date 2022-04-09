@@ -6,18 +6,24 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
+import org.json.JSONObject;
 import org.teavm.interop.Async;
 import org.teavm.interop.AsyncCallback;
 import org.teavm.jso.JSBody;
+import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.ajax.ReadyStateChangeHandler;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
-import org.teavm.jso.core.JSNumber;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.KeyboardEvent;
 import org.teavm.jso.dom.events.MessageEvent;
@@ -53,10 +59,12 @@ import net.lax1dude.eaglercraft.AssetRepository;
 import net.lax1dude.eaglercraft.Base64;
 import net.lax1dude.eaglercraft.EarlyLoadScreen;
 import net.lax1dude.eaglercraft.LocalStorageManager;
+import net.lax1dude.eaglercraft.ServerQuery;
+import net.lax1dude.eaglercraft.ServerQuery.QueryResponse;
 import net.lax1dude.eaglercraft.adapter.teavm.WebGLQuery;
 import net.lax1dude.eaglercraft.adapter.teavm.WebGLVertexArray;
 import net.minecraft.src.MathHelper;
-
+import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.RateLimit;
 import net.lax1dude.eaglercraft.adapter.teavm.WebGL2RenderingContext;
 import static net.lax1dude.eaglercraft.adapter.teavm.WebGL2RenderingContext.*;
 
@@ -195,6 +203,15 @@ public class EaglerAdapterImpl2 {
 		LocalStorageManager.saveStorageG();
 		LocalStorageManager.saveStorageP();
 	}
+
+	@JSBody(params = { "m" }, script = "return m.offsetX;")
+	private static native int getOffsetX(MouseEvent m);
+	
+	@JSBody(params = { "m" }, script = "return m.offsetY;")
+	private static native int getOffsetY(MouseEvent m);
+	
+	@JSBody(params = { "e" }, script = "return e.which;")
+	private static native int getWhich(KeyboardEvent e);
 	
 	public static final void initializeContext(HTMLElement rootElement, String assetPackageURI) {
 		parent = rootElement;
@@ -246,8 +263,8 @@ public class EaglerAdapterImpl2 {
 		canvas.addEventListener("mousemove", mousemove = new EventListener<MouseEvent>() {
 			@Override
 			public void handleEvent(MouseEvent evt) {
-				mouseX = evt.getClientX();
-				mouseY = canvas.getClientHeight() - evt.getClientY();
+				mouseX = getOffsetX(evt);
+				mouseY = canvas.getClientHeight() - getOffsetY(evt);
 				mouseDX += evt.getMovementX();
 				mouseDY += -evt.getMovementY();
 				evt.preventDefault();
@@ -257,7 +274,8 @@ public class EaglerAdapterImpl2 {
 		win.addEventListener("keydown", keydown = new EventListener<KeyboardEvent>() {
 			@Override
 			public void handleEvent(KeyboardEvent evt) {
-				keyStates[remapKey(evt.getKeyCode())] = true;
+				//keyStates[remapKey(evt.getKeyCode())] = true;
+				keyStates[remapKey(getWhich(evt))] = true;
 				keyEvents.add(evt);
 				evt.preventDefault();
 				evt.stopPropagation();
@@ -266,7 +284,8 @@ public class EaglerAdapterImpl2 {
 		win.addEventListener("keyup", keyup = new EventListener<KeyboardEvent>() {
 			@Override
 			public void handleEvent(KeyboardEvent evt) {
-				keyStates[remapKey(evt.getKeyCode())] = false;
+				//keyStates[remapKey(evt.getKeyCode())] = false;
+				keyStates[remapKey(getWhich(evt))] = false;
 				keyEvents.add(evt);
 				evt.preventDefault();
 				evt.stopPropagation();
@@ -472,6 +491,7 @@ public class EaglerAdapterImpl2 {
 	public static final int _wGL_READ_FRAMEBUFFER = READ_FRAMEBUFFER;
 	public static final int _wGL_DRAW_FRAMEBUFFER = DRAW_FRAMEBUFFER;
 	public static final int _wGL_FRAMEBUFFER = FRAMEBUFFER;
+	public static final int _wGL_POLYGON_OFFSET_FILL = POLYGON_OFFSET_FILL;
 	
 	public static final class TextureGL { 
 		protected final WebGLTexture obj;
@@ -854,6 +874,10 @@ public class EaglerAdapterImpl2 {
 	public static final void _wglBlitFramebuffer(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9, int p10) {
 		webgl.blitFramebuffer(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10);
 	}
+	public static final int _wglGetAttribLocation(ProgramGL p1, String p2) {
+		return webgl.getAttribLocation(p1.obj, p2);
+	}
+	
 	@JSBody(params = { "ctx", "p" }, script = "return ctx.getTexParameter(0x0DE1, p) | 0;")
 	private static final native int __wglGetTexParameteri(WebGL2RenderingContext ctx, int p);
 	public static final int _wglGetTexParameteri(int p1) {
@@ -937,11 +961,22 @@ public class EaglerAdapterImpl2 {
 		return currentEvent == null ? -1 : canvas.getClientHeight() - currentEvent.getClientY();
 	}
 	public static final boolean keysNext() {
+		if(unpressCTRL) { //un-press ctrl after copy/paste permission
+			keyEvents.clear();
+			currentEventK = null;
+			keyStates[29] = false;
+			keyStates[157] = false;
+			keyStates[28] = false;
+			keyStates[219] = false;
+			keyStates[220] = false;
+			unpressCTRL = false;
+			return false;
+		}
 		currentEventK = null;
 		return !keyEvents.isEmpty() && (currentEventK = keyEvents.remove(0)) != null;
 	}
 	public static final int getEventKey() {
-		return currentEventK == null ? -1 : remapKey(currentEventK.getKeyCode());
+		return currentEventK == null ? -1 : remapKey(getWhich(currentEventK));
 	}
 	public static final char getEventChar() {
 		if(currentEventK == null) return '\0';
@@ -952,6 +987,13 @@ public class EaglerAdapterImpl2 {
 		return currentEventK == null? false : !currentEventK.getType().equals("keyup");
 	}
 	public static final boolean isKeyDown(int p1) {
+		if(unpressCTRL) { //un-press ctrl after copy/paste permission
+			keyStates[28] = false;
+			keyStates[29] = false;
+			keyStates[157] = false;
+			keyStates[219] = false;
+			keyStates[220] = false;
+		}
 		return keyStates[p1];
 	}
 	public static final String getKeyName(int p1) {
@@ -1019,20 +1061,66 @@ public class EaglerAdapterImpl2 {
 	public static final void syncDisplay(int performanceToFps) {
 		
 	}
+	
+	private static final DateFormat dateFormatSS = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
+	public static final void saveScreenshot() {
+		saveScreenshot("screenshot_" + dateFormatSS.format(new Date()).toString() + ".png", canvas);
+	}
+	
+	@JSBody(params = { "name", "cvs" }, script = "var a=document.createElement(\"a\");a.href=cvs.toDataURL(\"image/png\");a.download=name;a.click();")
+	private static native void saveScreenshot(String name, HTMLCanvasElement cvs);
 
+	public static enum RateLimit {
+		NONE, FAILED, BLOCKED, FAILED_POSSIBLY_LOCKED, LOCKED, NOW_LOCKED;
+	}
+
+	private static final Set<String> rateLimitedAddresses = new HashSet();
+	private static final Set<String> blockedAddresses = new HashSet();
+	
 	private static WebSocket sock = null;
 	private static boolean sockIsConnecting = false;
+	private static boolean sockIsConnected = false;
+	private static boolean sockIsAlive = false;
 	private static LinkedList<byte[]> readPackets = new LinkedList();
+	private static RateLimit rateLimitStatus = null;
+	private static String currentSockURI = null;
+	
+	public static final RateLimit getRateLimitStatus() {
+		RateLimit l = rateLimitStatus;
+		rateLimitStatus = null;
+		return l;
+	}
+	public static final void logRateLimit(String addr, RateLimit l) {
+		if(l == RateLimit.BLOCKED) {
+			blockedAddresses.add(addr);
+		}else {
+			rateLimitedAddresses.add(addr);
+		}
+	}
+	public static final RateLimit checkRateLimitHistory(String addr) {
+		if(blockedAddresses.contains(addr)) {
+			return RateLimit.LOCKED;
+		}else if(rateLimitedAddresses.contains(addr)) {
+			return RateLimit.BLOCKED;
+		}else {
+			return RateLimit.NONE;
+		}
+	}
 	
 	@Async
 	public static native String connectWebSocket(String sockURI);
 	
 	private static void connectWebSocket(String sockURI, final AsyncCallback<String> cb) {
 		sockIsConnecting = true;
+		sockIsConnected = false;
+		sockIsAlive = false;
+		rateLimitStatus = null;
+		currentSockURI = sockURI;
 		try {
 			sock = WebSocket.create(sockURI);
 		} catch(Throwable t) {
 			sockIsConnecting = false;
+			sockIsAlive = false;
 			return;
 		}
 		sock.setBinaryType("arraybuffer");
@@ -1040,6 +1128,8 @@ public class EaglerAdapterImpl2 {
 			@Override
 			public void handleEvent(MessageEvent evt) {
 				sockIsConnecting = false;
+				sockIsAlive = false;
+				sockIsConnected = true;
 				readPackets.clear();
 				cb.complete("okay");
 			}
@@ -1048,15 +1138,55 @@ public class EaglerAdapterImpl2 {
 			@Override
 			public void handleEvent(CloseEvent evt) {
 				sock = null;
-				readPackets.clear();
+				if(sockIsConnecting) {
+					if(rateLimitStatus == null) {
+						if(blockedAddresses.contains(currentSockURI)) {
+							rateLimitStatus = RateLimit.LOCKED;
+						}else if(rateLimitedAddresses.contains(currentSockURI)) {
+							rateLimitStatus = RateLimit.FAILED_POSSIBLY_LOCKED;
+						}else {
+							rateLimitStatus = RateLimit.FAILED;
+						}
+					}
+				}else if(!sockIsAlive) {
+					if(rateLimitStatus == null) {
+						if(blockedAddresses.contains(currentSockURI)) {
+							rateLimitStatus = RateLimit.LOCKED;
+						}else if(rateLimitedAddresses.contains(currentSockURI)) {
+							rateLimitStatus = RateLimit.BLOCKED;
+						}
+					}
+				}
 				boolean b = sockIsConnecting;
 				sockIsConnecting = false;
+				sockIsConnected = false;
+				sockIsAlive = false;
 				if(b) cb.complete("fail");
 			}
 		});
 		sock.onMessage(new EventListener<MessageEvent>() {
 			@Override
 			public void handleEvent(MessageEvent evt) {
+				sockIsAlive = true;
+				if(isString(evt.getData())) {
+					String stat = evt.getDataAsString();
+					if(stat.equalsIgnoreCase("BLOCKED")) {
+						if(rateLimitStatus == null) {
+							rateLimitStatus = RateLimit.BLOCKED;
+						}
+						rateLimitedAddresses.add(currentSockURI);
+					}else if(stat.equalsIgnoreCase("LOCKED")) {
+						if(rateLimitStatus == null) {
+							rateLimitStatus = RateLimit.NOW_LOCKED;
+						}
+						rateLimitedAddresses.add(currentSockURI);
+						blockedAddresses.add(currentSockURI);
+					}
+					sockIsConnecting = false;
+					sockIsConnected = false;
+					sock.close();
+					return;
+				}
 				Uint8Array a = Uint8Array.create(evt.getDataAsArray());
 				byte[] b = new byte[a.getByteLength()];
 				for(int i = 0; i < b.length; ++i) {
@@ -1072,10 +1202,16 @@ public class EaglerAdapterImpl2 {
 		return "fail".equals(res) ? false : true;
 	}
 	public static final void endConnection() {
+		if(sock == null || sock.getReadyState() == 3) {
+			sockIsConnecting = false;
+		}
 		if(sock != null && !sockIsConnecting) sock.close();
 	}
 	public static final boolean connectionOpen() {
-		return sock != null && !sockIsConnecting;
+		if(sock == null || sock.getReadyState() == 3) {
+			sockIsConnecting = false;
+		}
+		return sock != null && !sockIsConnecting && sock.getReadyState() != 3;
 	}
 	@JSBody(params = { "sock", "buffer" }, script = "sock.send(buffer);")
 	private static native void nativeBinarySend(WebSocket sock, ArrayBuffer buffer);
@@ -1106,6 +1242,9 @@ public class EaglerAdapterImpl2 {
 	}
 	public static final void openLink(String url) {
 		win.open(url, "_blank");
+	}
+	public static final void redirectTo(String url) {
+		Window.current().getLocation().setFullURL(url);
 	}
 
 	@JSBody(params = { "str" }, script = "window.eval(str);")
@@ -1149,11 +1288,14 @@ public class EaglerAdapterImpl2 {
 		//l.setVelocity(vx, vy, vz);
 	}
 	
-	
-	
 	private static int playbackId = 0;
 	private static final HashMap<String,AudioBufferX> loadedSoundFiles = new HashMap();
-	private static AudioContext audioctx = null; 
+	private static AudioContext audioctx = null;
+	private static float playbackOffsetDelay = 0.03f;
+	
+	public static final void setPlaybackOffsetDelay(float f) {
+		playbackOffsetDelay = f;
+	}
 	
 	@Async
 	public static native AudioBuffer decodeAudioAsync(ArrayBuffer buffer);
@@ -1226,7 +1368,7 @@ public class EaglerAdapterImpl2 {
 		s.connect(g);
 		g.connect(p);
 		p.connect(audioctx.getDestination());
-		s.start(0.0d, /*0.03d*/0.0d);
+		s.start(0.0d, playbackOffsetDelay);
 		final int theId = ++playbackId;
 		activeSoundEffects.put(theId, new AudioBufferSourceNodeX(s, p, g));
 		s.setOnEnded(new EventListener<MediaEvent>() {
@@ -1249,7 +1391,7 @@ public class EaglerAdapterImpl2 {
 		g.getGain().setValue(/*volume > 1.0f ? 1.0f : volume*/volume);
 		s.connect(g);
 		g.connect(audioctx.getDestination());
-		s.start(0.0d, /*0.03d*/0.0d);
+		s.start(0.0d, playbackOffsetDelay);
 		final int theId = ++playbackId;
 		activeSoundEffects.put(theId, new AudioBufferSourceNodeX(s, null, g));
 		s.setOnEnded(new EventListener<MediaEvent>() {
@@ -1333,6 +1475,9 @@ public class EaglerAdapterImpl2 {
 	public static final void exit() {
 		
 	}
+	
+	@JSBody(params = { }, script = "return window.navigator.userAgent;")
+	public static native String getUserAgent();
 	
 	private static String[] LWJGLKeyNames = new String[] {"NONE", "ESCAPE", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "MINUS", "EQUALS", "BACK", "TAB", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "LBRACKET", "RBRACKET", "RETURN", "LCONTROL", "A", "S", "D", "F", "G", "H", "J", "K", "L", "SEMICOLON", "APOSTROPHE", "GRAVE", "LSHIFT", "BACKSLASH", "Z", "X", "C", "V", "B", "N", "M", "COMMA", "PERIOD", "SLASH", "RSHIFT", "MULTIPLY", "LMENU", "SPACE", "CAPITAL", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "NUMLOCK", "SCROLL", "NUMPAD7", "NUMPAD8", "NUMPAD9", "SUBTRACT", "NUMPAD4", "NUMPAD5", "NUMPAD6", "ADD", "NUMPAD1", "NUMPAD2", "NUMPAD3", "NUMPAD0", "DECIMAL", "null", "null", "null", "F11", "F12", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "F13", "F14", "F15", "F16", "F17", "F18", "null", "null", "null", "null", "null", "null", "KANA", "F19", "null", "null", "null", "null", "null", "null", "null", "CONVERT", "null", "NOCONVERT", "null", "YEN", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "NUMPADEQUALS", "null", "null", "CIRCUMFLEX", "AT", "COLON", "UNDERLINE", "KANJI", "STOP", "AX", "UNLABELED", "null", "null", "null", "null", "NUMPADENTER", "RCONTROL", "null", "null", "null", "null", "null", "null", "null", "null", "null", "SECTION", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "NUMPADCOMMA", "null", "DIVIDE", "null", "SYSRQ", "RMENU", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "FUNCTION", "PAUSE", "null", "HOME", "UP", "PRIOR", "null", "LEFT", "null", "RIGHT", "null", "END", "DOWN", "NEXT", "INSERT", "DELETE", "null", "null", "null", "null", "null", "null", "CLEAR", "LMETA", "RMETA", "APPS", "POWER", "SLEEP", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null"};
 	
@@ -1591,5 +1736,196 @@ public class EaglerAdapterImpl2 {
 	private static int remapKey(int k) {
 		return (k > LWJGLKeyCodes.length || k < 0) ? -1 : LWJGLKeyCodes[k];
 	}
+	
+	@JSFunctor
+	private static interface StupidFunctionResolveString extends JSObject {
+		void resolveStr(String s);
+	}
+	
+	private static boolean unpressCTRL = false;
+	
+	@Async
+	public static native String getClipboard();
+	
+	private static void getClipboard(final AsyncCallback<String> cb) {
+		final long start = System.currentTimeMillis();
+		getClipboard0(new StupidFunctionResolveString() {
+			@Override
+			public void resolveStr(String s) {
+				if(System.currentTimeMillis() - start > 500l) {
+					unpressCTRL = true;
+				}
+				cb.complete(s);
+			}
+		});
+	}
+	
+	@JSBody(params = { "cb" }, script = "if(!window.navigator.clipboard) cb(null); else window.navigator.clipboard.readText().then(function(s) { cb(s); }, function(s) { cb(null); });")
+	private static native void getClipboard0(StupidFunctionResolveString cb);
+	
+	@JSBody(params = { "str" }, script = "if(window.navigator.clipboard) window.navigator.clipboard.writeText(str);")
+	public static native void setClipboard(String str);
+	
+	@JSBody(params = { "obj" }, script = "return typeof obj === \"string\";")
+	private static native boolean isString(JSObject obj);
+	
+	private static class ServerQueryImpl implements ServerQuery {
+		
+		private final LinkedList<QueryResponse> queryResponses = new LinkedList();
+		private final LinkedList<byte[]> queryResponsesBytes = new LinkedList();
+		private final String type;
+		private boolean open;
+		private boolean alive;
+		private String uriString;
+		
+		private final WebSocket sock;
+		
+		private ServerQueryImpl(String type_, String uri) {
+			type = type_;
+			uriString = uri;
+			alive = false;
+			WebSocket s = null;
+			try {
+				s = WebSocket.create(uri);
+				s.setBinaryType("arraybuffer");
+				open = true;
+			}catch(Throwable t) {
+				open = false;
+				if(EaglerAdapterImpl2.blockedAddresses.contains(uriString)) {
+					queryResponses.add(new QueryResponse(true));
+				}else if(EaglerAdapterImpl2.rateLimitedAddresses.contains(uriString)) {
+					queryResponses.add(new QueryResponse(false));
+				}
+				sock = null;
+				return;
+			}
+			sock = s;
+			if(open) {
+				sock.onOpen(new EventListener<MessageEvent>() {
+					@Override
+					public void handleEvent(MessageEvent evt) {
+						sock.send("Accept: " + type);
+					}
+				});
+				sock.onClose(new EventListener<CloseEvent>() {
+					@Override
+					public void handleEvent(CloseEvent evt) {
+						open = false;
+						if(!alive) {
+							if(EaglerAdapterImpl2.blockedAddresses.contains(uriString)) {
+								queryResponses.add(new QueryResponse(true));
+							}else if(EaglerAdapterImpl2.rateLimitedAddresses.contains(uriString)) {
+								queryResponses.add(new QueryResponse(false));
+							}
+						}
+					}
+				});
+				sock.onMessage(new EventListener<MessageEvent>() {
+					@Override
+					public void handleEvent(MessageEvent evt) {
+						alive = true;
+						if(isString(evt.getData())) {
+							try {
+								String str = evt.getDataAsString();
+								if(str.equalsIgnoreCase("BLOCKED")) {
+									EaglerAdapterImpl2.rateLimitedAddresses.add(uriString);
+									queryResponses.add(new QueryResponse(false));
+									sock.close();
+									return;
+								}else if(str.equalsIgnoreCase("LOCKED")) {
+									EaglerAdapterImpl2.blockedAddresses.add(uriString);
+									queryResponses.add(new QueryResponse(true));
+									sock.close();
+									return;
+								}else {
+									QueryResponse q = new QueryResponse(new JSONObject(str));
+									if(q.rateLimitStatus != null) {
+										if(q.rateLimitStatus == RateLimit.BLOCKED) {
+											EaglerAdapterImpl2.rateLimitedAddresses.add(uriString);
+										}else if(q.rateLimitStatus == RateLimit.LOCKED) {
+											EaglerAdapterImpl2.blockedAddresses.add(uriString);
+										}
+										sock.close();
+									}
+									queryResponses.add(q);
+								}
+							}catch(Throwable t) {
+								System.err.println("Query response could not be parsed: " + t.toString());
+							}
+						}else {
+							Uint8Array a = Uint8Array.create(evt.getDataAsArray());
+							byte[] b = new byte[a.getByteLength()];
+							for(int i = 0; i < b.length; ++i) {
+								b[i] = (byte) (a.get(i) & 0xFF);
+							}
+							queryResponsesBytes.add(b);
+						}
+					}
+				});
+				Window.setTimeout(new TimerHandler() {
+					@Override
+					public void onTimer() {
+						if(open && sock.getReadyState() != 1) {
+							if(sock.getReadyState() == 0) {
+								sock.close();
+							}
+							open = false;
+						}
+					}
+				}, 5000l);
+			}
+		}
 
+		@Override
+		public boolean isQueryOpen() {
+			return open;
+		}
+
+		@Override
+		public void close() {
+			open = false;
+			sock.close();
+		}
+
+		@Override
+		public void send(String str) {
+			sock.send(str);
+		}
+
+		@Override
+		public int responseAvailable() {
+			return queryResponses.size();
+		}
+
+		@Override
+		public int responseBinaryAvailable() {
+			return queryResponsesBytes.size();
+		}
+
+		@Override
+		public QueryResponse getResponse() {
+			return queryResponses.size() > 0 ? queryResponses.remove(0) : null;
+		}
+
+		@Override
+		public byte[] getBinaryResponse() {
+			return queryResponsesBytes.size() > 0 ? queryResponsesBytes.remove(0) : null;
+		}
+		
+	}
+
+	public static final ServerQuery openQuery(String type, String uri) {
+		return new ServerQueryImpl(type, uri);
+	}
+	
+	private static String serverToJoinOnLaunch = null;
+	
+	public static final void setServerToJoinOnLaunch(String s) {
+		serverToJoinOnLaunch = s;
+	}
+	
+	public static final String getServerToJoinOnLaunch() {
+		return serverToJoinOnLaunch;
+	}
+	
 }

@@ -90,38 +90,10 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
 	 * burn.
 	 */
 	public void onLivingUpdate() {
-		if (!this.worldObj.isRemote) {
-			this.dataWatcher.updateObject(16, Integer.valueOf(this.health));
-		}
-
 		this.motionY *= 0.6000000238418579D;
 		double var4;
 		double var6;
 		double var8;
-
-		if (!this.worldObj.isRemote && this.getWatchedTargetId(0) > 0) {
-			Entity var1 = this.worldObj.getEntityByID(this.getWatchedTargetId(0));
-
-			if (var1 != null) {
-				if (this.posY < var1.posY || !this.isArmored() && this.posY < var1.posY + 5.0D) {
-					if (this.motionY < 0.0D) {
-						this.motionY = 0.0D;
-					}
-
-					this.motionY += (0.5D - this.motionY) * 0.6000000238418579D;
-				}
-
-				double var2 = var1.posX - this.posX;
-				var4 = var1.posZ - this.posZ;
-				var6 = var2 * var2 + var4 * var4;
-
-				if (var6 > 9.0D) {
-					var8 = (double) MathHelper.sqrt_double(var6);
-					this.motionX += (var2 / var8 * 0.5D - this.motionX) * 0.6000000238418579D;
-					this.motionZ += (var4 / var8 * 0.5D - this.motionZ) * 0.6000000238418579D;
-				}
-			}
-		}
 
 		if (this.motionX * this.motionX + this.motionZ * this.motionZ > 0.05000000074505806D) {
 			this.rotationYaw = (float) Math.atan2(this.motionZ, this.motionX) * (180F / (float) Math.PI) - 90.0F;

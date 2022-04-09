@@ -2,7 +2,9 @@ package net.minecraft.src;
 
 import java.io.IOException;
 
+import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglerProfile;
+import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.RateLimit;
 import net.minecraft.client.Minecraft;
 
 public class GuiConnecting extends GuiScreen {
@@ -52,8 +54,12 @@ public class GuiConnecting extends GuiScreen {
 					this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "connect.failed", "disconnect.genericReason", "invalid uri websocket protocol", ""));
 					return;
 				}
-				int i = uria.indexOf(':');
+				int i = uria.lastIndexOf(':');
 				int port = -1;
+				
+				if(i > 0 && uria.startsWith("[") && uria.charAt(i - 1) != ']') {
+					i = -1;
+				}
 				
 				if(i == -1) port = uri.startsWith("wss") ? 443 : 80;
 				if(uria.endsWith("/")) uria = uria.substring(0, uria.length() - 1);
@@ -68,7 +74,7 @@ public class GuiConnecting extends GuiScreen {
 					}
 				}
 				
-				this.clientHandler = new NetClientHandler(this.mc, this.mc.gameSettings.proxy.equals("")?uri:uria, 0);
+				this.clientHandler = new NetClientHandler(this.mc, (this.mc.gameSettings.proxy.equals("")||!this.mc.gameSettings.useProxy)?uri:uria, 0);
 				if(this.mc.gameSettings.useDefaultProtocol) {
 					this.clientHandler.addToSendQueue(new Packet2ClientProtocol(61, EaglerProfile.username, uria, port));
 				}else{
@@ -76,15 +82,38 @@ public class GuiConnecting extends GuiScreen {
 					this.clientHandler.addToSendQueue(new Packet250CustomPayload("EAG|MySkin", EaglerProfile.getSkinPacket()));
 				}
 			} catch (IOException e) {
+				try {
+					this.clientHandler.disconnect();
+				}catch(Throwable t) {
+				}
 				e.printStackTrace();
-				this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "connect.failed", "disconnect.genericReason", "could not connect to "+uri, e.toString()));
-				
+				showDisconnectScreen(e.toString());
 			}
 		}
 		if(this.clientHandler != null) {
 			this.clientHandler.processReadPackets();
 		}
+		if(timer > 5) {
+			if(!EaglerAdapter.connectionOpen() && this.mc.currentScreen == this) {
+				showDisconnectScreen("");
+			}
+		}
 		++timer;
+	}
+	
+	private void showDisconnectScreen(String e) {
+		RateLimit l = EaglerAdapter.getRateLimitStatus();
+		if(l == RateLimit.NOW_LOCKED) {
+			this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "disconnect.ipNowLocked", "disconnect.endOfStream", null));
+		}else if(l == RateLimit.LOCKED) {
+			this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "disconnect.ipLocked", "disconnect.endOfStream", null));
+		}else if(l == RateLimit.BLOCKED) {
+			this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "disconnect.ipBlocked", "disconnect.endOfStream", null));
+		}else if(l == RateLimit.FAILED_POSSIBLY_LOCKED) {
+			this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "disconnect.ipFailedPossiblyLocked", "disconnect.endOfStream", null));
+		}else {
+			this.mc.displayGuiScreen(new GuiDisconnected(this.field_98098_c, "connect.failed", "disconnect.genericReason", "could not connect to "+uri, e));
+		}
 	}
 
 	/**

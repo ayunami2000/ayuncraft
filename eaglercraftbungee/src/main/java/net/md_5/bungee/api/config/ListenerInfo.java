@@ -4,12 +4,17 @@
 
 package net.md_5.bungee.api.config;
 
-import java.beans.ConstructorProperties;
+import java.io.File;
+
+import net.md_5.bungee.api.ServerIcon;
 import net.md_5.bungee.api.tab.TabListHandler;
+import net.md_5.bungee.eaglercraft.WebSocketRateLimiter;
+
 import java.util.Map;
 import java.net.InetSocketAddress;
 
 public class ListenerInfo {
+	private final String hostString;
 	private final InetSocketAddress host;
 	private final String motd;
 	private final int maxPlayers;
@@ -18,13 +23,27 @@ public class ListenerInfo {
 	private final String fallbackServer;
 	private final boolean forceDefault;
 	private final boolean websocket;
+	private final boolean forwardIp;
 	private final Map<String, String> forcedHosts;
 	private final TexturePackInfo texturePack;
 	private final Class<? extends TabListHandler> tabList;
+	private final String serverIcon;
+	private final int[] serverIconCache;
+	private boolean serverIconLoaded;
+	private boolean serverIconSet;
+	private final boolean allowMOTD;
+	private final boolean allowQuery;
+	private final MOTDCacheConfiguration cacheConfig;
+	private final WebSocketRateLimiter rateLimitIP;
+	private final WebSocketRateLimiter rateLimitLogin;
+	private final WebSocketRateLimiter rateLimitMOTD;
+	private final WebSocketRateLimiter rateLimitQuery;
+	
 
-	@ConstructorProperties({ "host", "motd", "maxPlayers", "tabListSize", "defaultServer", "fallbackServer", "forceDefault", "websocket", "forcedHosts", "texturePack", "tabList" })
-	public ListenerInfo(final InetSocketAddress host, final String motd, final int maxPlayers, final int tabListSize, final String defaultServer, final String fallbackServer, final boolean forceDefault, final boolean websocket,
-			final Map<String, String> forcedHosts, final TexturePackInfo texturePack, final Class<? extends TabListHandler> tabList) {
+	public ListenerInfo(final String hostString, final InetSocketAddress host, final String motd, final int maxPlayers, final int tabListSize, final String defaultServer, final String fallbackServer, final boolean forceDefault, final boolean websocket,
+			final boolean forwardIp, final Map<String, String> forcedHosts, final TexturePackInfo texturePack, final Class<? extends TabListHandler> tabList, final String serverIcon, final MOTDCacheConfiguration cacheConfig,
+			final boolean allowMOTD, final boolean allowQuery, 	final WebSocketRateLimiter rateLimitIP, final WebSocketRateLimiter rateLimitLogin, final WebSocketRateLimiter rateLimitMOTD, final WebSocketRateLimiter rateLimitQuery) {
+		this.hostString = hostString;
 		this.host = host;
 		this.motd = motd;
 		this.maxPlayers = maxPlayers;
@@ -33,9 +52,25 @@ public class ListenerInfo {
 		this.fallbackServer = fallbackServer;
 		this.forceDefault = forceDefault;
 		this.websocket = websocket;
+		this.forwardIp = forwardIp;
 		this.forcedHosts = forcedHosts;
 		this.texturePack = texturePack;
 		this.tabList = tabList;
+		this.serverIcon = serverIcon;
+		this.serverIconCache = new int[4096];
+		this.serverIconLoaded = false;
+		this.serverIconSet = false;
+		this.allowMOTD = allowMOTD;
+		this.allowQuery = allowQuery;
+		this.cacheConfig = cacheConfig;
+		this.rateLimitIP = rateLimitIP;
+		this.rateLimitLogin = rateLimitLogin;
+		this.rateLimitMOTD = rateLimitMOTD;
+		this.rateLimitQuery = rateLimitQuery;
+	}
+
+	public String getHostString() {
+		return this.hostString;
 	}
 
 	public InetSocketAddress getHost() {
@@ -120,6 +155,9 @@ public class ListenerInfo {
 		if (this.getTabListSize() != other.getTabListSize()) {
 			return false;
 		}
+		if (this.isWebsocket() != other.isWebsocket()) {
+			return false;
+		}
 		final Object this$defaultServer = this.getDefaultServer();
 		final Object other$defaultServer = other.getDefaultServer();
 		Label_0165: {
@@ -180,6 +218,15 @@ public class ListenerInfo {
 		} else if (this$tabList.equals(other$tabList)) {
 			return true;
 		}
+		final Object this$getServerIcon = this.getServerIcon();
+		final Object other$getServerIcon = other.getServerIcon();
+		if (this$getServerIcon == null) {
+			if (other$getServerIcon == null) {
+				return true;
+			}
+		} else if (this$getServerIcon.equals(other$getServerIcon)) {
+			return true;
+		}
 		return false;
 	}
 
@@ -208,6 +255,8 @@ public class ListenerInfo {
 		result = result * 31 + (($texturePack == null) ? 0 : $texturePack.hashCode());
 		final Object $tabList = this.getTabList();
 		result = result * 31 + (($tabList == null) ? 0 : $tabList.hashCode());
+		final Object $serverIconCache = this.getTabList();
+		result = result * 31 + (($serverIconCache == null) ? 0 : $serverIconCache.hashCode());
 		return result;
 	}
 
@@ -220,4 +269,76 @@ public class ListenerInfo {
 	public boolean isWebsocket() {
 		return websocket;
 	}
+
+	public boolean hasForwardedHeaders() {
+		return forwardIp;
+	}
+
+	public String getServerIcon() {
+		return serverIcon;
+	}
+
+	public int[] getServerIconCache() {
+		if(!serverIconLoaded) {
+			if(serverIcon != null) {
+				int[] img = ServerIcon.createServerIcon(new File(serverIcon));
+				if(img != null) {
+					System.arraycopy(img, 0, serverIconCache, 0, img.length);
+					serverIconSet = true;
+				}else {
+					serverIconSet = false;
+				}
+			}else {
+				serverIconSet = false;
+			}
+			serverIconLoaded = true;
+		}
+		return serverIconCache;
+	}
+	
+	public boolean isIconSet() {
+		getServerIconCache();
+		return serverIconSet;
+	}
+
+	public boolean isForwardIp() {
+		return forwardIp;
+	}
+
+	public boolean isServerIconLoaded() {
+		return serverIconLoaded;
+	}
+
+	public boolean isServerIconSet() {
+		return serverIconSet;
+	}
+
+	public boolean isAllowMOTD() {
+		return allowMOTD;
+	}
+
+	public boolean isAllowQuery() {
+		return allowQuery;
+	}
+
+	public MOTDCacheConfiguration getCacheConfig() {
+		return cacheConfig;
+	}
+
+	public WebSocketRateLimiter getRateLimitIP() {
+		return rateLimitIP;
+	}
+
+	public WebSocketRateLimiter getRateLimitLogin() {
+		return rateLimitLogin;
+	}
+
+	public WebSocketRateLimiter getRateLimitMOTD() {
+		return rateLimitMOTD;
+	}
+
+	public WebSocketRateLimiter getRateLimitQuery() {
+		return rateLimitQuery;
+	}
+
 }

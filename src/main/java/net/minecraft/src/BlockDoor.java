@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockDoor extends Block {
 	private static final String[] doorIconNames = new String[] { "doorWood_lower", "doorWood_upper", "doorIron_lower", "doorIron_upper" };
@@ -281,11 +281,7 @@ public class BlockDoor extends Block {
 				}
 			}
 
-			if (var7) {
-				if (!par1World.isRemote) {
-					this.dropBlockAsItem(par1World, par2, par3, par4, var6, 0);
-				}
-			} else {
+			if (!var7) {
 				boolean var8 = par1World.isBlockIndirectlyGettingPowered(par2, par3, par4) || par1World.isBlockIndirectlyGettingPowered(par2, par3 + 1, par4);
 
 				if ((var8 || par5 > 0 && Block.blocksList[par5].canProvidePower()) && par5 != this.blockID) {
@@ -306,7 +302,7 @@ public class BlockDoor extends Block {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return (par1 & 8) != 0 ? 0 : (this.blockMaterial == Material.iron ? Item.doorIron.itemID : Item.doorWood.itemID);
 	}
 

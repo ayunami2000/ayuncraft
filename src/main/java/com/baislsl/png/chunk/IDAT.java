@@ -5,7 +5,7 @@ package com.baislsl.png.chunk;
  */
 public class IDAT extends Chunk {
 
-    public IDAT(byte[] length, byte[] type, byte[] data, byte[] crc) {
-        super(length, type, data, crc);
-    }
+	public IDAT(byte[] length, byte[] type, byte[] data, byte[] crc) {
+		super(length, type, data, crc);
+	}
 }

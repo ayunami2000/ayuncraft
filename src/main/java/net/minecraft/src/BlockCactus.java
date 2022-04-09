@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockCactus extends Block {
 	private Icon cactusTopIcon;
@@ -15,7 +15,7 @@ public class BlockCactus extends Block {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		if (par1World.isAirBlock(par2, par3 + 1, par4)) {
 			int var6;
 

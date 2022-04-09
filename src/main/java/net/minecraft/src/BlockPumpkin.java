@@ -30,19 +30,6 @@ public class BlockPumpkin extends BlockDirectional {
 		super.onBlockAdded(par1World, par2, par3, par4);
 
 		if (par1World.getBlockId(par2, par3 - 1, par4) == Block.blockSnow.blockID && par1World.getBlockId(par2, par3 - 2, par4) == Block.blockSnow.blockID) {
-			if (!par1World.isRemote) {
-				par1World.setBlock(par2, par3, par4, 0, 0, 2);
-				par1World.setBlock(par2, par3 - 1, par4, 0, 0, 2);
-				par1World.setBlock(par2, par3 - 2, par4, 0, 0, 2);
-				EntitySnowman var9 = new EntitySnowman();
-				var9.setWorld(par1World);
-				var9.setLocationAndAngles((double) par2 + 0.5D, (double) par3 - 1.95D, (double) par4 + 0.5D, 0.0F, 0.0F);
-				par1World.spawnEntityInWorld(var9);
-				par1World.notifyBlockChange(par2, par3, par4, 0);
-				par1World.notifyBlockChange(par2, par3 - 1, par4, 0);
-				par1World.notifyBlockChange(par2, par3 - 2, par4, 0);
-			}
-
 			for (int var10 = 0; var10 < 120; ++var10) {
 				par1World.spawnParticle("snowshovel", (double) par2 + par1World.rand.nextDouble(), (double) (par3 - 2) + par1World.rand.nextDouble() * 2.5D, (double) par4 + par1World.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
 			}

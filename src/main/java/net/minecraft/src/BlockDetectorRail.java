@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
 
 public class BlockDetectorRail extends BlockRailBase {
 	private Icon[] iconArray;
@@ -24,33 +23,6 @@ public class BlockDetectorRail extends BlockRailBase {
 	 */
 	public boolean canProvidePower() {
 		return true;
-	}
-
-	/**
-	 * Triggered whenever an entity collides with this block (enters into the
-	 * block). Args: world, x, y, z, entity
-	 */
-	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity) {
-		if (!par1World.isRemote) {
-			int var6 = par1World.getBlockMetadata(par2, par3, par4);
-
-			if ((var6 & 8) == 0) {
-				this.setStateIfMinecartInteractsWithRail(par1World, par2, par3, par4, var6);
-			}
-		}
-	}
-
-	/**
-	 * Ticks the block if it's been scheduled
-	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-		if (!par1World.isRemote) {
-			int var6 = par1World.getBlockMetadata(par2, par3, par4);
-
-			if ((var6 & 8) != 0) {
-				this.setStateIfMinecartInteractsWithRail(par1World, par2, par3, par4, var6);
-			}
-		}
 	}
 
 	/**

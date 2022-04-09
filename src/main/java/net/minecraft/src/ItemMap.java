@@ -25,20 +25,6 @@ public class ItemMap extends ItemMapBase {
 	public MapData getMapData(ItemStack par1ItemStack, World par2World) {
 		String var3 = "map_" + par1ItemStack.getItemDamage();
 		MapData var4 = (MapData) par2World.loadItemData(MapData.class, var3);
-
-		if (var4 == null && !par2World.isRemote) {
-			par1ItemStack.setItemDamage(par2World.getUniqueDataId("map"));
-			var3 = "map_" + par1ItemStack.getItemDamage();
-			var4 = new MapData(var3);
-			var4.scale = 3;
-			int var5 = 128 * (1 << var4.scale);
-			var4.xCenter = Math.round((float) par2World.getWorldInfo().getSpawnX() / (float) var5) * var5;
-			var4.zCenter = Math.round((float) (par2World.getWorldInfo().getSpawnZ() / var5)) * var5;
-			var4.dimension = (byte) par2World.provider.dimensionId;
-			var4.markDirty();
-			par2World.setItemData(var3, var4);
-		}
-
 		return var4;
 	}
 
@@ -223,18 +209,6 @@ public class ItemMap extends ItemMapBase {
 	 * check if is on a player hand and update it's contents.
 	 */
 	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
-		if (!par2World.isRemote) {
-			MapData var6 = this.getMapData(par1ItemStack, par2World);
-
-			if (par3Entity instanceof EntityPlayer) {
-				EntityPlayer var7 = (EntityPlayer) par3Entity;
-				var6.updateVisiblePlayers(var7, par1ItemStack);
-			}
-
-			if (par5) {
-				this.updateMapData(par2World, par3Entity, var6);
-			}
-		}
 	}
 
 	/**

@@ -106,28 +106,6 @@ public class BlockFenceGate extends BlockDirectional {
 	}
 
 	/**
-	 * Lets the block know when one of its neighbor changes. Doesn't know which
-	 * neighbor changed (coordinates passed are their own) Args: x, y, z, neighbor
-	 * blockID
-	 */
-	public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5) {
-		if (!par1World.isRemote) {
-			int var6 = par1World.getBlockMetadata(par2, par3, par4);
-			boolean var7 = par1World.isBlockIndirectlyGettingPowered(par2, par3, par4);
-
-			if (var7 || par5 > 0 && Block.blocksList[par5].canProvidePower()) {
-				if (var7 && !isFenceGateOpen(var6)) {
-					par1World.setBlockMetadataWithNotify(par2, par3, par4, var6 | 4, 2);
-					par1World.playAuxSFXAtEntity((EntityPlayer) null, 1003, par2, par3, par4, 0);
-				} else if (!var7 && isFenceGateOpen(var6)) {
-					par1World.setBlockMetadataWithNotify(par2, par3, par4, var6 & -5, 2);
-					par1World.playAuxSFXAtEntity((EntityPlayer) null, 1003, par2, par3, par4, 0);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Returns if the fence gate is open according to its metadata.
 	 */
 	public static boolean isFenceGateOpen(int par0) {

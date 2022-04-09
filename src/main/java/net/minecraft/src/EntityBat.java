@@ -190,10 +190,6 @@ public class EntityBat extends EntityAmbientCreature {
 		if (this.isEntityInvulnerable()) {
 			return false;
 		} else {
-			if (!this.worldObj.isRemote && this.getIsBatHanging()) {
-				this.setIsBatHanging(false);
-			}
-
 			return super.attackEntityFrom(par1DamageSource, par2);
 		}
 	}

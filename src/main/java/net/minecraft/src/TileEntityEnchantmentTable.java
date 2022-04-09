@@ -1,8 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class TileEntityEnchantmentTable extends TileEntity {
 	/** Used by the render to make the book 'bounce' */
@@ -24,7 +22,7 @@ public class TileEntityEnchantmentTable extends TileEntity {
 	public float bookRotation2;
 	public float bookRotationPrev;
 	public float bookRotation;
-	private static Random rand = new Random();
+	private static EaglercraftRandom rand = new EaglercraftRandom();
 	private String field_94136_s;
 
 	/**

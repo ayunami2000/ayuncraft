@@ -319,23 +319,6 @@ public class ContainerRepair extends Container {
 		}
 	}
 
-	/**
-	 * Callback for when the crafting gui is closed.
-	 */
-	public void onCraftGuiClosed(EntityPlayer par1EntityPlayer) {
-		super.onCraftGuiClosed(par1EntityPlayer);
-
-		if (!this.theWorld.isRemote) {
-			for (int var2 = 0; var2 < this.inputSlots.getSizeInventory(); ++var2) {
-				ItemStack var3 = this.inputSlots.getStackInSlotOnClosing(var2);
-
-				if (var3 != null) {
-					par1EntityPlayer.dropPlayerItem(var3);
-				}
-			}
-		}
-	}
-
 	public boolean canInteractWith(EntityPlayer par1EntityPlayer) {
 		return this.theWorld.getBlockId(this.field_82861_i, this.field_82858_j, this.field_82859_k) != Block.anvil.blockID ? false
 				: par1EntityPlayer.getDistanceSq((double) this.field_82861_i + 0.5D, (double) this.field_82858_j + 0.5D, (double) this.field_82859_k + 0.5D) <= 64.0D;

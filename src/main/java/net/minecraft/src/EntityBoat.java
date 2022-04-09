@@ -90,26 +90,6 @@ public class EntityBoat extends Entity {
 	public boolean attackEntityFrom(DamageSource par1DamageSource, int par2) {
 		if (this.isEntityInvulnerable()) {
 			return false;
-		} else if (!this.worldObj.isRemote && !this.isDead) {
-			this.setForwardDirection(-this.getForwardDirection());
-			this.setTimeSinceHit(10);
-			this.setDamageTaken(this.getDamageTaken() + par2 * 10);
-			this.setBeenAttacked();
-			boolean var3 = par1DamageSource.getEntity() instanceof EntityPlayer && ((EntityPlayer) par1DamageSource.getEntity()).capabilities.isCreativeMode;
-
-			if (var3 || this.getDamageTaken() > 40) {
-				if (this.riddenByEntity != null) {
-					this.riddenByEntity.mountEntity(this);
-				}
-
-				if (!var3) {
-					this.dropItemWithOffset(Item.boat.itemID, 1, 0.0F);
-				}
-
-				this.setDead();
-			}
-
-			return true;
 		} else {
 			return true;
 		}
@@ -231,7 +211,7 @@ public class EntityBoat extends Entity {
 		double var12;
 		double var25;
 
-		if (this.worldObj.isRemote && this.field_70279_a) {
+		if (this.field_70279_a) {
 			if (this.boatPosRotationIncrements > 0) {
 				var6 = this.posX + (this.boatX - this.posX) / (double) this.boatPosRotationIncrements;
 				var8 = this.posY + (this.boatY - this.posY) / (double) this.boatPosRotationIncrements;
@@ -306,20 +286,7 @@ public class EntityBoat extends Entity {
 
 			this.moveEntity(this.motionX, this.motionY, this.motionZ);
 
-			if (this.isCollidedHorizontally && var23 > 0.2D) {
-				if (!this.worldObj.isRemote && !this.isDead) {
-					this.setDead();
-					int var24;
-
-					for (var24 = 0; var24 < 3; ++var24) {
-						this.dropItemWithOffset(Block.planks.blockID, 1, 0.0F);
-					}
-
-					for (var24 = 0; var24 < 2; ++var24) {
-						this.dropItemWithOffset(Item.stick.itemID, 1, 0.0F);
-					}
-				}
-			} else {
+			if (!(this.isCollidedHorizontally && var23 > 0.2D)) {
 				this.motionX *= 0.9900000095367432D;
 				this.motionY *= 0.949999988079071D;
 				this.motionZ *= 0.9900000095367432D;
@@ -346,41 +313,6 @@ public class EntityBoat extends Entity {
 
 			this.rotationYaw = (float) ((double) this.rotationYaw + var14);
 			this.setRotation(this.rotationYaw, this.rotationPitch);
-
-			if (!this.worldObj.isRemote) {
-				List var16 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
-				int var26;
-
-				if (var16 != null && !var16.isEmpty()) {
-					for (var26 = 0; var26 < var16.size(); ++var26) {
-						Entity var18 = (Entity) var16.get(var26);
-
-						if (var18 != this.riddenByEntity && var18.canBePushed() && var18 instanceof EntityBoat) {
-							var18.applyEntityCollision(this);
-						}
-					}
-				}
-
-				for (var26 = 0; var26 < 4; ++var26) {
-					int var27 = MathHelper.floor_double(this.posX + ((double) (var26 % 2) - 0.5D) * 0.8D);
-					int var19 = MathHelper.floor_double(this.posZ + ((double) (var26 / 2) - 0.5D) * 0.8D);
-
-					for (int var20 = 0; var20 < 2; ++var20) {
-						int var21 = MathHelper.floor_double(this.posY) + var20;
-						int var22 = this.worldObj.getBlockId(var27, var21, var19);
-
-						if (var22 == Block.snow.blockID) {
-							this.worldObj.setBlockToAir(var27, var21, var19);
-						} else if (var22 == Block.waterlily.blockID) {
-							this.worldObj.destroyBlock(var27, var21, var19, true);
-						}
-					}
-				}
-
-				if (this.riddenByEntity != null && this.riddenByEntity.isDead) {
-					this.riddenByEntity = null;
-				}
-			}
 		}
 	}
 
@@ -413,15 +345,7 @@ public class EntityBoat extends Entity {
 	 * into the saddle on a pig.
 	 */
 	public boolean interact(EntityPlayer par1EntityPlayer) {
-		if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityPlayer && this.riddenByEntity != par1EntityPlayer) {
-			return true;
-		} else {
-			if (!this.worldObj.isRemote) {
-				par1EntityPlayer.mountEntity(this);
-			}
-
-			return true;
-		}
+		return true;
 	}
 
 	/**

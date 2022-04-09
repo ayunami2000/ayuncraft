@@ -48,36 +48,6 @@ public class EntityWitherSkull extends EntityFireball {
 	 * Called when this EntityFireball hits a block or entity.
 	 */
 	protected void onImpact(MovingObjectPosition par1MovingObjectPosition) {
-		if (!this.worldObj.isRemote) {
-			if (par1MovingObjectPosition.entityHit != null) {
-				if (this.shootingEntity != null) {
-					if (par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeMobDamage(this.shootingEntity), 8) && !par1MovingObjectPosition.entityHit.isEntityAlive()) {
-						this.shootingEntity.heal(5);
-					}
-				} else {
-					par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.magic, 5);
-				}
-
-				if (par1MovingObjectPosition.entityHit instanceof EntityLiving) {
-					byte var2 = 0;
-
-					if (this.worldObj.difficultySetting > 1) {
-						if (this.worldObj.difficultySetting == 2) {
-							var2 = 10;
-						} else if (this.worldObj.difficultySetting == 3) {
-							var2 = 40;
-						}
-					}
-
-					if (var2 > 0) {
-						((EntityLiving) par1MovingObjectPosition.entityHit).addPotionEffect(new PotionEffect(Potion.wither.id, 20 * var2, 1));
-					}
-				}
-			}
-
-			this.worldObj.newExplosion(this, this.posX, this.posY, this.posZ, 1.0F, false, this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"));
-			this.setDead();
-		}
 	}
 
 	/**

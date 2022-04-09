@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockCrops extends BlockFlower {
 	private Icon[] iconArray;
@@ -27,7 +27,7 @@ public class BlockCrops extends BlockFlower {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		super.updateTick(par1World, par2, par3, par4, par5Random);
 
 		if (par1World.getBlockLightValue(par2, par3 + 1, par4) >= 9) {
@@ -139,35 +139,16 @@ public class BlockCrops extends BlockFlower {
 	}
 
 	/**
-	 * Drops the block items with a specified chance of dropping the specified items
-	 */
-	public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {
-		super.dropBlockAsItemWithChance(par1World, par2, par3, par4, par5, par6, 0);
-
-		if (!par1World.isRemote) {
-			if (par5 >= 7) {
-				int var8 = 3 + par7;
-
-				for (int var9 = 0; var9 < var8; ++var9) {
-					if (par1World.rand.nextInt(15) <= par5) {
-						this.dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(this.getSeedItem(), 1, 0));
-					}
-				}
-			}
-		}
-	}
-
-	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return par1 == 7 ? this.getCropItem() : this.getSeedItem();
 	}
 
 	/**
 	 * Returns the quantity of items to drop on block destruction.
 	 */
-	public int quantityDropped(Random par1Random) {
+	public int quantityDropped(EaglercraftRandom par1Random) {
 		return 1;
 	}
 

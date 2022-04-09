@@ -99,14 +99,6 @@ public abstract class EntityHanging extends Entity {
 	 * Called to update the entity's position/logic.
 	 */
 	public void onUpdate() {
-		if (this.tickCounter1++ == 100 && !this.worldObj.isRemote) {
-			this.tickCounter1 = 0;
-
-			if (!this.isDead && !this.onValidSurface()) {
-				this.setDead();
-				this.dropItemStack();
-			}
-		}
 	}
 
 	/**
@@ -191,22 +183,6 @@ public abstract class EntityHanging extends Entity {
 		if (this.isEntityInvulnerable()) {
 			return false;
 		} else {
-			if (!this.isDead && !this.worldObj.isRemote) {
-				this.setDead();
-				this.setBeenAttacked();
-				EntityPlayer var3 = null;
-
-				if (par1DamageSource.getEntity() instanceof EntityPlayer) {
-					var3 = (EntityPlayer) par1DamageSource.getEntity();
-				}
-
-				if (var3 != null && var3.capabilities.isCreativeMode) {
-					return true;
-				}
-
-				this.dropItemStack();
-			}
-
 			return true;
 		}
 	}
@@ -215,20 +191,12 @@ public abstract class EntityHanging extends Entity {
 	 * Tries to moves the entity by the passed in displacement. Args: x, y, z
 	 */
 	public void moveEntity(double par1, double par3, double par5) {
-		if (!this.worldObj.isRemote && !this.isDead && par1 * par1 + par3 * par3 + par5 * par5 > 0.0D) {
-			this.setDead();
-			this.dropItemStack();
-		}
 	}
 
 	/**
 	 * Adds to the current velocity of the entity. Args: x, y, z
 	 */
 	public void addVelocity(double par1, double par3, double par5) {
-		if (!this.worldObj.isRemote && !this.isDead && par1 * par1 + par3 * par3 + par5 * par5 > 0.0D) {
-			this.setDead();
-			this.dropItemStack();
-		}
 	}
 
 	/**

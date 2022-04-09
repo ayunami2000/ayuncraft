@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
 
 public abstract class BlockButton extends Block {
 	/** Whether this button is sensible to arrows, used by wooden buttons. */
@@ -248,27 +247,6 @@ public abstract class BlockButton extends Block {
 	}
 
 	/**
-	 * Ticks the block if it's been scheduled
-	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-		if (!par1World.isRemote) {
-			int var6 = par1World.getBlockMetadata(par2, par3, par4);
-
-			if ((var6 & 8) != 0) {
-				if (this.sensible) {
-					this.func_82535_o(par1World, par2, par3, par4);
-				} else {
-					par1World.setBlockMetadataWithNotify(par2, par3, par4, var6 & 7, 3);
-					int var7 = var6 & 7;
-					this.func_82536_d(par1World, par2, par3, par4, var7);
-					par1World.playSoundEffect((double) par2 + 0.5D, (double) par3 + 0.5D, (double) par4 + 0.5D, "random.click", 0.3F, 0.5F);
-					par1World.markBlockRangeForRenderUpdate(par2, par3, par4, par2, par3, par4);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Sets the block's bounds for rendering it as an item
 	 */
 	public void setBlockBoundsForItemRender() {
@@ -276,20 +254,6 @@ public abstract class BlockButton extends Block {
 		float var2 = 0.125F;
 		float var3 = 0.125F;
 		this.setBlockBounds(0.5F - var1, 0.5F - var2, 0.5F - var3, 0.5F + var1, 0.5F + var2, 0.5F + var3);
-	}
-
-	/**
-	 * Triggered whenever an entity collides with this block (enters into the
-	 * block). Args: world, x, y, z, entity
-	 */
-	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity) {
-		if (!par1World.isRemote) {
-			if (this.sensible) {
-				if ((par1World.getBlockMetadata(par2, par3, par4) & 8) == 0) {
-					this.func_82535_o(par1World, par2, par3, par4);
-				}
-			}
-		}
 	}
 
 	private void func_82535_o(World par1World, int par2, int par3, int par4) {

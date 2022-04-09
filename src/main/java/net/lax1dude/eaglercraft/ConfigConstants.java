@@ -6,7 +6,7 @@ public class ConfigConstants {
 	
 	public static boolean profanity = false;
 
-	public static final String version = "22w04b";
+	public static final String version = "22w14b";
 	public static final String mainMenuString = "ayuncraft " + version;
 	
 	public static final String forkMe = "https://github.com/ayunami2000/ayuncraft";

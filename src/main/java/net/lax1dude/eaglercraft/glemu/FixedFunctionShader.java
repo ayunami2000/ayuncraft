@@ -200,6 +200,38 @@ public class FixedFunctionShader {
 		globject = _wglCreateProgram();
 		_wglAttachShader(globject, v);
 		_wglAttachShader(globject, f);
+		
+		int i = 0;
+		a_position = i++;
+		_wglBindAttributeLocation(globject, a_position, "a_position");
+		
+		if(enable_texture0) {
+			a_texture0 = i++;
+			_wglBindAttributeLocation(globject, a_texture0, "a_texture0");
+		}else {
+			a_texture0 = -1;
+		}
+		if(enable_color) {
+			a_color = i++;
+			_wglBindAttributeLocation(globject, a_color, "a_color");
+		}else {
+			a_color = -1;
+		}
+		if(enable_normal) {
+			a_normal = i++;
+			_wglBindAttributeLocation(globject, a_normal, "a_normal");
+		}else {
+			a_normal = -1;
+		}
+		if(enable_texture1) {
+			a_texture1 = i++;
+			_wglBindAttributeLocation(globject, a_texture1, "a_texture1");
+		}else {
+			a_texture1 = -1;
+		}
+		
+		attributeIndexesToEnable = i;
+		
 		_wglLinkProgram(globject);
 		
 		_wglDetachShader(globject, v);
@@ -262,37 +294,6 @@ public class FixedFunctionShader {
 		
 		u_texCoordV0 = _wglGetUniformLocation(globject, "texCoordV0");
 		u_texCoordV1 = _wglGetUniformLocation(globject, "texCoordV1");
-		
-		int i = 0;
-		a_position = i++;
-		_wglBindAttributeLocation(globject, a_position, "a_position");
-		
-		if(enable_texture0) {
-			a_texture0 = i++;
-			_wglBindAttributeLocation(globject, a_texture0, "a_texture0");
-		}else {
-			a_texture0 = -1;
-		}
-		if(enable_color) {
-			a_color = i++;
-			_wglBindAttributeLocation(globject, a_color, "a_color");
-		}else {
-			a_color = -1;
-		}
-		if(enable_normal) {
-			a_normal = i++;
-			_wglBindAttributeLocation(globject, a_normal, "a_normal");
-		}else {
-			a_normal = -1;
-		}
-		if(enable_texture1) {
-			a_texture1 = i++;
-			_wglBindAttributeLocation(globject, a_texture1, "a_texture1");
-		}else {
-			a_texture1 = -1;
-		}
-		
-		attributeIndexesToEnable = i;
 		
 		genericArray = _wglCreateVertexArray();
 		genericBuffer = _wglCreateBuffer();

@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class Chunk {
 	/**
@@ -516,18 +515,10 @@ public class Chunk {
 			int var12 = this.xPosition * 16 + par1;
 			int var13 = this.zPosition * 16 + par3;
 
-			if (var8 != 0 && !this.worldObj.isRemote) {
-				Block.blocksList[var8].onSetBlockIDWithMetaData(this.worldObj, var12, par2, var13, var9);
-			}
-
 			var10.setExtBlockID(par1, par2 & 15, par3, par4);
 
 			if (var8 != 0) {
-				if (!this.worldObj.isRemote) {
-					Block.blocksList[var8].breakBlock(this.worldObj, var12, par2, var13, var8, var9);
-				} else if (Block.blocksList[var8] instanceof ITileEntityProvider && var8 != par4) {
-					this.worldObj.removeBlockTileEntity(var12, par2, var13);
-				}
+				this.worldObj.removeBlockTileEntity(var12, par2, var13);
 			}
 
 			if (var10.getExtBlockID(par1, par2 & 15, par3) != par4) {
@@ -552,10 +543,6 @@ public class Chunk {
 				TileEntity var14;
 
 				if (par4 != 0) {
-					if (!this.worldObj.isRemote) {
-						Block.blocksList[par4].onBlockAdded(this.worldObj, var12, par2, var13);
-					}
-
 					if (Block.blocksList[par4] instanceof ITileEntityProvider) {
 						var14 = this.getChunkBlockTileEntity(par1, par2, par3);
 
@@ -938,8 +925,8 @@ public class Chunk {
 		return this.isModified;
 	}
 
-	public Random getRandomWithSeed(long par1) {
-		return new Random(this.worldObj.getSeed() + (long) (this.xPosition * this.xPosition * 4987142) + (long) (this.xPosition * 5947611) + (long) (this.zPosition * this.zPosition) * 4392871L + (long) (this.zPosition * 389711) ^ par1);
+	public EaglercraftRandom getRandomWithSeed(long par1) {
+		return new EaglercraftRandom(this.worldObj.getSeed() + (long) (this.xPosition * this.xPosition * 4987142) + (long) (this.xPosition * 5947611) + (long) (this.zPosition * this.zPosition) * 4392871L + (long) (this.zPosition * 389711) ^ par1);
 	}
 
 	public boolean isEmpty() {

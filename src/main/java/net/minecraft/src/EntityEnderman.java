@@ -107,52 +107,9 @@ public class EntityEnderman extends EntityMob {
 		this.moveSpeed = this.entityToAttack != null ? 6.5F : 0.3F;
 		int var1;
 
-		if (!this.worldObj.isRemote && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")) {
-			int var2;
-			int var3;
-			int var4;
-
-			if (this.getCarried() == 0) {
-				if (this.rand.nextInt(20) == 0) {
-					var1 = MathHelper.floor_double(this.posX - 2.0D + this.rand.nextDouble() * 4.0D);
-					var2 = MathHelper.floor_double(this.posY + this.rand.nextDouble() * 3.0D);
-					var3 = MathHelper.floor_double(this.posZ - 2.0D + this.rand.nextDouble() * 4.0D);
-					var4 = this.worldObj.getBlockId(var1, var2, var3);
-
-					if (carriableBlocks[var4]) {
-						this.setCarried(this.worldObj.getBlockId(var1, var2, var3));
-						this.setCarryingData(this.worldObj.getBlockMetadata(var1, var2, var3));
-						this.worldObj.setBlock(var1, var2, var3, 0);
-					}
-				}
-			} else if (this.rand.nextInt(2000) == 0) {
-				var1 = MathHelper.floor_double(this.posX - 1.0D + this.rand.nextDouble() * 2.0D);
-				var2 = MathHelper.floor_double(this.posY + this.rand.nextDouble() * 2.0D);
-				var3 = MathHelper.floor_double(this.posZ - 1.0D + this.rand.nextDouble() * 2.0D);
-				var4 = this.worldObj.getBlockId(var1, var2, var3);
-				int var5 = this.worldObj.getBlockId(var1, var2 - 1, var3);
-
-				if (var4 == 0 && var5 > 0 && Block.blocksList[var5].renderAsNormalBlock()) {
-					this.worldObj.setBlock(var1, var2, var3, this.getCarried(), this.getCarryingData(), 3);
-					this.setCarried(0);
-				}
-			}
-		}
-
 		for (var1 = 0; var1 < 2; ++var1) {
 			this.worldObj.spawnParticle("portal", this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width, this.posY + this.rand.nextDouble() * (double) this.height - 0.25D,
 					this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width, (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D);
-		}
-
-		if (this.worldObj.isDaytime() && !this.worldObj.isRemote) {
-			float var6 = this.getBrightness(1.0F);
-
-			if (var6 > 0.5F && this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ)) && this.rand.nextFloat() * 30.0F < (var6 - 0.4F) * 2.0F) {
-				this.entityToAttack = null;
-				this.setScreaming(false);
-				this.field_104003_g = false;
-				this.teleportRandomly();
-			}
 		}
 
 		if (this.isWet() || this.isBurning()) {
@@ -170,26 +127,6 @@ public class EntityEnderman extends EntityMob {
 
 		if (this.entityToAttack != null) {
 			this.faceEntity(this.entityToAttack, 100.0F, 100.0F);
-		}
-
-		if (!this.worldObj.isRemote && this.isEntityAlive()) {
-			if (this.entityToAttack != null) {
-				if (this.entityToAttack instanceof EntityPlayer && this.shouldAttackPlayer((EntityPlayer) this.entityToAttack)) {
-					this.moveStrafing = this.moveForward = 0.0F;
-					this.moveSpeed = 0.0F;
-
-					if (this.entityToAttack.getDistanceSqToEntity(this) < 16.0D) {
-						this.teleportRandomly();
-					}
-
-					this.teleportDelay = 0;
-				} else if (this.entityToAttack.getDistanceSqToEntity(this) > 256.0D && this.teleportDelay++ >= 30 && this.teleportToEntity(this.entityToAttack)) {
-					this.teleportDelay = 0;
-				}
-			} else {
-				this.setScreaming(false);
-				this.teleportDelay = 0;
-			}
 		}
 
 		super.onLivingUpdate();

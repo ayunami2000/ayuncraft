@@ -94,33 +94,7 @@ public class EntitySkeleton extends EntityMob implements IRangedAttackMob {
 	 * burn.
 	 */
 	public void onLivingUpdate() {
-		if (this.worldObj.isDaytime() && !this.worldObj.isRemote) {
-			float var1 = this.getBrightness(1.0F);
-
-			if (var1 > 0.5F && this.rand.nextFloat() * 30.0F < (var1 - 0.4F) * 2.0F && this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))) {
-				boolean var2 = true;
-				ItemStack var3 = this.getCurrentItemOrArmor(4);
-
-				if (var3 != null) {
-					if (var3.isItemStackDamageable()) {
-						var3.setItemDamage(var3.getItemDamageForDisplay() + this.rand.nextInt(2));
-
-						if (var3.getItemDamageForDisplay() >= var3.getMaxDamage()) {
-							this.renderBrokenItemStack(var3);
-							this.setCurrentItemOrArmor(4, (ItemStack) null);
-						}
-					}
-
-					var2 = false;
-				}
-
-				if (var2) {
-					this.setFire(8);
-				}
-			}
-		}
-
-		if (this.worldObj.isRemote && this.getSkeletonType() == 1) {
+		if (this.getSkeletonType() == 1) {
 			this.setSize(0.72F, 2.34F);
 		}
 
@@ -275,17 +249,5 @@ public class EntitySkeleton extends EntityMob implements IRangedAttackMob {
 	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeEntityToNBT(par1NBTTagCompound);
 		par1NBTTagCompound.setByte("SkeletonType", (byte) this.getSkeletonType());
-	}
-
-	/**
-	 * Sets the held item, or an armor slot. Slot 0 is held item. Slot 1-4 is armor.
-	 * Params: Item, slot
-	 */
-	public void setCurrentItemOrArmor(int par1, ItemStack par2ItemStack) {
-		super.setCurrentItemOrArmor(par1, par2ItemStack);
-
-		if (!this.worldObj.isRemote && par1 == 0) {
-			this.setCombatTask();
-		}
 	}
 }

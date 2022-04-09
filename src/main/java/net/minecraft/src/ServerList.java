@@ -2,11 +2,16 @@ package net.minecraft.src;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.lax1dude.eaglercraft.Base64;
 import net.lax1dude.eaglercraft.ConfigConstants;
+import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.LocalStorageManager;
+import net.lax1dude.eaglercraft.ServerQuery.QueryResponse;
+import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.RateLimit;
 import net.minecraft.client.Minecraft;
 
 public class ServerList {
@@ -14,9 +19,10 @@ public class ServerList {
 	private final Minecraft mc;
 
 	/** List of ServerData instances. */
-	private final List servers = new ArrayList();
+	private final List<ServerData> servers = new ArrayList();
 	
 	public static final List<ServerData> forcedServers = new ArrayList();
+	private static final Set<String> motdLocks = new HashSet();
 
 	public ServerList(Minecraft par1Minecraft) {
 		this.mc = par1Minecraft;
@@ -45,8 +51,13 @@ public class ServerList {
 	 * "servers" tag list.
 	 */
 	public void loadServerList() {
+		freeServerIcons();
 		this.servers.clear();
-		this.servers.addAll(forcedServers);
+		for(ServerData dat : forcedServers) {
+			dat.pingSentTime = -1l;
+			dat.hasPing = false;
+			this.servers.add(dat);
+		}
 		NBTTagList servers = LocalStorageManager.gameSettingsStorage.getTagList("servers");
 		for (int i = 0; i < servers.tagCount(); ++i) {
 			this.servers.add(ServerData.getServerDataFromNBTCompound((NBTTagCompound) servers.tagAt(i)));
@@ -77,13 +88,18 @@ public class ServerList {
 	 * Removes the ServerData instance stored for the given index in the list.
 	 */
 	public void removeServerData(int par1) {
-		this.servers.remove(par1);
+		ServerData dat = this.servers.remove(par1);
+		if(dat != null) {
+			dat.freeIcon();
+		}
 	}
 
 	/**
 	 * Adds the given ServerData instance to the list.
 	 */
 	public void addServerData(ServerData par1ServerData) {
+		par1ServerData.pingSentTime = -1l;
+		par1ServerData.hasPing = false;
 		this.servers.add(par1ServerData);
 	}
 
@@ -110,20 +126,103 @@ public class ServerList {
 	public void setServer(int par1, ServerData par2ServerData) {
 		this.servers.set(par1, par2ServerData);
 	}
-
-	public static void func_78852_b(ServerData par0ServerData) {
-		ServerList var1 = new ServerList(Minecraft.getMinecraft());
-		var1.loadServerList();
-
-		for (int var2 = 0; var2 < var1.countServers(); ++var2) {
-			ServerData var3 = var1.getServerData(var2);
-
-			if (var3.serverName.equals(par0ServerData.serverName) && var3.serverIP.equals(par0ServerData.serverIP)) {
-				var1.setServer(var2, par0ServerData);
+	
+	public void freeServerIcons() {
+		for(ServerData dat : servers) {
+			if(dat.currentQuery != null && dat.currentQuery.isQueryOpen()) {
+				dat.currentQuery.close();
+			}
+			if(dat.serverIconGL != -1) {
+				EaglerAdapter.glDeleteTextures(dat.serverIconGL);
+				dat.serverIconGL = -1;
+			}
+			dat.serverIconDirty = false;
+			dat.serverIconEnabled = false;
+		}
+	}
+	
+	public void refreshServerPing() {
+		for(ServerData dat : servers) {
+			if(dat.currentQuery != null && dat.currentQuery.isQueryOpen()) {
+				dat.currentQuery.close();
+			}
+			dat.hasPing = false;
+			dat.pingSentTime = -1l;
+		}
+	}
+	
+	public void updateServerPing() {
+		int total = 0;
+		for(ServerData dat : servers) {
+			if(dat.pingSentTime <= 0l) {
+				dat.pingToServer = -2l;
+				String addr = dat.serverIP;
+				if(!addr.startsWith("ws://") && !addr.startsWith("wss://")) {
+					if(EaglerAdapter.isSSLPage()) {
+						addr = "wss://" + addr;
+					}else {
+						addr = "ws://" + addr;
+					}
+				}
+				dat.pingSentTime = System.currentTimeMillis();
+				dat.currentQuery = EaglerAdapter.openQuery("MOTD", addr);
+				if(dat.currentQuery == null) {
+					dat.hasPing = true;
+				}else {
+					++total;
+				}
+			}else if(dat.currentQuery != null) {
+				if(!dat.hasPing) {
+					++total;
+				}
+				if(dat.currentQuery.responseAvailable() > 0) {
+					QueryResponse pkt;
+					do {
+						pkt = dat.currentQuery.getResponse();
+					}while(dat.currentQuery.responseAvailable() > 0);
+					if(pkt.rateLimitStatus != null) {
+						if(pkt.rateLimitStatus == RateLimit.LOCKED) {
+							dat.setRateLimitError(true, pkt.rateLimitIsTCP);
+						}else if(pkt.rateLimitStatus == RateLimit.BLOCKED) {
+							dat.setRateLimitError(false, pkt.rateLimitIsTCP);
+						}
+						dat.currentQuery.close();
+						dat.pingToServer = -1l;
+						dat.hasPing = true;
+					}else {
+						if(pkt.responseType.equalsIgnoreCase("MOTD") && pkt.isResponseJSON()) {
+							dat.setMOTDFromQuery(pkt);
+							if(!dat.hasPing) {
+								dat.pingToServer = pkt.clientTime - dat.pingSentTime;
+								dat.hasPing = true;
+							}
+						}
+					}
+				}
+				if(dat.currentQuery.responseBinaryAvailable() > 0) {
+					byte[] r;
+					do {
+						r = dat.currentQuery.getBinaryResponse();
+					}while(dat.currentQuery.responseBinaryAvailable() > 0);
+					if(r.length == 4096 * 4) {
+						if(dat.serverIcon == null) {
+							dat.serverIcon = new int[4096];
+						}
+						for(int i = 0; i < 4096; ++i) {
+							dat.serverIcon[i] = (((int)r[i * 4 + 3]&0xFF) << 24) | (((int)r[i * 4]&0xFF) << 16) | (((int)r[i * 4 + 1]&0xFF) << 8) | ((int)r[i * 4 + 2]&0xFF);
+						}
+						dat.serverIconDirty = true;
+					}
+				}
+				if(!dat.currentQuery.isQueryOpen() && dat.pingSentTime > 0l && !dat.hasPing) {
+					dat.pingToServer = -1l;
+					dat.hasPing = true;
+				}
+			}
+			if(total >= 4) {
 				break;
 			}
 		}
-
-		var1.saveServerList();
 	}
+	
 }

@@ -6,9 +6,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class Explosion {
 	/** whether or not the explosion sets fire to blocks around it */
@@ -17,7 +16,7 @@ public class Explosion {
 	/** whether or not this explosion spawns smoke particles */
 	public boolean isSmoking = true;
 	private int field_77289_h = 16;
-	private Random explosionRNG = new Random();
+	private EaglercraftRandom explosionRNG = new EaglercraftRandom();
 	private World worldObj;
 	public double explosionX;
 	public double explosionY;

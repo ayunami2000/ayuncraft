@@ -7,7 +7,7 @@ import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 public abstract class GuiSlot {
-	private final Minecraft mc;
+	protected final Minecraft mc;
 
 	/**
 	 * The width of the GuiScreen. Affects the container rendering, but not the
@@ -66,6 +66,7 @@ public abstract class GuiSlot {
 	private boolean showSelectionBox = true;
 	private boolean field_77243_s;
 	private int field_77242_t;
+	protected int elementWidth = 110;
 
 	public GuiSlot(Minecraft par1Minecraft, int par2, int par3, int par4, int par5, int par6) {
 		this.mc = par1Minecraft;
@@ -137,8 +138,8 @@ public abstract class GuiSlot {
 	}
 
 	public int func_77210_c(int par1, int par2) {
-		int var3 = this.width / 2 - 110;
-		int var4 = this.width / 2 + 110;
+		int var3 = this.width / 2 - elementWidth;
+		int var4 = this.width / 2 + elementWidth;
 		int var5 = par2 - this.top - this.field_77242_t + (int) this.amountScrolled - 4;
 		int var6 = var5 / this.slotHeight;
 		return par1 >= var3 && par1 <= var4 && var6 >= 0 && var5 >= 0 && var6 < this.getSize() ? var6 : -1;
@@ -219,8 +220,8 @@ public abstract class GuiSlot {
 				boolean var7 = true;
 
 				if (par2 >= this.top && par2 <= this.bottom) {
-					int var8 = this.width / 2 - 110;
-					var9 = this.width / 2 + 110;
+					int var8 = this.width / 2 - elementWidth;
+					var9 = this.width / 2 + elementWidth;
 					var10 = par2 - this.top - this.field_77242_t + (int) this.amountScrolled - 4;
 					var11 = var10 / this.slotHeight;
 
@@ -301,7 +302,7 @@ public abstract class GuiSlot {
 		var18.addVertexWithUV((double) this.right, (double) this.top, 0.0D, (double) ((float) this.right / var17), (double) ((float) (this.top + (int) this.amountScrolled) / var17));
 		var18.addVertexWithUV((double) this.left, (double) this.top, 0.0D, (double) ((float) this.left / var17), (double) ((float) (this.top + (int) this.amountScrolled) / var17));
 		var18.draw();
-		var9 = this.width / 2 - 92 - 16;
+		var9 = this.width / 2 + 2 - elementWidth;
 		var10 = this.top + 4 - (int) this.amountScrolled;
 
 		if (this.field_77243_s) {
@@ -310,14 +311,17 @@ public abstract class GuiSlot {
 
 		int var14;
 
+		EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
+		EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
+		
 		for (var11 = 0; var11 < var4; ++var11) {
 			var20 = var10 + var11 * this.slotHeight + this.field_77242_t;
 			var13 = this.slotHeight - 4;
 
 			if (var20 <= this.bottom && var20 + var13 >= this.top) {
 				if (this.showSelectionBox && this.isSelected(var11)) {
-					var14 = this.width / 2 - 110;
-					int var15 = this.width / 2 + 110;
+					var14 = this.width / 2 - elementWidth;
+					int var15 = this.width / 2 + elementWidth;
 					EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 					EaglerAdapter.glDisable(EaglerAdapter.GL_TEXTURE_2D);
 					var18.startDrawingQuads();
@@ -414,7 +418,7 @@ public abstract class GuiSlot {
 	}
 
 	protected int getScrollBarX() {
-		return this.width / 2 + 124;
+		return this.width / 2 + elementWidth + 14;
 	}
 
 	/**

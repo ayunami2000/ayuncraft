@@ -4,8 +4,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.HashMap;
-import java.util.Random;
 
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.glemu.vector.Matrix4f;
 
 import static net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2._wGL_CULL_FACE;
@@ -233,7 +233,7 @@ public class EffectPipeline {
 		}
 	}
 	
-	private static final Random deevis = new Random();
+	private static final EaglercraftRandom deevis = new EaglercraftRandom();
 
 	private static float[] projBuffer = new float[16];
 	private static float[] projBufferInv = new float[16];
@@ -426,6 +426,7 @@ public class EffectPipeline {
 
 				_wglAttachShader(prog, pvert_shader);
 				_wglAttachShader(prog, f);
+				_wglBindAttributeLocation(prog, 0, "a_pos");
 				_wglLinkProgram(prog);
 				_wglDetachShader(prog, pvert_shader);
 				_wglDetachShader(prog, f);
@@ -444,10 +445,9 @@ public class EffectPipeline {
 				UniformGL d = _wglGetUniformLocation(prog, "f_depth");
 				if(d != null) _wglUniform1i(d, 1);
 				
-				_wglBindAttributeLocation(prog, 0, "a_pos");
 				
 				if(_wglGetUniformLocation(prog, "ssao_kernel[0]") != null) {
-					Random r = new Random("eeeaglerrENOPHILEr".hashCode());
+					EaglercraftRandom r = new EaglercraftRandom("eeeaglerrENOPHILEr".hashCode());
 					for(int j = 0; j < 24; j++) {
 						float x = r.nextFloat() * 2.0f - 1.0f;
 						float y = r.nextFloat() * 2.0f - 1.0f;

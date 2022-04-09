@@ -84,10 +84,6 @@ public class EntityItem extends Entity {
 				this.motionZ = (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
 				this.playSound("random.fizz", 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
 			}
-
-			if (!this.worldObj.isRemote) {
-				this.searchForOtherItemsNearby();
-			}
 		}
 
 		float var2 = 0.98F;
@@ -110,10 +106,6 @@ public class EntityItem extends Entity {
 		}
 
 		++this.age;
-
-		if (!this.worldObj.isRemote && this.age >= 6000) {
-			this.setDead();
-		}
 	}
 
 	/**
@@ -237,41 +229,6 @@ public class EntityItem extends Entity {
 	}
 
 	/**
-	 * Called by a player entity when they collide with an entity
-	 */
-	public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {
-		if (!this.worldObj.isRemote) {
-			ItemStack var2 = this.getEntityItem();
-			int var3 = var2.stackSize;
-
-			if (this.delayBeforeCanPickup == 0 && par1EntityPlayer.inventory.addItemStackToInventory(var2)) {
-				if (var2.itemID == Block.wood.blockID) {
-					par1EntityPlayer.triggerAchievement(AchievementList.mineWood);
-				}
-
-				if (var2.itemID == Item.leather.itemID) {
-					par1EntityPlayer.triggerAchievement(AchievementList.killCow);
-				}
-
-				if (var2.itemID == Item.diamond.itemID) {
-					par1EntityPlayer.triggerAchievement(AchievementList.diamonds);
-				}
-
-				if (var2.itemID == Item.blazeRod.itemID) {
-					par1EntityPlayer.triggerAchievement(AchievementList.blazeRod);
-				}
-
-				this.playSound("random.pop", 0.2F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-				par1EntityPlayer.onItemPickup(this, var3);
-
-				if (var2.stackSize <= 0) {
-					this.setDead();
-				}
-			}
-		}
-	}
-
-	/**
 	 * Gets the username of the entity.
 	 */
 	public String getEntityName() {
@@ -283,18 +240,6 @@ public class EntityItem extends Entity {
 	 */
 	public boolean canAttackWithItem() {
 		return false;
-	}
-
-	/**
-	 * Teleports the entity to another dimension. Params: Dimension number to
-	 * teleport to
-	 */
-	public void travelToDimension(int par1) {
-		super.travelToDimension(par1);
-
-		if (!this.worldObj.isRemote) {
-			this.searchForOtherItemsNearby();
-		}
 	}
 
 	/**

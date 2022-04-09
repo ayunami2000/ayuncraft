@@ -1,10 +1,11 @@
 package net.minecraft.src;
 
 import java.util.Iterator;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockChest extends BlockContainer {
-	private final Random random = new Random();
+	private final EaglercraftRandom random = new EaglercraftRandom();
 
 	/** Determines whether of not the chest is trapped. */
 	public final int isTrapped;
@@ -145,88 +146,6 @@ public class BlockChest extends BlockContainer {
 	 * Turns the adjacent chests to a double chest.
 	 */
 	public void unifyAdjacentChests(World par1World, int par2, int par3, int par4) {
-		if (!par1World.isRemote) {
-			int var5 = par1World.getBlockId(par2, par3, par4 - 1);
-			int var6 = par1World.getBlockId(par2, par3, par4 + 1);
-			int var7 = par1World.getBlockId(par2 - 1, par3, par4);
-			int var8 = par1World.getBlockId(par2 + 1, par3, par4);
-			boolean var9 = true;
-			int var10;
-			int var11;
-			boolean var12;
-			byte var13;
-			int var14;
-
-			if (var5 != this.blockID && var6 != this.blockID) {
-				if (var7 != this.blockID && var8 != this.blockID) {
-					var13 = 3;
-
-					if (Block.opaqueCubeLookup[var5] && !Block.opaqueCubeLookup[var6]) {
-						var13 = 3;
-					}
-
-					if (Block.opaqueCubeLookup[var6] && !Block.opaqueCubeLookup[var5]) {
-						var13 = 2;
-					}
-
-					if (Block.opaqueCubeLookup[var7] && !Block.opaqueCubeLookup[var8]) {
-						var13 = 5;
-					}
-
-					if (Block.opaqueCubeLookup[var8] && !Block.opaqueCubeLookup[var7]) {
-						var13 = 4;
-					}
-				} else {
-					var10 = par1World.getBlockId(var7 == this.blockID ? par2 - 1 : par2 + 1, par3, par4 - 1);
-					var11 = par1World.getBlockId(var7 == this.blockID ? par2 - 1 : par2 + 1, par3, par4 + 1);
-					var13 = 3;
-					var12 = true;
-
-					if (var7 == this.blockID) {
-						var14 = par1World.getBlockMetadata(par2 - 1, par3, par4);
-					} else {
-						var14 = par1World.getBlockMetadata(par2 + 1, par3, par4);
-					}
-
-					if (var14 == 2) {
-						var13 = 2;
-					}
-
-					if ((Block.opaqueCubeLookup[var5] || Block.opaqueCubeLookup[var10]) && !Block.opaqueCubeLookup[var6] && !Block.opaqueCubeLookup[var11]) {
-						var13 = 3;
-					}
-
-					if ((Block.opaqueCubeLookup[var6] || Block.opaqueCubeLookup[var11]) && !Block.opaqueCubeLookup[var5] && !Block.opaqueCubeLookup[var10]) {
-						var13 = 2;
-					}
-				}
-			} else {
-				var10 = par1World.getBlockId(par2 - 1, par3, var5 == this.blockID ? par4 - 1 : par4 + 1);
-				var11 = par1World.getBlockId(par2 + 1, par3, var5 == this.blockID ? par4 - 1 : par4 + 1);
-				var13 = 5;
-				var12 = true;
-
-				if (var5 == this.blockID) {
-					var14 = par1World.getBlockMetadata(par2, par3, par4 - 1);
-				} else {
-					var14 = par1World.getBlockMetadata(par2, par3, par4 + 1);
-				}
-
-				if (var14 == 4) {
-					var13 = 4;
-				}
-
-				if ((Block.opaqueCubeLookup[var7] || Block.opaqueCubeLookup[var10]) && !Block.opaqueCubeLookup[var8] && !Block.opaqueCubeLookup[var11]) {
-					var13 = 5;
-				}
-
-				if ((Block.opaqueCubeLookup[var8] || Block.opaqueCubeLookup[var11]) && !Block.opaqueCubeLookup[var7] && !Block.opaqueCubeLookup[var10]) {
-					var13 = 4;
-				}
-			}
-
-			par1World.setBlockMetadataWithNotify(par2, par3, par4, var13, 3);
-		}
 	}
 
 	/**
@@ -328,17 +247,7 @@ public class BlockChest extends BlockContainer {
 	 * Called upon block activation (right click on the block.)
 	 */
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		if (par1World.isRemote) {
-			return true;
-		} else {
-			IInventory var10 = this.getInventory(par1World, par2, par3, par4);
-
-			if (var10 != null) {
-				par5EntityPlayer.displayGUIChest(var10);
-			}
-
-			return true;
-		}
+		return true;
 	}
 
 	/**
