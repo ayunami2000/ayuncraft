@@ -180,10 +180,6 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 	public void clearItemInUse() {
 		this.itemInUse = null;
 		this.itemInUseCount = 0;
-
-		if (!this.worldObj.isRemote) {
-			this.setEating(false);
-		}
 	}
 
 	public boolean isBlocking() {
@@ -201,10 +197,6 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 				if (this.itemInUseCount <= 25 && this.itemInUseCount % 4 == 0) {
 					this.updateItemUse(var1, 5);
 				}
-
-				if (--this.itemInUseCount == 0 && !this.worldObj.isRemote) {
-					this.onItemUseFinish();
-				}
 			} else {
 				this.clearItemInUse();
 			}
@@ -220,14 +212,7 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 			if (this.sleepTimer > 100) {
 				this.sleepTimer = 100;
 			}
-
-			if (!this.worldObj.isRemote) {
-				if (!this.isInBed()) {
-					this.wakeUpPlayer(true, true, false);
-				} else if (this.worldObj.isDaytime()) {
-					this.wakeUpPlayer(false, true, true);
-				}
-			}
+			
 		} else if (this.sleepTimer > 0) {
 			++this.sleepTimer;
 
@@ -237,11 +222,8 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 		}
 
 		super.onUpdate();
-
-		if (!this.worldObj.isRemote && this.openContainer != null && !this.openContainer.canInteractWith(this)) {
-			this.closeScreen();
-			this.openContainer = this.inventoryContainer;
-		}
+		
+		--this.itemInUseCount;
 
 		if (this.isBurning() && this.capabilities.disableDamage) {
 			this.extinguish();
@@ -296,10 +278,6 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 
 		if (this.ridingEntity == null) {
 			this.startMinecartRidingCoordinate = null;
-		}
-
-		if (!this.worldObj.isRemote) {
-			this.foodStats.onUpdate(this);
 		}
 	}
 
@@ -794,10 +772,6 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 			if (this.getHealth() <= 0) {
 				return false;
 			} else {
-				if (this.isPlayerSleeping() && !this.worldObj.isRemote) {
-					this.wakeUpPlayer(true, true, false);
-				}
-
 				if (par1DamageSource.isDifficultyScaled()) {
 					if (this.worldObj.difficultySetting == 0) {
 						par2 = 0;
@@ -1153,33 +1127,6 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 	 * Attempts to have the player sleep in a bed at the specified location.
 	 */
 	public EnumStatus sleepInBedAt(int par1, int par2, int par3) {
-		if (!this.worldObj.isRemote) {
-			if (this.isPlayerSleeping() || !this.isEntityAlive()) {
-				return EnumStatus.OTHER_PROBLEM;
-			}
-
-			if (!this.worldObj.provider.isSurfaceWorld()) {
-				return EnumStatus.NOT_POSSIBLE_HERE;
-			}
-
-			if (this.worldObj.isDaytime()) {
-				return EnumStatus.NOT_POSSIBLE_NOW;
-			}
-
-			if (Math.abs(this.posX - (double) par1) > 3.0D || Math.abs(this.posY - (double) par2) > 2.0D || Math.abs(this.posZ - (double) par3) > 3.0D) {
-				return EnumStatus.TOO_FAR_AWAY;
-			}
-
-			double var4 = 8.0D;
-			double var6 = 5.0D;
-			List var8 = this.worldObj.getEntitiesWithinAABB(EntityMob.class,
-					AxisAlignedBB.getAABBPool().getAABB((double) par1 - var4, (double) par2 - var6, (double) par3 - var4, (double) par1 + var4, (double) par2 + var6, (double) par3 + var4));
-
-			if (!var8.isEmpty()) {
-				return EnumStatus.NOT_SAFE;
-			}
-		}
-
 		this.setSize(0.2F, 0.2F);
 		this.yOffset = 0.2F;
 
@@ -1216,10 +1163,6 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 		this.sleepTimer = 0;
 		this.playerLocation = new ChunkCoordinates(par1, par2, par3);
 		this.motionX = this.motionZ = this.motionY = 0.0D;
-
-		if (!this.worldObj.isRemote) {
-			this.worldObj.updateAllPlayersSleepingFlag();
-		}
 
 		return EnumStatus.OK;
 	}
@@ -1267,10 +1210,6 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 		}
 
 		this.sleeping = false;
-
-		if (!this.worldObj.isRemote && par2) {
-			this.worldObj.updateAllPlayersSleepingFlag();
-		}
 
 		if (par1) {
 			this.sleepTimer = 0;
@@ -1625,11 +1564,6 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 	 * increases exhaustion level by supplied amount
 	 */
 	public void addExhaustion(float par1) {
-		if (!this.capabilities.disableDamage) {
-			if (!this.worldObj.isRemote) {
-				this.foodStats.addExhaustion(par1);
-			}
-		}
 	}
 
 	/**
@@ -1658,10 +1592,6 @@ public abstract class EntityPlayer extends EntityLiving implements ICommandSende
 		if (par1ItemStack != this.itemInUse) {
 			this.itemInUse = par1ItemStack;
 			this.itemInUseCount = par2;
-
-			if (!this.worldObj.isRemote) {
-				this.setEating(true);
-			}
 		}
 	}
 

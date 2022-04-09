@@ -1,8 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockVine extends Block {
 	public BlockVine(int par1) {
@@ -212,124 +210,6 @@ public class BlockVine extends Block {
 	}
 
 	/**
-	 * Lets the block know when one of its neighbor changes. Doesn't know which
-	 * neighbor changed (coordinates passed are their own) Args: x, y, z, neighbor
-	 * blockID
-	 */
-	public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5) {
-		if (!par1World.isRemote && !this.canVineStay(par1World, par2, par3, par4)) {
-			this.dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
-			par1World.setBlockToAir(par2, par3, par4);
-		}
-	}
-
-	/**
-	 * Ticks the block if it's been scheduled
-	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-		if (!par1World.isRemote && par1World.rand.nextInt(4) == 0) {
-			byte var6 = 4;
-			int var7 = 5;
-			boolean var8 = false;
-			int var9;
-			int var10;
-			int var11;
-			label138:
-
-			for (var9 = par2 - var6; var9 <= par2 + var6; ++var9) {
-				for (var10 = par4 - var6; var10 <= par4 + var6; ++var10) {
-					for (var11 = par3 - 1; var11 <= par3 + 1; ++var11) {
-						if (par1World.getBlockId(var9, var11, var10) == this.blockID) {
-							--var7;
-
-							if (var7 <= 0) {
-								var8 = true;
-								break label138;
-							}
-						}
-					}
-				}
-			}
-
-			var9 = par1World.getBlockMetadata(par2, par3, par4);
-			var10 = par1World.rand.nextInt(6);
-			var11 = Direction.facingToDirection[var10];
-			int var12;
-			int var13;
-
-			if (var10 == 1 && par3 < 255 && par1World.isAirBlock(par2, par3 + 1, par4)) {
-				if (var8) {
-					return;
-				}
-
-				var12 = par1World.rand.nextInt(16) & var9;
-
-				if (var12 > 0) {
-					for (var13 = 0; var13 <= 3; ++var13) {
-						if (!this.canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[var13], par3 + 1, par4 + Direction.offsetZ[var13]))) {
-							var12 &= ~(1 << var13);
-						}
-					}
-
-					if (var12 > 0) {
-						par1World.setBlock(par2, par3 + 1, par4, this.blockID, var12, 2);
-					}
-				}
-			} else {
-				int var14;
-
-				if (var10 >= 2 && var10 <= 5 && (var9 & 1 << var11) == 0) {
-					if (var8) {
-						return;
-					}
-
-					var12 = par1World.getBlockId(par2 + Direction.offsetX[var11], par3, par4 + Direction.offsetZ[var11]);
-
-					if (var12 != 0 && Block.blocksList[var12] != null) {
-						if (Block.blocksList[var12].blockMaterial.isOpaque() && Block.blocksList[var12].renderAsNormalBlock()) {
-							par1World.setBlockMetadataWithNotify(par2, par3, par4, var9 | 1 << var11, 2);
-						}
-					} else {
-						var13 = var11 + 1 & 3;
-						var14 = var11 + 3 & 3;
-
-						if ((var9 & 1 << var13) != 0 && this.canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[var11] + Direction.offsetX[var13], par3, par4 + Direction.offsetZ[var11] + Direction.offsetZ[var13]))) {
-							par1World.setBlock(par2 + Direction.offsetX[var11], par3, par4 + Direction.offsetZ[var11], this.blockID, 1 << var13, 2);
-						} else if ((var9 & 1 << var14) != 0 && this.canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[var11] + Direction.offsetX[var14], par3, par4 + Direction.offsetZ[var11] + Direction.offsetZ[var14]))) {
-							par1World.setBlock(par2 + Direction.offsetX[var11], par3, par4 + Direction.offsetZ[var11], this.blockID, 1 << var14, 2);
-						} else if ((var9 & 1 << var13) != 0 && par1World.isAirBlock(par2 + Direction.offsetX[var11] + Direction.offsetX[var13], par3, par4 + Direction.offsetZ[var11] + Direction.offsetZ[var13])
-								&& this.canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[var13], par3, par4 + Direction.offsetZ[var13]))) {
-							par1World.setBlock(par2 + Direction.offsetX[var11] + Direction.offsetX[var13], par3, par4 + Direction.offsetZ[var11] + Direction.offsetZ[var13], this.blockID, 1 << (var11 + 2 & 3), 2);
-						} else if ((var9 & 1 << var14) != 0 && par1World.isAirBlock(par2 + Direction.offsetX[var11] + Direction.offsetX[var14], par3, par4 + Direction.offsetZ[var11] + Direction.offsetZ[var14])
-								&& this.canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[var14], par3, par4 + Direction.offsetZ[var14]))) {
-							par1World.setBlock(par2 + Direction.offsetX[var11] + Direction.offsetX[var14], par3, par4 + Direction.offsetZ[var11] + Direction.offsetZ[var14], this.blockID, 1 << (var11 + 2 & 3), 2);
-						} else if (this.canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[var11], par3 + 1, par4 + Direction.offsetZ[var11]))) {
-							par1World.setBlock(par2 + Direction.offsetX[var11], par3, par4 + Direction.offsetZ[var11], this.blockID, 0, 2);
-						}
-					}
-				} else if (par3 > 1) {
-					var12 = par1World.getBlockId(par2, par3 - 1, par4);
-
-					if (var12 == 0) {
-						var13 = par1World.rand.nextInt(16) & var9;
-
-						if (var13 > 0) {
-							par1World.setBlock(par2, par3 - 1, par4, this.blockID, var13, 2);
-						}
-					} else if (var12 == this.blockID) {
-						var13 = par1World.rand.nextInt(16) & var9;
-						var14 = par1World.getBlockMetadata(par2, par3 - 1, par4);
-
-						if (var14 != (var14 | var13)) {
-							par1World.setBlockMetadataWithNotify(par2, par3 - 1, par4, var14 | var13, 2);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	/**
 	 * Called when a block is placed using its ItemBlock. Args: World, X, Y, Z,
 	 * side, hitX, hitY, hitZ, block metadata
 	 */
@@ -359,26 +239,14 @@ public class BlockVine extends Block {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return 0;
 	}
 
 	/**
 	 * Returns the quantity of items to drop on block destruction.
 	 */
-	public int quantityDropped(Random par1Random) {
+	public int quantityDropped(EaglercraftRandom par1Random) {
 		return 0;
-	}
-
-	/**
-	 * Called when the player destroys a block with an item that can harvest it. (i,
-	 * j, k) are the coordinates of the block and l is the block's subtype/damage.
-	 */
-	public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6) {
-		if (!par1World.isRemote && par2EntityPlayer.getCurrentEquippedItem() != null && par2EntityPlayer.getCurrentEquippedItem().itemID == Item.shears.itemID) {
-			this.dropBlockAsItem_do(par1World, par3, par4, par5, new ItemStack(Block.vine, 1, 0));
-		} else {
-			super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
-		}
 	}
 }

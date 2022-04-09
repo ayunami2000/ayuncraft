@@ -39,4 +39,6 @@ public interface INetworkManager {
 	public void networkShutdown(String var1, Object... var2);
 
 	public void closeConnections();
+	
+	public String getServerURI();
 }

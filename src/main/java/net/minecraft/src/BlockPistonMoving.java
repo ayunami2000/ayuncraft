@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockPistonMoving extends BlockContainer {
 	public BlockPistonMoving(int par1) {
@@ -80,18 +80,13 @@ public class BlockPistonMoving extends BlockContainer {
 	 * Called upon block activation (right click on the block.)
 	 */
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		if (!par1World.isRemote && par1World.getBlockTileEntity(par2, par3, par4) == null) {
-			par1World.setBlockToAir(par2, par3, par4);
-			return true;
-		} else {
-			return false;
-		}
+		return false;
 	}
 
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return 0;
 	}
 
@@ -99,13 +94,6 @@ public class BlockPistonMoving extends BlockContainer {
 	 * Drops the block items with a specified chance of dropping the specified items
 	 */
 	public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {
-		if (!par1World.isRemote) {
-			TileEntityPiston var8 = this.getTileEntityAtLocation(par1World, par2, par3, par4);
-
-			if (var8 != null) {
-				Block.blocksList[var8.getStoredBlockID()].dropBlockAsItem(par1World, par2, par3, par4, var8.getBlockMetadata(), 0);
-			}
-		}
 	}
 
 	/**
@@ -114,9 +102,6 @@ public class BlockPistonMoving extends BlockContainer {
 	 * blockID
 	 */
 	public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5) {
-		if (!par1World.isRemote && par1World.getBlockTileEntity(par2, par3, par4) == null) {
-			;
-		}
 	}
 
 	/**

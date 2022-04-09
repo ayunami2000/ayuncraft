@@ -110,27 +110,20 @@ public class EntityFireworkRocket extends Entity {
 
 		++this.fireworkAge;
 
-		if (this.worldObj.isRemote && this.fireworkAge % 2 < 2) {
+		if (this.fireworkAge % 2 < 2) {
 			this.worldObj.spawnParticle("fireworksSpark", this.posX, this.posY - 0.3D, this.posZ, this.rand.nextGaussian() * 0.05D, -this.motionY * 0.5D, this.rand.nextGaussian() * 0.05D);
-		}
-
-		if (!this.worldObj.isRemote && this.fireworkAge > this.lifetime) {
-			this.worldObj.setEntityState(this, (byte) 17);
-			this.setDead();
 		}
 	}
 
 	public void handleHealthUpdate(byte par1) {
-		if (par1 == 17 && this.worldObj.isRemote) {
-			ItemStack var2 = this.dataWatcher.getWatchableObjectItemStack(8);
-			NBTTagCompound var3 = null;
+		ItemStack var2 = this.dataWatcher.getWatchableObjectItemStack(8);
+		NBTTagCompound var3 = null;
 
-			if (var2 != null && var2.hasTagCompound()) {
-				var3 = var2.getTagCompound().getCompoundTag("Fireworks");
-			}
-
-			this.worldObj.func_92088_a(this.posX, this.posY, this.posZ, this.motionX, this.motionY, this.motionZ, var3);
+		if (var2 != null && var2.hasTagCompound()) {
+			var3 = var2.getTagCompound().getCompoundTag("Fireworks");
 		}
+
+		this.worldObj.func_92088_a(this.posX, this.posY, this.posZ, this.motionX, this.motionY, this.motionZ, var3);
 
 		super.handleHealthUpdate(par1);
 	}

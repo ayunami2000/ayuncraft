@@ -61,9 +61,12 @@ public abstract class EntityMinecart extends Entity {
 		}
 	}
 	
-	public void setWorld(World w) {
+	public Entity setWorld(World w) {
 		super.setWorld(w);
-		this.field_82344_g = w.func_82735_a(this);
+		if(w != null) {
+			this.field_82344_g = w.func_82735_a(this);
+		}
+		return this;
 	}
 
 	/**
@@ -131,33 +134,7 @@ public abstract class EntityMinecart extends Entity {
 	 * Called when the entity is attacked.
 	 */
 	public boolean attackEntityFrom(DamageSource par1DamageSource, int par2) {
-		if (!this.worldObj.isRemote && !this.isDead) {
-			if (this.isEntityInvulnerable()) {
-				return false;
-			} else {
-				this.setRollingDirection(-this.getRollingDirection());
-				this.setRollingAmplitude(10);
-				this.setBeenAttacked();
-				this.setDamage(this.getDamage() + par2 * 10);
-				boolean var3 = par1DamageSource.getEntity() instanceof EntityPlayer && ((EntityPlayer) par1DamageSource.getEntity()).capabilities.isCreativeMode;
-
-				if (var3 || this.getDamage() > 40) {
-					if (this.riddenByEntity != null) {
-						this.riddenByEntity.mountEntity(this);
-					}
-
-					if (var3 && !this.isInvNameLocalized()) {
-						this.setDead();
-					} else {
-						this.killMinecart(par1DamageSource);
-					}
-				}
-
-				return true;
-			}
-		} else {
-			return true;
-		}
+		return true;
 	}
 
 	public void killMinecart(DamageSource par1DamageSource) {
@@ -219,92 +196,20 @@ public abstract class EntityMinecart extends Entity {
 		if (this.posY < -64.0D) {
 			this.kill();
 		}
-
-		int var2;
 		
-		if (this.worldObj.isRemote) {
-			if (this.turnProgress > 0) {
-				double var19 = this.posX + (this.minecartX - this.posX) / (double) this.turnProgress;
-				double var21 = this.posY + (this.minecartY - this.posY) / (double) this.turnProgress;
-				double var5 = this.posZ + (this.minecartZ - this.posZ) / (double) this.turnProgress;
-				double var7 = MathHelper.wrapAngleTo180_double(this.minecartYaw - (double) this.rotationYaw);
-				this.rotationYaw = (float) ((double) this.rotationYaw + var7 / (double) this.turnProgress);
-				this.rotationPitch = (float) ((double) this.rotationPitch + (this.minecartPitch - (double) this.rotationPitch) / (double) this.turnProgress);
-				--this.turnProgress;
-				this.setPosition(var19, var21, var5);
-				this.setRotation(this.rotationYaw, this.rotationPitch);
-			} else {
-				this.setPosition(this.posX, this.posY, this.posZ);
-				this.setRotation(this.rotationYaw, this.rotationPitch);
-			}
-		} else {
-			this.prevPosX = this.posX;
-			this.prevPosY = this.posY;
-			this.prevPosZ = this.posZ;
-			this.motionY -= 0.03999999910593033D;
-			int var18 = MathHelper.floor_double(this.posX);
-			var2 = MathHelper.floor_double(this.posY);
-			int var20 = MathHelper.floor_double(this.posZ);
-
-			if (BlockRailBase.isRailBlockAt(this.worldObj, var18, var2 - 1, var20)) {
-				--var2;
-			}
-
-			double var4 = 0.4D;
-			double var6 = 0.0078125D;
-			int var8 = this.worldObj.getBlockId(var18, var2, var20);
-
-			if (BlockRailBase.isRailBlock(var8)) {
-				int var9 = this.worldObj.getBlockMetadata(var18, var2, var20);
-				this.updateOnTrack(var18, var2, var20, var4, var6, var8, var9);
-
-				if (var8 == Block.railActivator.blockID) {
-					this.onActivatorRailPass(var18, var2, var20, (var9 & 8) != 0);
-				}
-			} else {
-				this.func_94088_b(var4);
-			}
-
-			this.doBlockCollisions();
-			this.rotationPitch = 0.0F;
-			double var22 = this.prevPosX - this.posX;
-			double var11 = this.prevPosZ - this.posZ;
-
-			if (var22 * var22 + var11 * var11 > 0.001D) {
-				this.rotationYaw = (float) (Math.atan2(var11, var22) * 180.0D / Math.PI);
-
-				if (this.isInReverse) {
-					this.rotationYaw += 180.0F;
-				}
-			}
-
-			double var13 = (double) MathHelper.wrapAngleTo180_float(this.rotationYaw - this.prevRotationYaw);
-
-			if (var13 < -170.0D || var13 >= 170.0D) {
-				this.rotationYaw += 180.0F;
-				this.isInReverse = !this.isInReverse;
-			}
-
+		if (this.turnProgress > 0) {
+			double var19 = this.posX + (this.minecartX - this.posX) / (double) this.turnProgress;
+			double var21 = this.posY + (this.minecartY - this.posY) / (double) this.turnProgress;
+			double var5 = this.posZ + (this.minecartZ - this.posZ) / (double) this.turnProgress;
+			double var7 = MathHelper.wrapAngleTo180_double(this.minecartYaw - (double) this.rotationYaw);
+			this.rotationYaw = (float) ((double) this.rotationYaw + var7 / (double) this.turnProgress);
+			this.rotationPitch = (float) ((double) this.rotationPitch + (this.minecartPitch - (double) this.rotationPitch) / (double) this.turnProgress);
+			--this.turnProgress;
+			this.setPosition(var19, var21, var5);
 			this.setRotation(this.rotationYaw, this.rotationPitch);
-			List var15 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
-
-			if (var15 != null && !var15.isEmpty()) {
-				for (int var16 = 0; var16 < var15.size(); ++var16) {
-					Entity var17 = (Entity) var15.get(var16);
-
-					if (var17 != this.riddenByEntity && var17.canBePushed() && var17 instanceof EntityMinecart) {
-						var17.applyEntityCollision(this);
-					}
-				}
-			}
-
-			if (this.riddenByEntity != null && this.riddenByEntity.isDead) {
-				if (this.riddenByEntity.ridingEntity == this) {
-					this.riddenByEntity.ridingEntity = null;
-				}
-
-				this.riddenByEntity = null;
-			}
+		} else {
+			this.setPosition(this.posX, this.posY, this.posZ);
+			this.setRotation(this.rotationYaw, this.rotationPitch);
 		}
 	}
 
@@ -695,80 +600,6 @@ public abstract class EntityMinecart extends Entity {
 	 * Args: entity
 	 */
 	public void applyEntityCollision(Entity par1Entity) {
-		if (!this.worldObj.isRemote) {
-			if (par1Entity != this.riddenByEntity) {
-				if (par1Entity instanceof EntityLiving && !(par1Entity instanceof EntityPlayer) && !(par1Entity instanceof EntityIronGolem) && this.getMinecartType() == 0 && this.motionX * this.motionX + this.motionZ * this.motionZ > 0.01D
-						&& this.riddenByEntity == null && par1Entity.ridingEntity == null) {
-					par1Entity.mountEntity(this);
-				}
-
-				double var2 = par1Entity.posX - this.posX;
-				double var4 = par1Entity.posZ - this.posZ;
-				double var6 = var2 * var2 + var4 * var4;
-
-				if (var6 >= 9.999999747378752E-5D) {
-					var6 = (double) MathHelper.sqrt_double(var6);
-					var2 /= var6;
-					var4 /= var6;
-					double var8 = 1.0D / var6;
-
-					if (var8 > 1.0D) {
-						var8 = 1.0D;
-					}
-
-					var2 *= var8;
-					var4 *= var8;
-					var2 *= 0.10000000149011612D;
-					var4 *= 0.10000000149011612D;
-					var2 *= (double) (1.0F - this.entityCollisionReduction);
-					var4 *= (double) (1.0F - this.entityCollisionReduction);
-					var2 *= 0.5D;
-					var4 *= 0.5D;
-
-					if (par1Entity instanceof EntityMinecart) {
-						double var10 = par1Entity.posX - this.posX;
-						double var12 = par1Entity.posZ - this.posZ;
-						Vec3 var14 = this.worldObj.getWorldVec3Pool().getVecFromPool(var10, 0.0D, var12).normalize();
-						Vec3 var15 = this.worldObj.getWorldVec3Pool().getVecFromPool((double) MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F), 0.0D, (double) MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F))
-								.normalize();
-						double var16 = Math.abs(var14.dotProduct(var15));
-
-						if (var16 < 0.800000011920929D) {
-							return;
-						}
-
-						double var18 = par1Entity.motionX + this.motionX;
-						double var20 = par1Entity.motionZ + this.motionZ;
-
-						if (((EntityMinecart) par1Entity).getMinecartType() == 2 && this.getMinecartType() != 2) {
-							this.motionX *= 0.20000000298023224D;
-							this.motionZ *= 0.20000000298023224D;
-							this.addVelocity(par1Entity.motionX - var2, 0.0D, par1Entity.motionZ - var4);
-							par1Entity.motionX *= 0.949999988079071D;
-							par1Entity.motionZ *= 0.949999988079071D;
-						} else if (((EntityMinecart) par1Entity).getMinecartType() != 2 && this.getMinecartType() == 2) {
-							par1Entity.motionX *= 0.20000000298023224D;
-							par1Entity.motionZ *= 0.20000000298023224D;
-							par1Entity.addVelocity(this.motionX + var2, 0.0D, this.motionZ + var4);
-							this.motionX *= 0.949999988079071D;
-							this.motionZ *= 0.949999988079071D;
-						} else {
-							var18 /= 2.0D;
-							var20 /= 2.0D;
-							this.motionX *= 0.20000000298023224D;
-							this.motionZ *= 0.20000000298023224D;
-							this.addVelocity(var18 - var2, 0.0D, var20 - var4);
-							par1Entity.motionX *= 0.20000000298023224D;
-							par1Entity.motionZ *= 0.20000000298023224D;
-							par1Entity.addVelocity(var18 + var2, 0.0D, var20 + var4);
-						}
-					} else {
-						this.addVelocity(-var2, 0.0D, -var4);
-						par1Entity.addVelocity(var2 / 4.0D, 0.0D, var4 / 4.0D);
-					}
-				}
-			}
-		}
 	}
 
 	/**

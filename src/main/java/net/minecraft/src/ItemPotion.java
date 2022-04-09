@@ -68,19 +68,6 @@ public class ItemPotion extends Item {
 			--par1ItemStack.stackSize;
 		}
 
-		if (!par2World.isRemote) {
-			List var4 = this.getEffects(par1ItemStack);
-
-			if (var4 != null) {
-				Iterator var5 = var4.iterator();
-
-				while (var5.hasNext()) {
-					PotionEffect var6 = (PotionEffect) var5.next();
-					par3EntityPlayer.addPotionEffect(new PotionEffect(var6));
-				}
-			}
-		}
-
 		if (!par3EntityPlayer.capabilities.isCreativeMode) {
 			if (par1ItemStack.stackSize <= 0) {
 				return new ItemStack(Item.glassBottle);
@@ -118,10 +105,6 @@ public class ItemPotion extends Item {
 			}
 
 			par2World.playSoundAtEntity(par3EntityPlayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-
-			if (!par2World.isRemote) {
-				par2World.spawnEntityInWorld(new EntityPotion(par2World, par3EntityPlayer, par1ItemStack));
-			}
 
 			return par1ItemStack;
 		} else {

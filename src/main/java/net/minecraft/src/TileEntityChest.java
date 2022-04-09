@@ -291,26 +291,6 @@ public class TileEntityChest extends TileEntity implements IInventory {
 		++this.ticksSinceSync;
 		float var1;
 
-		if (!this.worldObj.isRemote && this.numUsingPlayers != 0 && (this.ticksSinceSync + this.xCoord + this.yCoord + this.zCoord) % 200 == 0) {
-			this.numUsingPlayers = 0;
-			var1 = 5.0F;
-			List var2 = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getAABBPool().getAABB((double) ((float) this.xCoord - var1), (double) ((float) this.yCoord - var1), (double) ((float) this.zCoord - var1),
-					(double) ((float) (this.xCoord + 1) + var1), (double) ((float) (this.yCoord + 1) + var1), (double) ((float) (this.zCoord + 1) + var1)));
-			Iterator var3 = var2.iterator();
-
-			while (var3.hasNext()) {
-				EntityPlayer var4 = (EntityPlayer) var3.next();
-
-				if (var4.openContainer instanceof ContainerChest) {
-					IInventory var5 = ((ContainerChest) var4.openContainer).getLowerChestInventory();
-
-					if (var5 == this || var5 instanceof InventoryLargeChest && ((InventoryLargeChest) var5).isPartOfLargeChest(this)) {
-						++this.numUsingPlayers;
-					}
-				}
-			}
-		}
-
 		this.prevLidAngle = this.lidAngle;
 		var1 = 0.1F;
 		double var11;

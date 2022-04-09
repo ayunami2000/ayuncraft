@@ -4,13 +4,10 @@
 
 package net.md_5.bungee;
 
-import net.md_5.bungee.api.connection.Server;
-import net.md_5.bungee.api.connection.PendingConnection;
 import java.beans.ConstructorProperties;
 import net.md_5.bungee.util.CaseInsensitiveSet;
 import java.util.HashSet;
 import net.md_5.bungee.api.config.TexturePackInfo;
-import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.event.PermissionCheckEvent;
 import java.util.Collections;
 import java.net.InetSocketAddress;
@@ -36,10 +33,14 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import net.md_5.bungee.api.ChatColor;
 import java.util.Objects;
+import java.util.WeakHashMap;
+
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.protocol.packet.DefinedPacket;
 import com.google.common.base.Preconditions;
 import java.util.Iterator;
+import java.util.Map;
+
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.score.Scoreboard;
 import net.md_5.bungee.protocol.packet.PacketCCSettings;
@@ -71,6 +72,7 @@ public final class UserConnection implements ProxiedPlayer {
 	private final Scoreboard serverSentScoreboard;
 	private String displayName;
 	private final Connection.Unsafe unsafe;
+	private final Map<String, Object> attachment = new WeakHashMap();
 
 	public void init() {
 		this.displayName = this.name;
@@ -382,5 +384,10 @@ public final class UserConnection implements ProxiedPlayer {
 	@Override
 	public String getDisplayName() {
 		return this.displayName;
+	}
+
+	@Override
+	public Map<String, Object> getAttachment() {
+		return attachment;
 	}
 }

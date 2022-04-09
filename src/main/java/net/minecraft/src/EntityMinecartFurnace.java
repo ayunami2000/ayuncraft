@@ -5,6 +5,10 @@ public class EntityMinecartFurnace extends EntityMinecart {
 	public double pushX;
 	public double pushZ;
 	
+	public EntityMinecartFurnace(World par1World) {
+		super();
+		setWorld(par1World);
+	}
 	public EntityMinecartFurnace(World par1World, double par2, double par4, double par6) {
 		super(par1World, par2, par4, par6);
 	}

@@ -64,19 +64,6 @@ public class BlockFarmland extends Block {
 	}
 
 	/**
-	 * Block's chance to react to an entity falling on it.
-	 */
-	public void onFallenUpon(World par1World, int par2, int par3, int par4, Entity par5Entity, float par6) {
-		if (!par1World.isRemote && par1World.rand.nextFloat() < par6 - 0.5F) {
-			if (!(par5Entity instanceof EntityPlayer) && !par1World.getGameRules().getGameRuleBooleanValue("mobGriefing")) {
-				return;
-			}
-
-			par1World.setBlock(par2, par3, par4, Block.dirt.blockID);
-		}
-	}
-
-	/**
 	 * returns true if there is at least one cropblock nearby (x-1 to x+1, y+1, z-1
 	 * to z+1)
 	 */

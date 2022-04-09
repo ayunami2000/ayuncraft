@@ -6,6 +6,9 @@ package net.md_5.bungee.command;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.ProxyServer;
+
+import java.net.InetAddress;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
@@ -25,7 +28,12 @@ public class CommandIP extends Command {
 		if (user == null) {
 			sender.sendMessage(ChatColor.RED + "That user is not online");
 		} else {
-			sender.sendMessage(ChatColor.BLUE + "IP of " + args[0] + " is " + user.getAddress());
+			Object o = user.getAttachment().get("remoteAddr");
+			if(o != null) {
+				sender.sendMessage(ChatColor.BLUE + "IP of " + args[0] + " is " + (InetAddress)o);
+			}else {
+				sender.sendMessage(ChatColor.BLUE + "IP of " + args[0] + " is " + user.getAddress());
+			}
 		}
 	}
 }

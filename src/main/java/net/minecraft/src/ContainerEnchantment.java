@@ -79,49 +79,6 @@ public class ContainerEnchantment extends Container {
 
 			if (var2 != null && var2.isItemEnchantable()) {
 				this.nameSeed = this.rand.nextLong();
-
-				if (!this.worldPointer.isRemote) {
-					var3 = 0;
-					int var4;
-
-					for (var4 = -1; var4 <= 1; ++var4) {
-						for (int var5 = -1; var5 <= 1; ++var5) {
-							if ((var4 != 0 || var5 != 0) && this.worldPointer.isAirBlock(this.posX + var5, this.posY, this.posZ + var4) && this.worldPointer.isAirBlock(this.posX + var5, this.posY + 1, this.posZ + var4)) {
-								if (this.worldPointer.getBlockId(this.posX + var5 * 2, this.posY, this.posZ + var4 * 2) == Block.bookShelf.blockID) {
-									++var3;
-								}
-
-								if (this.worldPointer.getBlockId(this.posX + var5 * 2, this.posY + 1, this.posZ + var4 * 2) == Block.bookShelf.blockID) {
-									++var3;
-								}
-
-								if (var5 != 0 && var4 != 0) {
-									if (this.worldPointer.getBlockId(this.posX + var5 * 2, this.posY, this.posZ + var4) == Block.bookShelf.blockID) {
-										++var3;
-									}
-
-									if (this.worldPointer.getBlockId(this.posX + var5 * 2, this.posY + 1, this.posZ + var4) == Block.bookShelf.blockID) {
-										++var3;
-									}
-
-									if (this.worldPointer.getBlockId(this.posX + var5, this.posY, this.posZ + var4 * 2) == Block.bookShelf.blockID) {
-										++var3;
-									}
-
-									if (this.worldPointer.getBlockId(this.posX + var5, this.posY + 1, this.posZ + var4 * 2) == Block.bookShelf.blockID) {
-										++var3;
-									}
-								}
-							}
-						}
-					}
-
-					for (var4 = 0; var4 < 3; ++var4) {
-						this.enchantLevels[var4] = EnchantmentHelper.calcItemStackEnchantability(this.rand, var4, var3, var2);
-					}
-
-					this.detectAndSendChanges();
-				}
 			} else {
 				for (var3 = 0; var3 < 3; ++var3) {
 					this.enchantLevels[var3] = 0;
@@ -138,53 +95,9 @@ public class ContainerEnchantment extends Container {
 		ItemStack var3 = this.tableInventory.getStackInSlot(0);
 
 		if (this.enchantLevels[par2] > 0 && var3 != null && (par1EntityPlayer.experienceLevel >= this.enchantLevels[par2] || par1EntityPlayer.capabilities.isCreativeMode)) {
-			if (!this.worldPointer.isRemote) {
-				List var4 = EnchantmentHelper.buildEnchantmentList(this.rand, var3, this.enchantLevels[par2]);
-				boolean var5 = var3.itemID == Item.book.itemID;
-
-				if (var4 != null) {
-					par1EntityPlayer.addExperienceLevel(-this.enchantLevels[par2]);
-
-					if (var5) {
-						var3.itemID = Item.enchantedBook.itemID;
-					}
-
-					int var6 = var5 ? this.rand.nextInt(var4.size()) : -1;
-
-					for (int var7 = 0; var7 < var4.size(); ++var7) {
-						EnchantmentData var8 = (EnchantmentData) var4.get(var7);
-
-						if (!var5 || var7 == var6) {
-							if (var5) {
-								Item.enchantedBook.func_92115_a(var3, var8);
-							} else {
-								var3.addEnchantment(var8.enchantmentobj, var8.enchantmentLevel);
-							}
-						}
-					}
-
-					this.onCraftMatrixChanged(this.tableInventory);
-				}
-			}
-
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	/**
-	 * Callback for when the crafting gui is closed.
-	 */
-	public void onCraftGuiClosed(EntityPlayer par1EntityPlayer) {
-		super.onCraftGuiClosed(par1EntityPlayer);
-
-		if (!this.worldPointer.isRemote) {
-			ItemStack var2 = this.tableInventory.getStackInSlotOnClosing(0);
-
-			if (var2 != null) {
-				par1EntityPlayer.dropPlayerItem(var2);
-			}
 		}
 	}
 

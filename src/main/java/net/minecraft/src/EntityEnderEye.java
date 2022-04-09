@@ -115,28 +115,6 @@ public class EntityEnderEye extends Entity {
 		this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
 		this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
 
-		if (!this.worldObj.isRemote) {
-			double var2 = this.targetX - this.posX;
-			double var4 = this.targetZ - this.posZ;
-			float var6 = (float) Math.sqrt(var2 * var2 + var4 * var4);
-			float var7 = (float) Math.atan2(var4, var2);
-			double var8 = (double) var1 + (double) (var6 - var1) * 0.0025D;
-
-			if (var6 < 1.0F) {
-				var8 *= 0.8D;
-				this.motionY *= 0.8D;
-			}
-
-			this.motionX = Math.cos((double) var7) * var8;
-			this.motionZ = Math.sin((double) var7) * var8;
-
-			if (this.posY < this.targetY) {
-				this.motionY += (1.0D - this.motionY) * 0.014999999664723873D;
-			} else {
-				this.motionY += (-1.0D - this.motionY) * 0.014999999664723873D;
-			}
-		}
-
 		float var10 = 0.25F;
 
 		if (this.isInWater()) {
@@ -146,21 +124,6 @@ public class EntityEnderEye extends Entity {
 		} else {
 			this.worldObj.spawnParticle("portal", this.posX - this.motionX * (double) var10 + this.rand.nextDouble() * 0.6D - 0.3D, this.posY - this.motionY * (double) var10 - 0.5D,
 					this.posZ - this.motionZ * (double) var10 + this.rand.nextDouble() * 0.6D - 0.3D, this.motionX, this.motionY, this.motionZ);
-		}
-
-		if (!this.worldObj.isRemote) {
-			this.setPosition(this.posX, this.posY, this.posZ);
-			++this.despawnTimer;
-
-			if (this.despawnTimer > 80 && !this.worldObj.isRemote) {
-				this.setDead();
-
-				if (this.shatterOrDrop) {
-					this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.eyeOfEnder)));
-				} else {
-					this.worldObj.playAuxSFX(2003, (int) Math.round(this.posX), (int) Math.round(this.posY), (int) Math.round(this.posZ), 0);
-				}
-			}
 		}
 	}
 

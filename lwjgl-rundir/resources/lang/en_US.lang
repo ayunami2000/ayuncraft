@@ -202,9 +202,39 @@ disconnect.closed=Connection closed
 disconnect.loginFailed=Failed to login
 disconnect.loginFailedInfo=Failed to login: %s
 disconnect.quitting=Quitting
-disconnect.endOfStream=End of stream
+disconnect.endOfStream=End of stream (RIP)
 disconnect.overflow=Buffer overflow
 disconnect.spam=Kicked for spamming
+
+disconnect.ratelimit.ipNowLocked.title=Connection Closed
+disconnect.ratelimit.ipNowLocked.description0=Suspected Denial of Service
+disconnect.ratelimit.ipNowLocked.description1=Your IP is now blocked
+disconnect.ratelimit.ipNowLocked.tryAgain=please try again in an hour
+
+disconnect.ratelimit.ipLocked.title=Connection Refused
+disconnect.ratelimit.ipLocked.description0=Suspected Denial of Service
+disconnect.ratelimit.ipLocked.description1=Your IP is still blocked
+disconnect.ratelimit.ipLocked.tryAgain=please try again in an hour
+
+disconnect.ratelimit.ipFailedPossiblyLocked.title=Connection Failed
+disconnect.ratelimit.ipFailedPossiblyLocked.description0=You've been kicked by this server before for suspected
+disconnect.ratelimit.ipFailedPossiblyLocked.description1=$Denial of Service (DoS), your IP is probably blocked
+disconnect.ratelimit.ipFailedPossiblyLocked.tryAgain=please try again in an hour
+
+disconnect.ratelimit.ipBlocked.title=Connection Closed
+disconnect.ratelimit.ipBlocked.description0=Too many connections from your IP
+disconnect.ratelimit.ipBlocked.description1=Please try again in a few minutes
+disconnect.ratelimit.ipBlocked.tryAgain=(Suspected Denial of Service)
+
+disconnect.ratelimit.kickBlocked.title=Connection Closed
+disconnect.ratelimit.kickBlocked.description0=You're reconnecting too quickly!
+disconnect.ratelimit.kickBlocked.description1=Please try again in a minute
+disconnect.ratelimit.kickBlocked.tryAgain=(too many logins from your IP)
+
+disconnect.ratelimit.kickLocked.title=Connection Closed
+disconnect.ratelimit.kickLocked.description0=Suspected Denial of Service
+disconnect.ratelimit.kickLocked.description1=Logins from you IP are now blocked
+disconnect.ratelimit.kickLocked.tryAgain=please try again in an hour
 
 options.off=OFF
 options.on=ON

@@ -1,10 +1,11 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockHopper extends BlockContainer {
-	private final Random field_94457_a = new Random();
+	private final EaglercraftRandom field_94457_a = new EaglercraftRandom();
 	private Icon hopperIcon;
 	private Icon hopperTopIcon;
 	private Icon hopperInsideIcon;
@@ -88,17 +89,7 @@ public class BlockHopper extends BlockContainer {
 	 * Called upon block activation (right click on the block.)
 	 */
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		if (par1World.isRemote) {
-			return true;
-		} else {
-			TileEntityHopper var10 = getHopperTile(par1World, par2, par3, par4);
-
-			if (var10 != null) {
-				par5EntityPlayer.displayGUIHopper(var10);
-			}
-
-			return true;
-		}
+		return true;
 	}
 
 	/**

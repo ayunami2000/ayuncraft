@@ -167,26 +167,6 @@ public class EntityFishHook extends Entity {
 			this.setPosition(var21, var22, var23);
 			this.setRotation(this.rotationYaw, this.rotationPitch);
 		} else {
-			if (!this.worldObj.isRemote) {
-				ItemStack var1 = this.angler.getCurrentEquippedItem();
-
-				if (this.angler.isDead || !this.angler.isEntityAlive() || var1 == null || var1.getItem() != Item.fishingRod || this.getDistanceSqToEntity(this.angler) > 1024.0D) {
-					this.setDead();
-					this.angler.fishEntity = null;
-					return;
-				}
-
-				if (this.bobber != null) {
-					if (!this.bobber.isDead) {
-						this.posX = this.bobber.posX;
-						this.posY = this.bobber.boundingBox.minY + (double) this.bobber.height * 0.8D;
-						this.posZ = this.bobber.posZ;
-						return;
-					}
-
-					this.bobber = null;
-				}
-			}
 
 			if (this.shake > 0) {
 				--this.shake;
@@ -388,44 +368,7 @@ public class EntityFishHook extends Entity {
 	}
 
 	public int catchFish() {
-		if (this.worldObj.isRemote) {
-			return 0;
-		} else {
-			byte var1 = 0;
-
-			if (this.bobber != null) {
-				double var2 = this.angler.posX - this.posX;
-				double var4 = this.angler.posY - this.posY;
-				double var6 = this.angler.posZ - this.posZ;
-				double var8 = (double) MathHelper.sqrt_double(var2 * var2 + var4 * var4 + var6 * var6);
-				double var10 = 0.1D;
-				this.bobber.motionX += var2 * var10;
-				this.bobber.motionY += var4 * var10 + (double) MathHelper.sqrt_double(var8) * 0.08D;
-				this.bobber.motionZ += var6 * var10;
-				var1 = 3;
-			} else if (this.ticksCatchable > 0) {
-				EntityItem var13 = new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.fishRaw));
-				double var3 = this.angler.posX - this.posX;
-				double var5 = this.angler.posY - this.posY;
-				double var7 = this.angler.posZ - this.posZ;
-				double var9 = (double) MathHelper.sqrt_double(var3 * var3 + var5 * var5 + var7 * var7);
-				double var11 = 0.1D;
-				var13.motionX = var3 * var11;
-				var13.motionY = var5 * var11 + (double) MathHelper.sqrt_double(var9) * 0.08D;
-				var13.motionZ = var7 * var11;
-				this.worldObj.spawnEntityInWorld(var13);
-				this.angler.worldObj.spawnEntityInWorld(new EntityXPOrb(this.angler.worldObj, this.angler.posX, this.angler.posY + 0.5D, this.angler.posZ + 0.5D, this.rand.nextInt(6) + 1));
-				var1 = 1;
-			}
-
-			if (this.inGround) {
-				var1 = 2;
-			}
-
-			this.setDead();
-			this.angler.fishEntity = null;
-			return var1;
-		}
+		return 0;
 	}
 
 	/**

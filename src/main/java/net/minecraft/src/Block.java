@@ -645,19 +645,6 @@ public class Block {
 	 * Drops the block items with a specified chance of dropping the specified items
 	 */
 	public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {
-		if (!par1World.isRemote) {
-			int var8 = this.quantityDroppedWithBonus(par7, par1World.rand);
-
-			for (int var9 = 0; var9 < var8; ++var9) {
-				if (par1World.rand.nextFloat() <= par6) {
-					int var10 = this.idDropped(par5, par1World.rand, par7);
-
-					if (var10 > 0) {
-						this.dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(var10, 1, this.damageDropped(par5)));
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -665,28 +652,12 @@ public class Block {
 	 * remote.
 	 */
 	protected void dropBlockAsItem_do(World par1World, int par2, int par3, int par4, ItemStack par5ItemStack) {
-		if (!par1World.isRemote && par1World.getGameRules().getGameRuleBooleanValue("doTileDrops")) {
-			float var6 = 0.7F;
-			double var7 = (double) (par1World.rand.nextFloat() * var6) + (double) (1.0F - var6) * 0.5D;
-			double var9 = (double) (par1World.rand.nextFloat() * var6) + (double) (1.0F - var6) * 0.5D;
-			double var11 = (double) (par1World.rand.nextFloat() * var6) + (double) (1.0F - var6) * 0.5D;
-			EntityItem var13 = new EntityItem(par1World, (double) par2 + var7, (double) par3 + var9, (double) par4 + var11, par5ItemStack);
-			var13.delayBeforeCanPickup = 10;
-			par1World.spawnEntityInWorld(var13);
-		}
 	}
 
 	/**
 	 * called by spawner, ore, redstoneOre blocks
 	 */
 	protected void dropXpOnBlockBreak(World par1World, int par2, int par3, int par4, int par5) {
-		if (!par1World.isRemote) {
-			while (par5 > 0) {
-				int var6 = EntityXPOrb.getXPSplit(par5);
-				par5 -= var6;
-				par1World.spawnEntityInWorld(new EntityXPOrb(par1World, (double) par2 + 0.5D, (double) par3 + 0.5D, (double) par4 + 0.5D, var6));
-			}
-		}
 	}
 
 	/**

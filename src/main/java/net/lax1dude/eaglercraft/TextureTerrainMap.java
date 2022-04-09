@@ -366,21 +366,21 @@ public class TextureTerrainMap implements IconRegister {
 			for(int x = 0; x < src.w; ++x) {
 				int pixel = src.data[y * src.w + x];
 				
-				if(y != src.h - 1) {
-					ret.data[(src.h - 1 - y) * ret.w + (x)] = pixel;
-					ret.data[(src.h - 1 - y) * ret.w + (x + src.w)] = pixel;
-					ret.data[(src.h - 1 - y) * ret.w + (x + src.w*2)] = pixel;
-				}
+				//if(y != src.h - 1) {
+					ret.data[y * ret.w + (x)] = pixel;
+					ret.data[y * ret.w + (x + src.w)] = pixel;
+					ret.data[y * ret.w + (x + src.w*2)] = pixel;
+				//}
 				
 				ret.data[(y + src.h) * ret.w + (x)] = pixel;
 				ret.data[(y + src.h) * ret.w + (x + src.w)] = pixel;
 				ret.data[(y + src.h) * ret.w + (x + src.w*2)] = pixel;
 
-				if(y != 0) {
-					ret.data[(src.h*3 - 1 - y) * ret.w + (x)] = pixel;
-					ret.data[(src.h*3 - 1 - y) * ret.w + (x + src.w)] = pixel;
-					ret.data[(src.h*3 - 1 - y) * ret.w + (x + src.w*2)] = pixel;
-				}
+				//if(y != 0) {
+					ret.data[(y + src.h * 2) * ret.w + (x)] = pixel;
+					ret.data[(y + src.h * 2) * ret.w + (x + src.w)] = pixel;
+					ret.data[(y + src.h * 2) * ret.w + (x + src.w*2)] = pixel;
+				//}
 			}
 		}
 		return ret;

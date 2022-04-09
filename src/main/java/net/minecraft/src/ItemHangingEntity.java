@@ -27,10 +27,6 @@ public class ItemHangingEntity extends Item {
 				return false;
 			} else {
 				if (var12 != null && var12.onValidSurface()) {
-					if (!par3World.isRemote) {
-						par3World.spawnEntityInWorld(var12);
-					}
-
 					--par1ItemStack.stackSize;
 				}
 

@@ -3,21 +3,18 @@ package net.minecraft.src;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
 import net.lax1dude.eaglercraft.ConfigConstants;
 import net.lax1dude.eaglercraft.EaglerAdapter;
-import net.lax1dude.eaglercraft.EaglerImage;
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.GuiScreenEditProfile;
-import net.lax1dude.eaglercraft.GuiScreenVoiceChannel;
 import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
 public class GuiMainMenu extends GuiScreen {
 	/** The RNG used by the Main Menu Screen. */
-	private static final Random rand = new Random();
+	private static final EaglercraftRandom rand = new EaglercraftRandom();
 
 	/** The splash message. */
 	private String splashText = "missingno";
@@ -138,11 +135,11 @@ public class GuiMainMenu extends GuiScreen {
 		StringTranslate var2 = StringTranslate.getInstance();
 		int var4 = this.height / 4 + 48;
 
-		GuiButton single;
-		this.buttonList.add(single = new GuiButton(1, this.width / 2 - 100, var4, var2.translateKey("menu.singleplayer")));
-		this.buttonList.add(new GuiButton(2, this.width / 2 - 100, var4 + 24 * 1, var2.translateKey("menu.multiplayer")));
-		this.buttonList.add(new GuiButton(3, this.width / 2 - 100, var4 + 24 * 2, var2.translateKey("menu.forkme")));
-		single.enabled = false;
+		//GuiButton single;
+		this.buttonList.add(new GuiButton(2, this.width / 2 - 100, var4, var2.translateKey("menu.multiplayer")));
+		this.buttonList.add(new GuiButton(3, this.width / 2 - 100, var4 + 24 * 1, var2.translateKey("menu.forkme")));
+		//this.buttonList.add(new GuiButton(3, this.width / 2 - 100, var4 + 24 * 2, var2.translateKey("menu.forkme")));
+		//single.enabled = false;
 
 		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, var4 + 72 + 12, 98, 20, var2.translateKey("menu.options")));
 		this.buttonList.add(new GuiButton(4, this.width / 2 + 2, var4 + 72 + 12, 98, 20, var2.translateKey("menu.editprofile")));
@@ -202,10 +199,12 @@ public class GuiMainMenu extends GuiScreen {
 				if(par1 >= (this.width - w - 4) && par1 <= this.width && par2 >= 0 && par2 <= 9) {
 					showAck = true;
 				}
+				/*
 				w = this.fontRenderer.getStringWidth("debug console") * 3 / 4;
 				if(par1 >= 0 && par1 <= (w + 4) && par2 >= 0 && par2 <= 9) {
 					EaglerAdapter.openConsole();
 				}
+				*/
 			}
 		}else {
 			if(par3 == 0) {
@@ -448,12 +447,13 @@ public class GuiMainMenu extends GuiScreen {
 		 */
 
 		this.drawString(this.fontRenderer, "minecraft 1.5.2", 2, this.height - 20, 16777215);
-		this.drawString(this.fontRenderer, ConfigConstants.mainMenuString, 2, this.height - 10, 16777215);
+		this.drawString(this.fontRenderer, ConfigConstants.mainMenuString + EnumChatFormatting.GRAY + " (cracked)", 2, this.height - 10, 16777215);
 
-		String var10 = "copyright " + Calendar.getInstance().get(Calendar.YEAR) + " calder young";
+		//String var10 = "Copyright " + Calendar.getInstance().get(Calendar.YEAR) + " Mojang AB.";
+		String var10 = "copyright 2013 Mojang AB";
 		this.drawString(this.fontRenderer, var10, this.width - this.fontRenderer.getStringWidth(var10) - 2, this.height - 10, 16777215);
 
-		var10 = "all rights reserved";
+		var10 = "site resources are";
 		this.drawString(this.fontRenderer, var10, this.width - this.fontRenderer.getStringWidth(var10) - 2, this.height - 20, 16777215);
 
 		if (this.field_92025_p != null && this.field_92025_p.length() > 0) {
@@ -463,7 +463,20 @@ public class GuiMainMenu extends GuiScreen {
 			// this.field_92024_r) / 2, ((GuiButton)this.buttonList.get(0)).yPosition - 12,
 			// 16777215);
 		}
-		
+
+		/*
+		String lid = "(login is disabled, this copy violates Mojang's terms of service)";
+		int sl = this.fontRenderer.getStringWidth(lid);
+
+		EaglerAdapter.glPushMatrix();
+		float k = ((this.width - sl) * 3 / 4) < 80 ? 0.5f : 0.75f;
+		EaglerAdapter.glScalef(k, k, k);
+		EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
+		EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
+		this.drawString(fontRenderer, lid, (int)(this.width / k - sl) / 2, (int)((this.height - 19) / k), 0x88999999);
+		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
+		EaglerAdapter.glPopMatrix();
+		*/
 		var10 = "ayuncraft readme.txt";
 		int w = this.fontRenderer.getStringWidth(var10) * 3 / 4;
 		if(!showAck && par1 >= (this.width - w - 4) && par1 <= this.width && par2 >= 0 && par2 <= 9) {
@@ -476,7 +489,7 @@ public class GuiMainMenu extends GuiScreen {
 		EaglerAdapter.glScalef(0.75f, 0.75f, 0.75f);
 		this.drawString(this.fontRenderer, var10, 0, 0, 16777215);
 		EaglerAdapter.glPopMatrix();
-		
+		/*
 		var10 = "debug console";
 		w = this.fontRenderer.getStringWidth(var10) * 3 / 4;
 		if(!showAck && par1 >= 0 && par1 <= (w + 4) && par2 >= 0 && par2 <= 9) {
@@ -489,7 +502,7 @@ public class GuiMainMenu extends GuiScreen {
 		EaglerAdapter.glScalef(0.75f, 0.75f, 0.75f);
 		this.drawString(this.fontRenderer, var10, 0, 0, 16777215);
 		EaglerAdapter.glPopMatrix();
-		
+		*/
 		if(showAck) {
 			super.drawScreen(0, 0, par3);
 			this.drawGradientRect(0, 0, this.width, this.height, -1072689136, -804253680);

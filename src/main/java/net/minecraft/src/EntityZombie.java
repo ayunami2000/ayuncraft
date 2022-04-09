@@ -89,57 +89,6 @@ public class EntityZombie extends EntityMob {
 		this.getDataWatcher().updateObject(13, Byte.valueOf((byte) (par1 ? 1 : 0)));
 	}
 
-	/**
-	 * Called frequently so the entity can update its state every tick as required.
-	 * For example, zombies and skeletons use this to react to sunlight and start to
-	 * burn.
-	 */
-	public void onLivingUpdate() {
-		if (this.worldObj.isDaytime() && !this.worldObj.isRemote && !this.isChild()) {
-			float var1 = this.getBrightness(1.0F);
-
-			if (var1 > 0.5F && this.rand.nextFloat() * 30.0F < (var1 - 0.4F) * 2.0F && this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))) {
-				boolean var2 = true;
-				ItemStack var3 = this.getCurrentItemOrArmor(4);
-
-				if (var3 != null) {
-					if (var3.isItemStackDamageable()) {
-						var3.setItemDamage(var3.getItemDamageForDisplay() + this.rand.nextInt(2));
-
-						if (var3.getItemDamageForDisplay() >= var3.getMaxDamage()) {
-							this.renderBrokenItemStack(var3);
-							this.setCurrentItemOrArmor(4, (ItemStack) null);
-						}
-					}
-
-					var2 = false;
-				}
-
-				if (var2) {
-					this.setFire(8);
-				}
-			}
-		}
-
-		super.onLivingUpdate();
-	}
-
-	/**
-	 * Called to update the entity's position/logic.
-	 */
-	public void onUpdate() {
-		if (!this.worldObj.isRemote && this.isConverting()) {
-			int var1 = this.getConversionTimeBoost();
-			this.conversionTime -= var1;
-
-			if (this.conversionTime <= 0) {
-				this.convertToVillager();
-			}
-		}
-
-		super.onUpdate();
-	}
-
 	public boolean attackEntityAsMob(Entity par1Entity) {
 		boolean var2 = super.attackEntityAsMob(par1Entity);
 
@@ -339,10 +288,6 @@ public class EntityZombie extends EntityMob {
 
 			if (var2.stackSize <= 0) {
 				par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack) null);
-			}
-
-			if (!this.worldObj.isRemote) {
-				this.startConversion(this.rand.nextInt(2401) + 3600);
 			}
 
 			return true;

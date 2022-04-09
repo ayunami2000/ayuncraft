@@ -1351,7 +1351,8 @@ public class RenderGlobal implements IWorldAccess {
 			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
 			EaglerAdapter.glPushMatrix();
 			EaglerAdapter.glDisable(EaglerAdapter.GL_ALPHA_TEST);
-			EaglerAdapter.glPolygonOffset(-3.0F, -3.0F);
+			EaglerAdapter.glPolygonOffset(3.0F, 3.0F);
+			EaglerAdapter.glDepthMask(false);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_POLYGON_OFFSET_FILL);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
 			par1Tessellator.startDrawingQuads();
@@ -1539,6 +1540,8 @@ public class RenderGlobal implements IWorldAccess {
 	 * Plays the specified record. Arg: recordName, x, y, z
 	 */
 	public void playRecord(String par1Str, int par2, int par3, int par4) {
+		Minecraft.getMinecraft().displayEaglercraftText("records have been deleted to reduce file size");
+		
 		ItemRecord var5 = ItemRecord.getRecord(par1Str);
 
 		if (par1Str != null && var5 != null) {

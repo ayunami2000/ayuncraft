@@ -61,10 +61,6 @@ public class ItemBow extends Item {
 			} else {
 				par3EntityPlayer.inventory.consumeInventoryItem(Item.arrow.itemID);
 			}
-
-			if (!par2World.isRemote) {
-				par2World.spawnEntityInWorld(var8);
-			}
 		}
 	}
 

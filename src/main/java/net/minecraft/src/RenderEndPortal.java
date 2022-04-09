@@ -1,9 +1,9 @@
 package net.minecraft.src;
 
 import java.nio.FloatBuffer;
-import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
@@ -22,7 +22,7 @@ public class RenderEndPortal extends TileEntitySpecialRenderer {
 		float var11 = (float) this.tileEntityRenderer.playerZ;
 		EaglerAdapter.glDisable(EaglerAdapter.GL_LIGHTING);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_ALPHA_TEST);
-		Random var12 = new Random(31100L);
+		EaglercraftRandom var12 = new EaglercraftRandom(31100L);
 		float var13 = 0.75F;
 
 		for (int var14 = 0; var14 < 16; ++var14) {

@@ -343,17 +343,8 @@ public abstract class World implements IBlockAccess {
 				this.theProfiler.endSection();
 
 				if (var9) {
-					if ((par6 & 2) != 0 && (!this.isRemote || (par6 & 4) == 0)) {
+					if ((par6 & 2) != 0 && (par6 & 4) == 0) {
 						this.markBlockForUpdate(par1, par2, par3);
-					}
-
-					if (!this.isRemote && (par6 & 1) != 0) {
-						this.notifyBlockChange(par1, par2, par3, var8);
-						Block var10 = Block.blocksList[par4];
-
-						if (var10 != null && var10.hasComparatorInputOverride()) {
-							this.func_96440_m(par1, par2, par3, par4);
-						}
 					}
 				}
 
@@ -412,17 +403,8 @@ public abstract class World implements IBlockAccess {
 				if (var9) {
 					int var10 = var6.getBlockID(var7, par2, var8);
 
-					if ((par5 & 2) != 0 && (!this.isRemote || (par5 & 4) == 0)) {
+					if ((par5 & 2) != 0 && (par5 & 4) == 0) {
 						this.markBlockForUpdate(par1, par2, par3);
-					}
-
-					if (!this.isRemote && (par5 & 1) != 0) {
-						this.notifyBlockChange(par1, par2, par3, var10);
-						Block var11 = Block.blocksList[var10];
-
-						if (var11 != null && var11.hasComparatorInputOverride()) {
-							this.func_96440_m(par1, par2, par3, var10);
-						}
 					}
 				}
 
@@ -566,14 +548,6 @@ public abstract class World implements IBlockAccess {
 	 * x, y, z, blockID
 	 */
 	public void notifyBlockOfNeighborChange(int par1, int par2, int par3, int par4) {
-		if (!this.isRemote) {
-			int var5 = this.getBlockId(par1, par2, par3);
-			Block var6 = Block.blocksList[var5];
-
-			if (var6 != null) {
-				var6.onNeighborBlockChange(this, par1, par2, par3, par4);
-			}
-		}
 	}
 
 	/**
@@ -2427,27 +2401,6 @@ public abstract class World implements IBlockAccess {
 
 	protected void moodSoundAndLightCheck(int par1, int par2, Chunk par3Chunk) {
 		this.theProfiler.endStartSection("moodSound");
-
-		if (this.ambientTickCountdown == 0 && !this.isRemote) {
-			this.updateLCG = this.updateLCG * 3 + 1013904223;
-			int var4 = this.updateLCG >> 2;
-			int var5 = var4 & 15;
-			int var6 = var4 >> 8 & 15;
-			int var7 = var4 >> 16 & 127;
-			int var8 = par3Chunk.getBlockID(var5, var7, var6);
-			var5 += par1;
-			var6 += par2;
-
-			if (var8 == 0 && this.getFullBlockLightValue(var5, var7, var6) <= this.rand.nextInt(8) && this.getSavedLightValue(EnumSkyBlock.Sky, var5, var7, var6) <= 0) {
-				EntityPlayer var9 = this.getClosestPlayer((double) var5 + 0.5D, (double) var7 + 0.5D, (double) var6 + 0.5D, 8.0D);
-
-				if (var9 != null && var9.getDistanceSq((double) var5 + 0.5D, (double) var7 + 0.5D, (double) var6 + 0.5D) > 4.0D) {
-					this.playSoundEffect((double) var5 + 0.5D, (double) var7 + 0.5D, (double) var6 + 0.5D, "ambient.cave.cave", 0.7F, 0.8F + this.rand.nextFloat() * 0.2F);
-					this.ambientTickCountdown = this.rand.nextInt(12000) + 6000;
-				}
-			}
-		}
-
 		this.theProfiler.endStartSection("checkLight");
 		par3Chunk.enqueueRelightChecks();
 	}

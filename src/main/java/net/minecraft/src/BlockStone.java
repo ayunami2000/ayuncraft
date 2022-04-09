@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockStone extends Block {
 	public BlockStone(int par1) {
@@ -11,7 +11,7 @@ public class BlockStone extends Block {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return Block.cobblestone.blockID;
 	}
 }

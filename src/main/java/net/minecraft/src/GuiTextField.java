@@ -72,6 +72,9 @@ public class GuiTextField extends Gui {
 	 * Sets the text of the textbox.
 	 */
 	public void setText(String par1Str) {
+		if(text.equals(par1Str)) {
+			return;
+		}
 		if (par1Str.length() > this.maxStringLength) {
 			this.text = par1Str.substring(0, this.maxStringLength);
 		} else {
@@ -271,20 +274,29 @@ public class GuiTextField extends Gui {
 				this.setCursorPositionEnd();
 				this.setSelectionPos(0);
 				return true;
-
+				
 			case 3:
-				GuiScreen.setClipboardString(this.getSelectedtext());
+				String s = this.getSelectedtext();
+				if(s != null && s.length() > 0) {
+					GuiScreen.setClipboardString(s);
+				}
 				return true;
 
 			case 22:
-				this.writeText(GuiScreen.getClipboardString());
+				String s3 = GuiScreen.getClipboardString();
+				if(s3 != null && s3.length() > 0) {
+					this.writeText(s3);
+				}
 				return true;
 
 			case 24:
-				GuiScreen.setClipboardString(this.getSelectedtext());
+				String s2 = this.getSelectedtext();
+				if(s2 != null && s2.length() > 0) {
+					GuiScreen.setClipboardString(s2);
+				}
 				this.writeText("");
 				return true;
-
+				
 			default:
 				switch (par2) {
 				case 14:
@@ -296,7 +308,7 @@ public class GuiTextField extends Gui {
 
 					return true;
 
-				case 199:
+				case 200:
 					if (GuiScreen.isShiftKeyDown()) {
 						this.setSelectionPos(0);
 					} else {
@@ -335,7 +347,7 @@ public class GuiTextField extends Gui {
 
 					return true;
 
-				case 207:
+				case 208:
 					if (GuiScreen.isShiftKeyDown()) {
 						this.setSelectionPos(this.text.length());
 					} else {
@@ -354,7 +366,27 @@ public class GuiTextField extends Gui {
 					return true;
 
 				default:
-					if (ChatAllowedCharacters.isAllowedCharacter(par1)) {
+					boolean ctrl = GuiScreen.isCtrlKeyDown();
+					if(ctrl && (par1 == 'c' || par1 == 'C')) {
+						String s5 = this.getSelectedtext();
+						if(s5.length() > 0) {
+							GuiScreen.setClipboardString(s5);
+						}
+						return true;
+					}else if(ctrl && (par1 == 'x' || par1 == 'X')) {
+						String s6 = this.getSelectedtext();
+						if(s6.length() > 0) {
+							GuiScreen.setClipboardString(s6);
+							this.writeText("");
+						}
+						return true;
+					}else if(ctrl && (par1 == 'v' || par1 == 'V')) {
+						String s4 = GuiScreen.getClipboardString();
+						if(s4 != null && s4.length() > 0) {
+							this.writeText(s4);
+						}
+						return true;
+					}else if (ChatAllowedCharacters.isAllowedCharacter(par1)) {
 						this.writeText(Character.toString(par1));
 						return true;
 					} else {
@@ -434,7 +466,7 @@ public class GuiTextField extends Gui {
 
 			if (var6) {
 				if (var13) {
-					Gui.drawRect(var11, var8 - 1, var11 + 1, var8 + 1 + this.fontRenderer.FONT_HEIGHT, -3092272);
+					Gui.drawRect(var11, var8 - 1, var11 + 1, var8 + 1 + this.fontRenderer.FONT_HEIGHT, var1 | 0xFF000000);
 				} else {
 					this.fontRenderer.drawStringWithShadow("_", var11, var8, var1);
 				}
@@ -466,18 +498,18 @@ public class GuiTextField extends Gui {
 		}
 
 		Tessellator var6 = Tessellator.instance;
-		EaglerAdapter.glColor4f(0.0F, 0.0F, 255.0F, 255.0F);
+		EaglerAdapter.glColor4f(0.2F, 0.2F, 1.0F, 1.0F);
+		EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
+		EaglerAdapter.glBlendFunc(EaglerAdapter.GL_ONE_MINUS_DST_COLOR, EaglerAdapter.GL_SRC_ALPHA);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_TEXTURE_2D);
-		EaglerAdapter.glEnable(EaglerAdapter.GL_COLOR_LOGIC_OP);
-		EaglerAdapter.glLogicOp(EaglerAdapter.GL_OR_REVERSE);
 		var6.startDrawingQuads();
 		var6.addVertex((double) par1, (double) par4, 0.0D);
 		var6.addVertex((double) par3, (double) par4, 0.0D);
 		var6.addVertex((double) par3, (double) par2, 0.0D);
 		var6.addVertex((double) par1, (double) par2, 0.0D);
 		var6.draw();
-		EaglerAdapter.glDisable(EaglerAdapter.GL_COLOR_LOGIC_OP);
 		EaglerAdapter.glEnable(EaglerAdapter.GL_TEXTURE_2D);
+		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
 	}
 
 	public void setMaxStringLength(int par1) {
@@ -579,7 +611,7 @@ public class GuiTextField extends Gui {
 		if (par1 < 0) {
 			par1 = 0;
 		}
-
+		
 		this.selectionEnd = par1;
 
 		if (this.fontRenderer != null) {

@@ -1,14 +1,13 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 
 public class GuiEnchantment extends GuiContainer {
 	/** The book model used on the GUI. */
 	private static ModelBook bookModel = new ModelBook();
-	private Random rand = new Random();
+	private EaglercraftRandom rand = new EaglercraftRandom();
 
 	/** ContainerEnchantment object associated with this gui */
 	private ContainerEnchantment containerEnchantment;
@@ -80,7 +79,7 @@ public class GuiEnchantment extends GuiContainer {
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glLoadIdentity();
 		ScaledResolution var6 = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
-		EaglerAdapter.glViewport((var6.getScaledWidth() - 320) / 2 * var6.getScaleFactor(), (var6.getScaledHeight() - 240) / 2 * var6.getScaleFactor(), 320 * var6.getScaleFactor(), 240 * var6.getScaleFactor());
+		EaglerAdapter.glViewport((var6.getScaledWidth() - 432) / 2 * var6.getScaleFactor(), (var6.getScaledHeight() - 182) / 2 * var6.getScaleFactor(), 320 * var6.getScaleFactor(), 240 * var6.getScaleFactor());
 		EaglerAdapter.glTranslatef(-0.34F, 0.23F, 0.0F);
 		EaglerAdapter.gluPerspective(90.0F, 1.3333334F, 9.0F, 80.0F);
 		float var7 = 1.0F;

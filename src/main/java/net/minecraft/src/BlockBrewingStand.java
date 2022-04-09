@@ -1,10 +1,11 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockBrewingStand extends BlockContainer {
-	private Random rand = new Random();
+	private EaglercraftRandom rand = new EaglercraftRandom();
 	private Icon theIcon;
 
 	public BlockBrewingStand(int par1) {
@@ -66,17 +67,7 @@ public class BlockBrewingStand extends BlockContainer {
 	 * Called upon block activation (right click on the block.)
 	 */
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		if (par1World.isRemote) {
-			return true;
-		} else {
-			TileEntityBrewingStand var10 = (TileEntityBrewingStand) par1World.getBlockTileEntity(par2, par3, par4);
-
-			if (var10 != null) {
-				par5EntityPlayer.displayGUIBrewingStand(var10);
-			}
-
-			return true;
-		}
+		return true;
 	}
 
 	/**
@@ -92,7 +83,7 @@ public class BlockBrewingStand extends BlockContainer {
 	 * A randomly called display update to be able to add particles or other items
 	 * for display
 	 */
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void randomDisplayTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		double var6 = (double) ((float) par2 + 0.4F + par5Random.nextFloat() * 0.2F);
 		double var8 = (double) ((float) par3 + 0.7F + par5Random.nextFloat() * 0.3F);
 		double var10 = (double) ((float) par4 + 0.4F + par5Random.nextFloat() * 0.2F);
@@ -142,7 +133,7 @@ public class BlockBrewingStand extends BlockContainer {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return Item.brewingStand.itemID;
 	}
 

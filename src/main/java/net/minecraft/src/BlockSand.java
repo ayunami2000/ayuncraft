@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
 public class BlockSand extends Block {
 	/** Do blocks fall instantly to where they stop or do they fall over time */
 	public static boolean fallInstantly = false;
@@ -32,28 +30,13 @@ public class BlockSand extends Block {
 	}
 
 	/**
-	 * Ticks the block if it's been scheduled
-	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-		if (!par1World.isRemote) {
-			this.tryToFall(par1World, par2, par3, par4);
-		}
-	}
-
-	/**
 	 * If there is space to fall below will start this block falling
 	 */
 	private void tryToFall(World par1World, int par2, int par3, int par4) {
 		if (canFallBelow(par1World, par2, par3 - 1, par4) && par3 >= 0) {
 			byte var8 = 32;
 
-			if (!fallInstantly && par1World.checkChunksExist(par2 - var8, par3 - var8, par4 - var8, par2 + var8, par3 + var8, par4 + var8)) {
-				if (!par1World.isRemote) {
-					EntityFallingSand var9 = new EntityFallingSand(par1World, (double) ((float) par2 + 0.5F), (double) ((float) par3 + 0.5F), (double) ((float) par4 + 0.5F), this.blockID, par1World.getBlockMetadata(par2, par3, par4));
-					this.onStartFalling(var9);
-					par1World.spawnEntityInWorld(var9);
-				}
-			} else {
+			if (!(!fallInstantly && par1World.checkChunksExist(par2 - var8, par3 - var8, par4 - var8, par2 + var8, par3 + var8, par4 + var8))) {
 				par1World.setBlockToAir(par2, par3, par4);
 
 				while (canFallBelow(par1World, par2, par3 - 1, par4) && par3 > 0) {

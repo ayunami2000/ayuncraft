@@ -45,10 +45,6 @@ public class ItemDye extends Item {
 		} else {
 			if (par1ItemStack.getItemDamage() == 15) {
 				if (func_96604_a(par1ItemStack, par3World, par4, par5, par6)) {
-					if (!par3World.isRemote) {
-						par3World.playAuxSFX(2005, par4, par5, par6, 0);
-					}
-
 					return true;
 				}
 			} else if (par1ItemStack.getItemDamage() == 3) {
@@ -101,11 +97,6 @@ public class ItemDye extends Item {
 		int var5 = par1World.getBlockId(par2, par3, par4);
 
 		if (var5 == Block.sapling.blockID) {
-			if (!par1World.isRemote) {
-
-				--par0ItemStack.stackSize;
-			}
-
 			return true;
 		} else if (var5 != Block.mushroomBrown.blockID && var5 != Block.mushroomRed.blockID) {
 			if (var5 != Block.melonStem.blockID && var5 != Block.pumpkinStem.blockID) {
@@ -113,11 +104,6 @@ public class ItemDye extends Item {
 					if (par1World.getBlockMetadata(par2, par3, par4) == 7) {
 						return false;
 					} else {
-						if (!par1World.isRemote) {
-							((BlockCrops) Block.blocksList[var5]).fertilize(par1World, par2, par3, par4);
-							--par0ItemStack.stackSize;
-						}
-
 						return true;
 					}
 				} else {
@@ -133,71 +119,20 @@ public class ItemDye extends Item {
 						if (var8 >= 2) {
 							return false;
 						} else {
-							if (!par1World.isRemote) {
-								++var8;
-								par1World.setBlockMetadataWithNotify(par2, par3, par4, var8 << 2 | var7, 2);
-								--par0ItemStack.stackSize;
-							}
-
 							return true;
 						}
 					} else if (var5 != Block.grass.blockID) {
 						return false;
 					} else {
-						if (!par1World.isRemote) {
-							--par0ItemStack.stackSize;
-							label102:
-
-							for (var6 = 0; var6 < 128; ++var6) {
-								var7 = par2;
-								var8 = par3 + 1;
-								int var9 = par4;
-
-								for (int var10 = 0; var10 < var6 / 16; ++var10) {
-									var7 += itemRand.nextInt(3) - 1;
-									var8 += (itemRand.nextInt(3) - 1) * itemRand.nextInt(3) / 2;
-									var9 += itemRand.nextInt(3) - 1;
-
-									if (par1World.getBlockId(var7, var8 - 1, var9) != Block.grass.blockID || par1World.isBlockNormalCube(var7, var8, var9)) {
-										continue label102;
-									}
-								}
-
-								if (par1World.getBlockId(var7, var8, var9) == 0) {
-									if (itemRand.nextInt(10) != 0) {
-										if (Block.tallGrass.canBlockStay(par1World, var7, var8, var9)) {
-											par1World.setBlock(var7, var8, var9, Block.tallGrass.blockID, 1, 3);
-										}
-									} else if (itemRand.nextInt(3) != 0) {
-										if (Block.plantYellow.canBlockStay(par1World, var7, var8, var9)) {
-											par1World.setBlock(var7, var8, var9, Block.plantYellow.blockID);
-										}
-									} else if (Block.plantRed.canBlockStay(par1World, var7, var8, var9)) {
-										par1World.setBlock(var7, var8, var9, Block.plantRed.blockID);
-									}
-								}
-							}
-						}
-
 						return true;
 					}
 				}
 			} else if (par1World.getBlockMetadata(par2, par3, par4) == 7) {
 				return false;
 			} else {
-				if (!par1World.isRemote) {
-					((BlockStem) Block.blocksList[var5]).fertilizeStem(par1World, par2, par3, par4);
-					--par0ItemStack.stackSize;
-				}
-
 				return true;
 			}
 		} else {
-			if (!par1World.isRemote) {
-				
-				--par0ItemStack.stackSize;
-			}
-
 			return true;
 		}
 	}

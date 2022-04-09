@@ -41,7 +41,7 @@ teavm {
    maxTopLevelNames = 10000;
    properties = null;
    debugInformationGenerated = false;
-   sourceMapsGenerated = false;
+   sourceMapsGenerated = true;
    sourceFilesCopied = false;
    incremental = false;
    transformers = null;
@@ -50,7 +50,7 @@ teavm {
    targetDirectory = file("javascript");
    
    /** The directory to monitor to decide if compile is up-to-date or not */
-   //sourceDirectory = [file("src/main/java"),file("../minecrafthtml5mcp/src")];
+   sourceDirectory = file("src");
    
    /** How to name the result file. */
    targetFileName = "classes.js";

@@ -6,7 +6,11 @@ public class EntityMinecartHopper extends EntityMinecartContainer implements Hop
 	/** Whether this hopper minecart is being blocked by an activator rail. */
 	private boolean isBlocked = true;
 	private int transferTicker = -1;
-
+	
+	public EntityMinecartHopper(World par1World) {
+		super();
+		setWorld(par1World);
+	}
 	public EntityMinecartHopper(World par1World, double par2, double par4, double par6) {
 		super(par1World, par2, par4, par6);
 	}
@@ -35,10 +39,6 @@ public class EntityMinecartHopper extends EntityMinecartContainer implements Hop
 	 * into the saddle on a pig.
 	 */
 	public boolean interact(EntityPlayer par1EntityPlayer) {
-		if (!this.worldObj.isRemote) {
-			par1EntityPlayer.displayGUIHopperMinecart(this);
-		}
-
 		return true;
 	}
 
@@ -93,26 +93,6 @@ public class EntityMinecartHopper extends EntityMinecartContainer implements Hop
 	 */
 	public double getZPos() {
 		return this.posZ;
-	}
-
-	/**
-	 * Called to update the entity's position/logic.
-	 */
-	public void onUpdate() {
-		super.onUpdate();
-
-		if (!this.worldObj.isRemote && this.isEntityAlive() && this.getBlocked()) {
-			--this.transferTicker;
-
-			if (!this.canTransfer()) {
-				this.setTransferTicker(0);
-
-				if (this.func_96112_aD()) {
-					this.setTransferTicker(4);
-					this.onInventoryChanged();
-				}
-			}
-		}
 	}
 
 	public boolean func_96112_aD() {

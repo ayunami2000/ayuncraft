@@ -96,67 +96,6 @@ public class EntityFallingSand extends Entity {
 			this.motionX *= 0.9800000190734863D;
 			this.motionY *= 0.9800000190734863D;
 			this.motionZ *= 0.9800000190734863D;
-
-			if (!this.worldObj.isRemote) {
-				int var1 = MathHelper.floor_double(this.posX);
-				int var2 = MathHelper.floor_double(this.posY);
-				int var3 = MathHelper.floor_double(this.posZ);
-
-				if (this.fallTime == 1) {
-					if (this.worldObj.getBlockId(var1, var2, var3) != this.blockID) {
-						this.setDead();
-						return;
-					}
-
-					this.worldObj.setBlockToAir(var1, var2, var3);
-				}
-
-				if (this.onGround) {
-					this.motionX *= 0.699999988079071D;
-					this.motionZ *= 0.699999988079071D;
-					this.motionY *= -0.5D;
-
-					if (this.worldObj.getBlockId(var1, var2, var3) != Block.pistonMoving.blockID) {
-						this.setDead();
-
-						if (!this.isBreakingAnvil && this.worldObj.canPlaceEntityOnSide(this.blockID, var1, var2, var3, true, 1, (Entity) null, (ItemStack) null) && !BlockSand.canFallBelow(this.worldObj, var1, var2 - 1, var3)
-								&& this.worldObj.setBlock(var1, var2, var3, this.blockID, this.metadata, 3)) {
-							if (Block.blocksList[this.blockID] instanceof BlockSand) {
-								((BlockSand) Block.blocksList[this.blockID]).onFinishFalling(this.worldObj, var1, var2, var3, this.metadata);
-							}
-
-							if (this.fallingBlockTileEntityData != null && Block.blocksList[this.blockID] instanceof ITileEntityProvider) {
-								TileEntity var4 = this.worldObj.getBlockTileEntity(var1, var2, var3);
-
-								if (var4 != null) {
-									NBTTagCompound var5 = new NBTTagCompound();
-									var4.writeToNBT(var5);
-									Iterator var6 = this.fallingBlockTileEntityData.getTags().iterator();
-
-									while (var6.hasNext()) {
-										NBTBase var7 = (NBTBase) var6.next();
-
-										if (!var7.getName().equals("x") && !var7.getName().equals("y") && !var7.getName().equals("z")) {
-											var5.setTag(var7.getName(), var7.copy());
-										}
-									}
-
-									var4.readFromNBT(var5);
-									var4.onInventoryChanged();
-								}
-							}
-						} else if (this.shouldDropItem && !this.isBreakingAnvil) {
-							this.entityDropItem(new ItemStack(this.blockID, 1, Block.blocksList[this.blockID].damageDropped(this.metadata)), 0.0F);
-						}
-					}
-				} else if (this.fallTime > 100 && !this.worldObj.isRemote && (var2 < 1 || var2 > 256) || this.fallTime > 600) {
-					if (this.shouldDropItem) {
-						this.entityDropItem(new ItemStack(this.blockID, 1, Block.blocksList[this.blockID].damageDropped(this.metadata)), 0.0F);
-					}
-
-					this.setDead();
-				}
-			}
 		}
 	}
 

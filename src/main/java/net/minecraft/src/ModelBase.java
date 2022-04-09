@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public abstract class ModelBase {
 	public float onGround;
@@ -44,7 +45,7 @@ public abstract class ModelBase {
 	public void setLivingAnimations(EntityLiving par1EntityLiving, float par2, float par3, float par4) {
 	}
 
-	public ModelRenderer getRandomModelBox(Random par1Random) {
+	public ModelRenderer getRandomModelBox(EaglercraftRandom par1Random) {
 		return (ModelRenderer) this.boxList.get(par1Random.nextInt(this.boxList.size()));
 	}
 

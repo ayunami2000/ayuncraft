@@ -2,7 +2,6 @@ package net.minecraft.src;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Random;
 import java.util.Set;
 
 import net.lax1dude.eaglercraft.EaglercraftRandom;

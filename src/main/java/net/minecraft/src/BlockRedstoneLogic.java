@@ -1,8 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
-
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public abstract class BlockRedstoneLogic extends BlockDirectional {
 	/** Tells whether the repeater is powered or not */
@@ -41,7 +39,7 @@ public abstract class BlockRedstoneLogic extends BlockDirectional {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		int var6 = par1World.getBlockMetadata(par2, par3, par4);
 
 		if (!this.func_94476_e(par1World, par2, par3, par4, var6)) {

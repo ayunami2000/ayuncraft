@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Random;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
-import net.minecraft.client.Minecraft;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class SoundManager {
 	
@@ -43,13 +42,13 @@ public class SoundManager {
 	private ArrayList<EntitySoundEvent> soundevents;
 	private ArrayList<QueuedSoundEvent> queuedsoundevents;
 	private HashMap<String,Integer> sounddefinitions;
-	private Random soundrandom;
+	private EaglercraftRandom soundrandom;
 
 	public SoundManager() {
 		this.soundevents = new ArrayList();
 		this.queuedsoundevents = new ArrayList();
 		this.sounddefinitions = null;
-		this.soundrandom = new Random();
+		this.soundrandom = new EaglercraftRandom();
 	}
 
 	/**
@@ -61,6 +60,7 @@ public class SoundManager {
 			this.sounddefinitions = new HashMap();
 			try {
 				NBTTagCompound file = CompressedStreamTools.readUncompressed(EaglerAdapter.loadResourceBytes("/sounds/sounds.dat"));
+				EaglerAdapter.setPlaybackOffsetDelay(file.hasKey("playbackOffset") ? file.getFloat("playbackOffset") : 0.03f);
 				NBTTagList l = file.getTagList("sounds");
 				int c = l.tagCount();
 				for(int i = 0; i < c; i++) {
@@ -101,12 +101,17 @@ public class SoundManager {
 		if(par1EntityLiving == null) {
 			EaglerAdapter.setListenerPos(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f);
 		}else {
-			float x = (float)(par1EntityLiving.prevPosX + (par1EntityLiving.posX - par1EntityLiving.prevPosX) * par2); if(!Float.isFinite(x)) x = 0.0f;
-			float y = (float)(par1EntityLiving.prevPosY + (par1EntityLiving.posY - par1EntityLiving.prevPosY) * par2); if(!Float.isFinite(y)) y = 0.0f;
-			float z = (float)(par1EntityLiving.prevPosZ + (par1EntityLiving.posZ - par1EntityLiving.prevPosZ) * par2); if(!Float.isFinite(z)) z = 0.0f;
-			float pitch = (float)(par1EntityLiving.prevRotationPitch + (par1EntityLiving.rotationPitch - par1EntityLiving.prevRotationPitch) * par2); if(!Float.isFinite(pitch)) pitch = 0.0f;
-			float yaw = (float)(par1EntityLiving.prevRotationYaw + (par1EntityLiving.rotationYaw - par1EntityLiving.prevRotationYaw) * par2); if(!Float.isFinite(yaw)) yaw = 0.0f;
-			EaglerAdapter.setListenerPos(x, y, z, (float)par1EntityLiving.motionX, (float)par1EntityLiving.motionY, (float)par1EntityLiving.motionZ, pitch, yaw);
+			double x = par1EntityLiving.prevPosX + (par1EntityLiving.posX - par1EntityLiving.prevPosX) * par2;
+			double y = par1EntityLiving.prevPosY + (par1EntityLiving.posY - par1EntityLiving.prevPosY) * par2;
+			double z = par1EntityLiving.prevPosZ + (par1EntityLiving.posZ - par1EntityLiving.prevPosZ) * par2;
+			double pitch = par1EntityLiving.prevRotationPitch + (par1EntityLiving.rotationPitch - par1EntityLiving.prevRotationPitch) * par2;
+			double yaw = par1EntityLiving.prevRotationYaw + (par1EntityLiving.rotationYaw - par1EntityLiving.prevRotationYaw) * par2;
+			
+			try {
+				EaglerAdapter.setListenerPos((float)x, (float)y, (float)z, (float)par1EntityLiving.motionX, (float)par1EntityLiving.motionY, (float)par1EntityLiving.motionZ, (float)pitch, (float)yaw);
+			}catch(Throwable t) {
+				System.err.println("AudioListener f***ed up again");
+			}
 		}
 	}
 

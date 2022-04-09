@@ -12,3 +12,5 @@ stable-download/java/spigot_command/world_nether/*
 stable-download/java/spigot_command/world_the_end/*
 stable-download/java/spigot_command/server.log
 stable-download/java/bungee_command/proxy*
+stable-download/web_
+lwjgl-rundir/_eagstorage*

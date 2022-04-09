@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class TileEntityDispenser extends TileEntity implements IInventory {
 	private ItemStack[] dispenserContents = new ItemStack[9];
@@ -8,7 +8,7 @@ public class TileEntityDispenser extends TileEntity implements IInventory {
 	/**
 	 * random number generator for instance. Used in random item stack selection.
 	 */
-	private Random dispenserRandom = new Random();
+	private EaglercraftRandom dispenserRandom = new EaglercraftRandom();
 	protected String customName;
 
 	/**

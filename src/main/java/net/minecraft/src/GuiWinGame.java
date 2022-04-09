@@ -2,10 +2,10 @@ package net.minecraft.src;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglerProfile;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 
@@ -67,7 +67,7 @@ public class GuiWinGame extends GuiScreen {
 				String var1 = "";
 				String var2 = "" + EnumChatFormatting.WHITE + EnumChatFormatting.OBFUSCATED + EnumChatFormatting.GREEN + EnumChatFormatting.AQUA;
 				short var3 = 274;
-				Random var5 = new Random(8124371L);
+				EaglercraftRandom var5 = new EaglercraftRandom(8124371L);
 				int var6;
 
 				for(String str : EaglerAdapter.fileContentsLines("/title/win.txt")) {

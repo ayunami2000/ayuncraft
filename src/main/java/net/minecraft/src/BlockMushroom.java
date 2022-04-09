@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockMushroom extends BlockFlower {
 	private final String field_94374_a;
@@ -16,7 +16,7 @@ public class BlockMushroom extends BlockFlower {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		if (par5Random.nextInt(25) == 0) {
 			byte var6 = 4;
 			int var7 = 5;

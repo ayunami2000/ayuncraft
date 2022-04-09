@@ -1,7 +1,8 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockSilverfish extends Block {
 	/** Block names that can be a silverfish stone. */
@@ -30,25 +31,9 @@ public class BlockSilverfish extends Block {
 	}
 
 	/**
-	 * Called right before the block is destroyed by a player. Args: world, x, y, z,
-	 * metaData
-	 */
-	public void onBlockDestroyedByPlayer(World par1World, int par2, int par3, int par4, int par5) {
-		if (!par1World.isRemote) {
-			EntitySilverfish var6 = new EntitySilverfish();
-			var6.setWorld(par1World);
-			var6.setLocationAndAngles((double) par2 + 0.5D, (double) par3, (double) par4 + 0.5D, 0.0F, 0.0F);
-			par1World.spawnEntityInWorld(var6);
-			var6.spawnExplosionParticle();
-		}
-
-		super.onBlockDestroyedByPlayer(par1World, par2, par3, par4, par5);
-	}
-
-	/**
 	 * Returns the quantity of items to drop on block destruction.
 	 */
-	public int quantityDropped(Random par1Random) {
+	public int quantityDropped(EaglercraftRandom par1Random) {
 		return 0;
 	}
 

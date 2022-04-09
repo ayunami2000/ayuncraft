@@ -55,6 +55,7 @@ public class EarlyLoadScreen {
 		
 		_wglAttachShader(program, vert);
 		_wglAttachShader(program, frag);
+		_wglBindAttributeLocation(program, 0, "a_pos");
 		_wglLinkProgram(program);
 		_wglDetachShader(program, vert);
 		_wglDetachShader(program, frag);
@@ -68,7 +69,6 @@ public class EarlyLoadScreen {
 		}
 		
 		_wglUseProgram(program);
-		_wglBindAttributeLocation(program, 0, "a_pos");
 		_wglUniform1i(_wglGetUniformLocation(program, "tex"), 0);
 
 		int width = getCanvasWidth();
