@@ -45,33 +45,7 @@ public class ItemMonsterPlacer extends Item {
 	 * false if it don't. This is for ITEMS, not BLOCKS
 	 */
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-		if (par3World.isRemote) {
-			return true;
-		} else {
-			int var11 = par3World.getBlockId(par4, par5, par6);
-			par4 += Facing.offsetsXForSide[par7];
-			par5 += Facing.offsetsYForSide[par7];
-			par6 += Facing.offsetsZForSide[par7];
-			double var12 = 0.0D;
-
-			if (par7 == 1 && Block.blocksList[var11] != null && Block.blocksList[var11].getRenderType() == 11) {
-				var12 = 0.5D;
-			}
-
-			Entity var14 = spawnCreature(par3World, par1ItemStack.getItemDamage(), (double) par4 + 0.5D, (double) par5 + var12, (double) par6 + 0.5D);
-
-			if (var14 != null) {
-				if (var14 instanceof EntityLiving && par1ItemStack.hasDisplayName()) {
-					((EntityLiving) var14).func_94058_c(par1ItemStack.getDisplayName());
-				}
-
-				if (!par2EntityPlayer.capabilities.isCreativeMode) {
-					--par1ItemStack.stackSize;
-				}
-			}
-
-			return true;
-		}
+		return true;
 	}
 
 	/**

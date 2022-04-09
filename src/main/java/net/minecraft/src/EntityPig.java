@@ -83,21 +83,6 @@ public class EntityPig extends EntityAnimal {
 	}
 
 	/**
-	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets
-	 * into the saddle on a pig.
-	 */
-	public boolean interact(EntityPlayer par1EntityPlayer) {
-		if (super.interact(par1EntityPlayer)) {
-			return true;
-		} else if (this.getSaddled() && !this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity == par1EntityPlayer)) {
-			par1EntityPlayer.mountEntity(this);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
 	 * Returns the item ID for the item the mob drops on death.
 	 */
 	protected int getDropItemId() {

@@ -1,6 +1,11 @@
 package net.minecraft.src;
 
 public class EntityMinecartEmpty extends EntityMinecart {
+	
+	public EntityMinecartEmpty(World par1) {
+		super();
+		setWorld(par1);
+	}
 
 	public EntityMinecartEmpty(World par1, double par2, double par4, double par6) {
 		super(par1, par2, par4, par6);
@@ -16,10 +21,6 @@ public class EntityMinecartEmpty extends EntityMinecart {
 		} else if (this.riddenByEntity != null && this.riddenByEntity != par1EntityPlayer) {
 			return false;
 		} else {
-			if (!this.worldObj.isRemote) {
-				par1EntityPlayer.mountEntity(this);
-			}
-
 			return true;
 		}
 	}

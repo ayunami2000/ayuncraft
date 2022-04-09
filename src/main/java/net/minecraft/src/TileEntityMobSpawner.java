@@ -23,7 +23,7 @@ public class TileEntityMobSpawner extends TileEntity {
 	public void updateEntity() {
 		super.updateEntity();
 		
-		if(worldObj.isRemote && worldObj.rand.nextFloat() < 0.2f) {
+		if(worldObj.rand.nextFloat() < 0.2f) {
 			worldObj.spawnParticle("flame", this.xCoord + worldObj.rand.nextFloat(), this.yCoord + worldObj.rand.nextFloat(), this.zCoord + worldObj.rand.nextFloat(), 0.0D, 0.0D, 0.0D);
 			worldObj.spawnParticle("flame", this.xCoord + worldObj.rand.nextFloat(), this.yCoord + worldObj.rand.nextFloat(), this.zCoord + worldObj.rand.nextFloat(), 0.0D, 0.0D, 0.0D);
 		}

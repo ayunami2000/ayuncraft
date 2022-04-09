@@ -45,10 +45,7 @@ public class EntitySheep extends EntityAnimal {
 	 * burn.
 	 */
 	public void onLivingUpdate() {
-		if (this.worldObj.isRemote) {
-			this.sheepTimer = Math.max(0, this.sheepTimer - 1);
-		}
-
+		this.sheepTimer = Math.max(0, this.sheepTimer - 1);
 		super.onLivingUpdate();
 	}
 
@@ -108,18 +105,6 @@ public class EntitySheep extends EntityAnimal {
 		ItemStack var2 = par1EntityPlayer.inventory.getCurrentItem();
 
 		if (var2 != null && var2.itemID == Item.shears.itemID && !this.getSheared() && !this.isChild()) {
-			if (!this.worldObj.isRemote) {
-				this.setSheared(true);
-				int var3 = 1 + this.rand.nextInt(3);
-
-				for (int var4 = 0; var4 < var3; ++var4) {
-					EntityItem var5 = this.entityDropItem(new ItemStack(Block.cloth.blockID, 1, this.getFleeceColor()), 1.0F);
-					var5.motionY += (double) (this.rand.nextFloat() * 0.05F);
-					var5.motionX += (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F);
-					var5.motionZ += (double) ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.1F);
-				}
-			}
-
 			var2.damageItem(1, par1EntityPlayer);
 			this.playSound("mob.sheep.shear", 1.0F, 1.0F);
 		}

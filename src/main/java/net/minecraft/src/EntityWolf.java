@@ -129,22 +129,6 @@ public class EntityWolf extends EntityTameable {
 	}
 
 	/**
-	 * Called frequently so the entity can update its state every tick as required.
-	 * For example, zombies and skeletons use this to react to sunlight and start to
-	 * burn.
-	 */
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-
-		if (!this.worldObj.isRemote && this.isShaking && !this.field_70928_h && !this.hasPath() && this.onGround) {
-			this.field_70928_h = true;
-			this.timeWolfIsShaking = 0.0F;
-			this.prevTimeWolfIsShaking = 0.0F;
-			this.worldObj.setEntityState(this, (byte) 8);
-		}
-	}
-
-	/**
 	 * Called to update the entity's position/logic.
 	 */
 	public void onUpdate() {

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.lax1dude.eaglercraft.ConfigConstants;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglercraftRandom;
 import net.lax1dude.eaglercraft.TextureLocation;
@@ -407,14 +408,16 @@ public class GuiIngame extends Gui {
 			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 2, 14737632);
 			var45 = "Allocated memory: " + var37 * 100L / var39 + "% (" + var37 / 1024L / 1024L + "MB)";
 			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 12, 14737632);
+			this.drawString(var8, "Player is not using an xbox live account", 2, 64, 0xFFBBBB);
+			this.drawString(var8, "Using cracked server @ " + mc.getServerURI(), 2, 73, 0xFFBBBB);
 			var47 = MathHelper.floor_double(this.mc.thePlayer.posX);
 			var22 = MathHelper.floor_double(this.mc.thePlayer.posY);
 			var23 = MathHelper.floor_double(this.mc.thePlayer.posZ);
-			this.drawString(var8, "x: "+doubleToShorterString(this.mc.thePlayer.posX)+" ("+var47+") // c: "+(var47 >> 4)+" ("+(var47 & 15)+")", 2, 64, 14737632);
-			this.drawString(var8, "y: "+doubleToShorterString(this.mc.thePlayer.posY)+" ("+var22+") (feet pos)", 2, 72, 14737632);
-			this.drawString(var8, "z: "+doubleToShorterString(this.mc.thePlayer.posZ)+" ("+var23+") // c: "+(var23 >> 4)+" ("+(var23 & 15)+")", 2, 80, 14737632);
+			this.drawString(var8, "x: "+doubleToShorterString(this.mc.thePlayer.posX)+" ("+var47+") // c: "+(var47 >> 4)+" ("+(var47 & 15)+")", 2, 92, 14737632);
+			this.drawString(var8, "y: "+doubleToShorterString(this.mc.thePlayer.posY)+" ("+var22+") (feet pos)", 2, 100, 14737632);
+			this.drawString(var8, "z: "+doubleToShorterString(this.mc.thePlayer.posZ)+" ("+var23+") // c: "+(var23 >> 4)+" ("+(var23 & 15)+")", 2, 108, 14737632);
 			var24 = MathHelper.floor_double((double) (this.mc.thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-			this.drawString(var8, "f: " + var24 + " (" + Direction.directions[var24] + ") / " + MathHelper.wrapAngleTo180_float(this.mc.thePlayer.rotationYaw), 2, 88, 14737632);
+			this.drawString(var8, "f: " + var24 + " (" + Direction.directions[var24] + ") / " + MathHelper.wrapAngleTo180_float(this.mc.thePlayer.rotationYaw), 2, 116, 14737632);
 
 			//this.drawString(var8, String.format("ws: %.3f, fs: %.3f, g: %b, fl: %d", new Object[] { Float.valueOf(this.mc.thePlayer.capabilities.getWalkSpeed()), Float.valueOf(this.mc.thePlayer.capabilities.getFlySpeed()),
 			//		Boolean.valueOf(this.mc.thePlayer.onGround), Integer.valueOf(this.mc.theWorld.getHeightValue(var47, var23)) }), 2, 104, 14737632);
@@ -445,6 +448,12 @@ public class GuiIngame extends Gui {
 			EaglerAdapter.glScalef(0.75f, 0.75f, 0.75f);
 			var8.drawStringWithShadow(this.mc.renderGlobal.getDebugInfoShort(), 2, 2, 16777215);
 			var8.drawStringWithShadow("x: "+MathHelper.floor_double(this.mc.thePlayer.posX)+", y: "+MathHelper.floor_double(this.mc.thePlayer.posY)+", z: "+MathHelper.floor_double(this.mc.thePlayer.posZ), 2, 12, 16777215);
+			int offset = this.mc.isChatOpen() ? 135 : 0;
+			int offset2 = this.mc.isChatOpen() ? 4 : 0;
+			String str = "not using an xbox live account";
+			var8.drawStringWithShadow(str, (var6 * 4 / 3) - 2 - var8.getStringWidth(str) - offset, 2 + offset2, 0xFFDDDD);
+			str = "eaglercraft: " + ConfigConstants.version;
+			var8.drawStringWithShadow(str, (var6 * 4 / 3) - 2 - var8.getStringWidth(str) - offset, 12 + offset2, 14737632);
 			EaglerAdapter.glPopMatrix();
 		}
 

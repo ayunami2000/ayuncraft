@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockStationary extends BlockFluid {
 	protected BlockStationary(int par1, Material par2Material) {
@@ -41,7 +41,7 @@ public class BlockStationary extends BlockFluid {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		if (this.blockMaterial == Material.lava) {
 			int var6 = par5Random.nextInt(3);
 			int var7;

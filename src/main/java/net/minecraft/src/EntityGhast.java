@@ -48,10 +48,6 @@ public class EntityGhast extends EntityFlying implements IMob {
 	}
 
 	protected void updateEntityActionState() {
-		if (!this.worldObj.isRemote && this.worldObj.difficultySetting == 0) {
-			this.setDead();
-		}
-
 		this.despawnEntity();
 		this.prevAttackCounter = this.attackCounter;
 		double var1 = this.waypointX - this.posX;
@@ -127,15 +123,6 @@ public class EntityGhast extends EntityFlying implements IMob {
 
 			if (this.attackCounter > 0) {
 				--this.attackCounter;
-			}
-		}
-
-		if (!this.worldObj.isRemote) {
-			byte var21 = this.dataWatcher.getWatchableObjectByte(16);
-			byte var12 = (byte) (this.attackCounter > 10 ? 1 : 0);
-
-			if (var21 != var12) {
-				this.dataWatcher.updateObject(16, Byte.valueOf(var12));
 			}
 		}
 	}

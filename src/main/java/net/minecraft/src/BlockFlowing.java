@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockFlowing extends BlockFluid {
 	/**
@@ -41,7 +41,7 @@ public class BlockFlowing extends BlockFluid {
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void updateTick(World par1World, int par2, int par3, int par4, EaglercraftRandom par5Random) {
 		int var6 = this.getFlowDecay(par1World, par2, par3, par4);
 		byte var7 = 1;
 

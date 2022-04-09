@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
 
 public class BlockSapling extends BlockFlower {
 	public static final String[] WOOD_TYPES = new String[] { "oak", "spruce", "birch", "jungle" };

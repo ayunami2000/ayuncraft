@@ -1,12 +1,11 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
 import net.minecraft.client.Minecraft;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.lax1dude.eaglercraft.DefaultSkinRenderer;
 import net.lax1dude.eaglercraft.EaglerAdapter;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 
 public abstract class RenderLiving extends Render {
@@ -287,7 +286,7 @@ public abstract class RenderLiving extends Render {
 
 		if (var3 > 0) {
 			EntityArrow var4 = new EntityArrow(par1EntityLiving.worldObj, par1EntityLiving.posX, par1EntityLiving.posY, par1EntityLiving.posZ);
-			Random var5 = new Random((long) par1EntityLiving.entityId);
+			EaglercraftRandom var5 = new EaglercraftRandom((long) par1EntityLiving.entityId);
 			RenderHelper.disableStandardItemLighting();
 
 			for (int var6 = 0; var6 < var3; ++var6) {

@@ -34,10 +34,9 @@ public class MouseHelper {
 	 * screen
 	 */
 	public void ungrabMouseCursor() {
-		int var1 = Minecraft.getMinecraft().displayWidth;
-		int var2 = Minecraft.getMinecraft().displayHeight;
-
-		EaglerAdapter.mouseSetCursorPosition(var1 / 2, var2 / 2);
+		//int var1 = Minecraft.getMinecraft().displayWidth;
+		//int var2 = Minecraft.getMinecraft().displayHeight;
+		//EaglerAdapter.mouseSetCursorPosition(var1 / 2, var2 / 2);
 		EaglerAdapter.mouseSetGrabbed(false);
 	}
 

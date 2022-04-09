@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 public class RenderPlayer extends RenderLiving {
 	private ModelBiped modelBipedMain;
 	private ModelBiped modelBipedMainNewSkin;
+	private ModelBiped modelBipedMainNewSkinSlim;
 	private ModelBiped modelArmorChestplate;
 	private ModelBiped modelArmor;
 	private static final String[] armorFilenamePrefix = new String[] { "cloth", "chain", "iron", "diamond", "gold" };
@@ -19,6 +20,7 @@ public class RenderPlayer extends RenderLiving {
 		super(new ModelBiped(0.0F), 0.5F);
 		this.modelBipedMain = (ModelBiped) this.mainModel;
 		this.modelBipedMainNewSkin = new ModelBipedNewSkins(0.0F, false);
+		this.modelBipedMainNewSkinSlim = new ModelBipedNewSkins(0.0F, true);
 		this.modelArmorChestplate = new ModelBiped(1.0F);
 		this.modelArmor = new ModelBiped(0.5F);
 	}
@@ -112,32 +114,34 @@ public class RenderPlayer extends RenderLiving {
 			float var10 = 1.0F;
 			EaglerAdapter.glColor3f(var10, var10, var10);
 			ItemStack var11 = par1EntityPlayer.inventory.getCurrentItem();
-			this.modelArmorChestplate.heldItemRight = this.modelArmor.heldItemRight = this.modelBipedMain.heldItemRight = this.modelBipedMainNewSkin.heldItemRight = var11 != null ? 1 : 0;
+			this.modelArmorChestplate.heldItemRight = this.modelArmor.heldItemRight = this.modelBipedMain.heldItemRight = this.modelBipedMainNewSkin.heldItemRight = this.modelBipedMainNewSkinSlim.heldItemRight = var11 != null ? 1 : 0;
 	
 			if (var11 != null && par1EntityPlayer.getItemInUseCount() > 0) {
 				EnumAction var12 = var11.getItemUseAction();
 	
 				if (var12 == EnumAction.block) {
-					this.modelArmorChestplate.heldItemRight = this.modelArmor.heldItemRight = this.modelBipedMain.heldItemRight = this.modelBipedMainNewSkin.heldItemRight = 3;
+					this.modelArmorChestplate.heldItemRight = this.modelArmor.heldItemRight = this.modelBipedMain.heldItemRight = this.modelBipedMainNewSkin.heldItemRight = this.modelBipedMainNewSkinSlim.heldItemRight = 3;
 				} else if (var12 == EnumAction.bow) {
-					this.modelArmorChestplate.aimedBow = this.modelArmor.aimedBow = this.modelBipedMain.aimedBow = this.modelBipedMainNewSkin.aimedBow = true;
+					this.modelArmorChestplate.aimedBow = this.modelArmor.aimedBow = this.modelBipedMain.aimedBow = this.modelBipedMainNewSkin.aimedBow = this.modelBipedMainNewSkinSlim.aimedBow = true;
 				}
 			}
 	
-			this.modelArmorChestplate.isSneak = this.modelArmor.isSneak = this.modelBipedMain.isSneak = this.modelBipedMainNewSkin.isSneak = par1EntityPlayer.isSneaking();
+			this.modelArmorChestplate.isSneak = this.modelArmor.isSneak = this.modelBipedMain.isSneak = this.modelBipedMainNewSkin.isSneak = this.modelBipedMainNewSkinSlim.isSneak = par1EntityPlayer.isSneaking();
 			double var14 = par4 - (double) par1EntityPlayer.yOffset;
 	
 			if (par1EntityPlayer.isSneaking() && !(par1EntityPlayer instanceof EntityPlayerSP)) {
 				var14 -= 0.125D;
 			}
 			
-			this.mainModel = (DefaultSkinRenderer.isPlayerNewSkin(par1EntityPlayer) ? this.modelBipedMainNewSkin : this.modelBipedMain);
+			this.mainModel = (DefaultSkinRenderer.isPlayerNewSkin(par1EntityPlayer) ? (DefaultSkinRenderer.isPlayerNewSkinSlim(par1EntityPlayer) ? this.modelBipedMainNewSkinSlim : this.modelBipedMainNewSkin) : this.modelBipedMain);
 			this.mainModel.isChild = false;
+			((ModelBiped)this.mainModel).blockTransparentSkin = true;
 			super.doRenderLiving(par1EntityPlayer, par2, var14, par6, par8, par9);
-			this.mainModel = this.modelBipedMain;
-			this.modelArmorChestplate.aimedBow = this.modelArmor.aimedBow = this.modelBipedMain.aimedBow = this.modelBipedMainNewSkin.aimedBow = false;
-			this.modelArmorChestplate.isSneak = this.modelArmor.isSneak = this.modelBipedMain.isSneak = this.modelBipedMainNewSkin.isSneak = false;
-			this.modelArmorChestplate.heldItemRight = this.modelArmor.heldItemRight = this.modelBipedMain.heldItemRight = this.modelBipedMainNewSkin.heldItemRight = 0;
+			((ModelBiped)this.mainModel).blockTransparentSkin = false;
+			//this.mainModel = this.modelBipedMain;
+			this.modelArmorChestplate.aimedBow = this.modelArmor.aimedBow = this.modelBipedMain.aimedBow = this.modelBipedMainNewSkin.aimedBow = this.modelBipedMainNewSkinSlim.aimedBow = false;
+			this.modelArmorChestplate.isSneak = this.modelArmor.isSneak = this.modelBipedMain.isSneak = this.modelBipedMainNewSkin.isSneak = this.modelBipedMainNewSkinSlim.isSneak = false;
+			this.modelArmorChestplate.heldItemRight = this.modelArmor.heldItemRight = this.modelBipedMain.heldItemRight = this.modelBipedMainNewSkin.heldItemRight = this.modelBipedMainNewSkinSlim.heldItemRight = 0;
 		}else {
 			int renderType = DefaultSkinRenderer.getPlayerRenderer(par1EntityPlayer);
 			if(DefaultSkinRenderer.isZombieModel(renderType)) {
@@ -231,13 +235,14 @@ public class RenderPlayer extends RenderLiving {
 		super.renderEquippedItems(par1EntityPlayer, par2);
 		super.renderArrowsStuckInEntity(par1EntityPlayer, par2);
 		ItemStack var4 = par1EntityPlayer.inventory.armorItemInSlot(3);
-		
+
 		boolean isNew = DefaultSkinRenderer.isPlayerNewSkin(par1EntityPlayer);
+		boolean isSlim = DefaultSkinRenderer.isPlayerNewSkinSlim(par1EntityPlayer);
 		int renderType = DefaultSkinRenderer.getPlayerRenderer(par1EntityPlayer);
 
 		if (var4 != null) {
 			EaglerAdapter.glPushMatrix();
-			(isNew ? this.modelBipedMainNewSkin : this.modelBipedMain).bipedHead.postRender(0.0625F);
+			(isNew ? (isSlim ? this.modelBipedMainNewSkinSlim : this.modelBipedMainNewSkin) : this.modelBipedMain).bipedHead.postRender(0.0625F);
 			float var5;
 
 			if (var4.getItem().itemID < 256) {
@@ -343,7 +348,7 @@ public class RenderPlayer extends RenderLiving {
 			if(DefaultSkinRenderer.isZombieModel(renderType) || renderType == 20) {
 				((ModelBiped)this.mainModel).bipedRightArm.postRender(0.0625F);
 			}else {
-				(isNew ? this.modelBipedMainNewSkin : this.modelBipedMain).bipedRightArm.postRender(0.0625F);
+				(isNew ? (isSlim ? this.modelBipedMainNewSkinSlim : this.modelBipedMainNewSkin) : this.modelBipedMain).bipedRightArm.postRender(0.0625F);
 			}
 			
 			EaglerAdapter.glTranslatef(-0.0625F, 0.4375F, 0.0625F);
@@ -458,9 +463,10 @@ public class RenderPlayer extends RenderLiving {
 		int i = DefaultSkinRenderer.getPlayerRenderer(par1EntityPlayer);
 		if(DefaultSkinRenderer.isStandardModel(i) || DefaultSkinRenderer.isZombieModel(i)) {
 			boolean isNew = DefaultSkinRenderer.isPlayerNewSkin(par1EntityPlayer);
-			(isNew ? this.modelBipedMainNewSkin : this.modelBipedMain).onGround = 0.0F;
-			(isNew ? this.modelBipedMainNewSkin : this.modelBipedMain).setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, par1EntityPlayer);
-			(isNew ? this.modelBipedMainNewSkin : this.modelBipedMain).bipedRightArm.render(0.0625F);
+			boolean isSlim = DefaultSkinRenderer.isPlayerNewSkinSlim(par1EntityPlayer);
+			(isNew ? (isSlim ? this.modelBipedMainNewSkinSlim : this.modelBipedMainNewSkin) : this.modelBipedMain).onGround = 0.0F;
+			(isNew ? (isSlim ? this.modelBipedMainNewSkinSlim : this.modelBipedMainNewSkin) : this.modelBipedMain).setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, par1EntityPlayer);
+			(isNew ? (isSlim ? this.modelBipedMainNewSkinSlim : this.modelBipedMainNewSkin) : this.modelBipedMain).bipedRightArm.render(0.0625F);
 		}
 	}
 
@@ -582,7 +588,7 @@ public class RenderPlayer extends RenderLiving {
 	protected void bindTexture(EntityLiving par1EntityLiving) {
 		if(par1EntityLiving instanceof EntityClientPlayerMP) {
 			if(EaglerProfile.presetSkinId < 0) {
-				Minecraft.getMinecraft().renderEngine.bindTexture(EaglerProfile.glTex.get(EaglerProfile.customSkinId));
+				Minecraft.getMinecraft().renderEngine.bindTexture(EaglerProfile.skins.get(EaglerProfile.customSkinId).glTex);
 			}else {
 				DefaultSkinRenderer.defaultVanillaSkins[EaglerProfile.presetSkinId].bindTexture();
 			}

@@ -70,60 +70,6 @@ public class EntityWitch extends EntityMob implements IRangedAttackMob {
 		return true;
 	}
 
-	/**
-	 * Called frequently so the entity can update its state every tick as required.
-	 * For example, zombies and skeletons use this to react to sunlight and start to
-	 * burn.
-	 */
-	public void onLivingUpdate() {
-		if (!this.worldObj.isRemote) {
-			if (this.getAggressive()) {
-				if (this.witchAttackTimer-- <= 0) {
-					this.setAggressive(false);
-					ItemStack var1 = this.getHeldItem();
-					this.setCurrentItemOrArmor(0, (ItemStack) null);
-
-					if (var1 != null && var1.itemID == Item.potion.itemID) {
-						List var2 = Item.potion.getEffects(var1);
-
-						if (var2 != null) {
-							Iterator var3 = var2.iterator();
-
-							while (var3.hasNext()) {
-								PotionEffect var4 = (PotionEffect) var3.next();
-								this.addPotionEffect(new PotionEffect(var4));
-							}
-						}
-					}
-				}
-			} else {
-				short var5 = -1;
-
-				if (this.rand.nextFloat() < 0.15F && this.isBurning() && !this.isPotionActive(Potion.fireResistance)) {
-					var5 = 16307;
-				} else if (this.rand.nextFloat() < 0.05F && this.health < this.getMaxHealth()) {
-					var5 = 16341;
-				} else if (this.rand.nextFloat() < 0.25F && this.getAttackTarget() != null && !this.isPotionActive(Potion.moveSpeed) && this.getAttackTarget().getDistanceSqToEntity(this) > 121.0D) {
-					var5 = 16274;
-				} else if (this.rand.nextFloat() < 0.25F && this.getAttackTarget() != null && !this.isPotionActive(Potion.moveSpeed) && this.getAttackTarget().getDistanceSqToEntity(this) > 121.0D) {
-					var5 = 16274;
-				}
-
-				if (var5 > -1) {
-					this.setCurrentItemOrArmor(0, new ItemStack(Item.potion, 1, var5));
-					this.witchAttackTimer = this.getHeldItem().getMaxItemUseDuration();
-					this.setAggressive(true);
-				}
-			}
-
-			if (this.rand.nextFloat() < 7.5E-4F) {
-				this.worldObj.setEntityState(this, (byte) 15);
-			}
-		}
-
-		super.onLivingUpdate();
-	}
-
 	public void handleHealthUpdate(byte par1) {
 		if (par1 == 15) {
 			for (int var2 = 0; var2 < this.rand.nextInt(35) + 10; ++var2) {

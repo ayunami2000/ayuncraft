@@ -1,19 +1,16 @@
 package net.lax1dude.eaglercraft;
 
+import net.lax1dude.eaglercraft.EaglerProfile.EaglerProfileSkin;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.GuiTextField;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.StringTranslate;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Arrays;
 
 public class GuiScreenEditProfile extends GuiScreen {
 	
@@ -32,6 +29,8 @@ public class GuiScreenEditProfile extends GuiScreen {
 	private int mousey = 0;
 
 	private int proxyInvalid = 0;
+	
+	private boolean newSkinWaitSteveOrAlex = false;
 	
 	private static final TextureLocation gui = new TextureLocation("/gui/gui.png");
 	
@@ -75,9 +74,18 @@ public class GuiScreenEditProfile extends GuiScreen {
 	
 	public GuiScreenEditProfile(GuiScreen parent) {
 		this.parent = parent;
-		this.dropDownOptions = EaglerProfile.concatArrays(EaglerProfile.skinNames.toArray(new String[0]), defaultOptions);
+		reconcatDD();
 	}
-	
+
+	private void reconcatDD() {
+		String[] n = new String[EaglerProfile.skins.size()];
+		for(int i = 0; i < n.length; ++i) {
+			n[i] = EaglerProfile.skins.get(i).name;
+		}
+
+		this.dropDownOptions = EaglerProfile.concatArrays(n, defaultOptions);
+	}
+
 	private GuiButton button0, button1, button2, button3;
 
 	public void initGui() {
@@ -90,7 +98,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 		this.username.setText(EaglerProfile.username);
 		this.proxy = new GuiTextField(this.fontRenderer, this.width / 2 - 20 + 1, this.height / 6 + 1, 138, 20);
 		this.proxy.setText(this.mc.gameSettings.proxy);
-		selectedSlot = EaglerProfile.presetSkinId == -1 ? EaglerProfile.customSkinId : (EaglerProfile.presetSkinId + EaglerProfile.skinNames.size());
+		selectedSlot = EaglerProfile.presetSkinId == -1 ? EaglerProfile.customSkinId : (EaglerProfile.presetSkinId + EaglerProfile.skins.size());
 		//this.buttonList.add(new GuiButton(0, this.width / 2 - 100, 140, "eeeee"));
 		this.buttonList.add(button0 = new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, var1.translateKey("gui.done")));
 		this.buttonList.add(button1 = new GuiButton(2, this.width / 2 - 21, this.height / 6 + 110, 71, 20, var1.translateKey("profile.addSkin")));
@@ -124,7 +132,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 
 		this.username.drawTextBox();
 		this.proxy.drawTextBox();
-		if(dropDownOpen) {
+		if(dropDownOpen ||  newSkinWaitSteveOrAlex) {
 			super.drawScreen(0, 0, par3);
 		}else {
 			super.drawScreen(mx, my, par3);
@@ -182,7 +190,78 @@ public class GuiScreenEditProfile extends GuiScreen {
 		
 		int xx = this.width / 2 - 80;
 		int yy = this.height / 6 + 130;
-		DefaultSkinRenderer.renderPlayerPreview(xx, yy, mx, my, selectedSlot);
+		
+		if(newSkinWaitSteveOrAlex && selectedSlot < EaglerProfile.skins.size()) {
+			skinWidth = 70;
+			skinHeight = 120;
+			
+			EaglerProfile.EaglerProfileSkin eee = EaglerProfile.skins.get(selectedSlot);
+			
+			EaglerAdapter.glClear(EaglerAdapter.GL_DEPTH_BUFFER_BIT);
+			
+			skinX = this.width / 2 - 90;
+			skinY = this.height / 4;
+			xx = skinX + 35;
+			yy = skinY + 117;
+			
+			boolean mouseOver = mx >= skinX && my >= skinY && mx < skinX + skinWidth && my < skinY + skinHeight;
+			int cc = mouseOver ? 0xFFDDDD99 : 0xFF555555;
+			
+			EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
+			EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
+			drawRect(0, 0, width, height, 0xbb000000);
+			drawRect(skinX, skinY, skinX + skinWidth, skinY + skinHeight, 0xbb000000);
+			EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
+			
+			drawRect(skinX, skinY, skinX + 1, skinY + skinHeight, cc);
+			drawRect(skinX, skinY, skinX + skinWidth, skinY + 1, cc);
+			drawRect(skinX + skinWidth - 1, skinY, skinX + skinWidth, skinY + skinHeight, cc);
+			drawRect(skinX, skinY + skinHeight - 1, skinX + skinWidth, skinY + skinHeight, cc);
+			
+			if(mouseOver) {
+				drawCenteredString(fontRenderer, "Steve", skinX + skinWidth / 2, skinY + skinHeight + 6, cc);
+			}
+			
+			this.mc.renderEngine.bindTexture(eee.glTex);
+			DefaultSkinRenderer.renderAlexOrSteve(xx, yy, mx, my, false);
+			
+			skinX = this.width / 2 + 20;
+			skinY = this.height / 4;
+			xx = skinX + 35;
+			yy = skinY + 117;
+
+			mouseOver = mx >= skinX && my >= skinY && mx < skinX + skinWidth && my < skinY + skinHeight;
+			cc = mouseOver ? 0xFFDDDD99 : 0xFF555555;
+
+			EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
+			drawRect(skinX, skinY, skinX + skinWidth, skinY + skinHeight, 0xbb000000);
+			EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
+			
+			drawRect(skinX, skinY, skinX + 1, skinY + skinHeight, cc);
+			drawRect(skinX, skinY, skinX + skinWidth, skinY + 1, cc);
+			drawRect(skinX + skinWidth - 1, skinY, skinX + skinWidth, skinY + skinHeight, cc);
+			drawRect(skinX, skinY + skinHeight - 1, skinX + skinWidth, skinY + skinHeight, cc);
+				
+			if(mouseOver) {
+				drawCenteredString(fontRenderer, "Alex", skinX + skinWidth / 2, skinY + skinHeight + 8, cc);
+			}
+
+			this.mc.renderEngine.bindTexture(eee.glTex);
+			DefaultSkinRenderer.renderAlexOrSteve(xx, yy, mx, my, true);
+		}else {
+			skinX = this.width / 2 - 120;
+			skinY = this.height / 6 + 8;
+			skinWidth = 80;
+			skinHeight = 130;
+			if(DefaultSkinRenderer.isPlayerPreviewNew(selectedSlot)) {
+				int w = fontRenderer.getStringWidth("1.8") + 4;
+				EaglerAdapter.glPushMatrix();
+				EaglerAdapter.glScalef(0.75f, 0.75f, 0.75f);
+				drawString(fontRenderer, "1.8", (int)((skinX + skinWidth) / 0.75f) - w, (int)((skinY + skinHeight) / 0.75f) - 12, 0xFFBBBB66);
+				EaglerAdapter.glPopMatrix();
+			}
+			DefaultSkinRenderer.renderPlayerPreview(xx, yy, newSkinWaitSteveOrAlex ? width / 2 : mx, newSkinWaitSteveOrAlex ? height / 2 : my, selectedSlot);
+		}
 		
 	}
 	
@@ -199,72 +278,75 @@ public class GuiScreenEditProfile extends GuiScreen {
 		}
 	}
 	
+	private void save() {
+		EaglerProfile.username = this.username.getText().length() == 0 ? "null" : this.username.getText();
+		this.mc.gameSettings.proxy=proxy.getText();
+
+		//check proxy
+		if(!this.mc.gameSettings.proxy.equals("")) {
+			proxyInvalid=0;
+			this.drawCenteredString(this.fontRenderer, "checking proxy...", this.width / 2, 5, 16777215);
+			try {
+				if(!ConfigConstants.ipPattern.matcher(this.mc.gameSettings.proxy).matches())throw new IOException("lol");//for some reason, direct ip didnt match...
+				URL url = new URL("http" + (EaglerAdapter.isSSLPage() ? "s" : "") + "://" + this.mc.gameSettings.proxy + "/api/vm/net/connect");
+				URLConnection con = url.openConnection();
+				HttpURLConnection http = (HttpURLConnection) con;
+				http.setConnectTimeout(5000);
+				http.setReadTimeout(5000);
+				http.connect();
+				if(http.getResponseCode()!=HttpURLConnection.HTTP_NOT_FOUND){
+					http.disconnect();
+					throw new IOException("lol");
+				}
+				http.disconnect();
+			} catch (IOException e) {
+				//change proxy and then do nothing else if it fails
+				this.mc.gameSettings.proxy=this.mc.gameSettings.getNewProxy();
+				proxy.setText(this.mc.gameSettings.proxy);
+				proxyInvalid = 300;
+				return;
+			}
+		}
+
+		EaglerProfile.presetSkinId = selectedSlot - EaglerProfile.skins.size();
+		if(EaglerProfile.presetSkinId < 0) {
+			EaglerProfile.presetSkinId = -1;
+			EaglerProfile.customSkinId = selectedSlot;
+		}else {
+			EaglerProfile.customSkinId = -1;
+		}
+		
+		LocalStorageManager.profileSettingsStorage.setInteger("ps", EaglerProfile.presetSkinId);
+		LocalStorageManager.profileSettingsStorage.setInteger("cs", EaglerProfile.customSkinId);
+		LocalStorageManager.profileSettingsStorage.setString("name", EaglerProfile.username);
+		
+		NBTTagCompound skins = new NBTTagCompound();
+		for(int i = 0, l = EaglerProfile.skins.size(); i < l; i++) {
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setByteArray("data", EaglerProfile.skins.get(i).data);
+			nbt.setBoolean("slim", EaglerProfile.skins.get(i).slim);
+			skins.setTag(EaglerProfile.skins.get(i).name, nbt);
+		}
+		LocalStorageManager.profileSettingsStorage.setCompoundTag("skins", skins);
+		
+		LocalStorageManager.saveStorageP();
+	}
+	
 	protected void actionPerformed(GuiButton par1GuiButton) {
 		if(!dropDownOpen) {
 			if(par1GuiButton.id == 200) {
-				EaglerProfile.username = this.username.getText().length() == 0 ? "null" : this.username.getText();
-				this.mc.gameSettings.proxy=proxy.getText();
-
-				//check proxy
-				if(!this.mc.gameSettings.proxy.equals("")) {
-					proxyInvalid=0;
-					this.drawCenteredString(this.fontRenderer, "checking proxy...", this.width / 2, 5, 16777215);
-					try {
-						if(!ConfigConstants.ipPattern.matcher(this.mc.gameSettings.proxy).matches())throw new IOException("lol");//for some reason, direct ip didnt match...
-						URL url = new URL("http" + (EaglerAdapter.isSSLPage() ? "s" : "") + "://" + this.mc.gameSettings.proxy + "/api/vm/net/connect");
-						URLConnection con = url.openConnection();
-						HttpURLConnection http = (HttpURLConnection) con;
-						http.setConnectTimeout(5000);
-						http.setReadTimeout(5000);
-						http.connect();
-						if(http.getResponseCode()!=HttpURLConnection.HTTP_NOT_FOUND){
-							http.disconnect();
-							throw new IOException("lol");
-						}
-						http.disconnect();
-					} catch (IOException e) {
-						//change proxy and then do nothing else if it fails
-						this.mc.gameSettings.proxy=this.mc.gameSettings.getNewProxy();
-						proxy.setText(this.mc.gameSettings.proxy);
-						proxyInvalid = 300;
-						return;
-					}
-				}
-
-
-
-				EaglerProfile.presetSkinId = selectedSlot - EaglerProfile.skinNames.size();
-				if(EaglerProfile.presetSkinId < 0) {
-					EaglerProfile.presetSkinId = -1;
-					EaglerProfile.customSkinId = selectedSlot;
-				}else {
-					EaglerProfile.customSkinId = -1;
-				}
-				
-				LocalStorageManager.profileSettingsStorage.setInteger("ps", EaglerProfile.presetSkinId);
-				LocalStorageManager.profileSettingsStorage.setInteger("cs", EaglerProfile.customSkinId);
-				LocalStorageManager.profileSettingsStorage.setString("name", EaglerProfile.username);
-				
-				NBTTagCompound skins = new NBTTagCompound();
-				for(int i = 0; i < EaglerProfile.skinNames.size(); i++) {
-					skins.setByteArray(EaglerProfile.skinNames.get(i), EaglerProfile.skinDatas.get(i));
-				}
-				LocalStorageManager.profileSettingsStorage.setCompoundTag("skins", skins);
-				
-				LocalStorageManager.saveStorageP();
-				
+				save();
 				this.mc.displayGuiScreen((GuiScreen) parent);
 			}else if(par1GuiButton.id == 2) {
 				EaglerAdapter.openFileChooser("png", "image/png");
 			}else if(par1GuiButton.id == 3) {
-				EaglerProfile.skinDatas.clear();
-				EaglerProfile.skinNames.clear();
-				for(Integer i : EaglerProfile.glTex) {
-					this.mc.renderEngine.deleteTexture(i.intValue());
+				for(EaglerProfileSkin i : EaglerProfile.skins) {
+					this.mc.renderEngine.deleteTexture(i.glTex);
 				}
-				EaglerProfile.glTex.clear();
+				EaglerProfile.skins.clear();
 				this.dropDownOptions = defaultOptions;
 				this.selectedSlot = 0;
+				save();
 			}else if (par1GuiButton.id == 4) {
 				//toggle version mode
 				this.mc.gameSettings.useDefaultProtocol=!this.mc.gameSettings.useDefaultProtocol;
@@ -312,15 +394,22 @@ public class GuiScreenEditProfile extends GuiScreen {
 			if(name.length() > 32) {
 				name = name.substring(0, 32);
 			}
-			EaglerProfile.addSkin(name, rawSkin);
-			selectedSlot = EaglerProfile.skinNames.size() - 1;
-			this.dropDownOptions = EaglerProfile.concatArrays(EaglerProfile.skinNames.toArray(new String[0]), defaultOptions);
+			if((img.w == 64 && img.h == 64) || (img.w == 128 && img.h == 128)) {
+				newSkinWaitSteveOrAlex = true;
+			}
+			int k;
+			if((k = EaglerProfile.addSkin(name, rawSkin, false)) != -1) {
+				selectedSlot = k;
+				reconcatDD();
+				save();
+			}
 		}
 	}
 	
 	public void onGuiClosed() {
 		EaglerAdapter.enableRepeatEvents(false);
 	}
+	
 	
 	protected void keyTyped(char par1, int par2) {
 		this.username.textboxKeyTyped(par1, par2);
@@ -342,6 +431,44 @@ public class GuiScreenEditProfile extends GuiScreen {
 	}
 	
 	protected void mouseClicked(int par1, int par2, int par3) {
+		if(newSkinWaitSteveOrAlex) {
+			int skinX = this.width / 2 - 90;
+			int skinY = this.height / 4;
+			int skinWidth = 70;
+			int skinHeight = 120;
+			if(par1 >= skinX && par2 >= skinY && par1 < skinX + skinWidth && par2 < skinY + skinHeight) {
+				if(selectedSlot < EaglerProfile.skins.size()) {
+					newSkinWaitSteveOrAlex = false;
+					EaglerProfile.skins.get(selectedSlot).slim = false;
+					save();
+				}
+				return;
+			}
+			skinX = this.width / 2 + 20;
+			skinY = this.height / 4;
+			if(par1 >= skinX && par2 >= skinY && par1 < skinX + skinWidth && par2 < skinY + skinHeight) {
+				if(selectedSlot < EaglerProfile.skins.size()) {
+					EaglerProfile.skins.get(selectedSlot).slim = true;
+					newSkinWaitSteveOrAlex = false;
+					save();
+				}
+			}
+			return;
+		}else if(selectedSlot < EaglerProfile.skins.size()) {
+			int skinX = this.width / 2 - 120;
+			int skinY = this.height / 6 + 8;
+			int skinWidth = 80;
+			int skinHeight = 130;
+			if(par1 >= skinX && par2 >= skinY && par1 < skinX + skinWidth && par2 < skinY + skinHeight) {
+				if(selectedSlot < EaglerProfile.skins.size()) {
+					int type = EaglerProfile.getSkinSize(EaglerProfile.skins.get(selectedSlot).data.length);
+					if(type == 1 || type == 3) {
+						newSkinWaitSteveOrAlex = true;
+						return;
+					}
+				}
+			}
+		}
 		super.mouseClicked(par1, par2, par3);
 		this.username.mouseClicked(par1, par2, par3);
 		this.proxy.mouseClicked(par1, par2, par3);

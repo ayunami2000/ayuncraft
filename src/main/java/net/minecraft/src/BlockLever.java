@@ -241,34 +241,7 @@ public class BlockLever extends Block {
 	 * Called upon block activation (right click on the block.)
 	 */
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		if (par1World.isRemote) {
-			return true;
-		} else {
-			int var10 = par1World.getBlockMetadata(par2, par3, par4);
-			int var11 = var10 & 7;
-			int var12 = 8 - (var10 & 8);
-			par1World.setBlockMetadataWithNotify(par2, par3, par4, var11 + var12, 3);
-			par1World.playSoundEffect((double) par2 + 0.5D, (double) par3 + 0.5D, (double) par4 + 0.5D, "random.click", 0.3F, var12 > 0 ? 0.6F : 0.5F);
-			par1World.notifyBlocksOfNeighborChange(par2, par3, par4, this.blockID);
-
-			if (var11 == 1) {
-				par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, this.blockID);
-			} else if (var11 == 2) {
-				par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, this.blockID);
-			} else if (var11 == 3) {
-				par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, this.blockID);
-			} else if (var11 == 4) {
-				par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, this.blockID);
-			} else if (var11 != 5 && var11 != 6) {
-				if (var11 == 0 || var11 == 7) {
-					par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, this.blockID);
-				}
-			} else {
-				par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, this.blockID);
-			}
-
-			return true;
-		}
+		return true;
 	}
 
 	/**

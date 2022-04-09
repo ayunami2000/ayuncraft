@@ -12,17 +12,6 @@ public class EntitySpider extends EntityMob {
 		this.dataWatcher.addObject(16, new Byte((byte) 0));
 	}
 
-	/**
-	 * Called to update the entity's position/logic.
-	 */
-	public void onUpdate() {
-		super.onUpdate();
-
-		if (!this.worldObj.isRemote) {
-			this.setBesideClimbableBlock(this.isCollidedHorizontally);
-		}
-	}
-
 	public int getMaxHealth() {
 		return 16;
 	}

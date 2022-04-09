@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockDeadBush extends BlockFlower {
 	protected BlockDeadBush(int par1) {
@@ -20,19 +20,7 @@ public class BlockDeadBush extends BlockFlower {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return -1;
-	}
-
-	/**
-	 * Called when the player destroys a block with an item that can harvest it. (i,
-	 * j, k) are the coordinates of the block and l is the block's subtype/damage.
-	 */
-	public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6) {
-		if (!par1World.isRemote && par2EntityPlayer.getCurrentEquippedItem() != null && par2EntityPlayer.getCurrentEquippedItem().itemID == Item.shears.itemID) {
-			this.dropBlockAsItem_do(par1World, par3, par4, par5, new ItemStack(Block.deadBush, 1, par6));
-		} else {
-			super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
-		}
 	}
 }

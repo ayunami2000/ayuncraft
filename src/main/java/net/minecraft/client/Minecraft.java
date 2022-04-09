@@ -17,7 +17,7 @@ import net.lax1dude.eaglercraft.glemu.EffectPipeline;
 import net.lax1dude.eaglercraft.glemu.FixedFunctionShader;
 
 public class Minecraft implements Runnable {
-	
+
 	private ServerData currentServerData;
 
 	/**
@@ -27,11 +27,12 @@ public class Minecraft implements Runnable {
 	public PlayerControllerMP playerController;
 	private boolean fullscreen = false;
 	private boolean hasCrashed = false;
-	
+	private boolean isGonnaTakeDatScreenShot = false;
+
 	public int displayWidth;
 	public int displayHeight;
 	private Timer timer = new Timer(20.0F);
-	
+
 	public WorldClient theWorld;
 	public RenderGlobal renderGlobal;
 	public EntityClientPlayerMP thePlayer;
@@ -110,7 +111,7 @@ public class Minecraft implements Runnable {
 	 * textures refreshed.
 	 */
 	private boolean refreshTexturePacksScheduled;
-	
+
 	private String serverName;
 	private int serverPort;
 
@@ -135,7 +136,7 @@ public class Minecraft implements Runnable {
 	/** The profiler instance */
 	public final Profiler mcProfiler = new Profiler();
 	private long field_83002_am = -1L;
-	
+
 	public int chunkUpdates = 0;
 	public static int debugChunkUpdates = 0;
 
@@ -154,9 +155,9 @@ public class Minecraft implements Runnable {
 	/** holds the current fps */
 	int fpsCounter = 0;
 	long prevFrameTime = -1L;
-	
+
 	long secondTimer = 0l;
-	
+
 	private HashSet<String> shownPlayerMessages = new HashSet();
 
 	/** Profiler currently displayed in the debug screen pie chart */
@@ -191,9 +192,9 @@ public class Minecraft implements Runnable {
 		this.gameSettings = new GameSettings(this);
 		this.texturePackList = new TexturePackList(this);
 		this.renderEngine = new RenderEngine(this.texturePackList, this.gameSettings);
-		
+
 		this.loadScreen();
-		
+
 		ChatAllowedCharacters.getAllowedCharacters();
 		this.fontRenderer = new FontRenderer(this.gameSettings, "/font/default.png", this.renderEngine, false);
 		this.standardGalacticFontRenderer = new FontRenderer(this.gameSettings, "/font/alternate.png", this.renderEngine, false);
@@ -203,7 +204,7 @@ public class Minecraft implements Runnable {
 			//this.fontRenderer.setUnicodeFlag(StringTranslate.getInstance().isUnicode());
 			//this.fontRenderer.setBidiFlag(StringTranslate.isBidirectional(this.gameSettings.language));
 		}
-		
+
 		this.loadScreen();
 
 		ColorizerGrass.setGrassBiomeColorizer(this.renderEngine.getTextureContents("/misc/grasscolor.png"));
@@ -240,13 +241,18 @@ public class Minecraft implements Runnable {
 		//if (this.serverName != null) {
 		//	this.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort));
 		//} else {
-		
+
 		EaglerProfile.loadFromStorage();
-		
+
 		this.sndManager.playTheTitleMusic();
 		showIntroAnimation();
-		
-		this.displayGuiScreen(new GuiScreenEditProfile(new GuiMainMenu()));
+
+		String s = EaglerAdapter.getServerToJoinOnLaunch();
+		if(s != null) {
+			this.displayGuiScreen(new GuiScreenEditProfile(new GuiConnecting(new GuiMainMenu(), this, new ServerData("Eaglercraft Server", s))));
+		}else {
+			this.displayGuiScreen(new GuiScreenEditProfile(new GuiMainMenu()));
+		}
 
 		this.loadingScreen = new LoadingScreenRenderer(this);
 
@@ -254,13 +260,13 @@ public class Minecraft implements Runnable {
 			this.toggleFullscreen();
 		}
 	}
-	
+
 	public void showWarningText() {
 		ScaledResolution var1 = new ScaledResolution(this.gameSettings, this.displayWidth, this.displayHeight);
 		String s = "warning: early beta, major problems will arise";
 		this.fontRenderer.drawString(s, (var1.getScaledWidth() - this.fontRenderer.getStringWidth(s)) / 2, var1.getScaledHeight() - 50, 0xffcccccc);
 	}
-	
+
 	private void showIntroAnimation() {
 		ScaledResolution var1 = new ScaledResolution(this.gameSettings, this.displayWidth, this.displayHeight);
 		EaglerAdapter.glClearColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -275,7 +281,7 @@ public class Minecraft implements Runnable {
 		EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_FOG);
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		
+
 		long t1 = System.currentTimeMillis();
 		for(int i = 0; i < 20; i++) {
 			this.displayWidth = EaglerAdapter.getCanvasWidth();
@@ -286,9 +292,9 @@ public class Minecraft implements Runnable {
 			EaglerAdapter.glLoadIdentity();
 			EaglerAdapter.glOrtho(0.0F, var1.getScaledWidth(), var1.getScaledHeight(), 0.0F, 1000.0F, 3000.0F);
 			EaglerAdapter.glMatrixMode(EaglerAdapter.GL_MODELVIEW);
-			
+
 			float f = ((float)(System.currentTimeMillis() - t1) / 333f);
-			
+
 			EaglerAdapter.glClear(EaglerAdapter.GL_COLOR_BUFFER_BIT | EaglerAdapter.GL_DEPTH_BUFFER_BIT);
 			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, MathHelper.clamp_float(1.0f - f, 0.0F, 1.0F));
 			this.renderEngine.bindTexture("%clamp%/title/eagtek.png");
@@ -299,12 +305,12 @@ public class Minecraft implements Runnable {
 			EaglerAdapter.glScalef(f1, f1, 1.0f);
 			this.scaledTessellator(0, 0, 0, 0, 256, 256);
 			EaglerAdapter.glPopMatrix();
-			
+
 			showWarningText();
 
 			EaglerAdapter.glFlush();
 			EaglerAdapter.updateDisplay();
-			
+
 			long t = t1 + 17 + 17*i - System.currentTimeMillis();
 			if(t > 0) {
 				try {
@@ -314,7 +320,7 @@ public class Minecraft implements Runnable {
 				}
 			}
 		}
-		
+
 		t1 = System.currentTimeMillis();
 		for(int i = 0; i < 20; i++) {
 			this.displayWidth = EaglerAdapter.getCanvasWidth();
@@ -325,9 +331,9 @@ public class Minecraft implements Runnable {
 			EaglerAdapter.glLoadIdentity();
 			EaglerAdapter.glOrtho(0.0F, var1.getScaledWidth(), var1.getScaledHeight(), 0.0F, 1000.0F, 3000.0F);
 			EaglerAdapter.glMatrixMode(EaglerAdapter.GL_MODELVIEW);
-			
+
 			float f = ((float)(System.currentTimeMillis() - t1) / 333f);
-			
+
 			EaglerAdapter.glClear(EaglerAdapter.GL_COLOR_BUFFER_BIT | EaglerAdapter.GL_DEPTH_BUFFER_BIT);
 			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, MathHelper.clamp_float(f, 0.0F, 1.0F));
 			this.renderEngine.bindTexture("%blur%/title/mojang.png");
@@ -338,12 +344,12 @@ public class Minecraft implements Runnable {
 			EaglerAdapter.glScalef(f1, f1, 1.0f);
 			this.scaledTessellator(0, 0, 0, 0, 256, 256);
 			EaglerAdapter.glPopMatrix();
-			
+
 			showWarningText();
 
 			EaglerAdapter.glFlush();
 			EaglerAdapter.updateDisplay();
-			
+
 			long t = t1 + 17 + 17*i - System.currentTimeMillis();
 			if(t > 0) {
 				try {
@@ -353,7 +359,7 @@ public class Minecraft implements Runnable {
 				}
 			}
 		}
-		
+
 		try {
 			Thread.sleep(1600l);
 		} catch (InterruptedException e) {
@@ -366,9 +372,9 @@ public class Minecraft implements Runnable {
 			this.displayHeight = EaglerAdapter.getCanvasHeight();
 			EaglerAdapter.glViewport(0, 0, this.displayWidth, this.displayHeight);
 			var1 = new ScaledResolution(this.gameSettings, this.displayWidth, this.displayHeight);
-			
+
 			float f = ((float)(System.currentTimeMillis() - t1) / 340f);
-			
+
 			EaglerAdapter.glClear(EaglerAdapter.GL_COLOR_BUFFER_BIT | EaglerAdapter.GL_DEPTH_BUFFER_BIT);
 			EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, MathHelper.clamp_float((1.0f - f), 0.0F, 1.0F));
 			this.renderEngine.bindTexture("%blur%/title/mojang.png");
@@ -379,12 +385,12 @@ public class Minecraft implements Runnable {
 			EaglerAdapter.glScalef(f1, f1, 1.0f);
 			this.scaledTessellator(0, 0, 0, 0, 256, 256);
 			EaglerAdapter.glPopMatrix();
-			
+
 			showWarningText();
 
 			EaglerAdapter.glFlush();
 			EaglerAdapter.updateDisplay();
-			
+
 			long t = t1 + 17 + 17*i - System.currentTimeMillis();
 			if(t > 0) {
 				try {
@@ -403,7 +409,7 @@ public class Minecraft implements Runnable {
 			EaglerAdapter.glClear(EaglerAdapter.GL_COLOR_BUFFER_BIT | EaglerAdapter.GL_DEPTH_BUFFER_BIT);
 			EaglerAdapter.glFlush();
 			EaglerAdapter.updateDisplay();
-			
+
 			long t = t1 + 17 + 17*i - System.currentTimeMillis();
 			if(t > 0) {
 				try {
@@ -414,22 +420,25 @@ public class Minecraft implements Runnable {
 			}
 		}
 		*/
-		
+
 		EaglerAdapter.glClear(EaglerAdapter.GL_COLOR_BUFFER_BIT | EaglerAdapter.GL_DEPTH_BUFFER_BIT);
 		showWarningText();
 		EaglerAdapter.glFlush();
 		EaglerAdapter.updateDisplay();
-		
+
 		try {
 			Thread.sleep(100l);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		GuiScreenVoiceChannel.fadeInTimer = System.currentTimeMillis();
 		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
 		EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
 		EaglerAdapter.glAlphaFunc(EaglerAdapter.GL_GREATER, 0.1F);
+
+		while(EaglerAdapter.keysNext());
+		while(EaglerAdapter.mouseNext());
 	}
 
 	/**
@@ -483,7 +492,7 @@ public class Minecraft implements Runnable {
 	}
 
 	public static EnumOS getOs() {
-		String var0 = System.getProperty("os.name").toLowerCase();
+		String var0 = EaglerAdapter.getUserAgent().toLowerCase();
 		return var0.contains("win") ? EnumOS.WINDOWS
 				: (var0.contains("mac") ? EnumOS.MACOS
 						: (var0.contains("solaris") ? EnumOS.SOLARIS : (var0.contains("sunos") ? EnumOS.SOLARIS : (var0.contains("linux") ? EnumOS.LINUX : (var0.contains("unix") ? EnumOS.LINUX : EnumOS.UNKNOWN)))));
@@ -522,13 +531,21 @@ public class Minecraft implements Runnable {
 		}
 	}
 
+	public boolean isChatOpen() {
+		return this.currentScreen != null && (this.currentScreen instanceof GuiChat);
+	}
+
+	public String getServerURI() {
+		return this.getNetHandler() != null ? this.getNetHandler().getNetManager().getServerURI() : "[not connected]";
+	}
+
 	/**
 	 * Checks for an OpenGL error. If there is one, prints the error ID and error
 	 * string.
 	 */
 	public void checkGLError(String par1Str) {
 		int var2;
-		
+
 
 		while ((var2 = EaglerAdapter.glGetError()) != 0) {
 			String var3 = EaglerAdapter.gluErrorString(var2);
@@ -573,36 +590,10 @@ public class Minecraft implements Runnable {
 
 	public void run() {
 		this.running = true;
-
-		//try {
-			this.startGame();
-		//} catch (Exception var11) {
-		//	var11.printStackTrace();
-		//	return;
-		//}
-
-		//try {
-			while (this.running) {
-
-				if (this.refreshTexturePacksScheduled) {
-					this.refreshTexturePacksScheduled = false;
-					this.renderEngine.refreshTextures();
-				}
-
-				try {
-					this.runGameLoop();
-				} catch (OutOfMemoryError var10) {
-					this.freeMemory();
-					this.displayGuiScreen(new GuiMemoryErrorScreen());
-					System.gc();
-				}
-			}
-		//} catch (MinecraftError var12) {
-		//	;
-		//} catch (Throwable var14) {
-		//	var14.printStackTrace();
-		//}
-		
+		this.startGame();
+		while (this.running) {
+			this.runGameLoop();
+		}
 		EaglerAdapter.destroyContext();
 		EaglerAdapter.exit();
 	}
@@ -611,6 +602,11 @@ public class Minecraft implements Runnable {
 	 * Called repeatedly from run()
 	 */
 	private void runGameLoop() {
+		if (this.refreshTexturePacksScheduled) {
+			this.refreshTexturePacksScheduled = false;
+			this.renderEngine.refreshTextures();
+		}
+
 		AxisAlignedBB.getAABBPool().cleanPool();
 
 		if (this.theWorld != null) {
@@ -663,9 +659,9 @@ public class Minecraft implements Runnable {
 		}
 
 		this.mcProfiler.endSection();
-		
+
 		EaglerAdapter.glClearStack();
-		
+
 		if (!this.skipRenderWorld) {
 			this.mcProfiler.endStartSection("gameRenderer");
 			this.entityRenderer.updateCameraAndRender(this.timer.renderPartialTicks);
@@ -694,8 +690,6 @@ public class Minecraft implements Runnable {
 		this.guiAchievement.updateAchievementWindow();
 		this.mcProfiler.startSection("root");
 
-		this.screenshotListener();
-
 		if (!this.fullscreen && (EaglerAdapter.getCanvasWidth() != this.displayWidth || EaglerAdapter.getCanvasHeight() != this.displayHeight)) {
 			this.displayWidth = EaglerAdapter.getCanvasWidth();
 			this.displayHeight = EaglerAdapter.getCanvasHeight();
@@ -715,7 +709,7 @@ public class Minecraft implements Runnable {
 		++this.fpsCounter;
 		boolean var5 = this.isGamePaused;
 		this.isGamePaused = false;
-		
+
 		if(System.currentTimeMillis() - secondTimer > 1000l) {
 			debugFPS = fpsCounter;
 			fpsCounter = 0;
@@ -728,7 +722,12 @@ public class Minecraft implements Runnable {
 		if (this.func_90020_K() > 0) {
 			EaglerAdapter.syncDisplay(EntityRenderer.performanceToFps(this.func_90020_K()));
 		}
-		
+
+		if(isGonnaTakeDatScreenShot) {
+			isGonnaTakeDatScreenShot = false;
+			EaglerAdapter.saveScreenshot();
+		}
+
 		EaglerAdapter.doJavascriptCoroutines();
 
 		this.mcProfiler.endSection();
@@ -737,47 +736,6 @@ public class Minecraft implements Runnable {
 
 	private int func_90020_K() {
 		return this.currentScreen != null && this.currentScreen instanceof GuiMainMenu ? 2 : this.gameSettings.limitFramerate;
-	}
-
-	public void freeMemory() {
-		try {
-			this.renderGlobal.deleteAllDisplayLists();
-		} catch (Throwable var4) {
-			;
-		}
-
-		try {
-			System.gc();
-			AxisAlignedBB.getAABBPool().clearPool();
-			this.theWorld.getWorldVec3Pool().clearAndFreeCache();
-		} catch (Throwable var3) {
-			;
-		}
-
-		try {
-			System.gc();
-			this.loadWorld((WorldClient) null);
-		} catch (Throwable var2) {
-			;
-		}
-
-		System.gc();
-	}
-
-	/**
-	 * checks if keys are down
-	 */
-	private void screenshotListener() {
-		/*
-		if (EaglerAdapter.isKeyDown(60)) {
-			if (!this.isTakingScreenshot) {
-				this.isTakingScreenshot = true;
-				this.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(minecraftDir, this.displayWidth, this.displayHeight));
-			}
-		} else {
-			this.isTakingScreenshot = false;
-		}
-		*/
 	}
 
 	/**
@@ -844,7 +802,7 @@ public class Minecraft implements Runnable {
 			int var13;
 
 			EaglerAdapter.glDepthMask(true);
-			
+
 			for (int var11 = 0; var11 < var3.size(); ++var11) {
 				ProfilerResult var12 = (ProfilerResult) var3.get(var11);
 				var13 = MathHelper.floor_double(var12.field_76332_a / 4.0D) + 1;
@@ -980,7 +938,7 @@ public class Minecraft implements Runnable {
 			}
 		}
 	}
-	
+
 	public void displayEaglercraftText(String s) {
 		if(this.thePlayer != null && shownPlayerMessages.add(s)) {
 			this.thePlayer.sendChatToPlayer("notice: "+s);
@@ -1058,7 +1016,7 @@ public class Minecraft implements Runnable {
 	 * Toggles fullscreen mode.
 	 */
 	public void toggleFullscreen() {
-		
+
 	}
 
 	/**
@@ -1083,7 +1041,7 @@ public class Minecraft implements Runnable {
 		if (this.rightClickDelayTimer > 0) {
 			--this.rightClickDelayTimer;
 		}
-		
+
 		EaglerAdapter.anisotropicPatch(this.gameSettings.patchAnisotropic);
 
 		this.mcProfiler.startSection("stats");
@@ -1100,13 +1058,13 @@ public class Minecraft implements Runnable {
 		if (!this.isGamePaused && this.theWorld != null) {
 			this.playerController.updateController();
 		}
-		
+
 		this.mcProfiler.endStartSection("textures");
 
 		if (!this.isGamePaused) {
 			this.renderEngine.updateDynamicTextures();
 		}
-		
+
 		DefaultSkinRenderer.deleteOldSkins();
 
 		if (this.currentScreen == null && this.thePlayer != null) {
@@ -1132,6 +1090,7 @@ public class Minecraft implements Runnable {
 			}
 		}
 
+		GuiMultiplayer.tickRefreshCooldown();
 		GuiScreenVoiceChannel.tickVoiceConnection();
 		NoteblockPlayer.tick();
 
@@ -1189,7 +1148,7 @@ public class Minecraft implements Runnable {
 				if (EaglerAdapter.getEventKeyState()) {
 					KeyBinding.onTick(EaglerAdapter.getEventKey());
 				}
-				
+
 				boolean F3down = (this.gameSettings.keyBindFunction.pressed && EaglerAdapter.isKeyDown(4));
 
 				if (this.field_83002_am > 0L) {
@@ -1205,6 +1164,7 @@ public class Minecraft implements Runnable {
 				}
 
 				if (EaglerAdapter.getEventKeyState()) {
+					isGonnaTakeDatScreenShot |= (this.gameSettings.keyBindFunction.pressed && EaglerAdapter.getEventKey() == 3);
 					if (EaglerAdapter.getEventKey() == 87) {
 						this.toggleFullscreen();
 					} else {
@@ -1270,7 +1230,7 @@ public class Minecraft implements Runnable {
 								this.gameSettings.smoothCamera = !this.gameSettings.smoothCamera;
 							}
 						}
-						
+
 						if(!this.gameSettings.keyBindFunction.pressed) {
 							for (int var9 = 0; var9 < 9; ++var9) {
 								if (EaglerAdapter.getEventKey() == 2 + var9) {
@@ -1311,11 +1271,11 @@ public class Minecraft implements Runnable {
 			if (this.currentScreen == null && EaglerAdapter.isKeyDown(53) && var8) {
 				this.displayGuiScreen(new GuiChat("/"));
 			}
-			
+
 			if(this.gameSettings.keyBindSprint.pressed && !this.thePlayer.isSprinting() && this.thePlayer.canSprint() && !this.thePlayer.isCollidedHorizontally) {
 				this.thePlayer.setSprinting(true);
 			}
-			
+
 			if (this.thePlayer.isUsingItem()) {
 				if (!this.gameSettings.keyBindUseItem.pressed) {
 					this.playerController.onStoppedUsingItem(this.thePlayer);
@@ -1412,7 +1372,7 @@ public class Minecraft implements Runnable {
 			this.mcProfiler.endStartSection("pendingConnection");
 			this.myNetworkManager.processReadPackets();
 		}
-		
+
 		if(this.theWorld == null) {
 			this.sndManager.playTheTitleMusic();
 		}else {
@@ -1422,7 +1382,7 @@ public class Minecraft implements Runnable {
 		this.mcProfiler.endSection();
 		this.systemTime = getSystemTime();
 	}
-	
+
 	private int titleMusicObj = -1;
 
 	/**
@@ -1498,13 +1458,13 @@ public class Minecraft implements Runnable {
 				this.thePlayer = this.playerController.func_78754_a(par1WorldClient);
 				this.playerController.flipPlayer(this.thePlayer);
 			}
-			
+
 			//if(!EaglerAdapter._wisAnisotropicPatched()) {
 			//	displayEaglercraftText("ANGLE Issue #4994 is unpatched on this browser, using fake aliased sampling on linear magnified terrain texture for anisotropic filtering. Chrome patch progress and information available at https://crbug.com/angleproject/4994");
 			//}
 
 			StringTranslate var4 = StringTranslate.getInstance();
-			
+
 			if(!this.gameSettings.fancyGraphics || this.gameSettings.ambientOcclusion == 0) {
 				displayEaglercraftText(var4.translateKey("fancyGraphicsNote"));
 			}
@@ -1521,7 +1481,7 @@ public class Minecraft implements Runnable {
 		System.gc();
 		this.systemTime = 0L;
 	}
-	
+
 	/*
 	public void installResource(String par1Str, File par2File) {
 		int var3 = par1Str.indexOf("/");
@@ -1738,7 +1698,7 @@ public class Minecraft implements Runnable {
 	public void scheduleTexturePackRefresh() {
 		this.refreshTexturePacksScheduled = true;
 	}
-	
+
 	/**
 	 * Set the current ServerData instance.
 	 */
@@ -1764,7 +1724,7 @@ public class Minecraft implements Runnable {
 	public boolean isSingleplayer() {
 		return false;
 	}
-	
+
 	/**
 	 * Gets the system time in milliseconds.
 	 */
@@ -1778,7 +1738,7 @@ public class Minecraft implements Runnable {
 	public boolean isFullScreen() {
 		return this.fullscreen;
 	}
-	
+
 	public static int getGLMaximumTextureSize() {
 		return 8192;
 	}

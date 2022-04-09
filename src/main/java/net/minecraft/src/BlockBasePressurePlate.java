@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import java.util.Random;
-
 public abstract class BlockBasePressurePlate extends Block {
 	private String pressurePlateIconName;
 
@@ -90,33 +88,6 @@ public abstract class BlockBasePressurePlate extends Block {
 		if (var6) {
 			this.dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
 			par1World.setBlockToAir(par2, par3, par4);
-		}
-	}
-
-	/**
-	 * Ticks the block if it's been scheduled
-	 */
-	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-		if (!par1World.isRemote) {
-			int var6 = this.getPowerSupply(par1World.getBlockMetadata(par2, par3, par4));
-
-			if (var6 > 0) {
-				this.setStateIfMobInteractsWithPlate(par1World, par2, par3, par4, var6);
-			}
-		}
-	}
-
-	/**
-	 * Triggered whenever an entity collides with this block (enters into the
-	 * block). Args: world, x, y, z, entity
-	 */
-	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity) {
-		if (!par1World.isRemote) {
-			int var6 = this.getPowerSupply(par1World.getBlockMetadata(par2, par3, par4));
-
-			if (var6 == 0) {
-				this.setStateIfMobInteractsWithPlate(par1World, par2, par3, par4, var6);
-			}
 		}
 	}
 

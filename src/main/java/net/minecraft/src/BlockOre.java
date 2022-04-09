@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockOre extends Block {
 	public BlockOre(int par1) {
@@ -11,7 +11,7 @@ public class BlockOre extends Block {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return this.blockID == Block.oreCoal.blockID ? Item.coal.itemID
 				: (this.blockID == Block.oreDiamond.blockID ? Item.diamond.itemID
 						: (this.blockID == Block.oreLapis.blockID ? Item.dyePowder.itemID
@@ -21,7 +21,7 @@ public class BlockOre extends Block {
 	/**
 	 * Returns the quantity of items to drop on block destruction.
 	 */
-	public int quantityDropped(Random par1Random) {
+	public int quantityDropped(EaglercraftRandom par1Random) {
 		return this.blockID == Block.oreLapis.blockID ? 4 + par1Random.nextInt(5) : 1;
 	}
 
@@ -29,7 +29,7 @@ public class BlockOre extends Block {
 	 * Returns the usual quantity dropped by the block plus a bonus of 1 to 'i'
 	 * (inclusive).
 	 */
-	public int quantityDroppedWithBonus(int par1, Random par2Random) {
+	public int quantityDroppedWithBonus(int par1, EaglercraftRandom par2Random) {
 		if (par1 > 0 && this.blockID != this.idDropped(0, par2Random, par1)) {
 			int var3 = par2Random.nextInt(par1 + 2) - 1;
 

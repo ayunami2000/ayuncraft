@@ -82,18 +82,6 @@ public class EntityEnderCrystal extends Entity {
 		if (this.isEntityInvulnerable()) {
 			return false;
 		} else {
-			if (!this.isDead && !this.worldObj.isRemote) {
-				this.health = 0;
-
-				if (this.health <= 0) {
-					this.setDead();
-
-					if (!this.worldObj.isRemote) {
-						this.worldObj.createExplosion((Entity) null, this.posX, this.posY, this.posZ, 6.0F, true);
-					}
-				}
-			}
-
 			return true;
 		}
 	}

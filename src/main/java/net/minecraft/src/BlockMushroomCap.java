@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public class BlockMushroomCap extends Block {
 	private static final String[] field_94429_a = new String[] { "mushroom_skin_brown", "mushroom_skin_red" };
@@ -33,7 +33,7 @@ public class BlockMushroomCap extends Block {
 	/**
 	 * Returns the quantity of items to drop on block destruction.
 	 */
-	public int quantityDropped(Random par1Random) {
+	public int quantityDropped(EaglercraftRandom par1Random) {
 		int var2 = par1Random.nextInt(10) - 7;
 
 		if (var2 < 0) {
@@ -46,7 +46,7 @@ public class BlockMushroomCap extends Block {
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
-	public int idDropped(int par1, Random par2Random, int par3) {
+	public int idDropped(int par1, EaglercraftRandom par2Random, int par3) {
 		return Block.mushroomBrown.blockID + this.mushroomType;
 	}
 

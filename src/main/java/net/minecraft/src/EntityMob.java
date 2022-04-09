@@ -25,17 +25,6 @@ public abstract class EntityMob extends EntityCreature implements IMob {
 	}
 
 	/**
-	 * Called to update the entity's position/logic.
-	 */
-	public void onUpdate() {
-		super.onUpdate();
-
-		if (!this.worldObj.isRemote && this.worldObj.difficultySetting == 0) {
-			this.setDead();
-		}
-	}
-
-	/**
 	 * Finds the closest player within 16 blocks to attack, or null if this Entity
 	 * isn't interested in attacking (Animals, Spiders at day, peaceful PigZombies).
 	 */

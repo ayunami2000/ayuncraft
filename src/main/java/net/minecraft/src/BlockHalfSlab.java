@@ -1,7 +1,8 @@
 package net.minecraft.src;
 
 import java.util.List;
-import java.util.Random;
+
+import net.lax1dude.eaglercraft.EaglercraftRandom;
 
 public abstract class BlockHalfSlab extends Block {
 	protected final boolean isDoubleSlab;
@@ -77,7 +78,7 @@ public abstract class BlockHalfSlab extends Block {
 	/**
 	 * Returns the quantity of items to drop on block destruction.
 	 */
-	public int quantityDropped(Random par1Random) {
+	public int quantityDropped(EaglercraftRandom par1Random) {
 		return this.isDoubleSlab ? 2 : 1;
 	}
 

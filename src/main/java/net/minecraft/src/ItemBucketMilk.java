@@ -12,10 +12,6 @@ public class ItemBucketMilk extends Item {
 			--par1ItemStack.stackSize;
 		}
 
-		if (!par2World.isRemote) {
-			par3EntityPlayer.clearActivePotions();
-		}
-
 		return par1ItemStack.stackSize <= 0 ? new ItemStack(Item.bucketEmpty) : par1ItemStack;
 	}
 

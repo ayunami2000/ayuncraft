@@ -36,35 +36,6 @@ public class TileEntityBeacon extends TileEntity implements IInventory {
 	}
 
 	private void addEffectsToPlayers() {
-		if (this.isBeaconActive && this.levels > 0 && !this.worldObj.isRemote && this.primaryEffect > 0) {
-			double var1 = (double) (this.levels * 10 + 10);
-			byte var3 = 0;
-
-			if (this.levels >= 4 && this.primaryEffect == this.secondaryEffect) {
-				var3 = 1;
-			}
-
-			AxisAlignedBB var4 = AxisAlignedBB.getAABBPool().getAABB((double) this.xCoord, (double) this.yCoord, (double) this.zCoord, (double) (this.xCoord + 1), (double) (this.yCoord + 1), (double) (this.zCoord + 1)).expand(var1, var1,
-					var1);
-			var4.maxY = (double) this.worldObj.getHeight();
-			List var5 = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, var4);
-			Iterator var6 = var5.iterator();
-			EntityPlayer var7;
-
-			while (var6.hasNext()) {
-				var7 = (EntityPlayer) var6.next();
-				var7.addPotionEffect(new PotionEffect(this.primaryEffect, 180, var3, true));
-			}
-
-			if (this.levels >= 4 && this.primaryEffect != this.secondaryEffect && this.secondaryEffect > 0) {
-				var6 = var5.iterator();
-
-				while (var6.hasNext()) {
-					var7 = (EntityPlayer) var6.next();
-					var7.addPotionEffect(new PotionEffect(this.secondaryEffect, 180, 0, true));
-				}
-			}
-		}
 	}
 
 	/**

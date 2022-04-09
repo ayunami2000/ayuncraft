@@ -9,11 +9,9 @@ import java.util.HashMap;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 
 import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2;
-import net.lax1dude.eaglercraft.glemu.vector.Matrix3f;
 import net.lax1dude.eaglercraft.glemu.vector.Matrix4f;
 import net.lax1dude.eaglercraft.glemu.vector.Vector3f;
 import net.lax1dude.eaglercraft.glemu.vector.Vector4f;
-import net.minecraft.src.RenderItem;
 
 public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	public static boolean glBlendEnabled=false;
@@ -312,6 +310,8 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		case GL_TEXTURE_GEN_Q:
 			enableTexGen = true;
 			break;
+		case GL_POLYGON_OFFSET_FILL:
+			_wglEnable(_wGL_POLYGON_OFFSET_FILL);
 		default:
 			break;
 		}
@@ -447,6 +447,8 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		case GL_TEXTURE_GEN_Q:
 			enableTexGen = false;
 			break;
+		case GL_POLYGON_OFFSET_FILL:
+			_wglDisable(_wGL_POLYGON_OFFSET_FILL);
 		default:
 			break;
 		}
@@ -609,6 +611,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		case GL_DST_COLOR: pp1 = _wGL_DST_COLOR; break;
 		case GL_SRC_COLOR: pp1 = _wGL_SRC_COLOR; break;
 		case GL_ONE_MINUS_SRC_COLOR: pp1 = _wGL_ONE_MINUS_SRC_COLOR; break;
+		case GL_ONE_MINUS_DST_COLOR: pp1 = _wGL_ONE_MINUS_DST_COLOR; break;
 		case GL_ONE: pp1 = _wGL_ONE; break;
 		case GL_ZERO: pp1 = _wGL_ZERO; break;
 		}
@@ -620,6 +623,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		case GL_DST_COLOR: pp2 = _wGL_DST_COLOR; break;
 		case GL_SRC_COLOR: pp2 = _wGL_SRC_COLOR; break;
 		case GL_ONE_MINUS_SRC_COLOR: pp2 = _wGL_ONE_MINUS_SRC_COLOR; break;
+		case GL_ONE_MINUS_DST_COLOR: pp1 = _wGL_ONE_MINUS_DST_COLOR; break;
 		case GL_ONE: pp2 = _wGL_ONE; break;
 		case GL_ZERO: pp2 = _wGL_ZERO; break;
 		}
