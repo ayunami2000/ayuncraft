@@ -105,7 +105,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 		this.buttonList.add(button2 = new GuiButton(3, this.width / 2 - 21 + 71, this.height / 6 + 110, 72, 20, var1.translateKey("profile.clearSkin")));
 
 		this.buttonList.add(button3 = new GuiButton(4, this.width / 2 - 21 + 71, this.height / 6 + 134, 72, 20, this.mc.gameSettings.useDefaultProtocol?"Switch to Eaglercraft":"Switch to Vanilla"));
-		this.buttonList.add(button4 = new GuiButton(5, this.width / 2 - 21, this.height / 6 + 134, 72, 20, (this.mc.gameSettings.useProxy?"Dis":"En")+"able Proxy Mode"));
+		this.buttonList.add(button4 = new GuiButton(5, this.width / 2 - 21, this.height / 6 + 134, 72, 20, (this.mc.gameSettings.useProxy?"Dis":"En")+"able Proxy"));
 		//this.buttonList.add(new GuiButton(200, this.width / 2, this.height / 6 + 72, 150, 20, var1.translateKey("gui.done")));
 	}
 	
