@@ -86,7 +86,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 		this.dropDownOptions = EaglerProfile.concatArrays(n, defaultOptions);
 	}
 
-	private GuiButton button0, button1, button2, button3;
+	private GuiButton button0, button1, button2, button3, button4;
 
 	public void initGui() {
 		super.initGui();
@@ -105,6 +105,7 @@ public class GuiScreenEditProfile extends GuiScreen {
 		this.buttonList.add(button2 = new GuiButton(3, this.width / 2 - 21 + 71, this.height / 6 + 110, 72, 20, var1.translateKey("profile.clearSkin")));
 
 		this.buttonList.add(button3 = new GuiButton(4, this.width / 2 - 21 + 71, this.height / 6 + 134, 72, 20, this.mc.gameSettings.useDefaultProtocol?"Switch to Eaglercraft":"Switch to Vanilla"));
+		this.buttonList.add(button4 = new GuiButton(5, this.width / 2 - 21, this.height / 6 + 134, 72, 20, (this.mc.gameSettings.useProxy?"Dis":"En")+"able Proxy Mode"));
 		//this.buttonList.add(new GuiButton(200, this.width / 2, this.height / 6 + 72, 150, 20, var1.translateKey("gui.done")));
 	}
 	
@@ -351,6 +352,10 @@ public class GuiScreenEditProfile extends GuiScreen {
 				//toggle version mode
 				this.mc.gameSettings.useDefaultProtocol=!this.mc.gameSettings.useDefaultProtocol;
 				button3.displayString=this.mc.gameSettings.useDefaultProtocol?"Switch to Eaglercraft":"Switch to Vanilla";
+			}else if (par1GuiButton.id == 5) {
+				//toggle using proxy
+				this.mc.gameSettings.useProxy=!this.mc.gameSettings.useProxy;
+				button4.displayString=(this.mc.gameSettings.useProxy?"Dis":"En")+"able Proxy Mode";
 			}
 		}
 	}

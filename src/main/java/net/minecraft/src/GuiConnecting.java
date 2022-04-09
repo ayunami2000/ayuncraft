@@ -74,7 +74,7 @@ public class GuiConnecting extends GuiScreen {
 					}
 				}
 				
-				this.clientHandler = new NetClientHandler(this.mc, this.mc.gameSettings.proxy.equals("")?uri:uria, 0);
+				this.clientHandler = new NetClientHandler(this.mc, (this.mc.gameSettings.proxy.equals("")||!this.mc.gameSettings.useProxy)?uri:uria, 0);
 				if(this.mc.gameSettings.useDefaultProtocol) {
 					this.clientHandler.addToSendQueue(new Packet2ClientProtocol(61, EaglerProfile.username, uria, port));
 				}else{

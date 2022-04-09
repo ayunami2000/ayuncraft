@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 public class GameSettings {
 	public static boolean useDefaultProtocol = true;
+	public static boolean useProxy = true;
 	public static String proxy = "";
 	public static String getNewProxy(){
 		if(ConfigConstants.proxies.length==1)return ConfigConstants.proxies[0];
