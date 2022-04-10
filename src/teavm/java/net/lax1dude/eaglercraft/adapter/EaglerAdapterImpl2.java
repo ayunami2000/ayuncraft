@@ -377,7 +377,7 @@ public class EaglerAdapterImpl2 {
 	private static boolean enableRepeatEvents = false;
 	private static boolean isWindowFocused = true;
 	
-	@JSBody(params = { }, script = "return {antialias: false, depth: true, powerPreference: \"high-performance\", desynchronized: true, preserveDrawingBuffer: false, premultipliedAlpha: false, alpha: false};")
+	@JSBody(params = { }, script = "return {antialias: false, depth: true, powerPreference: \"high-performance\", desynchronized: false, preserveDrawingBuffer: false, premultipliedAlpha: false, alpha: false};")
 	public static native JSObject youEagler();
 	
 	public static final int _wGL_TEXTURE_2D = TEXTURE_2D;
@@ -984,30 +984,14 @@ public class EaglerAdapterImpl2 {
 	
 	@JSBody(params = { "obj" }, script = "if(obj.commit) obj.commit();")
 	private static native int commitContext(JSObject obj);
-
-	@JSBody(params = { "obj", "def" }, script = "return window.eagler && (typeof window.eagler[obj] === 'boolean' ? window.eagler[obj] : def);")
-	private static native boolean getJavascriptFlag(String obj, boolean def);
-	
-	@JSBody(params = { "obj" }, script = "return typeof obj === 'boolean';")
-	private static native boolean hasJavascriptFlag(String obj);
-	
-	@Async
-	private static native Object delayFor0Millis();
-	
-	private static void delayFor0Millis(AsyncCallback<Object> cb) {
-		Window.setTimeout(new TimerHandler() {
-			@Override
-			public void onTimer() {
-				cb.complete(null);
-			}
-		}, 0);
-	}
 	
 	public static final void updateDisplay() {
-		//if(getJavascriptFlag("displayUpdateCommitContext", true)) {
-			commitContext(webgl);
-		//}
-		delayFor0Millis();
+		commitContext(webgl);
+		try {
+			Thread.sleep(1l);
+		} catch (InterruptedException e) {
+			;
+		}
 	}
 	public static final void setVSyncEnabled(boolean p1) {
 		
