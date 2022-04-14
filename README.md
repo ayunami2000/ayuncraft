@@ -45,14 +45,14 @@ Keep both the first and second terminal window you opened, just minimize them do
 13. **It should allow you to connect, if not, check the two terminal windows for errors**
 14. If you are okay with regularly checking for updates to [Offline_Download_Version.html](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/Offline_Download_Version.html), you are now finished
 15. If you are playing with friends and want a shared website that can be updated, see the `stable-download/web` folder
-16. To install, create a website and upload the contents of `stable-download/web` to the URL you want to have Eaglercraft on. Edit `index.html`, remove line 19 containing the `alert(` stuff, then search the file for `https://g.eags.us/eaglercraft/` and replace it everywhere with the URL to your own site instead of g.eags.us.
+16. To install, create a website and upload the contents of `stable-download/web` to the URL you want to have Eaglercraft on
 17. **The 'web' folder will not work if you open it in your browser locally! If you see 'file:///' in the URL you are doing it wrong. You need to upload the folder to an HTTP or HTTPS server and access it over the internet via http:// or https://. The game will not load otherwise, this is not a bug**
 18. To modify the default list of servers, download [servers_template.dat](https://github.com/LAX1DUDE/eaglercraft/raw/main/stable-download/servers_template.dat) and open it in [NBTExplorer](https://github.com/jaquadro/NBTExplorer/releases). Make your changes and then save
 19. **If you can't install NBTExplorer, try [WebNBT](https://irath96.github.io/webNBT/)**
 20. Upload your modified `servers_template.dat` to [base64encode.org](https://www.base64encode.org/) and press 'Encode'.
 21. Download and open the encoded file, copy and paste the text in the file back between the quotes in `index.html` at line 21 (or 22) in place of the old text that also begins with `CgAACQAHc2Vydm` between the quotes
 22. **To create a link to your site that automatically joins the server,** add a `?server=` variable to the URL, like (for example): [https://g.eags.us/eaglercraft/?server=127.0.0.1:25565](https://g.eags.us/eaglercraft/?server=127.0.0.1:25565) will automatically join `ws://127.0.0.1:25565/` as soon as the player finishes setting their username and skin
-23. To change your server's MOTD and icon, edit the `motd1:` tag of the listener config in `java/bungee_command/config.yml`, and replace `server-icon.png` in the folder where the config file is. Use `&` to add color/formatting codes. **Icon must be a 64x64 pixel PNG**
+23. To change your server's MOTD and icon, edit the `motd1:` tag of the listener config in `java/bungee_command/config.yml`, and replace `server-icon.png` in the folder where the config file is. Use `&` to add color/formatting codes. The server list will downscale your icon to 64x64 pixels
 24. You can give your MOTD multiple lines, add a `motd2:` to define a second line
 25. **For an animated MOTD and icon, install EaglerMOTD: [https://github.com/LAX1DUDE/eaglercraft-motd/](https://github.com/LAX1DUDE/eaglercraft-motd/)**
 26. To add some bukkit plugins, download the plugin's JAR file for CraftBukkit 1.5.2 and place it in `java/bukkit_command/plugins`
