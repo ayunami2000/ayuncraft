@@ -46,13 +46,15 @@ public class ServerData {
 	public boolean hasError = false;
 	public List<String> playerList = new ArrayList();
 	public int serverIconGL = -1;
+	public final boolean isDefault;
 
 	/** Whether to hide the IP address for this server. */
 	private boolean hideAddress = false;
 
-	public ServerData(String par1Str, String par2Str) {
+	public ServerData(String par1Str, String par2Str, boolean isDefault) {
 		this.serverName = par1Str;
 		this.serverIP = par2Str;
+		this.isDefault = isDefault;
 	}
 
 	/**
@@ -94,7 +96,7 @@ public class ServerData {
 	 * instance.
 	 */
 	public static ServerData getServerDataFromNBTCompound(NBTTagCompound par0NBTTagCompound) {
-		ServerData var1 = new ServerData(par0NBTTagCompound.getString("name"), par0NBTTagCompound.getString("ip"));
+		ServerData var1 = new ServerData(par0NBTTagCompound.getString("name"), par0NBTTagCompound.getString("ip"), par0NBTTagCompound.getBoolean("default"));
 		var1.hideAddress = par0NBTTagCompound.getBoolean("hideAddress");
 		return var1;
 	}

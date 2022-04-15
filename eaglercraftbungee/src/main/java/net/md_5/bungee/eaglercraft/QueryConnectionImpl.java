@@ -19,6 +19,8 @@ public class QueryConnectionImpl implements QueryConnection {
 	protected List<String> packetBuffer = new LinkedList();
 	protected long creationTime;
 	protected boolean keepAlive = false;
+
+	public static String confirmHash = null;
 	
 	public QueryConnectionImpl(ListenerInfo listener, InetAddress addr, WebSocket socket, String accept) {
 		this.listener = listener;

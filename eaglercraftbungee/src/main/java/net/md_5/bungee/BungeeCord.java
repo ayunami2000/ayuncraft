@@ -60,6 +60,7 @@ import net.md_5.bungee.command.CommandSend;
 import net.md_5.bungee.command.CommandPerms;
 import net.md_5.bungee.command.CommandBungee;
 import net.md_5.bungee.command.CommandClearRatelimit;
+import net.md_5.bungee.command.CommandConfirmCode;
 import net.md_5.bungee.command.CommandAlert;
 import net.md_5.bungee.command.CommandIP;
 import net.md_5.bungee.command.CommandServer;
@@ -154,6 +155,7 @@ public class BungeeCord extends ProxyServer {
 		this.getPluginManager().registerCommand(null, new CommandSend());
 		this.getPluginManager().registerCommand(null, new CommandFind());
 		this.getPluginManager().registerCommand(null, new CommandClearRatelimit());
+		this.getPluginManager().registerCommand(null, new CommandConfirmCode());
 		this.registerChannel("BungeeCord");
 		Log.setOutput(new PrintStream(ByteStreams.nullOutputStream()));
 		AnsiConsole.systemInstall();
