@@ -15,6 +15,9 @@ import net.minecraft.client.Minecraft;
 public class ServerData {
 	public String serverName;
 	public String serverIP;
+	private final int id;
+	
+	private static int idCounter = 0;
 
 	/**
 	 * the string indicating number of players on and capacity of the server that is
@@ -55,6 +58,15 @@ public class ServerData {
 		this.serverName = par1Str;
 		this.serverIP = par2Str;
 		this.isDefault = isDefault;
+		this.id = ++idCounter;
+	}
+	
+	public int hashCode() {
+		return id;
+	}
+	
+	public boolean equals(Object o) {
+		return o instanceof ServerData && id == ((ServerData)o).id;
 	}
 
 	/**

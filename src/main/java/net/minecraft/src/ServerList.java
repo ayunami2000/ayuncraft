@@ -79,8 +79,8 @@ public class ServerList {
 	 */
 	public void saveServerList() {
 		NBTTagList servers = new NBTTagList();
-		for(int i = forcedServers.size(); i < this.servers.size(); ++i) {
-			servers.appendTag(((ServerData) this.servers.get(i)).getNBTCompound());
+		for(int i = forcedServers.size(); i < this.allServers.size(); ++i) {
+			servers.appendTag(((ServerData) this.allServers.get(i)).getNBTCompound());
 		}
 		LocalStorageManager.gameSettingsStorage.setTag("servers", servers);
 		LocalStorageManager.saveStorageG();
@@ -98,6 +98,7 @@ public class ServerList {
 	 */
 	public void removeServerData(int par1) {
 		ServerData dat = this.servers.remove(par1);
+		this.allServers.remove(dat);
 		if(dat != null) {
 			dat.freeIcon();
 		}
@@ -109,7 +110,8 @@ public class ServerList {
 	public void addServerData(ServerData par1ServerData) {
 		par1ServerData.pingSentTime = -1l;
 		par1ServerData.hasPing = false;
-		this.servers.add(par1ServerData);
+		this.allServers.add(par1ServerData);
+		refreshServerPing();
 	}
 
 	/**
@@ -122,22 +124,21 @@ public class ServerList {
 	/**
 	 * Takes two list indexes, and swaps their order around.
 	 */
-	public void swapServers(int par1, int par2) {
+	public void swapServers(int par1, int par2) { // will be fixed eventually
+		/*
 		ServerData var3 = this.getServerData(par1);
-		this.servers.set(par1, this.getServerData(par2));
+		ServerData dat = this.getServerData(par2);
+		this.servers.set(par1, dat);
 		this.servers.set(par2, var3);
+		int i = this.allServers.indexOf(dat);
+		this.allServers.set(par1, this.allServers.get(i));
+		this.allServers.set(i, var3);
 		this.saveServerList();
-	}
-
-	/**
-	 * Sets the given index in the list to the given ServerData instance.
-	 */
-	public void setServer(int par1, ServerData par2ServerData) {
-		this.servers.set(par1, par2ServerData);
+		*/
 	}
 	
 	public void freeServerIcons() {
-		for(ServerData dat : servers) {
+		for(ServerData dat : allServers) {
 			if(dat.currentQuery != null && dat.currentQuery.isQueryOpen()) {
 				dat.currentQuery.close();
 			}

@@ -255,7 +255,7 @@ public class GuiMultiplayer extends GuiScreen {
 			this.mc.gameSettings.saveOptions();
 		} else {
 			if (isShiftKeyDown() && par2 == 200) {
-				if (var3 > 0 && var3 < this.internetServerList.countServers()) {
+				if (var3 > ServerList.forcedServers.size() && var3 < this.internetServerList.countServers()) {
 					this.internetServerList.swapServers(var3, var3 - 1);
 					--this.selectedServer;
 
@@ -361,6 +361,10 @@ public class GuiMultiplayer extends GuiScreen {
 	}
 
 	static int getSelectedServer(GuiMultiplayer par0GuiMultiplayer) {
+		int i = internetServerList.countServers();
+		if(par0GuiMultiplayer.selectedServer >= i && par0GuiMultiplayer.selectedServer > 0) {
+			par0GuiMultiplayer.selectedServer = i - 1;
+		}
 		return par0GuiMultiplayer.selectedServer;
 	}
 
