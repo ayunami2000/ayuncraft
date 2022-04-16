@@ -435,7 +435,7 @@ public class EaglerAdapterImpl2 {
 	public static final int _wGL_SRC_COLOR = SRC_COLOR;
 	public static final int _wGL_ONE = ONE;
 	public static final int _wGL_NEAREST = NEAREST;
-	public static final int _wGL_CLAMP = REPEAT;
+	public static final int _wGL_CLAMP = CLAMP_TO_EDGE;
 	public static final int _wGL_TEXTURE_WRAP_S = TEXTURE_WRAP_S;
 	public static final int _wGL_TEXTURE_WRAP_T = TEXTURE_WRAP_T;
 	public static final int _wGL_REPEAT = REPEAT;

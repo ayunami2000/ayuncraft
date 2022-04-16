@@ -213,7 +213,7 @@ public class EaglerAdapterImpl2 {
 	public static final int _wGL_SRC_COLOR = GL11.GL_SRC_COLOR;
 	public static final int _wGL_ONE = GL11.GL_ONE;
 	public static final int _wGL_NEAREST = GL11.GL_NEAREST;
-	public static final int _wGL_CLAMP = GL11.GL_REPEAT;
+	public static final int _wGL_CLAMP = GL12.GL_CLAMP_TO_EDGE;
 	public static final int _wGL_TEXTURE_WRAP_S = GL11.GL_TEXTURE_WRAP_S;
 	public static final int _wGL_TEXTURE_WRAP_T = GL11.GL_TEXTURE_WRAP_T;
 	public static final int _wGL_TEXTURE_MAX_LEVEL = GL12.GL_TEXTURE_MAX_LEVEL;
@@ -936,7 +936,7 @@ public class EaglerAdapterImpl2 {
 					}else {
 						rateLimitStatus = RateLimit.FAILED;
 					}
-				}else if(!socketIsAlive) {
+				}else if(!socketIsAlive && (blockedAddresses.contains(serverUriString) || rateLimitedAddresses.contains(serverUriString))) {
 					rateLimitStatus = RateLimit.LOCKED;
 				}
 			}

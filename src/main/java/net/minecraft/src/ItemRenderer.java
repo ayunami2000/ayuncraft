@@ -108,9 +108,9 @@ public class ItemRenderer {
 			}
 
 			EaglerAdapter.glDisable(EaglerAdapter.GL_RESCALE_NORMAL);
+			
+			EaglerAdapter.flipLightMatrix();
 		}
-		
-		EaglerAdapter.flipLightMatrix();
 
 		EaglerAdapter.glPopMatrix();
 	}

@@ -105,8 +105,11 @@ public abstract class Render {
 	 */
 	private void renderShadow(Entity par1Entity, double par2, double par4, double par6, float par8, float par9) {
 		EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
+		EaglerAdapter.glDisable(EaglerAdapter.GL_ALPHA_TEST);
 		EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
 		shadow.bindTexture();
+		EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_WRAP_S, EaglerAdapter.GL_CLAMP);
+		EaglerAdapter.glTexParameteri(EaglerAdapter.GL_TEXTURE_2D, EaglerAdapter.GL_TEXTURE_WRAP_T, EaglerAdapter.GL_CLAMP);
 		World var10 = this.getWorldFromRenderManager();
 		EaglerAdapter.glDepthMask(false);
 		float var11 = this.shadowSize;
@@ -150,6 +153,7 @@ public abstract class Render {
 		var30.draw();
 		EaglerAdapter.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
+		EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
 		EaglerAdapter.glDepthMask(true);
 	}
 

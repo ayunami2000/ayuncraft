@@ -1017,8 +1017,10 @@ public class NetClientHandler extends NetHandler {
 	public void handleMapData(Packet131MapData par1Packet131MapData) {
 		if (par1Packet131MapData.itemID == Item.map.itemID) {
 			ItemMap.getMPMapData(par1Packet131MapData.uniqueID, this.mc.theWorld).updateMPMapData(par1Packet131MapData.itemData);
+		} else if (par1Packet131MapData.itemID == 103) {
+			ItemMap.readAyunamiMapPacket(this.mc.theWorld, par1Packet131MapData.uniqueID, par1Packet131MapData.itemData);
 		} else {
-			System.err.println("Unknown itemid: " + par1Packet131MapData.uniqueID);
+			System.err.println("Unknown itemid: " + par1Packet131MapData.itemID);
 		}
 	}
 

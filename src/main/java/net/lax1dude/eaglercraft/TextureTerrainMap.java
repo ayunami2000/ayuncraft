@@ -54,10 +54,10 @@ public class TextureTerrainMap implements IconRegister {
 			this.maxV = (float)(originY + 48) / (float)map.height;
 			this.originX_center = originX + 16;
 			this.originY_center = originY + 16;
-			this.minU_center = (float)originX_center / (float)map.width;
-			this.minV_center = (float)originY_center / (float)map.height;
-			this.maxU_center = (float)(originX_center + 16) / (float)map.width;
-			this.maxV_center = (float)(originY_center + 16) / (float)map.height;
+			this.minU_center = (float)(originX_center + 0.1f) / (float)map.width;
+			this.minV_center = (float)(originY_center + 0.1f) / (float)map.height;
+			this.maxU_center = (float)(originX_center + 16 - 0.1f) / (float)map.width;
+			this.maxV_center = (float)(originY_center + 16 - 0.1f) / (float)map.height;
 		}
 
 		@Override

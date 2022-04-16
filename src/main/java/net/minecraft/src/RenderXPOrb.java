@@ -23,10 +23,10 @@ public class RenderXPOrb extends Render {
 		int var10 = par1EntityXPOrb.getTextureByXP();
 		tex_xporb.bindTexture();
 		Tessellator var11 = Tessellator.instance;
-		float var12 = (float) (var10 % 4 * 16 + 0) / 64.0F;
-		float var13 = (float) (var10 % 4 * 16 + 16) / 64.0F;
-		float var14 = (float) (var10 / 4 * 16 + 0) / 64.0F;
-		float var15 = (float) (var10 / 4 * 16 + 16) / 64.0F;
+		float var12 = (float) (var10 % 4 * 16 + 0 + 0.2f) / 64.0F;
+		float var13 = (float) (var10 % 4 * 16 + 16 - 0.2f) / 64.0F;
+		float var14 = (float) (var10 / 4 * 16 + 0 + 0.2f) / 64.0F;
+		float var15 = (float) (var10 / 4 * 16 + 16 - 0.2f) / 64.0F;
 		float var16 = 1.0F;
 		float var17 = 0.5F;
 		float var18 = 0.25F;

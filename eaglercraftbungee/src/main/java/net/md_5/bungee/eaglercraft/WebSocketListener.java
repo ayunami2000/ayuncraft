@@ -95,9 +95,9 @@ public class WebSocketListener extends WebSocketServer {
 			if(o instanceof PendingSocket) {
 				InetAddress realAddr = ((PendingSocket)o).realAddress;
 				arg1 = arg1.trim().toLowerCase();
+				QueryConnectionImpl con;
 				if(arg1.startsWith("accept:")) {
 					arg1 = arg1.substring(7).trim();
-					QueryConnectionImpl con;
 					WebsocketQueryEvent evt;
 					if(arg1.startsWith("motd")) {
 						if(info.isAllowMOTD()) {
@@ -121,7 +121,12 @@ public class WebSocketListener extends WebSocketServer {
 							return;
 						}
 					}else {
-						if(info.isAllowQuery()) {
+						if(QueryConnectionImpl.confirmHash != null && arg1.equalsIgnoreCase(QueryConnectionImpl.confirmHash)) {
+							QueryConnectionImpl.confirmHash = null;
+							arg0.send("OK");
+							arg0.close();
+							return;
+						}else if(info.isAllowQuery()) {
 							if(ratelimitQuery != null && !BanList.isBlockedBan(realAddr)) {
 								RateLimit l = ratelimitQuery.rateLimit(realAddr);
 								if(l.blocked()) {

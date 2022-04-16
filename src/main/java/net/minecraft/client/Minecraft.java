@@ -249,7 +249,7 @@ public class Minecraft implements Runnable {
 
 		String s = EaglerAdapter.getServerToJoinOnLaunch();
 		if(s != null) {
-			this.displayGuiScreen(new GuiScreenEditProfile(new GuiConnecting(new GuiMainMenu(), this, new ServerData("Eaglercraft Server", s))));
+			this.displayGuiScreen(new GuiScreenEditProfile(new GuiConnecting(new GuiMainMenu(), this, new ServerData("Eaglercraft Server", s, false))));
 		}else {
 			this.displayGuiScreen(new GuiScreenEditProfile(new GuiMainMenu()));
 		}

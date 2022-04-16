@@ -142,10 +142,11 @@ public class EntityFX extends Entity {
 	}
 
 	public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7) {
-		float var8 = (float) this.particleTextureIndexX / 16.0F;
-		float var9 = var8 + 0.0624375F;
-		float var10 = (float) this.particleTextureIndexY / 16.0F;
-		float var11 = var10 + 0.0624375F;
+		float fix = 0.001f;
+		float var8 = (float) this.particleTextureIndexX / 16.0F + fix;
+		float var9 = var8 + 0.0624375F - fix;
+		float var10 = (float) this.particleTextureIndexY / 16.0F + fix;
+		float var11 = var10 + 0.0624375F - fix;
 		float var12 = 0.1F * this.particleScale;
 
 		if (this.particleIcon != null) {

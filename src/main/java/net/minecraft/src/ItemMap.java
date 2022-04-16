@@ -1,8 +1,8 @@
 package net.minecraft.src;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
-
-
 
 public class ItemMap extends ItemMapBase {
 	protected ItemMap(int par1) {
@@ -254,6 +254,23 @@ public class ItemMap extends ItemMapBase {
 				par3List.add("Scaling at 1:" + (1 << var5.scale));
 				par3List.add("(Level " + var5.scale + "/" + 4 + ")");
 			}
+		}
+	}
+
+	public static void readAyunamiMapPacket(WorldClient theWorld, short mapId, byte[] data) {
+		try {
+			String var2 = "map_" + mapId;
+			MapData var3 = (MapData) theWorld.loadItemData(MapData.class, var2);
+
+			if (var3 == null) {
+				var3 = new MapData(var2);
+				theWorld.setItemData(var2, var3);
+			}
+			
+			var3.readAyunamiMapPacket(new ByteArrayInputStream(data));
+		}catch(IOException e) {
+			System.err.println("Failed to read AyunamiMap packet! " + e.toString());
+			e.printStackTrace();
 		}
 	}
 }
