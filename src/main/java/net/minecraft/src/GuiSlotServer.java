@@ -41,7 +41,7 @@ class GuiSlotServer extends GuiSlot {
 
 			if (par2 && var5) {
 				GuiMultiplayer.func_74008_b(this.parentGui, par1);
-			} else if (var6 && GuiScreen.isShiftKeyDown() && var3 >= 0 && var3 < GuiMultiplayer.getInternetServerList(this.parentGui).countServers()) {
+			} else if (var6 && GuiScreen.isShiftKeyDown() && var3 > ServerList.forcedServers.size() && var3 < GuiMultiplayer.getInternetServerList(this.parentGui).countServers()) {
 				GuiMultiplayer.getInternetServerList(this.parentGui).swapServers(var3, GuiMultiplayer.getSelectedServer(this.parentGui));
 			}
 		}

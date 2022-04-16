@@ -3,6 +3,7 @@ package net.minecraft.src;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -20,9 +21,12 @@ public class ServerList {
 
 	/** List of ServerData instances. */
 	private final List<ServerData> servers = new ArrayList();
+	private final List<ServerData> allServers = new ArrayList();
 	
 	public static final List<ServerData> forcedServers = new ArrayList();
 	private static final Set<String> motdLocks = new HashSet();
+	
+	public static boolean hideDownDefaultServers = false;
 
 	public ServerList(Minecraft par1Minecraft) {
 		this.mc = par1Minecraft;
@@ -32,13 +36,14 @@ public class ServerList {
 	public static void loadDefaultServers(String base64) {
 		try {
 			NBTTagCompound nbt = CompressedStreamTools.readUncompressed(Base64.decodeBase64(base64));
-			if(nbt.getBoolean("profanity")) {
-				ConfigConstants.profanity = true;
-			}
+			ConfigConstants.profanity = nbt.getBoolean("profanity");
+			hideDownDefaultServers = nbt.getBoolean("hide_down");
 			forcedServers.clear();
 			NBTTagList list = nbt.getTagList("servers");
 			for (int i = 0; i < list.tagCount(); ++i) {
-				forcedServers.add(ServerData.getServerDataFromNBTCompound((NBTTagCompound) list.tagAt(i)));
+				NBTTagCompound tag = (NBTTagCompound) list.tagAt(i);
+				tag.setBoolean("default", true);
+				forcedServers.add(ServerData.getServerDataFromNBTCompound(tag));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -53,14 +58,18 @@ public class ServerList {
 	public void loadServerList() {
 		freeServerIcons();
 		this.servers.clear();
+		this.allServers.clear();
 		for(ServerData dat : forcedServers) {
 			dat.pingSentTime = -1l;
 			dat.hasPing = false;
 			this.servers.add(dat);
+			this.allServers.add(dat);
 		}
 		NBTTagList servers = LocalStorageManager.gameSettingsStorage.getTagList("servers");
 		for (int i = 0; i < servers.tagCount(); ++i) {
-			this.servers.add(ServerData.getServerDataFromNBTCompound((NBTTagCompound) servers.tagAt(i)));
+			ServerData dat = ServerData.getServerDataFromNBTCompound((NBTTagCompound) servers.tagAt(i));
+			this.servers.add(dat);
+			this.allServers.add(dat);
 		}
 	}
 
@@ -70,8 +79,8 @@ public class ServerList {
 	 */
 	public void saveServerList() {
 		NBTTagList servers = new NBTTagList();
-		for(int i = forcedServers.size(); i < this.servers.size(); ++i) {
-			servers.appendTag(((ServerData) this.servers.get(i)).getNBTCompound());
+		for(int i = forcedServers.size(); i < this.allServers.size(); ++i) {
+			servers.appendTag(((ServerData) this.allServers.get(i)).getNBTCompound());
 		}
 		LocalStorageManager.gameSettingsStorage.setTag("servers", servers);
 		LocalStorageManager.saveStorageG();
@@ -89,6 +98,7 @@ public class ServerList {
 	 */
 	public void removeServerData(int par1) {
 		ServerData dat = this.servers.remove(par1);
+		this.allServers.remove(dat);
 		if(dat != null) {
 			dat.freeIcon();
 		}
@@ -100,7 +110,8 @@ public class ServerList {
 	public void addServerData(ServerData par1ServerData) {
 		par1ServerData.pingSentTime = -1l;
 		par1ServerData.hasPing = false;
-		this.servers.add(par1ServerData);
+		this.allServers.add(par1ServerData);
+		refreshServerPing();
 	}
 
 	/**
@@ -113,22 +124,21 @@ public class ServerList {
 	/**
 	 * Takes two list indexes, and swaps their order around.
 	 */
-	public void swapServers(int par1, int par2) {
+	public void swapServers(int par1, int par2) { // will be fixed eventually
+		/*
 		ServerData var3 = this.getServerData(par1);
-		this.servers.set(par1, this.getServerData(par2));
+		ServerData dat = this.getServerData(par2);
+		this.servers.set(par1, dat);
 		this.servers.set(par2, var3);
+		int i = this.allServers.indexOf(dat);
+		this.allServers.set(par1, this.allServers.get(i));
+		this.allServers.set(i, var3);
 		this.saveServerList();
-	}
-
-	/**
-	 * Sets the given index in the list to the given ServerData instance.
-	 */
-	public void setServer(int par1, ServerData par2ServerData) {
-		this.servers.set(par1, par2ServerData);
+		*/
 	}
 	
 	public void freeServerIcons() {
-		for(ServerData dat : servers) {
+		for(ServerData dat : allServers) {
 			if(dat.currentQuery != null && dat.currentQuery.isQueryOpen()) {
 				dat.currentQuery.close();
 			}
@@ -142,6 +152,8 @@ public class ServerList {
 	}
 	
 	public void refreshServerPing() {
+		this.servers.clear();
+		this.servers.addAll(this.allServers);
 		for(ServerData dat : servers) {
 			if(dat.currentQuery != null && dat.currentQuery.isQueryOpen()) {
 				dat.currentQuery.close();
@@ -153,7 +165,9 @@ public class ServerList {
 	
 	public void updateServerPing() {
 		int total = 0;
-		for(ServerData dat : servers) {
+		Iterator<ServerData> itr = servers.iterator();
+		while(itr.hasNext()) {
+			ServerData dat = itr.next();
 			if(dat.pingSentTime <= 0l) {
 				dat.pingToServer = -2l;
 				String addr = dat.serverIP;
@@ -217,6 +231,9 @@ public class ServerList {
 				if(!dat.currentQuery.isQueryOpen() && dat.pingSentTime > 0l && !dat.hasPing) {
 					dat.pingToServer = -1l;
 					dat.hasPing = true;
+				}
+				if(ServerList.hideDownDefaultServers && dat.isDefault && dat.pingToServer == -1l && dat.hasPing == true) {
+					itr.remove();
 				}
 			}
 			if(total >= 4) {

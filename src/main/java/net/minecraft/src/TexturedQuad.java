@@ -16,8 +16,8 @@ public class TexturedQuad {
 
 	public TexturedQuad(PositionTextureVertex[] par1ArrayOfPositionTextureVertex, Vec3 normal, int par2, int par3, int par4, int par5, float par6, float par7) {
 		this(par1ArrayOfPositionTextureVertex);
-		float var8 = 0.0F / par6;
-		float var9 = 0.0F / par7;
+		float var8 = 0.2F / par6;
+		float var9 = 0.2F / par7;
 		par1ArrayOfPositionTextureVertex[0] = par1ArrayOfPositionTextureVertex[0].setTexturePosition((float) par4 / par6 - var8, (float) par3 / par7 + var9);
 		par1ArrayOfPositionTextureVertex[1] = par1ArrayOfPositionTextureVertex[1].setTexturePosition((float) par2 / par6 + var8, (float) par3 / par7 + var9);
 		par1ArrayOfPositionTextureVertex[2] = par1ArrayOfPositionTextureVertex[2].setTexturePosition((float) par2 / par6 + var8, (float) par5 / par7 - var9);

@@ -16,15 +16,16 @@ public class RenderArrow extends Render {
 		EaglerAdapter.glRotatef(par1EntityArrow.prevRotationPitch + (par1EntityArrow.rotationPitch - par1EntityArrow.prevRotationPitch) * par9, 0.0F, 0.0F, 1.0F);
 		Tessellator var10 = Tessellator.instance;
 		byte var11 = 0;
-		float var12 = 0.0F;
-		float var13 = 0.5F;
-		float var14 = (float) (0 + var11 * 10) / 32.0F;
-		float var15 = (float) (5 + var11 * 10) / 32.0F;
-		float var16 = 0.0F;
-		float var17 = 0.15625F;
-		float var18 = (float) (5 + var11 * 10) / 32.0F;
-		float var19 = (float) (10 + var11 * 10) / 32.0F;
-		float var20 = 0.05625F;
+		float fix = 0.002f;
+		float var12 = 0.0F + fix;
+		float var13 = 0.5F - fix;
+		float var14 = (float) (0 + var11 * 10) / 32.0F + fix;
+		float var15 = (float) (5 + var11 * 10) / 32.0F - fix;
+		float var16 = 0.0F + fix;
+		float var17 = 0.15625F - fix;
+		float var18 = (float) (5 + var11 * 10) / 32.0F + fix;
+		float var19 = (float) (10 + var11 * 10) / 32.0F - fix;
+		float var20 = 0.05625F + fix;
 		EaglerAdapter.glEnable(EaglerAdapter.GL_RESCALE_NORMAL);
 		float var21 = (float) par1EntityArrow.arrowShake - par9;
 
@@ -53,7 +54,7 @@ public class RenderArrow extends Render {
 
 		for (int var23 = 0; var23 < 4; ++var23) {
 			EaglerAdapter.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
-			EaglerAdapter.glNormal3f(0.0F, 0.0F, var20);
+			EaglerAdapter.glNormal3f(0.0F, 0.0F, -var20);
 			var10.startDrawingQuads();
 			var10.addVertexWithUV(-8.0D, -2.0D, 0.0D, (double) var12, (double) var14);
 			var10.addVertexWithUV(8.0D, -2.0D, 0.0D, (double) var13, (double) var14);

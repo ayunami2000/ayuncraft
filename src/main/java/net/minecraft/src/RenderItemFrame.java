@@ -113,10 +113,11 @@ public class RenderItemFrame extends Render {
 				EaglerAdapter.glDisable(EaglerAdapter.GL_CULL_FACE);
 				var4.startDrawingQuads();
 				byte var5 = 7;
-				var4.addVertexWithUV((double) (0 - var5), (double) (128 + var5), 0.0D, 0.0D, 1.0D);
-				var4.addVertexWithUV((double) (128 + var5), (double) (128 + var5), 0.0D, 1.0D, 1.0D);
-				var4.addVertexWithUV((double) (128 + var5), (double) (0 - var5), 0.0D, 1.0D, 0.0D);
-				var4.addVertexWithUV((double) (0 - var5), (double) (0 - var5), 0.0D, 0.0D, 0.0D);
+				double d = 0.001d;
+				var4.addVertexWithUV((double) (0 - var5), (double) (128 + var5), 0.0D, 0.0D + d, 1.0D - d);
+				var4.addVertexWithUV((double) (128 + var5), (double) (128 + var5), 0.0D, 1.0D - d, 1.0D - d);
+				var4.addVertexWithUV((double) (128 + var5), (double) (0 - var5), 0.0D, 1.0D - d, 0.0D + d);
+				var4.addVertexWithUV((double) (0 - var5), (double) (0 - var5), 0.0D, 0.0D + d, 0.0D + d);
 				var4.draw();
 				EaglerAdapter.glEnable(EaglerAdapter.GL_CULL_FACE);
 				EaglerAdapter.glTranslatef(0.0F, 0.0F, -2.0F);
