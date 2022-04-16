@@ -191,12 +191,12 @@ public class FontRenderer {
 		float var3 = (float) (par1 % 16 * 8);
 		float var4 = (float) (par1 / 16 * 8);
 		float var5 = par2 ? 1.0F : 0.0F;
-		float var6 = (float) this.charWidth[par1] - 0.02F;
+		float var6 = (float) this.charWidth[par1] - 0.2F;
 		Tessellator t = Tessellator.instance;
-		t.addVertexWithUV(this.posX + 0.02F + var5, this.posY + 0.02F, 0.0F, (var3 + 0.02F) / 128.0F, (var4 + 0.02F) / 128.0F);
-		t.addVertexWithUV(this.posX + 0.02F - var5, this.posY + 7.98F, 0.0F, (var3 + 0.02F) / 128.0F, (var4 + 7.98F) / 128.0F);
-		t.addVertexWithUV(this.posX + var6 - var5, this.posY + 7.98F, 0.0F, (var3 + var6) / 128.0F, (var4 + 7.98F) / 128.0F);
-		t.addVertexWithUV(this.posX + var6 + var5, this.posY + 0.02F, 0.0F, (var3 + var6) / 128.0F, (var4 + 0.02F) / 128.0F);
+		t.addVertexWithUV(this.posX + 0.05F + var5, this.posY + 0.05F, 0.0F, (var3 + 0.1F) / 128.0F, (var4 + 0.1F) / 128.0F);
+		t.addVertexWithUV(this.posX + 0.05F - var5, this.posY + 7.95F, 0.0F, (var3 + 0.1F) / 128.0F, (var4 + 7.8F) / 128.0F);
+		t.addVertexWithUV(this.posX + var6 - var5, this.posY + 7.95F, 0.0F, (var3 + var6) / 128.0F, (var4 + 7.8F) / 128.0F);
+		t.addVertexWithUV(this.posX + var6 + var5, this.posY + 0.05F, 0.0F, (var3 + var6) / 128.0F, (var4 + 0.1F) / 128.0F);
 		return (float) this.charWidth[par1];
 	}
 
