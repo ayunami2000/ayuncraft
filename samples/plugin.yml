@@ -1,0 +1,11 @@
+name: EaglerSamplesPlugin
+main: plugin.EaglerSamplesPlugin
+version: 1.0
+author: lax1dude
+description: eagler
+depend: []
+commands:
+   samplemap:
+      description: test ayunami map system
+      usage: /samplemap <get|disable|set> [mapid] [image file] [16bpp|24bpp] [compress]
+      permission: eaglersamples.samplemap

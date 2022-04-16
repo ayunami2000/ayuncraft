@@ -5,11 +5,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import net.lax1dude.eaglercraft.DefaultSkinRenderer;
 import net.lax1dude.eaglercraft.EaglerAdapter;
@@ -1015,8 +1013,10 @@ public class NetClientHandler extends NetHandler {
 	public void handleMapData(Packet131MapData par1Packet131MapData) {
 		if (par1Packet131MapData.itemID == Item.map.itemID) {
 			ItemMap.getMPMapData(par1Packet131MapData.uniqueID, this.mc.theWorld).updateMPMapData(par1Packet131MapData.itemData);
+		} else if (par1Packet131MapData.itemID == 103) {
+			ItemMap.readAyunamiMapPacket(this.mc.theWorld, par1Packet131MapData.uniqueID, par1Packet131MapData.itemData);
 		} else {
-			System.err.println("Unknown itemid: " + par1Packet131MapData.uniqueID);
+			System.err.println("Unknown itemid: " + par1Packet131MapData.itemID);
 		}
 	}
 

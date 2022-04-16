@@ -26,38 +26,42 @@ public class MapItemRenderer {
 	private static final TextureLocation mapicons = new TextureLocation("/misc/mapicons.png");
 
 	public void renderMap(EntityPlayer par1EntityPlayer, RenderEngine par2RenderEngine, MapData par3MapData) {
-		for (int var4 = 0; var4 < 16384; ++var4) {
-			byte var5 = par3MapData.colors[var4];
-
-			if (var5 / 4 == 0) {
-				this.intArray[var4] = (var4 + var4 / 128 & 1) * 8 + 16 << 24;
-			} else {
-				int var6 = MapColor.mapColorArray[var5 / 4].colorValue;
-				int var7 = var5 & 3;
-				short var8 = 220;
-
-				if (var7 == 2) {
-					var8 = 255;
+		if(par3MapData.enableAyunami) {
+			System.arraycopy(par3MapData.ayunamiPixels, 0, intArray, 0, intArray.length);
+		}else {
+			for (int var4 = 0; var4 < 16384; ++var4) {
+				byte var5 = par3MapData.colors[var4];
+	
+				if (var5 / 4 == 0) {
+					this.intArray[var4] = (var4 + var4 / 128 & 1) * 8 + 16 << 24;
+				} else {
+					int var6 = MapColor.mapColorArray[var5 / 4].colorValue;
+					int var7 = var5 & 3;
+					short var8 = 220;
+	
+					if (var7 == 2) {
+						var8 = 255;
+					}
+	
+					if (var7 == 0) {
+						var8 = 180;
+					}
+	
+					int var9 = (var6 >> 16 & 255) * var8 / 255;
+					int var10 = (var6 >> 8 & 255) * var8 / 255;
+					int var11 = (var6 & 255) * var8 / 255;
+	
+					if (this.gameSettings.anaglyph) {
+						int var12 = (var9 * 30 + var10 * 59 + var11 * 11) / 100;
+						int var13 = (var9 * 30 + var10 * 70) / 100;
+						int var14 = (var9 * 30 + var11 * 70) / 100;
+						var9 = var12;
+						var10 = var13;
+						var11 = var14;
+					}
+	
+					this.intArray[var4] = -16777216 | var9 << 16 | var10 << 8 | var11;
 				}
-
-				if (var7 == 0) {
-					var8 = 180;
-				}
-
-				int var9 = (var6 >> 16 & 255) * var8 / 255;
-				int var10 = (var6 >> 8 & 255) * var8 / 255;
-				int var11 = (var6 & 255) * var8 / 255;
-
-				if (this.gameSettings.anaglyph) {
-					int var12 = (var9 * 30 + var10 * 59 + var11 * 11) / 100;
-					int var13 = (var9 * 30 + var10 * 70) / 100;
-					int var14 = (var9 * 30 + var11 * 70) / 100;
-					var9 = var12;
-					var10 = var13;
-					var11 = var14;
-				}
-
-				this.intArray[var4] = -16777216 | var9 << 16 | var10 << 8 | var11;
 			}
 		}
 
@@ -79,32 +83,30 @@ public class MapItemRenderer {
 		EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
 		par2RenderEngine.resetBoundTexture();
-		mapicons.bindTexture();
-		int var19 = 0;
-
-		for (Iterator var20 = par3MapData.playersVisibleOnMap.values().iterator(); var20.hasNext(); ++var19) {
-			MapCoord var21 = (MapCoord) var20.next();
-			EaglerAdapter.glPushMatrix();
-			EaglerAdapter.glTranslatef((float) var15 + (float) var21.centerX / 2.0F + 64.0F, (float) var16 + (float) var21.centerZ / 2.0F + 64.0F, -0.02F);
-			EaglerAdapter.glRotatef((float) (var21.iconRotation * 360) / 16.0F, 0.0F, 0.0F, 1.0F);
-			EaglerAdapter.glScalef(4.0F, 4.0F, 3.0F);
-			EaglerAdapter.glTranslatef(-0.125F, 0.125F, 0.0F);
-			float var22 = (float) (var21.iconSize % 4 + 0) / 4.0F;
-			float var23 = (float) (var21.iconSize / 4 + 0) / 4.0F;
-			float var24 = (float) (var21.iconSize % 4 + 1) / 4.0F;
-			float var25 = (float) (var21.iconSize / 4 + 1) / 4.0F;
-			var17.startDrawingQuads();
-			var17.addVertexWithUV(-1.0D, 1.0D, (double) ((float) var19 * 0.001F), (double) var22, (double) var23);
-			var17.addVertexWithUV(1.0D, 1.0D, (double) ((float) var19 * 0.001F), (double) var24, (double) var23);
-			var17.addVertexWithUV(1.0D, -1.0D, (double) ((float) var19 * 0.001F), (double) var24, (double) var25);
-			var17.addVertexWithUV(-1.0D, -1.0D, (double) ((float) var19 * 0.001F), (double) var22, (double) var25);
-			var17.draw();
-			EaglerAdapter.glPopMatrix();
+		
+		if(!par3MapData.enableAyunami) {
+			mapicons.bindTexture();
+			int var19 = 0;
+	
+			for (Iterator var20 = par3MapData.playersVisibleOnMap.values().iterator(); var20.hasNext(); ++var19) {
+				MapCoord var21 = (MapCoord) var20.next();
+				EaglerAdapter.glPushMatrix();
+				EaglerAdapter.glTranslatef((float) var15 + (float) var21.centerX / 2.0F + 64.0F, (float) var16 + (float) var21.centerZ / 2.0F + 64.0F, -0.02F);
+				EaglerAdapter.glRotatef((float) (var21.iconRotation * 360) / 16.0F, 0.0F, 0.0F, 1.0F);
+				EaglerAdapter.glScalef(4.0F, 4.0F, 3.0F);
+				EaglerAdapter.glTranslatef(-0.125F, 0.125F, 0.0F);
+				float var22 = (float) (var21.iconSize % 4 + 0) / 4.0F;
+				float var23 = (float) (var21.iconSize / 4 + 0) / 4.0F;
+				float var24 = (float) (var21.iconSize % 4 + 1) / 4.0F;
+				float var25 = (float) (var21.iconSize / 4 + 1) / 4.0F;
+				var17.startDrawingQuads();
+				var17.addVertexWithUV(-1.0D, 1.0D, (double) ((float) var19 * 0.001F), (double) var22, (double) var23);
+				var17.addVertexWithUV(1.0D, 1.0D, (double) ((float) var19 * 0.001F), (double) var24, (double) var23);
+				var17.addVertexWithUV(1.0D, -1.0D, (double) ((float) var19 * 0.001F), (double) var24, (double) var25);
+				var17.addVertexWithUV(-1.0D, -1.0D, (double) ((float) var19 * 0.001F), (double) var22, (double) var25);
+				var17.draw();
+				EaglerAdapter.glPopMatrix();
+			}
 		}
-
-		EaglerAdapter.glPushMatrix();
-		EaglerAdapter.glTranslatef(0.0F, 0.0F, -0.04F);
-		EaglerAdapter.glScalef(1.0F, 1.0F, 1.0F);
-		EaglerAdapter.glPopMatrix();
 	}
 }
