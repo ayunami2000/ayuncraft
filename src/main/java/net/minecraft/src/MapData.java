@@ -1,10 +1,16 @@
 package net.minecraft.src;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.jcraft.jzlib.InflaterInputStream;
 
 
 
@@ -240,4 +246,130 @@ public class MapData extends WorldSavedData {
 
 		return var2;
 	}
+	
+	
+	public boolean enableAyunami = false;
+	public int[] ayunamiPixels = null;
+	private int[] ayunamiPallete = null;
+	
+	
+	/**
+	 * Operations:
+	 * 
+	 *   - 0: disable engine
+	 *   - 1: compressed data
+	 *   
+	 *   - 2: set pixels R8_G8_B8
+	 *   - 3: set pixels R5_G6_B5
+	 *   - 4: set pallete R8_G8_B8
+	 *   - 5: set pallete R5_G6_B5
+	 *   - 6: set pixels via pallete
+	 *   - 7: set pallete and pixels R8_G8_B8
+	 *   - 8: set pallete and pixels R5_G6_B5
+	 * 
+	 */
+	public void readAyunamiMapPacket(InputStream dat) throws IOException {
+		int operation = dat.read();
+		DataInputStream ddat;
+		switch(operation) {
+			case 0:
+				ayunamiDisable();
+				break;
+			case 1:
+				readAyunamiMapPacket(new InflaterInputStream(dat));
+				break;
+			case 2:
+				ayunamiSetPixels_R8_G8_B8(new DataInputStream(dat));
+				break;
+			case 3:
+				ayunamiSetPixels_R5_G6_B5(new DataInputStream(dat));
+				break;
+			case 4:
+				ayunamiSetPallete_R8_G8_B8(new DataInputStream(dat));
+				break;
+			case 5:
+				ayunamiSetPallete_R5_G6_B5(new DataInputStream(dat));
+				break;
+			case 6:
+				ayunamiSetPixelsFromPallete(new DataInputStream(dat));
+				break;
+			case 7:
+				ddat = new DataInputStream(dat);
+				ayunamiSetPallete_R8_G8_B8(ddat);
+				ayunamiSetPixelsFromPallete(ddat);
+				break;
+			case 8:
+				ddat = new DataInputStream(dat);
+				ayunamiSetPallete_R5_G6_B5(ddat);
+				ayunamiSetPixelsFromPallete(ddat);
+				break;
+			default:
+				throw new IOException("Unknown map packet type: " + operation);
+		}
+	}
+	
+	private void ayunamiDisable() {
+		if(enableAyunami) {
+			enableAyunami = false;
+			ayunamiPixels = null;
+			ayunamiPallete = null;
+		}
+	}
+	
+	private void ayunamiEnable() {
+		if(!enableAyunami) {
+			enableAyunami = true;
+			ayunamiPixels = new int[16384];
+			ayunamiPallete = new int[256];
+		}
+	}
+
+	private void ayunamiSetPixels_R8_G8_B8(DataInputStream dat) throws IOException {
+		ayunamiEnable();
+		for(int i = 0; i < ayunamiPixels.length; ++i) {
+			ayunamiPixels[i] = -16777216 | (dat.read() << 16) | (dat.read() << 8) | dat.read();
+		}
+	}
+
+	private void ayunamiSetPixels_R5_G6_B5(DataInputStream dat) throws IOException {
+		ayunamiEnable();
+		for(int i = 0; i < ayunamiPixels.length; ++i) {
+			int j = (int)dat.readShort() & 0xFFFF;
+			int r = ((j >> 11) & 0x1F);
+			int g = ((j >> 5) & 0x3F);
+			int b = (j & 0x1F);
+			ayunamiPixels[i] = -16777216 | (r << 19) | (g << 10) | (b << 3);
+		}
+	}
+
+	private void ayunamiSetPallete_R8_G8_B8(DataInputStream dat) throws IOException {
+		ayunamiEnable();
+		int len = dat.read();
+		ayunamiPallete = new int[len];
+		for(int i = 0; i < len; ++i) {
+			ayunamiPallete[i] = -16777216 | (dat.read() << 16) | (dat.read() << 8) | dat.read();
+		}
+		
+	}
+
+	private void ayunamiSetPallete_R5_G6_B5(DataInputStream dat) throws IOException {
+		ayunamiEnable();
+		int len = dat.read();
+		ayunamiPallete = new int[len];
+		for(int i = 0; i < len; ++i) {
+			int j = (int)dat.readShort() & 0xFFFF;
+			int r = ((j >> 11) & 0x1F);
+			int g = ((j >> 5) & 0x3F);
+			int b = (j & 0x1F);
+			ayunamiPixels[i] = -16777216 | (r << 19) | (g << 10) | (b << 3);
+		}
+	}
+
+	private void ayunamiSetPixelsFromPallete(DataInputStream dat) throws IOException {
+		ayunamiEnable();
+		for(int i = 0; i < ayunamiPixels.length; ++i) {
+			ayunamiPixels[i] = ayunamiPallete[dat.read()];
+		}
+	}
+	
 }

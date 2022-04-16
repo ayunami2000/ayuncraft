@@ -908,7 +908,7 @@ public class EaglerAdapterImpl2 {
 					}else {
 						rateLimitStatus = RateLimit.FAILED;
 					}
-				}else if(!socketIsAlive) {
+				}else if(!socketIsAlive && (blockedAddresses.contains(serverUriString) || rateLimitedAddresses.contains(serverUriString))) {
 					rateLimitStatus = RateLimit.LOCKED;
 				}
 			}
