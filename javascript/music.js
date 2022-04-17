@@ -76,7 +76,7 @@ window.startmusic=function(v){
 	var url="";
 	if(usealt==0){
 		songs=shuffle(songs);
-		url=insturl+"/latest_version?download_widget={%22id%22%3A%22"+songs[0]+"%22%2C%22itag%22%3A%22251%22%2C%22title%22%3A%22song.webm%22}";
+		url=insturl+"/latest_version?id="+songs[0]+"&itag=251";
 	}else if(usealt==1){
 		url="https://nightride.fm/stream/chillsynth.m4a";
 	}else if(usealt==2){
