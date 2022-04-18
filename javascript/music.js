@@ -109,3 +109,10 @@ window.volmusic=function(v){
 window.playingmusic=function(){
 	return usealt==2||aud.playing||loading;
 };
+
+navigator.mediaSession.setActionHandler('play', function() {});
+navigator.mediaSession.setActionHandler('pause', function() {});
+navigator.mediaSession.setActionHandler('seekbackward', function() {});
+navigator.mediaSession.setActionHandler('seekforward', function() {});
+navigator.mediaSession.setActionHandler('previoustrack', function() {});
+navigator.mediaSession.setActionHandler('nexttrack', function() {});

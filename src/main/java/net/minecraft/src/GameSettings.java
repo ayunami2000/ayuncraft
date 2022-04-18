@@ -5,8 +5,6 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.minecraft.client.Minecraft;
 
-import java.util.Arrays;
-
 public class GameSettings {
 	public static boolean useDefaultProtocol = false;
 	public static boolean useProxy = false;
