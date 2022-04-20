@@ -607,6 +607,73 @@ public class EaglerAdapterImpl2 {
 		return GL20.glGetAttribLocation(p1.obj, p2);
 	}
 	
+	public static final boolean isVideoSupported() {
+		return false;
+	}
+	public static final void loadVideo(String src, boolean autoplay) {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final void loadVideo(String src, boolean autoplay, String setJavascriptPointer) {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final void loadVideo(String src, boolean autoplay, String setJavascriptPointer, String javascriptOnloadFunction) {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final void bufferVideo(String src, int ttl) {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final void unloadVideo() {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final boolean isVideoLoaded() {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final boolean isVideoPaused() {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final void setVideoPaused(boolean pause) {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final void setVideoLoop(boolean pause) {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final void setVideoVolume(float x, float y, float z, float v) {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final void updateVideoTexture() {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final void bindVideoTexture() {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final int getVideoWidth() {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final int getVideoHeight() {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final float getVideoCurrentTime() {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final void setVideoCurrentTime(float seconds) {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final float getVideoDuration() {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+	public static final void setVideoFrameRate(float seconds) {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+
+	public static final int VIDEO_ERR_NONE = -1;
+	public static final int VIDEO_ERR_ABORTED = 1;
+	public static final int VIDEO_ERR_NETWORK = 2;
+	public static final int VIDEO_ERR_DECODE = 3;
+	public static final int VIDEO_ERR_SRC_NOT_SUPPORTED = 4;
+
+	public static final int getVideoError() {
+		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
 
 	// =======================================================================================
 	// =======================================================================================
@@ -1119,10 +1186,10 @@ public class EaglerAdapterImpl2 {
 		return s;
 	}
 	public static final void setListenerPos(float x, float y, float z, float vx, float vy, float vz, float pitch, float yaw) {
-		float var11 = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
-		float var12 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
+		float var11 = -MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
+		float var12 = -MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
 		float var13 = -var12;
-		float var14 = -MathHelper.sin(-pitch * 0.017453292F - (float) Math.PI);
+		float var14 = MathHelper.sin(-pitch * 0.017453292F - (float) Math.PI);
 		float var15 = -var11;
 		float var16 = 0.0F;
 		float var17 = 1.0F;

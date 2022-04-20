@@ -1,8 +1,11 @@
 package net.minecraft.src;
 
 import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.List;
+
+import net.lax1dude.eaglercraft.EaglerAdapter;
 
 public class ItemMap extends ItemMapBase {
 	protected ItemMap(int par1) {
@@ -270,6 +273,90 @@ public class ItemMap extends ItemMapBase {
 			var3.readAyunamiMapPacket(new ByteArrayInputStream(data));
 		}catch(IOException e) {
 			System.err.println("Failed to read AyunamiMap packet! " + e.toString());
+			e.printStackTrace();
+		}
+	}
+	
+	private static MapData getMapById(WorldClient theWorld, int id) {
+		String var2 = "map_" + id;
+		MapData var3 = (MapData) theWorld.loadItemData(MapData.class, var2);
+		if (var3 == null) {
+			var3 = new MapData(var2);
+			theWorld.setItemData(var2, var3);
+		}
+		return var3;
+	}
+
+	public static void processVideoMap(WorldClient theWorld, byte[] data) {
+		if(!EaglerAdapter.isVideoSupported()) {
+			return;
+		}
+		try {
+			DataInputStream dat = new DataInputStream(new ByteArrayInputStream(data));
+			int op = dat.read();
+			if(op == 0) {
+				int count = dat.read();
+				int w = (count >> 4) & 0xF;
+				int h = count & 0xF;
+				for(int y = 0; y < h; ++y) {
+					for(int x = 0; x < w; ++x) {
+						getMapById(theWorld, dat.readUnsignedShort()).enableVideoPlayback = false;
+					}
+				}
+				EaglerAdapter.unloadVideo();
+			}else if(op == 8) {
+				int ttl = dat.readInt();
+				String src = dat.readUTF();
+				EaglerAdapter.bufferVideo(src, ttl);
+			}else {
+				boolean fullResetPacket = (op & 2) == 2;
+				boolean positionPacket = (op & 4) == 4;
+
+				int fps = 0;
+				int len = 0;
+				String url = null;
+				if(fullResetPacket) {
+					int count = dat.read();
+					int w = (count >> 4) & 0xF;
+					int h = count & 0xF;
+					float wf = 1.0f / w;
+					float hf = 1.0f / h;
+					for(int y = 0; y < h; ++y) {
+						for(int x = 0; x < w; ++x) {
+							MapData mp = getMapById(theWorld, dat.readUnsignedShort());
+							mp.videoX1 = x * wf;
+							mp.videoY1 = y * hf;
+							mp.videoX2 = mp.videoX1 + wf;
+							mp.videoY2 = mp.videoY1 + hf;
+							mp.enableVideoPlayback = true;
+						}
+					}
+					fps = dat.read();
+					len = dat.readInt();
+					url = dat.readUTF();
+				}
+				
+				if(positionPacket) {
+					float v = dat.readFloat();
+					EaglerAdapter.setVideoVolume((float)dat.readDouble(), (float)dat.readDouble(), (float)dat.readDouble(), v);
+				}
+				
+				if(fullResetPacket) {
+					EaglerAdapter.setVideoFrameRate(fps);
+					EaglerAdapter.loadVideo(url, true);
+				}
+				
+				int time = dat.readInt();
+				int timeNow = (int)(EaglerAdapter.getVideoCurrentTime() * 1000.0f);
+				if(MathHelper.abs_int(time - timeNow) > 1000) {
+					EaglerAdapter.setVideoCurrentTime(time * 0.001f);
+				}
+				
+				EaglerAdapter.setVideoLoop(dat.readBoolean());
+				EaglerAdapter.setVideoPaused(dat.readBoolean());
+			}
+		}catch(IOException e) {
+			System.err.println("Failed to read video map packet! " + e.toString());
 			e.printStackTrace();
 		}
 	}

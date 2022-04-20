@@ -38,6 +38,8 @@ public class ServerList {
 			NBTTagCompound nbt = CompressedStreamTools.readUncompressed(Base64.decodeBase64(base64));
 			ConfigConstants.profanity = nbt.getBoolean("profanity");
 			hideDownDefaultServers = nbt.getBoolean("hide_down");
+			ConfigConstants.ayonullTitle = nbt.hasKey("serverListTitle") ? nbt.getString("serverListTitle") : null;
+			ConfigConstants.ayonullLink = nbt.hasKey("serverListLink") ? nbt.getString("serverListLink") : null;
 			forcedServers.clear();
 			NBTTagList list = nbt.getTagList("servers");
 			for (int i = 0; i < list.tagCount(); ++i) {

@@ -3,6 +3,7 @@ package net.minecraft.src;
 import java.util.Collections;
 import java.util.List;
 
+import net.lax1dude.eaglercraft.ConfigConstants;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 
 public class GuiMultiplayer extends GuiScreen {
@@ -287,8 +288,23 @@ public class GuiMultiplayer extends GuiScreen {
 		this.lagTooltip = null;
 		StringTranslate var4 = StringTranslate.getInstance();
 		this.drawDefaultBackground();
+		
+		boolean showAyonull = ConfigConstants.ayonullTitle != null && ConfigConstants.ayonullLink != null;
+		
+		this.serverSlotContainer.top = showAyonull ? 42 : 32;
 		this.serverSlotContainer.drawScreen(par1, par2, par3);
-		this.drawCenteredString(this.fontRenderer, var4.translateKey("multiplayer.title"), this.width / 2, 20, 16777215);
+		
+		if(showAyonull) {
+			this.drawCenteredString(this.fontRenderer, ConfigConstants.ayonullTitle, this.width / 2, 12, 0xDDDD66);
+			
+			String link = ConfigConstants.ayonullLink;
+			int linkWidth = fontRenderer.getStringWidth(link);
+			boolean mouseOver = par1 > (this.width - linkWidth) / 2 - 10 && par1 < (this.width + linkWidth) / 2 + 10 && par2 > 21 && par2 < 35;
+			this.drawString(this.fontRenderer, EnumChatFormatting.UNDERLINE + link, (this.width - linkWidth) / 2, 23, mouseOver ? 0xBBBBFF : 0x7777DD);
+		}else {
+			this.drawCenteredString(this.fontRenderer, var4.translateKey("multiplayer.title"), this.width / 2, 16, 16777215);
+		}
+		
 		super.drawScreen(par1, par2, par3);
 
 		if (this.lagTooltip != null) {
@@ -304,6 +320,19 @@ public class GuiMultiplayer extends GuiScreen {
 				isLockedOut = false;
 			}
 		}
+	}
+	
+
+	protected void mouseClicked(int par1, int par2, int par3) {
+		if (par3 == 0 && ConfigConstants.ayonullTitle != null && ConfigConstants.ayonullLink != null) {
+			int linkWidth = fontRenderer.getStringWidth(ConfigConstants.ayonullLink);
+			boolean mouseOver = par1 > (this.width - linkWidth) / 2 - 10 && par1 < (this.width + linkWidth) / 2 + 10 && par2 > 21 && par2 < 35;
+			if(mouseOver) {
+				EaglerAdapter.openLink(ConfigConstants.ayonullLink);
+				return;
+			}
+		}
+		super.mouseClicked(par1, par2, par3);
 	}
 
 	/**

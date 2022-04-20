@@ -181,14 +181,21 @@ void main(){
 	/* https://bugs.chromium.org/p/angleproject/issues/detail?id=4994 */
     uv = ((uv * anisotropic_fix) - fract(uv * anisotropic_fix) + 0.5) / anisotropic_fix;
 	
-	color *= texture(tex0, uv).bgra;
+	vec4 texColor = texture(tex0, uv);
 #else
-	color *= texture(tex0, (matrix_t * vec4(v_texture0, 0.0, 1.0)).xy).bgra;
+	vec4 texColor = texture(tex0, (matrix_t * vec4(v_texture0, 0.0, 1.0)).xy);
 #endif
 
 #else
-	color *= texture(tex0, (matrix_t * vec4(texCoordV0, 0.0, 1.0)).xy).bgra;
+	vec4 texColor = texture(tex0, (matrix_t * vec4(texCoordV0, 0.0, 1.0)).xy);
 #endif
+
+#ifdef CC_swap_rb
+	color *= texColor.rgba;
+#else
+	color *= texColor.bgra;
+#endif
+
 #endif
 
 #ifdef CC_alphatest

@@ -9,3 +9,7 @@ commands:
       description: test ayunami map system
       usage: /samplemap <get|disable|set> [mapid] [image file] [16bpp|24bpp] [compress]
       permission: eaglersamples.samplemap
+   videomap:
+      description: test video map system (place video_map_config.txt in your server's working directory)
+      usage: /videomap <begin|stop|preload|pause|resume|loop|move> [url] [duration or ttl]
+      permission: eaglersamples.videomap

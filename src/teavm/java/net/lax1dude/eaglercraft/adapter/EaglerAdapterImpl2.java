@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ import org.teavm.jso.ajax.ReadyStateChangeHandler;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
+import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.KeyboardEvent;
 import org.teavm.jso.dom.events.MessageEvent;
@@ -32,6 +34,8 @@ import org.teavm.jso.dom.events.WheelEvent;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
+import org.teavm.jso.dom.html.HTMLVideoElement;
+import org.teavm.jso.media.MediaError;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Float32Array;
 import org.teavm.jso.typedarrays.Int32Array;
@@ -43,6 +47,7 @@ import org.teavm.jso.webaudio.AudioListener;
 import org.teavm.jso.webaudio.DecodeErrorCallback;
 import org.teavm.jso.webaudio.DecodeSuccessCallback;
 import org.teavm.jso.webaudio.GainNode;
+import org.teavm.jso.webaudio.MediaElementAudioSourceNode;
 import org.teavm.jso.webaudio.MediaEvent;
 import org.teavm.jso.webaudio.PannerNode;
 import org.teavm.jso.webgl.WebGLBuffer;
@@ -348,6 +353,20 @@ public class EaglerAdapterImpl2 {
 		
 		mouseEvents.clear();
 		keyEvents.clear();
+		
+		Window.setInterval(new TimerHandler() {
+			@Override
+			public void onTimer() {
+				Iterator<BufferedVideo> vids = videosBuffer.values().iterator();
+				while(vids.hasNext()) {
+					BufferedVideo v = vids.next();
+					if(System.currentTimeMillis() - v.requestedTime > v.ttl) {
+						v.videoElement.setSrc("");
+						vids.remove();
+					}
+				}
+			}
+		}, 5000);
 	}
 	
 	public static final void destroyContext() {
@@ -868,6 +887,302 @@ public class EaglerAdapterImpl2 {
 		return getString("window.navigator.platform").toLowerCase().contains("win");
 	}
 	
+	private static HTMLVideoElement currentVideo = null;
+	private static TextureGL videoTexture = null;
+	private static boolean videoIsLoaded = false;
+	private static boolean videoTexIsInitialized = false;
+	private static int frameRate = 17;
+	private static long frameTimer = 0l;
+	
+	public static final boolean isVideoSupported() {
+		return true;
+	}
+	public static final void loadVideo(String src, boolean autoplay) {
+		loadVideo(src, autoplay, null, null);
+	}
+	public static final void loadVideo(String src, boolean autoplay, String setJavascriptPointer) {
+		loadVideo(src, autoplay, setJavascriptPointer, null);
+	}
+	
+	@JSBody(params = { "ptr", "el" }, script = "window[ptr] = el;")
+	private static native void setVideoPointer(String ptr, HTMLVideoElement el);
+	@JSBody(params = { "ptr", "el" }, script = "window[ptr](el);")
+	private static native void callVideoLoadEvent(String ptr, HTMLVideoElement el);
+	
+	private static MediaElementAudioSourceNode currentVideoAudioSource = null;
+	
+	private static GainNode currentVideoAudioGain = null;
+	private static float currentVideoAudioGainValue = 1.0f;
+	
+	private static PannerNode currentVideoAudioPanner = null;
+	private static float currentVideoAudioX = 0.0f;
+	private static float currentVideoAudioY = 0.0f;
+	private static float currentVideoAudioZ = 0.0f;
+	
+	public static final void loadVideo(String src, boolean autoplay, String setJavascriptPointer, final String javascriptOnloadFunction) {
+		videoIsLoaded = false;
+		videoTexIsInitialized = false;
+		if(videoTexture == null) {
+			videoTexture = _wglGenTextures();
+		}
+		if(currentVideo != null) {
+			currentVideo.pause();
+			currentVideo.setSrc("");
+		}
+		
+		BufferedVideo vid = videosBuffer.get(src);
+		
+		if(vid != null) {
+			currentVideo = vid.videoElement;
+			videosBuffer.remove(src);
+		}else {
+			currentVideo = (HTMLVideoElement) win.getDocument().createElement("video");
+			currentVideo.setAutoplay(autoplay);
+		}
+		
+		if(setJavascriptPointer != null) {
+			setVideoPointer(setJavascriptPointer, currentVideo);
+		}
+		
+		currentVideo.addEventListener("playing", new EventListener<Event>() {
+			@Override
+			public void handleEvent(Event evt) {
+				videoIsLoaded = true;
+				if(javascriptOnloadFunction != null) {
+					callVideoLoadEvent(javascriptOnloadFunction, currentVideo);
+				}
+			}
+		});
+		
+		if(vid == null) {
+			currentVideo.setControls(false);
+			currentVideo.setSrc(src);
+		}else {
+			if(autoplay) {
+				currentVideo.play();
+			}
+		}
+		
+		if(currentVideoAudioSource != null) {
+			currentVideoAudioSource.disconnect();
+		}
+		
+		currentVideoAudioSource = audioctx.createMediaElementSource(currentVideo);
+		
+		if(currentVideoAudioGainValue < 0.0f) {
+			currentVideoAudioSource.connect(audioctx.getDestination());
+		}else {
+			if(currentVideoAudioGain == null) {
+				currentVideoAudioGain = audioctx.createGain();
+				currentVideoAudioGain.getGain().setValue(currentVideoAudioGainValue > 1.0f ? 1.0f : currentVideoAudioGainValue);
+			}
+			
+			currentVideoAudioSource.connect(currentVideoAudioGain);
+			
+			if(currentVideoAudioPanner == null) {
+				currentVideoAudioPanner = audioctx.createPanner();
+				currentVideoAudioPanner.setRolloffFactor(1f);
+				currentVideoAudioPanner.setDistanceModel("linear");
+				currentVideoAudioPanner.setPanningModel("HRTF");
+				currentVideoAudioPanner.setConeInnerAngle(360f);
+				currentVideoAudioPanner.setConeOuterAngle(0f);
+				currentVideoAudioPanner.setConeOuterGain(0f);
+				currentVideoAudioPanner.setOrientation(0f, 1f, 0f);
+				currentVideoAudioPanner.setPosition(currentVideoAudioX, currentVideoAudioY, currentVideoAudioZ);
+				currentVideoAudioPanner.setMaxDistance(currentVideoAudioGainValue * 16f + 0.1f);
+				currentVideoAudioGain.connect(currentVideoAudioPanner);
+				currentVideoAudioPanner.connect(audioctx.getDestination());
+			}
+		}
+		
+	}
+	
+	private static class BufferedVideo {
+		
+		protected final HTMLVideoElement videoElement;
+		protected final String url;
+		protected final long requestedTime;
+		protected final int ttl;
+		
+		public BufferedVideo(HTMLVideoElement videoElement, String url, int ttl) {
+			this.videoElement = videoElement;
+			this.url = url;
+			this.requestedTime = System.currentTimeMillis();
+			this.ttl = ttl;
+		}
+		
+	}
+	
+	private static final HashMap<String, BufferedVideo> videosBuffer = new HashMap();
+	
+	public static final void bufferVideo(String src, int ttl) {
+		if(!videosBuffer.containsKey(src)) {
+			HTMLVideoElement video = (HTMLVideoElement) win.getDocument().createElement("video");
+			video.setAutoplay(false);
+			video.setPreload("auto");
+			video.setControls(false);
+			video.setSrc(src);
+			videosBuffer.put(src, new BufferedVideo(video, src, ttl));
+		}
+	}
+	
+	public static final void unloadVideo() {
+		if(videoTexture != null) {
+			_wglDeleteTextures(videoTexture);
+			videoTexture = null;
+		}
+		if(currentVideo != null) {
+			currentVideo.pause();
+			currentVideo.setSrc("");
+			currentVideo = null;
+		}
+		if(currentVideoAudioSource != null) {
+			currentVideoAudioSource.disconnect();
+		}
+	}
+	public static final boolean isVideoLoaded() {
+		return videoTexture != null && currentVideo != null && videoIsLoaded;
+	}
+	public static final boolean isVideoPaused() {
+		return currentVideo == null || currentVideo.isPaused();
+	}
+	public static final void setVideoPaused(boolean pause) {
+		if(currentVideo != null) {
+			if(pause) {
+				currentVideo.pause();
+			}else {
+				currentVideo.play();
+			}
+		}
+	}
+	public static final void setVideoLoop(boolean loop) {
+		if(currentVideo != null) {
+			currentVideo.setLoop(loop);
+		}
+	}
+	public static final void setVideoVolume(float x, float y, float z, float v) {
+		currentVideoAudioX = x;
+		currentVideoAudioY = y;
+		currentVideoAudioZ = z;
+		if(v < 0.0f) {
+			if(currentVideoAudioGainValue >= 0.0f && currentVideoAudioSource != null) {
+				currentVideoAudioSource.disconnect();
+				currentVideoAudioSource.connect(audioctx.getDestination());
+			}
+			currentVideoAudioGainValue = v;
+		}else {
+			if(currentVideoAudioGain != null) {
+				currentVideoAudioGain.getGain().setValue(v > 1.0f ? 1.0f : v);
+				if(currentVideoAudioGainValue < 0.0f && currentVideoAudioSource != null) {
+					currentVideoAudioSource.disconnect();
+					currentVideoAudioSource.connect(currentVideoAudioGain);
+				}
+			}
+			currentVideoAudioGainValue = v;
+			if(currentVideoAudioPanner != null) {
+				currentVideoAudioPanner.setMaxDistance(v * 16f + 0.1f);
+				currentVideoAudioPanner.setPosition(x, y, z);
+			}
+		}
+	}
+	
+	@JSBody(
+		params = {"ctx", "target", "internalformat", "format", "type", "video"},
+		script = "ctx.texImage2D(target, 0, internalformat, format, type, video);"
+	)
+	private static native void html5VideoTexImage2D(WebGL2RenderingContext ctx, int target, int internalformat, int format, int type, HTMLVideoElement video);
+
+	@JSBody(
+		params = {"ctx", "target", "format", "type", "video"},
+		script = "ctx.texSubImage2D(target, 0, 0, 0, format, type, video);"
+	)
+	private static native void html5VideoTexSubImage2D(WebGL2RenderingContext ctx, int target, int format, int type, HTMLVideoElement video);
+	
+	public static final void updateVideoTexture() {
+		long ms = System.currentTimeMillis();
+		if(ms - frameTimer < frameRate && videoTexIsInitialized) {
+			return;
+		}
+		frameTimer = ms;
+		if(currentVideo != null && videoTexture != null && videoIsLoaded) {
+			_wglBindTexture(_wGL_TEXTURE_2D, videoTexture);
+			if(videoTexIsInitialized) {
+				html5VideoTexSubImage2D(webgl, _wGL_TEXTURE_2D, _wGL_RGBA, _wGL_UNSIGNED_BYTE, currentVideo);
+			}else {
+				html5VideoTexImage2D(webgl, _wGL_TEXTURE_2D, _wGL_RGBA, _wGL_RGBA, _wGL_UNSIGNED_BYTE, currentVideo);
+				_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_S, _wGL_CLAMP);
+				_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_T, _wGL_CLAMP);
+				_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_MIN_FILTER, _wGL_LINEAR);
+				_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_MAG_FILTER, _wGL_LINEAR);
+				videoTexIsInitialized = true;
+			}
+		}
+	}
+	public static final void bindVideoTexture() {
+		if(videoTexture != null) {
+			_wglBindTexture(_wGL_TEXTURE_2D, videoTexture);
+		}
+	}
+	public static final int getVideoWidth() {
+		if(currentVideo != null && videoIsLoaded) {
+			return currentVideo.getWidth();
+		}else {
+			return -1;
+		}
+	}
+	public static final int getVideoHeight() {
+		if(currentVideo != null && videoIsLoaded) {
+			return currentVideo.getHeight();
+		}else {
+			return -1;
+		}
+	}
+	public static final float getVideoCurrentTime() {
+		if(currentVideo != null && videoIsLoaded) {
+			return (float) currentVideo.getCurrentTime();
+		}else {
+			return -1.0f;
+		}
+	}
+	public static final void setVideoCurrentTime(float seconds) {
+		if(currentVideo != null && videoIsLoaded) {
+			currentVideo.setCurrentTime(seconds);
+		}
+	}
+	public static final float getVideoDuration() {
+		if(currentVideo != null && videoIsLoaded) {
+			return (float) currentVideo.getDuration();
+		}else {
+			return -1.0f;
+		}
+	}
+
+	public static final int VIDEO_ERR_NONE = -1;
+	public static final int VIDEO_ERR_ABORTED = 1;
+	public static final int VIDEO_ERR_NETWORK = 2;
+	public static final int VIDEO_ERR_DECODE = 3;
+	public static final int VIDEO_ERR_SRC_NOT_SUPPORTED = 4;
+
+	public static final int getVideoError() {
+		if(currentVideo != null && videoIsLoaded) {
+			MediaError err = currentVideo.getError();
+			if(err != null) {
+				return err.getCode();
+			}else {
+				return -1;
+			}
+		}else {
+			return -1;
+		}
+	}
+	
+	public static final void setVideoFrameRate(float fps) {
+		frameRate = (int)(1000.0f / fps);
+		if(frameRate < 1) {
+			frameRate = 1;
+		}
+	}
+	
 	private static MouseEvent currentEvent = null;
 	private static KeyboardEvent currentEventK = null;
 	private static boolean[] buttonStates = new boolean[8];
@@ -1250,18 +1565,13 @@ public class EaglerAdapterImpl2 {
 	public static native String getFileChooserResultName();
 	
 	public static final void setListenerPos(float x, float y, float z, float vx, float vy, float vz, float pitch, float yaw) {
-		float var11 = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
-		float var12 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
-		float var13 = -var12;
-		float var14 = -MathHelper.sin(-pitch * 0.017453292F - (float) Math.PI);
-		float var15 = -var11;
-		float var16 = 0.0F;
-		float var17 = 1.0F;
-		float var18 = 0.0F;
+		float var2 = MathHelper.cos(-yaw * 0.017453292F);
+		float var3 = MathHelper.sin(-yaw * 0.017453292F);
+		float var4 = -MathHelper.cos(-pitch * 0.017453292F);
+		float var5 = MathHelper.sin(-pitch * 0.017453292F);
 		AudioListener l = audioctx.getListener();
 		l.setPosition(x, y, z);
-		l.setOrientation(var13, var14, var15, var16, var17, var18);
-		//l.setVelocity(vx, vy, vz);
+		l.setOrientation(var3 * var4, -var5, var2 * var4, 0.0f, 1.0f, 0.0f);
 	}
 	
 	private static int playbackId = 0;

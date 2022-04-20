@@ -10,7 +10,9 @@ import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglerProfile;
 
 import net.lax1dude.eaglercraft.GuiScreenEditProfile;
+import net.lax1dude.eaglercraft.GuiScreenLicense;
 import net.lax1dude.eaglercraft.GuiScreenVoiceChannel;
+import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.lax1dude.eaglercraft.glemu.EffectPipeline;
 import net.lax1dude.eaglercraft.glemu.FixedFunctionShader;
@@ -247,11 +249,19 @@ public class Minecraft implements Runnable {
 		showIntroAnimation();
 		
 		String s = EaglerAdapter.getServerToJoinOnLaunch();
+		GuiScreen scr;
+		
 		if(s != null) {
-			this.displayGuiScreen(new GuiScreenEditProfile(new GuiConnecting(new GuiMainMenu(), this, new ServerData("Eaglercraft Server", s, false))));
+			scr = new GuiScreenEditProfile(new GuiConnecting(new GuiMainMenu(), this, new ServerData("Eaglercraft Server", s, false)));
 		}else {
-			this.displayGuiScreen(new GuiScreenEditProfile(new GuiMainMenu()));
+			scr = new GuiScreenEditProfile(new GuiMainMenu());
 		}
+		
+		if(!LocalStorageManager.profileSettingsStorage.getBoolean("acceptLicense")) {
+			scr = new GuiScreenLicense(scr);
+		}
+		
+		displayGuiScreen(scr);
 
 		this.loadingScreen = new LoadingScreenRenderer(this);
 
@@ -1441,6 +1451,9 @@ public class Minecraft implements Runnable {
 
 		this.sndManager.playStreaming((String) null, 0.0F, 0.0F, 0.0F);
 		this.sndManager.stopAllSounds();
+		if(EaglerAdapter.isVideoSupported()) {
+			EaglerAdapter.unloadVideo();
+		}
 		this.theWorld = par1WorldClient;
 
 		if (par1WorldClient != null) {
