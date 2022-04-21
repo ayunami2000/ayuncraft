@@ -891,7 +891,7 @@ public class EaglerAdapterImpl2 {
 	private static TextureGL videoTexture = null;
 	private static boolean videoIsLoaded = false;
 	private static boolean videoTexIsInitialized = false;
-	private static int frameRate = 17;
+	private static int frameRate = 33;
 	private static long frameTimer = 0l;
 	
 	public static final boolean isVideoSupported() {
@@ -937,6 +937,7 @@ public class EaglerAdapterImpl2 {
 			videosBuffer.remove(src);
 		}else {
 			currentVideo = (HTMLVideoElement) win.getDocument().createElement("video");
+			currentVideo.setAttribute("crossorigin", "anonymous");
 			currentVideo.setAutoplay(autoplay);
 		}
 		
@@ -1019,6 +1020,7 @@ public class EaglerAdapterImpl2 {
 		if(!videosBuffer.containsKey(src)) {
 			HTMLVideoElement video = (HTMLVideoElement) win.getDocument().createElement("video");
 			video.setAutoplay(false);
+			video.setAttribute("crossorigin", "anonymous");
 			video.setPreload("auto");
 			video.setControls(false);
 			video.setSrc(src);
@@ -1105,16 +1107,20 @@ public class EaglerAdapterImpl2 {
 		}
 		frameTimer = ms;
 		if(currentVideo != null && videoTexture != null && videoIsLoaded) {
-			_wglBindTexture(_wGL_TEXTURE_2D, videoTexture);
-			if(videoTexIsInitialized) {
-				html5VideoTexSubImage2D(webgl, _wGL_TEXTURE_2D, _wGL_RGBA, _wGL_UNSIGNED_BYTE, currentVideo);
-			}else {
-				html5VideoTexImage2D(webgl, _wGL_TEXTURE_2D, _wGL_RGBA, _wGL_RGBA, _wGL_UNSIGNED_BYTE, currentVideo);
-				_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_S, _wGL_CLAMP);
-				_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_T, _wGL_CLAMP);
-				_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_MIN_FILTER, _wGL_LINEAR);
-				_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_MAG_FILTER, _wGL_LINEAR);
-				videoTexIsInitialized = true;
+			try {
+				_wglBindTexture(_wGL_TEXTURE_2D, videoTexture);
+				if(videoTexIsInitialized) {
+					html5VideoTexSubImage2D(webgl, _wGL_TEXTURE_2D, _wGL_RGBA, _wGL_UNSIGNED_BYTE, currentVideo);
+				}else {
+					html5VideoTexImage2D(webgl, _wGL_TEXTURE_2D, _wGL_RGBA, _wGL_RGBA, _wGL_UNSIGNED_BYTE, currentVideo);
+					_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_S, _wGL_CLAMP);
+					_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_T, _wGL_CLAMP);
+					_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_MIN_FILTER, _wGL_LINEAR);
+					_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_MAG_FILTER, _wGL_LINEAR);
+					videoTexIsInitialized = true;
+				}
+			}catch(Throwable t) {
+				// rip
 			}
 		}
 	}

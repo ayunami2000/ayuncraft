@@ -34,8 +34,8 @@ public class VideoMapPacketCodec {
 		this.posX = posX;
 		this.posY = posY;
 		this.posZ = posZ;
-		this.volume = 1.0f;
-		this.frameRate = 60;
+		this.volume = volume;
+		this.frameRate = 30;
 		this.requiresPositionPacket = true;
 		this.requiresFullResetPacket = true;
 		this.isDisabled = true;
