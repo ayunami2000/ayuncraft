@@ -1186,16 +1186,12 @@ public class EaglerAdapterImpl2 {
 		return s;
 	}
 	public static final void setListenerPos(float x, float y, float z, float vx, float vy, float vz, float pitch, float yaw) {
-		float var11 = -MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
-		float var12 = -MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
-		float var13 = -var12;
-		float var14 = MathHelper.sin(-pitch * 0.017453292F - (float) Math.PI);
-		float var15 = -var11;
-		float var16 = 0.0F;
-		float var17 = 1.0F;
-		float var18 = 0.0F;
+		float var2 = MathHelper.cos(yaw * 0.017453292F - (float) Math.PI);
+		float var3 = MathHelper.sin(yaw * 0.017453292F - (float) Math.PI);
+		float var4 = -MathHelper.cos(pitch * 0.017453292F);
+		float var5 = MathHelper.sin(pitch * 0.017453292F);
 		ss.setListenerPosition(x, y, z);
-		ss.setListenerOrientation(var13, var14, var15, var16, var17, var18);
+		ss.setListenerOrientation(var3 * var4, var5, var2 * var4, 0.0f, 1.0f, 0.0f);
 		ss.setListenerVelocity(vx, vy, vz);
 	}
 	public static final void setPlaybackOffsetDelay(float f) {

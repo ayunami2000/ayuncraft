@@ -1565,13 +1565,13 @@ public class EaglerAdapterImpl2 {
 	public static native String getFileChooserResultName();
 	
 	public static final void setListenerPos(float x, float y, float z, float vx, float vy, float vz, float pitch, float yaw) {
-		float var2 = MathHelper.cos(-yaw * 0.017453292F);
-		float var3 = MathHelper.sin(-yaw * 0.017453292F);
-		float var4 = -MathHelper.cos(-pitch * 0.017453292F);
-		float var5 = MathHelper.sin(-pitch * 0.017453292F);
+		float var2 = MathHelper.cos(yaw * 0.017453292F - (float) Math.PI);
+		float var3 = MathHelper.sin(yaw * 0.017453292F - (float) Math.PI);
+		float var4 = -MathHelper.cos(pitch * 0.017453292F);
+		float var5 = MathHelper.sin(pitch * 0.017453292F);
 		AudioListener l = audioctx.getListener();
 		l.setPosition(x, y, z);
-		l.setOrientation(var3 * var4, -var5, var2 * var4, 0.0f, 1.0f, 0.0f);
+		l.setOrientation(var3 * var4, var5, var2 * var4, 0.0f, 1.0f, 0.0f);
 	}
 	
 	private static int playbackId = 0;
