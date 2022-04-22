@@ -156,6 +156,7 @@ public class RenderGlobal implements IWorldAccess {
 			this.glOcclusionQuery[i] = -1;
 		}
 		this.occlusionQueryAvailable = new boolean[glOcclusionQuery.length];
+		this.occlusionQueryStalled = new boolean[occlusionQueryAvailable.length];
 		this.starGLCallList = GLAllocation.generateDisplayLists(3);
 		EaglerAdapter.glPushMatrix();
 		EaglerAdapter.glNewList(this.starGLCallList, EaglerAdapter.GL_COMPILE);
@@ -503,6 +504,7 @@ public class RenderGlobal implements IWorldAccess {
 
 	private long lastOcclusionQuery = 0l;
 	private boolean[] occlusionQueryAvailable;
+	private boolean[] occlusionQueryStalled;
 
 	/**
 	 * Sorts all renderers based on the passed in entity. Args: entityLiving,
@@ -569,9 +571,14 @@ public class RenderGlobal implements IWorldAccess {
 				int ccz = c.chunkZ - fz;
 				if((ccx < 2 && ccx > -2 && ccy < 2 && ccy > -2 && ccz < 2 && ccz > -2) || glOcclusionQuery[c.chunkIndex] == -1) {
 					c.isVisible = true;
-				}else if(!c.skipAllRenderPasses() && c.isInFrustum && occlusionQueryAvailable[c.chunkIndex] && EaglerAdapter.glGetQueryResultAvailable(glOcclusionQuery[c.chunkIndex])) {
-					c.isVisible = EaglerAdapter.glGetQueryResult(glOcclusionQuery[c.chunkIndex]);
-					occlusionQueryAvailable[c.chunkIndex] = false;
+				}else if(!c.skipAllRenderPasses() && c.isInFrustum && occlusionQueryAvailable[c.chunkIndex]) {
+					if(EaglerAdapter.glGetQueryResultAvailable(glOcclusionQuery[c.chunkIndex])) {
+						c.isVisible = EaglerAdapter.glGetQueryResult(glOcclusionQuery[c.chunkIndex]);
+						occlusionQueryAvailable[c.chunkIndex] = false;
+					}else if(occlusionQueryStalled[c.chunkIndex]) {
+						c.isVisible = true;
+					}
+					occlusionQueryStalled[c.chunkIndex] = false;
 				}
 			}
 		}
@@ -596,7 +603,11 @@ public class RenderGlobal implements IWorldAccess {
 				int ccy = c.chunkY - fy;
 				int ccz = c.chunkZ - fz;
 				if(!c.skipAllRenderPasses() && c.isInFrustum && !(ccx < 2 && ccx > -2 && ccy < 2 && ccy > -2 && ccz < 2 && ccz > -2)) {
-					occlusionQueryAvailable[c.chunkIndex] = true;
+					if(occlusionQueryAvailable[c.chunkIndex]) {
+						occlusionQueryStalled[c.chunkIndex] = true;
+					}else {
+						occlusionQueryAvailable[c.chunkIndex] = true;
+					}
 					int q = glOcclusionQuery[c.chunkIndex];
 					if(q == -1) {
 						q = glOcclusionQuery[c.chunkIndex] = EaglerAdapter.glCreateQuery();
