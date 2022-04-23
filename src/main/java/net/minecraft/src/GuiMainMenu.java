@@ -211,6 +211,7 @@ public class GuiMainMenu extends GuiScreen {
 				int x = (this.width - 345) / 2;
 				int y = (this.height - 230) / 2;
 				if(par1 >= (x + 323) && par1 <= (x + 323 + 13) && par2 >= (y + 7) && par2 <= (y + 7 + 13)) {
+					this.mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
 					hideAck();
 				}
 				int trackHeight = 193;

@@ -1098,19 +1098,12 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	
 	public static final void glDrawOcclusionBB(float posX, float posY, float posZ, float sizeX, float sizeY, float sizeZ) {
 		glPushMatrix();
-		glTranslatef(posX - sizeX * 0.0001f, posY - sizeY * 0.0001f, posZ - sizeZ * 0.0001f);
-		glScalef(sizeX * 1.0002f, sizeY * 1.0002f, sizeZ * 1.0002f);
+		glTranslatef(posX - sizeX * 0.01f, posY - sizeY * 0.01f, posZ - sizeZ * 0.01f);
+		glScalef(sizeX * 1.02f, sizeY * 1.02f, sizeZ * 1.02f);
 		matModelV[matModelPointer].store(occlusionModel);
 		_wglUniformMat4fv(occlusion_matrix_m, occlusionModel);
 		_wglDrawArrays(_wGL_TRIANGLES, 0, 36);
 		glPopMatrix();
-		//glPushMatrix();
-		//glTranslatef(posX + sizeX * 0.0001f, posY + sizeY * 0.0001f, posZ + sizeZ * 0.0001f);
-		//glScalef(sizeX * 0.9998f, sizeY * 0.9998f, sizeZ * 0.9998f);
-		//matModelV[matModelPointer].store(occlusionModel);
-		//_wglUniformMat4fv(occlusion_matrix_m, occlusionModel);
-		//_wglDrawArrays(_wGL_TRIANGLES, 0, 36);
-		//glPopMatrix();
 		
 	}
 	
