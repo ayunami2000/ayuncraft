@@ -320,7 +320,8 @@ public class RenderGlobal implements IWorldAccess {
 						int i = (var6 * this.renderChunksTall + var5) * this.renderChunksWide + var4;
 						this.worldRenderers[i] = new WorldRenderer(this.theWorld, this.tileEntities, var4 * 16, var5 * 16, var6 * 16, this.glRenderListBase + var2);
 						this.worldRenderers[i].isWaitingOnOcclusionQuery = false;
-						this.worldRenderers[i].isVisible = true;
+						this.worldRenderers[i].isNowVisible = true;
+						this.worldRenderers[i].isVisible = 100;
 						this.worldRenderers[i].isInFrustum = true;
 						this.worldRenderers[i].chunkIndex = var3++;
 						this.worldRenderers[i].markDirty();
@@ -502,6 +503,8 @@ public class RenderGlobal implements IWorldAccess {
 		}
 	}
 
+	// GOSH FUCKING DAMMIT WHY IN THE FUCK IS GODDAMN WEBGL THIS UNSTABLE
+	
 	private long lastOcclusionQuery = 0l;
 	private boolean[] occlusionQueryAvailable;
 	private long[] occlusionQueryStalled;
@@ -563,7 +566,9 @@ public class RenderGlobal implements IWorldAccess {
 		int var34;
 		
 		long queryRate = 50l;
-		long stallRate = 150l;
+		long stallRateVisible = 50l;
+		long stallRate = 500l;
+		int cooldownRate = 10;
 
 		long ct = System.currentTimeMillis();
 		if(par2 == 0) {
@@ -574,14 +579,25 @@ public class RenderGlobal implements IWorldAccess {
 				int ccy = c.chunkY - fy;
 				int ccz = c.chunkZ - fz;
 				if((ccx < 2 && ccx > -2 && ccy < 2 && ccy > -2 && ccz < 2 && ccz > -2) || glOcclusionQuery[c.chunkIndex] == -1) {
-					c.isVisible = true;
+					c.isNowVisible = true;
+					c.isVisible = cooldownRate;
 				}else if(!c.skipAllRenderPasses() && c.isInFrustum) {
-					if(occlusionQueryAvailable[c.chunkIndex] && EaglerAdapter.glGetQueryResultAvailable(glOcclusionQuery[c.chunkIndex])) {
-						c.isVisible = EaglerAdapter.glGetQueryResult(glOcclusionQuery[c.chunkIndex]);
-						occlusionQueryAvailable[c.chunkIndex] = false;
-						occlusionQueryStalled[c.chunkIndex] = 0l;
-					}else if(occlusionQueryStalled[c.chunkIndex] != 0l && ct - occlusionQueryStalled[c.chunkIndex] > stallRate) {
-						c.isVisible = true;
+					if(occlusionQueryAvailable[c.chunkIndex]) {
+						if(EaglerAdapter.glGetQueryResultAvailable(glOcclusionQuery[c.chunkIndex])) {
+							if(EaglerAdapter.glGetQueryResult(glOcclusionQuery[c.chunkIndex])) {
+								c.isNowVisible = true;
+								c.isVisible = cooldownRate;
+							}else {
+								if(c.isVisible <= 0) {
+									c.isNowVisible = false;
+								}
+							}
+							occlusionQueryAvailable[c.chunkIndex] = false;
+							occlusionQueryStalled[c.chunkIndex] = 0l;
+						}else if(occlusionQueryStalled[c.chunkIndex] != 0l && ct - occlusionQueryStalled[c.chunkIndex] > stallRateVisible) {
+							c.isNowVisible = true;
+							c.isVisible = cooldownRate;
+						}
 					}
 				}
 			}
@@ -627,6 +643,9 @@ public class RenderGlobal implements IWorldAccess {
 						EaglerAdapter.glEndQuery();
 					}
 				}
+				if(c.isVisible > 0) {
+					--c.isVisible;
+				}
 			}
 			EaglerAdapter.glEndOcclusionBB();
 			EaglerAdapter.glColorMask(true, true, true, true);
@@ -654,14 +673,14 @@ public class RenderGlobal implements IWorldAccess {
 					++this.renderersSkippingRenderPass;
 				} else if (!this.sortedWorldRenderers[var7].isInFrustum) {
 					++this.renderersBeingClipped;
-				} else if (!this.sortedWorldRenderers[var7].isVisible) {
+				} else if(!this.sortedWorldRenderers[var7].isNowVisible) {
 					++this.renderersBeingOccluded;
 				} else {
 					++this.renderersBeingRendered;
 				}
 			}
 
-			if (!this.sortedWorldRenderers[var7].skipRenderPass[par3] && this.sortedWorldRenderers[var7].isInFrustum && this.sortedWorldRenderers[var7].isVisible) {
+			if (!this.sortedWorldRenderers[var7].skipRenderPass[par3] && this.sortedWorldRenderers[var7].isInFrustum && this.sortedWorldRenderers[var7].isNowVisible) {
 				int var8 = this.sortedWorldRenderers[var7].getGLCallListForPass(par3);
 
 				if (var8 >= 0) {
