@@ -16,116 +16,116 @@ import net.lax1dude.eaglercraft.glemu.vector.Vector4f;
 public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	public static boolean glBlendEnabled=false;
 
-	public static final int GL_ZERO = 0;
-	public static final int GL_ONE = 1;
-	public static final int GL_TEXTURE_2D = 2;
-	public static final int GL_SMOOTH = 3;
-	public static final int GL_DEPTH_TEST = 4;
-	public static final int GL_LEQUAL = 5;
-	public static final int GL_ALPHA_TEST = 6;
-	public static final int GL_GREATER = 7;
-	public static final int GL_BACK = 8;
-	public static final int GL_PROJECTION = 9;
-	public static final int GL_MODELVIEW = 10;
-	public static final int GL_COLOR_BUFFER_BIT = 1;
-	public static final int GL_DEPTH_BUFFER_BIT = 2;
-	public static final int GL_LIGHTING = 13;
-	public static final int GL_FOG = 14;
-	public static final int GL_COLOR_MATERIAL = 15;
-	public static final int GL_BLEND = 16;
-	public static final int GL_RGBA = 18;
-	public static final int GL_UNSIGNED_BYTE = 19;
-	public static final int GL_TEXTURE_WIDTH = 20;
-	public static final int GL_LIGHT0 = 21;
-	public static final int GL_LIGHT1 = 22;
-	public static final int GL_POSITION = 30;
-	public static final int GL_DIFFUSE = 31;
-	public static final int GL_SPECULAR = 32;
-	public static final int GL_AMBIENT = 33;
-	public static final int GL_FLAT = 34;
-	public static final int GL_LIGHT_MODEL_AMBIENT = 35;
-	public static final int GL_FRONT_AND_BACK = 36;
-	public static final int GL_AMBIENT_AND_DIFFUSE = 37;
-	public static final int GL_MODELVIEW_MATRIX = 38;
-	public static final int GL_PROJECTION_MATRIX = 39;
-	public static final int GL_VIEWPORT = 40;
-	public static final int GL_RESCALE_NORMAL = 41;
-	public static final int GL_SRC_ALPHA = 42;
-	public static final int GL_ONE_MINUS_SRC_ALPHA = 43;
-	public static final int GL_ONE_MINUS_DST_COLOR = 44;
-	public static final int GL_ONE_MINUS_SRC_COLOR = 45;
-	public static final int GL_CULL_FACE = 46;
-	public static final int GL_TEXTURE_MIN_FILTER = 47;
-	public static final int GL_TEXTURE_MAG_FILTER = 48;
-	public static final int GL_LINEAR = 49;
-	public static final int GL_COLOR_LOGIC_OP = 50;
-	public static final int GL_OR_REVERSE = 51;
-	public static final int GL_EQUAL = 52;
-	public static final int GL_SRC_COLOR = 53;
-	public static final int GL_TEXTURE = 54;
-	public static final int GL_FRONT = 55;
-	public static final int GL_COMPILE = 56;
-	public static final int GL_S = 57;
-	public static final int GL_T = 58;
-	public static final int GL_R = 59;
-	public static final int GL_Q = 60;
-	public static final int GL_TEXTURE_GEN_S = 61;
-	public static final int GL_TEXTURE_GEN_T = 62;
-	public static final int GL_TEXTURE_GEN_R = 63;
-	public static final int GL_TEXTURE_GEN_Q = 64;
-	public static final int GL_TEXTURE_GEN_MODE = 65;
-	public static final int GL_OBJECT_PLANE = 66;
-	public static final int GL_EYE_PLANE = 67;
-	public static final int GL_OBJECT_LINEAR = 68;
-	public static final int GL_EYE_LINEAR = 69;
-	public static final int GL_NEAREST = 70;
-	public static final int GL_CLAMP = 71;
-	public static final int GL_TEXTURE_WRAP_S = 72;
-	public static final int GL_TEXTURE_WRAP_T = 73;
-	public static final int GL_REPEAT = 74;
-	public static final int GL_BGRA = 75;
-	public static final int GL_UNSIGNED_INT_8_8_8_8_REV = 76;
-	public static final int GL_DST_COLOR = 77;
-	public static final int GL_POLYGON_OFFSET_FILL = 78;
-	public static final int GL_NORMALIZE = 79;
-	public static final int GL_DST_ALPHA = 80;
-	public static final int GL_FLOAT = 81;
-	public static final int GL_TEXTURE_COORD_ARRAY = 82;
-	public static final int GL_SHORT = 83;
-	public static final int GL_COLOR_ARRAY = 84;
-	public static final int GL_VERTEX_ARRAY = 85;
-	public static final int GL_TRIANGLES = 86;
-	public static final int GL_NORMAL_ARRAY = 87;
-	public static final int GL_TEXTURE_3D = 88;
-	public static final int GL_FOG_MODE = 89;
-	public static final int GL_EXP = 90;
-	public static final int GL_FOG_DENSITY = 91;
-	public static final int GL_FOG_START = 92;
-	public static final int GL_FOG_END = 93;
-	public static final int GL_FOG_COLOR = 94;
-	public static final int GL_TRIANGLE_STRIP = 95;
-	public static final int GL_PACK_ALIGNMENT = 96;
-	public static final int GL_UNPACK_ALIGNMENT = 97;
-	public static final int GL_QUADS = 98;
-	public static final int GL_TEXTURE0 = 99;
-	public static final int GL_TEXTURE1 = 100;
-	public static final int GL_TEXTURE2 = 101;
-	public static final int GL_TEXTURE3 = 102;
-	public static final int GL_INVALID_ENUM = 140;
-	public static final int GL_INVALID_VALUE= 141;
-	public static final int GL_INVALID_OPERATION = 142;
-	public static final int GL_OUT_OF_MEMORY = 143;
-	public static final int GL_CONTEXT_LOST_WEBGL = 144;
-	public static final int GL_TRIANGLE_FAN = 145;
-	public static final int GL_LINE_STRIP = 146;
-	public static final int GL_LIGHTING2 = 147;
-	public static final int GL_LINES = 148;
-	public static final int GL_NEAREST_MIPMAP_LINEAR = 149;
-	public static final int GL_TEXTURE_MAX_ANISOTROPY = 150;
-	public static final int GL_TEXTURE_MAX_LEVEL = 151;
-	public static final int GL_LINEAR_MIPMAP_LINEAR = 152;
-	public static final int GL_LINEAR_MIPMAP_NEAREST = 153;
-	public static final int GL_NEAREST_MIPMAP_NEAREST = 154;
+	public static final int GL_ZERO = RealOpenGLEnums.GL_ZERO;
+	public static final int GL_ONE = RealOpenGLEnums.GL_ONE;
+	public static final int GL_TEXTURE_2D = RealOpenGLEnums.GL_TEXTURE_2D;
+	public static final int GL_SMOOTH = RealOpenGLEnums.GL_SMOOTH;
+	public static final int GL_DEPTH_TEST = RealOpenGLEnums.GL_DEPTH_TEST;
+	public static final int GL_LEQUAL = RealOpenGLEnums.GL_LEQUAL;
+	public static final int GL_ALPHA_TEST = RealOpenGLEnums.GL_ALPHA_TEST;
+	public static final int GL_GREATER = RealOpenGLEnums.GL_GREATER;
+	public static final int GL_BACK = RealOpenGLEnums.GL_BACK;
+	public static final int GL_PROJECTION = RealOpenGLEnums.GL_PROJECTION;
+	public static final int GL_MODELVIEW = RealOpenGLEnums.GL_MODELVIEW;
+	public static final int GL_COLOR_BUFFER_BIT = RealOpenGLEnums.GL_COLOR_BUFFER_BIT;
+	public static final int GL_DEPTH_BUFFER_BIT = RealOpenGLEnums.GL_DEPTH_BUFFER_BIT;
+	public static final int GL_LIGHTING = RealOpenGLEnums.GL_LIGHTING;
+	public static final int GL_FOG = RealOpenGLEnums.GL_FOG;
+	public static final int GL_COLOR_MATERIAL = RealOpenGLEnums.GL_COLOR_MATERIAL;
+	public static final int GL_BLEND = RealOpenGLEnums.GL_BLEND;
+	public static final int GL_RGBA = RealOpenGLEnums.GL_RGBA;
+	public static final int GL_UNSIGNED_BYTE = RealOpenGLEnums.GL_UNSIGNED_BYTE;
+	public static final int GL_TEXTURE_WIDTH = RealOpenGLEnums.GL_TEXTURE_WIDTH;
+	public static final int GL_LIGHT0 = RealOpenGLEnums.GL_LIGHT0;
+	public static final int GL_LIGHT1 = RealOpenGLEnums.GL_LIGHT1;
+	public static final int GL_POSITION = RealOpenGLEnums.GL_POSITION;
+	public static final int GL_DIFFUSE = RealOpenGLEnums.GL_DIFFUSE;
+	public static final int GL_SPECULAR = RealOpenGLEnums.GL_SPECULAR;
+	public static final int GL_AMBIENT = RealOpenGLEnums.GL_AMBIENT;
+	public static final int GL_FLAT = RealOpenGLEnums.GL_FLAT;
+	public static final int GL_LIGHT_MODEL_AMBIENT = RealOpenGLEnums.GL_LIGHT_MODEL_AMBIENT;
+	public static final int GL_FRONT_AND_BACK = RealOpenGLEnums.GL_FRONT_AND_BACK;
+	public static final int GL_AMBIENT_AND_DIFFUSE = RealOpenGLEnums.GL_AMBIENT_AND_DIFFUSE;
+	public static final int GL_MODELVIEW_MATRIX = RealOpenGLEnums.GL_MODELVIEW_MATRIX;
+	public static final int GL_PROJECTION_MATRIX = RealOpenGLEnums.GL_PROJECTION_MATRIX;
+	public static final int GL_VIEWPORT = RealOpenGLEnums.GL_VIEWPORT;
+	public static final int GL_RESCALE_NORMAL = RealOpenGLEnums.GL_RESCALE_NORMAL;
+	public static final int GL_SRC_ALPHA = RealOpenGLEnums.GL_SRC_ALPHA;
+	public static final int GL_ONE_MINUS_SRC_ALPHA = RealOpenGLEnums.GL_ONE_MINUS_SRC_ALPHA;
+	public static final int GL_ONE_MINUS_DST_COLOR = RealOpenGLEnums.GL_ONE_MINUS_DST_COLOR;
+	public static final int GL_ONE_MINUS_SRC_COLOR = RealOpenGLEnums.GL_ONE_MINUS_SRC_COLOR;
+	public static final int GL_CULL_FACE = RealOpenGLEnums.GL_CULL_FACE;
+	public static final int GL_TEXTURE_MIN_FILTER = RealOpenGLEnums.GL_TEXTURE_MIN_FILTER;
+	public static final int GL_TEXTURE_MAG_FILTER = RealOpenGLEnums.GL_TEXTURE_MAG_FILTER;
+	public static final int GL_LINEAR = RealOpenGLEnums.GL_LINEAR;
+	public static final int GL_COLOR_LOGIC_OP = RealOpenGLEnums.GL_COLOR_LOGIC_OP;
+	public static final int GL_OR_REVERSE = RealOpenGLEnums.GL_OR_REVERSE;
+	public static final int GL_EQUAL = RealOpenGLEnums.GL_EQUAL;
+	public static final int GL_SRC_COLOR = RealOpenGLEnums.GL_SRC_COLOR;
+	public static final int GL_TEXTURE = RealOpenGLEnums.GL_TEXTURE;
+	public static final int GL_FRONT = RealOpenGLEnums.GL_FRONT;
+	public static final int GL_COMPILE = RealOpenGLEnums.GL_COMPILE;
+	public static final int GL_S = RealOpenGLEnums.GL_S;
+	public static final int GL_T = RealOpenGLEnums.GL_T;
+	public static final int GL_R = RealOpenGLEnums.GL_R;
+	public static final int GL_Q = RealOpenGLEnums.GL_Q;
+	public static final int GL_TEXTURE_GEN_S = RealOpenGLEnums.GL_TEXTURE_GEN_S;
+	public static final int GL_TEXTURE_GEN_T = RealOpenGLEnums.GL_TEXTURE_GEN_T;
+	public static final int GL_TEXTURE_GEN_R = RealOpenGLEnums.GL_TEXTURE_GEN_R;
+	public static final int GL_TEXTURE_GEN_Q = RealOpenGLEnums.GL_TEXTURE_GEN_Q;
+	public static final int GL_TEXTURE_GEN_MODE = RealOpenGLEnums.GL_TEXTURE_GEN_MODE;
+	public static final int GL_OBJECT_PLANE = RealOpenGLEnums.GL_OBJECT_PLANE;
+	public static final int GL_EYE_PLANE = RealOpenGLEnums.GL_EYE_PLANE;
+	public static final int GL_OBJECT_LINEAR = RealOpenGLEnums.GL_OBJECT_LINEAR;
+	public static final int GL_EYE_LINEAR = RealOpenGLEnums.GL_EYE_LINEAR;
+	public static final int GL_NEAREST = RealOpenGLEnums.GL_NEAREST;
+	public static final int GL_CLAMP = RealOpenGLEnums.GL_CLAMP_TO_EDGE;
+	public static final int GL_TEXTURE_WRAP_S = RealOpenGLEnums.GL_TEXTURE_WRAP_S;
+	public static final int GL_TEXTURE_WRAP_T = RealOpenGLEnums.GL_TEXTURE_WRAP_T;
+	public static final int GL_REPEAT = RealOpenGLEnums.GL_REPEAT;
+	public static final int GL_BGRA = RealOpenGLEnums.GL_BGRA;
+	public static final int GL_UNSIGNED_INT_8_8_8_8_REV = RealOpenGLEnums.GL_UNSIGNED_INT_8_8_8_8_REV;
+	public static final int GL_DST_COLOR = RealOpenGLEnums.GL_DST_COLOR;
+	public static final int GL_POLYGON_OFFSET_FILL = RealOpenGLEnums.GL_POLYGON_OFFSET_FILL;
+	public static final int GL_NORMALIZE = RealOpenGLEnums.GL_NORMALIZE;
+	public static final int GL_DST_ALPHA = RealOpenGLEnums.GL_DST_ALPHA;
+	public static final int GL_FLOAT = RealOpenGLEnums.GL_FLOAT;
+	public static final int GL_TEXTURE_COORD_ARRAY = RealOpenGLEnums.GL_TEXTURE_COORD_ARRAY;
+	public static final int GL_SHORT = RealOpenGLEnums.GL_SHORT;
+	public static final int GL_COLOR_ARRAY = RealOpenGLEnums.GL_COLOR_ARRAY;
+	public static final int GL_VERTEX_ARRAY = RealOpenGLEnums.GL_VERTEX_ARRAY;
+	public static final int GL_TRIANGLES = RealOpenGLEnums.GL_TRIANGLES;
+	public static final int GL_NORMAL_ARRAY = RealOpenGLEnums.GL_NORMAL_ARRAY;
+	public static final int GL_TEXTURE_3D = RealOpenGLEnums.GL_TEXTURE_3D;
+	public static final int GL_FOG_MODE = RealOpenGLEnums.GL_FOG_MODE;
+	public static final int GL_EXP = RealOpenGLEnums.GL_EXP;
+	public static final int GL_FOG_DENSITY = RealOpenGLEnums.GL_FOG_DENSITY;
+	public static final int GL_FOG_START = RealOpenGLEnums.GL_FOG_START;
+	public static final int GL_FOG_END = RealOpenGLEnums.GL_FOG_END;
+	public static final int GL_FOG_COLOR = RealOpenGLEnums.GL_FOG_COLOR;
+	public static final int GL_TRIANGLE_STRIP = RealOpenGLEnums.GL_TRIANGLE_STRIP;
+	public static final int GL_PACK_ALIGNMENT = RealOpenGLEnums.GL_PACK_ALIGNMENT;
+	public static final int GL_UNPACK_ALIGNMENT = RealOpenGLEnums.GL_UNPACK_ALIGNMENT;
+	public static final int GL_QUADS = RealOpenGLEnums.GL_QUADS;
+	public static final int GL_TEXTURE0 = RealOpenGLEnums.GL_TEXTURE0;
+	public static final int GL_TEXTURE1 = RealOpenGLEnums.GL_TEXTURE1;
+	public static final int GL_TEXTURE2 = RealOpenGLEnums.GL_TEXTURE2;
+	public static final int GL_TEXTURE3 = RealOpenGLEnums.GL_TEXTURE3;
+	public static final int GL_INVALID_ENUM = RealOpenGLEnums.GL_INVALID_ENUM;
+	public static final int GL_INVALID_VALUE = RealOpenGLEnums.GL_INVALID_VALUE;
+	public static final int GL_INVALID_OPERATION = RealOpenGLEnums.GL_INVALID_OPERATION;
+	public static final int GL_OUT_OF_MEMORY = RealOpenGLEnums.GL_OUT_OF_MEMORY;
+	public static final int GL_CONTEXT_LOST_WEBGL = -100;
+	public static final int GL_TRIANGLE_FAN = RealOpenGLEnums.GL_TRIANGLE_FAN;
+	public static final int GL_LINE_STRIP = RealOpenGLEnums.GL_LINE_STRIP;
+	public static final int EAG_SWAP_RB = -101;
+	public static final int GL_LINES = RealOpenGLEnums.GL_LINES;
+	public static final int GL_NEAREST_MIPMAP_LINEAR = RealOpenGLEnums.GL_NEAREST_MIPMAP_LINEAR;
+	public static final int GL_TEXTURE_MAX_ANISOTROPY = -103;
+	public static final int GL_TEXTURE_MAX_LEVEL = RealOpenGLEnums.GL_TEXTURE_MAX_LEVEL;
+	public static final int GL_LINEAR_MIPMAP_LINEAR = RealOpenGLEnums.GL_LINEAR_MIPMAP_LINEAR;
+	public static final int GL_LINEAR_MIPMAP_NEAREST = RealOpenGLEnums.GL_LINEAR_MIPMAP_NEAREST;
+	public static final int GL_NEAREST_MIPMAP_NEAREST = RealOpenGLEnums.GL_NEAREST_MIPMAP_NEAREST;
 	
 	public static final boolean isWebGL = _wisWebGL();
 
@@ -167,6 +167,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	private static TextureGL boundTexture0 = null;
 	private static boolean enableAnisotropicPatch = false;
 	private static boolean hintAnisotropicPatch = false;
+	private static boolean swapRB = false;
 	
 	public static final void anisotropicPatch(boolean e) {
 		enableAnisotropicPatch = e;
@@ -293,8 +294,6 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		case GL_LIGHTING:
 			enableLighting = true;
 			break;
-		case GL_LIGHTING2:
-			break;
 		case GL_ALPHA_TEST:
 			enableAlphaTest = true;
 			break;
@@ -312,6 +311,10 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 			break;
 		case GL_POLYGON_OFFSET_FILL:
 			_wglEnable(_wGL_POLYGON_OFFSET_FILL);
+			break;
+		case EAG_SWAP_RB:
+			swapRB = true;
+			break;
 		default:
 			break;
 		}
@@ -336,14 +339,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		alphaThresh = p2;
 	}
 	public static final void glCullFace(int p1) {
-		int f = _wGL_BACK;
-		switch(p1) {
-		case GL_BACK: f = _wGL_BACK; break;
-		case GL_FRONT: f = _wGL_FRONT; break;
-		case GL_FRONT_AND_BACK: f = _wGL_FRONT_AND_BACK; break;
-		default: break;
-		}
-		_wglCullFace(f);
+		_wglCullFace(p1);
 	}
 	public static final void glMatrixMode(int p1) {
 		matrixMode = p1;
@@ -366,14 +362,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		_wglViewport(p1, p2, p3, p4);
 	}
 	public static final void glClear(int p1) {
-		int f = 0;
-		if((p1 & GL_COLOR_BUFFER_BIT) == GL_COLOR_BUFFER_BIT) {
-			f = f | _wGL_COLOR_BUFFER_BIT;
-		}
-		if((p1 & GL_DEPTH_BUFFER_BIT) == GL_DEPTH_BUFFER_BIT) {
-			f = f | _wGL_DEPTH_BUFFER_BIT;
-		}
-		_wglClear(f);
+		_wglClear(p1);
 	}
 	public static final void glOrtho(float left, float right, float bottom, float top, float zNear, float zFar) {
 		Matrix4f res = getMatrix();
@@ -430,8 +419,6 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		case GL_LIGHTING:
 			enableLighting = false;
 			break;
-		case GL_LIGHTING2:
-			break;
 		case GL_ALPHA_TEST:
 			enableAlphaTest = false;
 			break;
@@ -449,6 +436,10 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 			break;
 		case GL_POLYGON_OFFSET_FILL:
 			_wglDisable(_wGL_POLYGON_OFFSET_FILL);
+			break;
+		case EAG_SWAP_RB:
+			swapRB = false;
+			break;
 		default:
 			break;
 		}
@@ -461,10 +452,6 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	}
 	public static final int glGetError() {
 		int err = _wglGetError();
-		if(err == _wGL_INVALID_ENUM) return GL_INVALID_ENUM;
-		if(err == _wGL_INVALID_OPERATION) return GL_INVALID_OPERATION;
-		if(err == _wGL_INVALID_VALUE) return GL_INVALID_VALUE;
-		if(err == _wGL_OUT_OF_MEMORY) return GL_OUT_OF_MEMORY;
 		if(err == _wGL_CONTEXT_LOST_WEBGL) return GL_CONTEXT_LOST_WEBGL;
 		return err;
 	}
@@ -601,34 +588,8 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		}
 	}
 	public static final void glBlendFunc(int p1, int p2) {
-		int pp1 = 0;
-		int pp2 = 0;
-		switch(p1) {
-		default:
-		case GL_SRC_ALPHA: pp1 = _wGL_SRC_ALPHA; break;
-		case GL_ONE_MINUS_SRC_ALPHA: pp1 = _wGL_ONE_MINUS_SRC_ALPHA; break;
-		case GL_DST_ALPHA: pp1 = _wGL_DST_ALPHA; break;
-		case GL_DST_COLOR: pp1 = _wGL_DST_COLOR; break;
-		case GL_SRC_COLOR: pp1 = _wGL_SRC_COLOR; break;
-		case GL_ONE_MINUS_SRC_COLOR: pp1 = _wGL_ONE_MINUS_SRC_COLOR; break;
-		case GL_ONE_MINUS_DST_COLOR: pp1 = _wGL_ONE_MINUS_DST_COLOR; break;
-		case GL_ONE: pp1 = _wGL_ONE; break;
-		case GL_ZERO: pp1 = _wGL_ZERO; break;
-		}
-		switch(p2) {
-		default:
-		case GL_SRC_ALPHA: pp2 = _wGL_SRC_ALPHA; break;
-		case GL_ONE_MINUS_SRC_ALPHA: pp2 = _wGL_ONE_MINUS_SRC_ALPHA; break;
-		case GL_DST_ALPHA: pp2 = _wGL_DST_ALPHA; break;
-		case GL_DST_COLOR: pp2 = _wGL_DST_COLOR; break;
-		case GL_SRC_COLOR: pp2 = _wGL_SRC_COLOR; break;
-		case GL_ONE_MINUS_SRC_COLOR: pp2 = _wGL_ONE_MINUS_SRC_COLOR; break;
-		case GL_ONE_MINUS_DST_COLOR: pp1 = _wGL_ONE_MINUS_DST_COLOR; break;
-		case GL_ONE: pp2 = _wGL_ONE; break;
-		case GL_ZERO: pp2 = _wGL_ZERO; break;
-		}
 		fogPremultiply = (p1 == GL_ONE && p2 == GL_ONE_MINUS_SRC_ALPHA);
-		_wglBlendFunc(pp1, pp2);
+		_wglBlendFunc(p1, p2);
 	}
 	public static final void glDepthMask(boolean p1) {
 		_wglDepthMask(p1);
@@ -658,57 +619,17 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		_wglCopyTexSubImage2D(_wGL_TEXTURE_2D, p2, p3, p4, p5, p6, p7, p8);
 	}
 	public static final void glTexParameteri(int p1, int p2, int p3) {
-		int pp1 = 0;
-		switch(p1) {
-		default:
-		case GL_TEXTURE_2D: pp1 = _wGL_TEXTURE_2D; break;
-		//case GL_TEXTURE_3D: pp1 = _wGL_TEXTURE_3D; break;
+		if(selectedTex == 0 && boundTexture0 != null && p2 == GL_TEXTURE_MAG_FILTER) {
+			boundTexture0.nearest = p3 == GL_NEAREST;
 		}
-		int pp2 = 0;
-		switch(p2) {
-		default:
-		case GL_TEXTURE_MAG_FILTER: pp2 = _wGL_TEXTURE_MAG_FILTER; break;
-		case GL_TEXTURE_MIN_FILTER: pp2 = _wGL_TEXTURE_MIN_FILTER; break;
-		case GL_TEXTURE_WRAP_S: pp2 = _wGL_TEXTURE_WRAP_S; break;
-		case GL_TEXTURE_WRAP_T: pp2 = _wGL_TEXTURE_WRAP_T; break;
-		case GL_TEXTURE_MAX_LEVEL: pp2 = _wGL_TEXTURE_MAX_LEVEL; break;
-		}
-		int pp3 = 0;
-		switch(p3) {
-		default:
-		pp3 = p3; break;
-		case GL_LINEAR: pp3 = _wGL_LINEAR; break;
-		case GL_NEAREST_MIPMAP_LINEAR: pp3 = _wGL_NEAREST_MIPMAP_LINEAR; break;
-		case GL_LINEAR_MIPMAP_LINEAR: pp3 = _wGL_LINEAR_MIPMAP_LINEAR; break;
-		case GL_LINEAR_MIPMAP_NEAREST: pp3 = _wGL_LINEAR_MIPMAP_NEAREST; break;
-		case GL_NEAREST_MIPMAP_NEAREST: pp3 = _wGL_NEAREST_MIPMAP_NEAREST; break;
-		case GL_NEAREST: pp3 = _wGL_NEAREST; break;
-		case GL_REPEAT: pp3 = _wGL_REPEAT; break;
-		case GL_CLAMP: pp3 = _wGL_CLAMP; break;
-		}
-
-		if(selectedTex == 0 && boundTexture0 != null && pp2 == _wGL_TEXTURE_MAG_FILTER) {
-			boundTexture0.nearest = pp3 == _wGL_NEAREST;
-		}
-		_wglTexParameteri(pp1, pp2, pp3);
+		_wglTexParameteri(p1, p2, p3);
 		updateAnisotropicPatch();
 	}
 	public static final void glTexParameterf(int p1, int p2, float p3) {
-		int pp1 = 0;
-		switch(p1) {
-		default:
-		case GL_TEXTURE_2D: pp1 = _wGL_TEXTURE_2D; break;
-		//case GL_TEXTURE_3D: pp1 = _wGL_TEXTURE_3D; break;
-		}
-		int pp2 = 0;
-		switch(p2) {
-		default:
-		case GL_TEXTURE_MAX_ANISOTROPY: pp2 = _wGL_TEXTURE_MAX_ANISOTROPY; break;
-		}
-		if(selectedTex == 0 && boundTexture0 != null && pp2 == _wGL_TEXTURE_MAX_ANISOTROPY) {
+		if(selectedTex == 0 && boundTexture0 != null && p2 == GL_TEXTURE_MAX_ANISOTROPY) {
 			boundTexture0.anisotropic = p3 > 1.0f;
 		}
-		_wglTexParameterf(pp1, pp2, p3);
+		_wglTexParameterf(p1, p2 == GL_TEXTURE_MAX_ANISOTROPY ? _wGL_TEXTURE_MAX_ANISOTROPY : p2, p3);
 		updateAnisotropicPatch();
 	}
 	public static final void glLogicOp(int p1) {
@@ -947,6 +868,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		mode = (mode | (enableTexture2D ? FixedFunctionShader.UNIT0 : 0));
 		mode = (mode | (enableTexture2D_1 ? FixedFunctionShader.UNIT1 : 0));
 		mode = (mode | ((enableTexture2D && (enableAnisotropicFix || (hintAnisotropicPatch && enableAnisotropicPatch))) ? FixedFunctionShader.FIX_ANISOTROPIC : 0));
+		mode = (mode | (swapRB ? FixedFunctionShader.SWAP_RB : 0));
 		return mode;
 	}
 	private static final int getShaderModeFlag() {
@@ -962,6 +884,7 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 		mode = (mode | (enableTexture2D ? FixedFunctionShader.UNIT0 : 0));
 		mode = (mode | (enableTexture2D_1 ? FixedFunctionShader.UNIT1 : 0));
 		mode = (mode | ((enableTexture2D && (enableAnisotropicFix || (hintAnisotropicPatch && enableAnisotropicPatch))) ? FixedFunctionShader.FIX_ANISOTROPIC : 0));
+		mode = (mode | (swapRB ? FixedFunctionShader.SWAP_RB : 0));
 		return mode;
 	}
 	private static FixedFunctionShader shader = null;
@@ -1034,31 +957,25 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 				_wglDrawQuadArrays(p2, p3);
 				triangleDrawn += p3 / 2;
 			}else {
-				int drawMode = 0;
 				switch(p1) {
 				default:
 				case GL_TRIANGLES:
-					drawMode = _wGL_TRIANGLES;
 					triangleDrawn += p3 / 3;
 					break;
 				case GL_TRIANGLE_STRIP:
-					drawMode = _wGL_TRIANGLE_STRIP;
 					triangleDrawn += p3 - 2;
 					break;
 				case GL_TRIANGLE_FAN:
-					drawMode = _wGL_TRIANGLE_FAN;
 					triangleDrawn += p3 - 2;
 					break;
 				case GL_LINE_STRIP:
-					drawMode = _wGL_LINE_STRIP;
 					triangleDrawn += p3 - 1;
 					break;
 				case GL_LINES:
-					drawMode = _wGL_LINES;
 					triangleDrawn += p3 / 2;
 					break;
 				}
-				_wglDrawArrays(drawMode, p2, p3);
+				_wglDrawArrays(p1, p2, p3);
 			}
 			
 			shader.unuseProgram();
@@ -1184,19 +1101,12 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	
 	public static final void glDrawOcclusionBB(float posX, float posY, float posZ, float sizeX, float sizeY, float sizeZ) {
 		glPushMatrix();
-		glTranslatef(posX - sizeX * 0.0001f, posY - sizeY * 0.0001f, posZ - sizeZ * 0.0001f);
-		glScalef(sizeX * 1.0002f, sizeY * 1.0002f, sizeZ * 1.0002f);
+		glTranslatef(posX - sizeX * 0.01f, posY - sizeY * 0.01f, posZ - sizeZ * 0.01f);
+		glScalef(sizeX * 1.02f, sizeY * 1.02f, sizeZ * 1.02f);
 		matModelV[matModelPointer].store(occlusionModel);
 		_wglUniformMat4fv(occlusion_matrix_m, occlusionModel);
 		_wglDrawArrays(_wGL_TRIANGLES, 0, 36);
 		glPopMatrix();
-		//glPushMatrix();
-		//glTranslatef(posX + sizeX * 0.0001f, posY + sizeY * 0.0001f, posZ + sizeZ * 0.0001f);
-		//glScalef(sizeX * 0.9998f, sizeY * 0.9998f, sizeZ * 0.9998f);
-		//matModelV[matModelPointer].store(occlusionModel);
-		//_wglUniformMat4fv(occlusion_matrix_m, occlusionModel);
-		//_wglDrawArrays(_wGL_TRIANGLES, 0, 36);
-		//glPopMatrix();
 		
 	}
 	
@@ -1206,7 +1116,12 @@ public class EaglerAdapterGL30 extends EaglerAdapterImpl2 {
 	
 	public static final boolean glGetQueryResult(int obj) {
 		QueryGL q = queryObjs.get(obj);
-		return _wglGetQueryObjecti(q, _wGL_QUERY_RESULT_AVAILABLE) == 0 || _wglGetQueryObjecti(q, _wGL_QUERY_RESULT) > 0;
+		return _wglGetQueryObjecti(q, _wGL_QUERY_RESULT) > 0;
+	}
+	
+	public static final boolean glGetQueryResultAvailable(int obj) {
+		QueryGL q = queryObjs.get(obj);
+		return _wglGetQueryObjecti(q, _wGL_QUERY_RESULT_AVAILABLE) >= 0;
 	}
 
 	public static final int glGenTextures() {

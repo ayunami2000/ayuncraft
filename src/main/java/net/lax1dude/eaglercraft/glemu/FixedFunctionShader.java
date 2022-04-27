@@ -9,7 +9,7 @@ import static net.lax1dude.eaglercraft.glemu.EaglerAdapterGL30.*;
 
 public class FixedFunctionShader {
 	
-	private static final FixedFunctionShader[] instances = new FixedFunctionShader[2048]; //lol
+	private static final FixedFunctionShader[] instances = new FixedFunctionShader[4096]; //lol
 	
 	public static void refreshCoreGL() {
 		for(int i = 0; i < instances.length; ++i) {
@@ -32,6 +32,7 @@ public class FixedFunctionShader {
 	public static final int UNIT0 = 256;
 	public static final int UNIT1 = 512;
 	public static final int FIX_ANISOTROPIC = 1024;
+	public static final int SWAP_RB = 2048;
 	
 	public static FixedFunctionShader instance(int i) {
 		FixedFunctionShader s = instances[i];
@@ -47,6 +48,7 @@ public class FixedFunctionShader {
 			boolean CC_unit0 = false;
 			boolean CC_unit1 = false;
 			boolean CC_anisotropic = false;
+			boolean CC_swap_rb = false;
 			if((i & COLOR) == COLOR) {
 				CC_a_color = true;
 			}
@@ -80,7 +82,11 @@ public class FixedFunctionShader {
 			if((i & FIX_ANISOTROPIC) == FIX_ANISOTROPIC) {
 				CC_anisotropic = true;
 			}
-			s = new FixedFunctionShader(i, CC_a_color, CC_a_normal, CC_a_texture0, CC_a_texture1, CC_TEX_GEN_STRQ, CC_lighting, CC_fog, CC_alphatest, CC_unit0, CC_unit1, CC_anisotropic);
+			if((i & SWAP_RB) == SWAP_RB) {
+				CC_swap_rb = true;
+			}
+			s = new FixedFunctionShader(i, CC_a_color, CC_a_normal, CC_a_texture0, CC_a_texture1, CC_TEX_GEN_STRQ, CC_lighting,
+					CC_fog, CC_alphatest, CC_unit0, CC_unit1, CC_anisotropic, CC_swap_rb);
 			instances[i] = s;
 		}
 		return s;
@@ -99,6 +105,7 @@ public class FixedFunctionShader {
 	private final boolean enable_unit0;
 	private final boolean enable_unit1;
 	private final boolean enable_anisotropic_fix;
+	private final boolean enable_swap_rb;
 	private final ProgramGL globject;
 
 	private UniformGL u_matrix_m = null;
@@ -148,7 +155,8 @@ public class FixedFunctionShader {
 	public final BufferGL genericBuffer;
 	public boolean bufferIsInitialized = false;
 	
-	private FixedFunctionShader(int j, boolean CC_a_color, boolean CC_a_normal, boolean CC_a_texture0, boolean CC_a_texture1, boolean CC_TEX_GEN_STRQ, boolean CC_lighting, boolean CC_fog, boolean CC_alphatest, boolean CC_unit0, boolean CC_unit1, boolean CC_anisotropic_fix) {
+	private FixedFunctionShader(int j, boolean CC_a_color, boolean CC_a_normal, boolean CC_a_texture0, boolean CC_a_texture1, boolean CC_TEX_GEN_STRQ, boolean CC_lighting, 
+			boolean CC_fog, boolean CC_alphatest, boolean CC_unit0, boolean CC_unit1, boolean CC_anisotropic_fix, boolean CC_swap_rb) {
 		enable_color = CC_a_color;
 		enable_normal = CC_a_normal;
 		enable_texture0 = CC_a_texture0;
@@ -160,6 +168,7 @@ public class FixedFunctionShader {
 		enable_unit0 = CC_unit0;
 		enable_unit1 = CC_unit1;
 		enable_anisotropic_fix = CC_anisotropic_fix;
+		enable_swap_rb = CC_swap_rb;
 		
 		if(shaderSource == null) {
 			shaderSource = fileContents("/glsl/core.glsl");
@@ -177,6 +186,7 @@ public class FixedFunctionShader {
 		if(enable_unit0) source += "#define CC_unit0\n";
 		if(enable_unit1) source += "#define CC_unit1\n";
 		if(enable_anisotropic_fix) source += "#define CC_patch_anisotropic\n";
+		if(enable_swap_rb) source += "#define CC_swap_rb\n";
 		source += shaderSource;
 		
 		ShaderGL v = _wglCreateShader(_wGL_VERTEX_SHADER);

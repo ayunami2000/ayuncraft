@@ -102,10 +102,10 @@ public class GuiIngame extends Gui {
 			this.drawTexturedModalRect(var6 / 2 - 91, var7 - 22, 0, 0, 182, 22);
 			this.drawTexturedModalRect(var6 / 2 - 91 - 1 + var31.currentItem * 20, var7 - 22 - 1, 0, 22, 24, 22);
 			tex_icons.bindTexture();
-			//EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
-			//EaglerAdapter.glBlendFunc(EaglerAdapter.GL_ONE_MINUS_DST_COLOR, EaglerAdapter.GL_ONE_MINUS_SRC_COLOR);
+			EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
+			EaglerAdapter.glBlendFunc(EaglerAdapter.GL_ONE_MINUS_DST_COLOR, EaglerAdapter.GL_ONE_MINUS_SRC_COLOR);
 			this.drawTexturedModalRect(var6 / 2 - 7, var7 / 2 - 7, 0, 0, 16, 16);
-			//EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
+			EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
 			var11 = this.mc.thePlayer.hurtResistantTime / 3 % 2 == 1;
 
 			if (this.mc.thePlayer.hurtResistantTime < 10) {
