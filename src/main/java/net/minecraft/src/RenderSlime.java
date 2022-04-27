@@ -19,7 +19,6 @@ public class RenderSlime extends RenderLiving {
 			return 0;
 		} else if (par2 == 0) {
 			this.setRenderPassModel(this.scaleAmount);
-			EaglerAdapter.glEnable(EaglerAdapter.GL_NORMALIZE);
 			EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
 			EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
 			return 1;

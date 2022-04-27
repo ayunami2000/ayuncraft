@@ -63,7 +63,8 @@ public class WorldRenderer {
 	public int chunkIndex;
 
 	/** Is this renderer visible according to the occlusion query */
-	public boolean isVisible = true;
+	public int isVisible = 0;
+	public boolean isNowVisible = true;
 
 	/** Is this renderer waiting on the result of the occlusion query */
 	public boolean isWaitingOnOcclusionQuery;

@@ -372,4 +372,12 @@ public class MapData extends WorldSavedData {
 		}
 	}
 	
+	public boolean enableVideoPlayback = false;
+
+	public float videoX1 = 0.0f;
+	public float videoY1 = 0.0f;
+	public float videoX2 = 1.0f;
+	public float videoY2 = 1.0f;
+	
+	
 }
