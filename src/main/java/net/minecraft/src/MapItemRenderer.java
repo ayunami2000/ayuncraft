@@ -42,6 +42,7 @@ public class MapItemRenderer {
 			texX2 = par3MapData.videoX2;
 			texY2 = par3MapData.videoY2;
 		}else if(isImageMode) {
+			EaglerAdapter.glEnable(EaglerAdapter.EAG_SWAP_RB);
 			EaglerAdapter.updateImageTexture();
 			EaglerAdapter.bindImageTexture();
 			texX1 = par3MapData.videoX1;
@@ -107,7 +108,7 @@ public class MapItemRenderer {
 		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
 		par2RenderEngine.resetBoundTexture();
 
-		if(isVideoMode) {
+		if(isVideoMode || isImageMode) {
 			EaglerAdapter.glDisable(EaglerAdapter.EAG_SWAP_RB);
 		}
 
