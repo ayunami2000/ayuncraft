@@ -360,4 +360,64 @@ public class ItemMap extends ItemMapBase {
 			e.printStackTrace();
 		}
 	}
+
+	public static void processImageMap(WorldClient theWorld, byte[] data) {
+		if(!EaglerAdapter.isImageSupported()) {
+			return;
+		}
+		try {
+			DataInputStream dat = new DataInputStream(new ByteArrayInputStream(data));
+			int op = dat.read();
+			if(op == 0) {
+				int count = dat.read();
+				int w = (count >> 4) & 0xF;
+				int h = count & 0xF;
+				for(int y = 0; y < h; ++y) {
+					for(int x = 0; x < w; ++x) {
+						getMapById(theWorld, dat.readUnsignedShort()).enableVideoPlayback = false;
+					}
+				}
+				EaglerAdapter.unloadImage();
+			}else if(op == 8) {
+				int ttl = dat.readInt();
+				String src = dat.readUTF();
+				EaglerAdapter.bufferImage(src, ttl);
+			}else {
+				boolean fullResetPacket = (op & 2) == 2;
+				boolean positionPacket = (op & 4) == 4;
+
+				int fps = 0;
+				int len = 0;
+				String url = null;
+				if(fullResetPacket) {
+					int count = dat.read();
+					int w = (count >> 4) & 0xF;
+					int h = count & 0xF;
+					float wf = 1.0f / w;
+					float hf = 1.0f / h;
+					for(int y = 0; y < h; ++y) {
+						for(int x = 0; x < w; ++x) {
+							MapData mp = getMapById(theWorld, dat.readUnsignedShort());
+							mp.videoX1 = x * wf;
+							mp.videoY1 = y * hf;
+							mp.videoX2 = mp.videoX1 + wf;
+							mp.videoY2 = mp.videoY1 + hf;
+							mp.enableVideoPlayback = true;
+						}
+					}
+					fps = dat.read();
+					len = dat.readInt();
+					url = dat.readUTF();
+				}
+
+				if(fullResetPacket) {
+					EaglerAdapter.setImageFrameRate(fps);
+					EaglerAdapter.loadImage(url);
+				}
+			}
+		}catch(IOException e) {
+			System.err.println("Failed to read image map packet! " + e.toString());
+			e.printStackTrace();
+		}
+	}
 }

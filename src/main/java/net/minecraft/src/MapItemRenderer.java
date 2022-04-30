@@ -30,11 +30,20 @@ public class MapItemRenderer {
 		float texX2 = 1.0f;
 		float texY1 = 0.0f;
 		float texY2 = 1.0f;
-		boolean isVideoMode = EaglerAdapter.isVideoSupported() && par3MapData.enableVideoPlayback && EaglerAdapter.isVideoLoaded();
+		boolean isVideoOrImageMode = EaglerAdapter.isVideoSupported() && par3MapData.enableVideoPlayback;
+		boolean isVideoMode = isVideoOrImageMode && EaglerAdapter.isVideoLoaded();
+		boolean isImageMode = isVideoOrImageMode && EaglerAdapter.isImageLoaded();
 		if(isVideoMode) {
 			EaglerAdapter.glEnable(EaglerAdapter.EAG_SWAP_RB);
 			EaglerAdapter.updateVideoTexture();
 			EaglerAdapter.bindVideoTexture();
+			texX1 = par3MapData.videoX1;
+			texY1 = par3MapData.videoY1;
+			texX2 = par3MapData.videoX2;
+			texY2 = par3MapData.videoY2;
+		}else if(isImageMode) {
+			EaglerAdapter.updateImageTexture();
+			EaglerAdapter.bindImageTexture();
 			texX1 = par3MapData.videoX1;
 			texY1 = par3MapData.videoY1;
 			texX2 = par3MapData.videoX2;
@@ -45,26 +54,26 @@ public class MapItemRenderer {
 			}else {
 				for (int var4 = 0; var4 < 16384; ++var4) {
 					byte var5 = par3MapData.colors[var4];
-		
+
 					if (var5 / 4 == 0) {
 						this.intArray[var4] = (var4 + var4 / 128 & 1) * 8 + 16 << 24;
 					} else {
 						int var6 = MapColor.mapColorArray[var5 / 4].colorValue;
 						int var7 = var5 & 3;
 						short var8 = 220;
-		
+
 						if (var7 == 2) {
 							var8 = 255;
 						}
-		
+
 						if (var7 == 0) {
 							var8 = 180;
 						}
-		
+
 						int var9 = (var6 >> 16 & 255) * var8 / 255;
 						int var10 = (var6 >> 8 & 255) * var8 / 255;
 						int var11 = (var6 & 255) * var8 / 255;
-		
+
 						if (this.gameSettings.anaglyph) {
 							int var12 = (var9 * 30 + var10 * 59 + var11 * 11) / 100;
 							int var13 = (var9 * 30 + var10 * 70) / 100;
@@ -73,14 +82,14 @@ public class MapItemRenderer {
 							var10 = var13;
 							var11 = var14;
 						}
-		
+
 						this.intArray[var4] = -16777216 | var9 << 16 | var10 << 8 | var11;
 					}
 				}
 			}
 			par2RenderEngine.createTextureFromBytes(this.intArray, 128, 128, this.bufferedImage);
 		}
-		
+
 		byte var15 = 0;
 		byte var16 = 0;
 		Tessellator var17 = Tessellator.instance;
@@ -97,15 +106,15 @@ public class MapItemRenderer {
 		EaglerAdapter.glEnable(EaglerAdapter.GL_ALPHA_TEST);
 		EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
 		par2RenderEngine.resetBoundTexture();
-		
+
 		if(isVideoMode) {
 			EaglerAdapter.glDisable(EaglerAdapter.EAG_SWAP_RB);
 		}
-		
+
 		if(!par3MapData.enableAyunami && !isVideoMode) {
 			mapicons.bindTexture();
 			int var19 = 0;
-	
+
 			for (Iterator var20 = par3MapData.playersVisibleOnMap.values().iterator(); var20.hasNext(); ++var19) {
 				MapCoord var21 = (MapCoord) var20.next();
 				EaglerAdapter.glPushMatrix();

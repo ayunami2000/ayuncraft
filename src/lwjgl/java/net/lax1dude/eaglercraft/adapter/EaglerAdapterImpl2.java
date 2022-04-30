@@ -675,6 +675,43 @@ public class EaglerAdapterImpl2 {
 		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
 	}
 
+	public static final boolean isImageSupported() {
+		return false;
+	}
+	public static final void loadImage(String src) {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void loadImage(String src, String setJavascriptPointer) {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void loadImage(String src, String setJavascriptPointer, String javascriptOnloadFunction) {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void bufferImage(String src, int ttl) {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void unloadImage() {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final boolean isImageLoaded() {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void updateImageTexture() {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void bindImageTexture() {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final int getImageWidth() {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final int getImageHeight() {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void setImageFrameRate(float seconds) {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+
 	// =======================================================================================
 	// =======================================================================================
 	// =======================================================================================

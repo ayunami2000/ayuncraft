@@ -20,7 +20,7 @@ public class VideoMapPacketCodecBukkit extends VideoMapPacketCodec {
 	public VideoMapPacketCodecBukkit(int[][] mapIds, double posX, double posY, double posZ, float volume) {
 		super(mapIds, posX, posY, posZ, volume);
 	}
-	
+
 	/**
 	 * @param mapIds 2D grid of map IDs that make up the screen (mapIds[y][x])
 	 * @param posX audio playback X coord
@@ -28,13 +28,23 @@ public class VideoMapPacketCodecBukkit extends VideoMapPacketCodec {
 	 * @param posZ audio playback Z coord
 	 */
 	public VideoMapPacketCodecBukkit(int[][] mapIds, double posX, double posY, double posZ) {
-		super(mapIds, posX, posY, posZ, 1.0f);
+		super(mapIds, posX, posY, posZ);
+	}
+
+	/**
+	 * @param mapIds 2D grid of map IDs that make up the screen (mapIds[y][x])
+	 */
+	public VideoMapPacketCodecBukkit(int[][] mapIds) {
+		super(mapIds);
 	}
 	
 	public static class VideoMapPacket {
 		protected final Object packet;
 		protected VideoMapPacket(byte[] packet) {
-			this.packet = new Packet131ItemData((short)104, (short)0, packet);
+			this(packet, false);
+		}
+		protected VideoMapPacket(byte[] packet, boolean image) {
+			this.packet = new Packet131ItemData((short)(104 + (image ? 1 : 0)), (short)0, packet);
 		}
 		public Object getNativePacket() {
 			return packet;
@@ -72,7 +82,15 @@ public class VideoMapPacketCodecBukkit extends VideoMapPacketCodec {
 	public VideoMapPacket disableVideoBukkit() {
 		return new VideoMapPacket(disableVideo());
 	}
-	
+
+	/**
+	 * unloads image and resets all map object to vanilla renderer
+	 * @return packet to send to players
+	 */
+	public VideoMapPacket disableImageBukkit() {
+		return new VideoMapPacket(disableVideo(), true);
+	}
+
 	/**
 	 * syncs the server side video timestamp with players
 	 * @return packet to send to players
@@ -80,7 +98,15 @@ public class VideoMapPacketCodecBukkit extends VideoMapPacketCodec {
 	public VideoMapPacket syncPlaybackWithPlayersBukkit() {
 		return new VideoMapPacket(syncPlaybackWithPlayers());
 	}
-	
+
+	/**
+	 * syncs the server side image with players
+	 * @return packet to send to players
+	 */
+	public VideoMapPacket syncPlaybackWithPlayersImageBukkit() {
+		return new VideoMapPacket(syncPlaybackWithPlayers(), true);
+	}
+
 	/**
 	 * @param url URL to an MP4 or other HTML5 supported video file
 	 * @param loop If the video file should loop
@@ -90,7 +116,15 @@ public class VideoMapPacketCodecBukkit extends VideoMapPacketCodec {
 	public VideoMapPacket beginPlaybackBukkit(String url, boolean loop, float duration) {
 		return new VideoMapPacket(beginPlayback(url, loop, duration));
 	}
-	
+
+	/**
+	 * @param url URL to a PNG, JPEG, GIF, or other HTML5 supported image file
+	 * @return packet to send to players
+	 */
+	public VideoMapPacket beginPlaybackImageBukkit(String url) {
+		return new VideoMapPacket(beginPlayback(url, loop, duration));
+	}
+
 	/**
 	 * Tells the browser to pre-load a URL to a video to be played in the future
 	 * @param url the URL of the video
@@ -99,6 +133,16 @@ public class VideoMapPacketCodecBukkit extends VideoMapPacketCodec {
 	 */
 	public static VideoMapPacket bufferVideoBukkit(String url, int ttl) {
 		return new VideoMapPacket(bufferVideo(url, ttl));
+	}
+
+	/**
+	 * Tells the browser to pre-load a URL to an image to be played in the future
+	 * @param url the URL of the image
+	 * @param ttl the amount of time the image should stay loaded
+	 * @return packet to send to players
+	 */
+	public static VideoMapPacket bufferImageBukkit(String url, int ttl) {
+		return new VideoMapPacket(bufferVideo(url, ttl), true);
 	}
 
 	/**

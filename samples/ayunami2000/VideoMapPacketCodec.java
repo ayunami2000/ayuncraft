@@ -40,7 +40,7 @@ public class VideoMapPacketCodec {
 		this.requiresFullResetPacket = true;
 		this.isDisabled = true;
 	}
-	
+
 	/**
 	 * @param mapIds 2D grid of map IDs that make up the screen (mapIds[y][x])
 	 * @param posX audio playback X coord
@@ -48,7 +48,14 @@ public class VideoMapPacketCodec {
 	 * @param posZ audio playback Z coord
 	 */
 	public VideoMapPacketCodec(int[][] mapIds, double posX, double posY, double posZ) {
-		this(mapIds, posX, posY, posZ, 1.0f);
+		this(mapIds, posX, posY, posZ, 0.5f);
+	}
+
+	/**
+	 * @param mapIds 2D grid of map IDs that make up the screen (mapIds[y][x])
+	 */
+	public VideoMapPacketCodec(int[][] mapIds) {
+		this(mapIds, 0, 100, 0, 0.5f);
 	}
 
 	/**
