@@ -112,7 +112,7 @@ public class MapItemRenderer {
 			EaglerAdapter.glDisable(EaglerAdapter.EAG_SWAP_RB);
 		}
 
-		if(!par3MapData.enableAyunami && !isVideoMode) {
+		if(!par3MapData.enableAyunami && !(isVideoMode || isImageMode)) {
 			mapicons.bindTexture();
 			int var19 = 0;
 
