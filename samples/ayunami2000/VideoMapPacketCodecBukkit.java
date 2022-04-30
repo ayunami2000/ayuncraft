@@ -122,7 +122,7 @@ public class VideoMapPacketCodecBukkit extends VideoMapPacketCodec {
 	 * @return packet to send to players
 	 */
 	public VideoMapPacket beginPlaybackImageBukkit(String url) {
-		return new VideoMapPacket(beginPlayback(url, loop, duration));
+		return new VideoMapPacket(beginPlayback(url));
 	}
 
 	/**

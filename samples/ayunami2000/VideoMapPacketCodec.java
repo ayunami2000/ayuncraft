@@ -174,7 +174,7 @@ public class VideoMapPacketCodec {
 	/**
 	 * @param url URL to an MP4 or other HTML5 supported video file
 	 * @param loop If the video file should loop
-	 * @param durationSeconds duration of the video in seconds
+	 * @param duration duration of the video in seconds
 	 * @return packet to send to players
 	 */
 	public byte[] beginPlayback(String url, boolean loop, float duration) {
