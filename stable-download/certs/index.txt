@@ -1,0 +1,2 @@
+# eaglercraft secure mode certificate list
+https://raw.githubusercontent.com/LAX1DUDE/eaglercraft/main/stable-download/certs/22w19a-1.dat
