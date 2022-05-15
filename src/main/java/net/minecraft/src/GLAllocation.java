@@ -68,7 +68,7 @@ public class GLAllocation {
 	 * Creates and returns a direct byte buffer with the specified capacity. Applies
 	 * native ordering to speed up access.
 	 */
-	public static synchronized ByteBuffer createDirectByteBuffer(int par0) {
+	public static ByteBuffer createDirectByteBuffer(int par0) {
 		return EaglerAdapter.isWebGL ? ByteBuffer.wrap(new byte[par0]).order(ByteOrder.nativeOrder()) : ByteBuffer.allocateDirect(par0).order(ByteOrder.nativeOrder());
 	}
 
