@@ -26,6 +26,7 @@ public class Configuration {
 	private boolean onlineMode;
 	private int playerLimit;
 	private String name;
+	private boolean showBanType;
 
 	public Configuration() {
 		this.timeout = 30000;
@@ -51,6 +52,7 @@ public class Configuration {
 		this.onlineMode = false;
 		this.playerLimit = adapter.getInt("player_limit", this.playerLimit);
 		this.name = adapter.getString("server_name", EaglercraftBungee.name + " Server");
+		this.showBanType = adapter.getBoolean("display_ban_type_on_kick", false);
 		Preconditions.checkArgument(this.listeners != null && !this.listeners.isEmpty(), (Object) "No listeners defined.");
 		final Map<String, ServerInfo> newServers = adapter.getServers();
 		Preconditions.checkArgument(newServers != null && !newServers.isEmpty(), (Object) "No servers defined");
@@ -102,4 +104,9 @@ public class Configuration {
 	public String getServerName() {
 		return name;
 	}
+
+	public boolean shouldShowBanType() {
+		return this.showBanType;
+	}
+	
 }

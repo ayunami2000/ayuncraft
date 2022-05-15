@@ -41,6 +41,7 @@ import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.eaglercraft.BanList;
 import net.md_5.bungee.eaglercraft.WebSocketProxy;
 import net.md_5.bungee.eaglercraft.BanList.BanCheck;
+import net.md_5.bungee.eaglercraft.BanList.BanState;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.protocol.packet.PacketFEPing;
 import net.md_5.bungee.Util;
@@ -164,7 +165,11 @@ public class InitialHandler extends PacketHandler implements PendingConnection {
 			default:
 				System.err.println("Player '" + un + "' is banned: " + bc.string);
 			}
-			this.disconnect("" + ChatColor.RED + "You are banned.\n" + ChatColor.DARK_GRAY + "Reason: " + bc.string);
+			if(bc.reason == BanState.USER_BANNED || ((BungeeCord)bungee).config.shouldShowBanType()) {
+				this.disconnect("" + ChatColor.RED + "You are banned.\n" + ChatColor.DARK_GRAY + "Reason: " + bc.string);
+			}else {
+				this.disconnect("" + ChatColor.RED + "You are banned.");
+			}
 			return;
 		}
 		final int limit = BungeeCord.getInstance().config.getPlayerLimit();
@@ -266,7 +271,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection {
 
 	@Override
 	public InetSocketAddress getVirtualHost() {
-		return (this.handshake == null) ? null : new InetSocketAddress(this.handshake.getHost(), this.handshake.getPort());
+		return (this.handshake == null) ? null : new InetSocketAddress(this.handshake.getHost(), this.handshake.getPort() & 0xFFFF);
 	}
 
 	@Override

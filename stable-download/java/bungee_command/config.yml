@@ -56,6 +56,7 @@ servers:
     address: localhost:25569
     restricted: false
 server_name: EaglercraftBungee Server
+display_ban_type_on_kick: false
 permissions:
   default:
   - bungeecord.command.server
