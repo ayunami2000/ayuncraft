@@ -35,6 +35,7 @@ import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.dom.html.HTMLVideoElement;
+import org.teavm.jso.dom.html.HTMLImageElement;
 import org.teavm.jso.media.MediaError;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Float32Array;
@@ -886,7 +887,7 @@ public class EaglerAdapterImpl2 {
 	public static final boolean isWindows() {
 		return getString("window.navigator.platform").toLowerCase().contains("win");
 	}
-	
+
 	private static HTMLVideoElement currentVideo = null;
 	private static TextureGL videoTexture = null;
 	private static boolean videoIsLoaded = false;
@@ -1183,6 +1184,171 @@ public class EaglerAdapterImpl2 {
 	}
 	
 	public static final void setVideoFrameRate(float fps) {
+		frameRate = (int)(1000.0f / fps);
+		if(frameRate < 1) {
+			frameRate = 1;
+		}
+	}
+
+	private static HTMLImageElement currentImage = null;
+	private static TextureGL imageTexture = null;
+	private static boolean imageIsLoaded = false;
+	private static boolean imageTexIsInitialized = false;
+	private static int imageFrameRate = 33;
+	private static long imageFrameTimer = 0l;
+
+	public static final boolean isImageSupported() {
+		return true;
+	}
+	public static final void loadImage(String src) {
+		loadImage(src, null);
+	}
+	public static final void loadImage(String src, String setJavascriptPointer) {
+		loadImage(src, setJavascriptPointer, null);
+	}
+
+	@JSBody(params = { "ptr", "el" }, script = "window[ptr] = el;")
+	private static native void setImagePointer(String ptr, HTMLImageElement el);
+	@JSBody(params = { "ptr", "el" }, script = "window[ptr](el);")
+	private static native void callImageLoadEvent(String ptr, HTMLImageElement el);
+
+	public static final void loadImage(String src, String setJavascriptPointer, final String javascriptOnloadFunction) {
+		imageIsLoaded = false;
+		imageTexIsInitialized = false;
+		if(imageTexture == null) {
+			imageTexture = _wglGenTextures();
+		}
+		if(currentImage != null) {
+			currentImage.setSrc("");
+		}
+
+		BufferedImageElem img = imagesBuffer.get(src);
+
+		if(img != null) {
+			currentImage = img.imageElement;
+			imagesBuffer.remove(src);
+		}else {
+			currentImage = (HTMLImageElement) win.getDocument().createElement("img");
+			currentImage.setAttribute("crossorigin", "anonymous");
+		}
+
+		if(setJavascriptPointer != null) {
+			setImagePointer(setJavascriptPointer, currentImage);
+		}
+
+		currentImage.addEventListener("load", new EventListener<Event>() {
+			@Override
+			public void handleEvent(Event evt) {
+				imageIsLoaded = true;
+				if(javascriptOnloadFunction != null) {
+					callImageLoadEvent(javascriptOnloadFunction, currentImage);
+				}
+			}
+		});
+
+		if(img == null) {
+			currentImage.setSrc(src);
+		}
+	}
+
+	private static class BufferedImageElem {
+
+		protected final HTMLImageElement imageElement;
+		protected final String url;
+		protected final long requestedTime;
+		protected final int ttl;
+
+		public BufferedImageElem(HTMLImageElement imageElement, String url, int ttl) {
+			this.imageElement = imageElement;
+			this.url = url;
+			this.requestedTime = System.currentTimeMillis();
+			this.ttl = ttl;
+		}
+
+	}
+
+	private static final HashMap<String, BufferedImageElem> imagesBuffer = new HashMap();
+
+	public static final void bufferImage(String src, int ttl) {
+		if(!imagesBuffer.containsKey(src)) {
+			HTMLImageElement image = (HTMLImageElement) win.getDocument().createElement("img");
+			image.setAttribute("crossorigin", "anonymous");
+			image.setSrc(src);
+			imagesBuffer.put(src, new BufferedImageElem(image, src, ttl));
+		}
+	}
+
+	public static final void unloadImage() {
+		if(imageTexture != null) {
+			_wglDeleteTextures(imageTexture);
+			imageTexture = null;
+		}
+		if(currentImage != null) {
+			currentImage.setSrc("");
+			currentImage = null;
+		}
+	}
+	public static final boolean isImageLoaded() {
+		return imageTexture != null && currentImage != null && imageIsLoaded;
+	}
+
+	@JSBody(
+			params = {"ctx", "target", "internalformat", "format", "type", "image"},
+			script = "ctx.texImage2D(target, 0, internalformat, format, type, image);"
+	)
+	private static native void html5ImageTexImage2D(WebGL2RenderingContext ctx, int target, int internalformat, int format, int type, HTMLImageElement image);
+
+	@JSBody(
+			params = {"ctx", "target", "format", "type", "image"},
+			script = "ctx.texSubImage2D(target, 0, 0, 0, format, type, image);"
+	)
+	private static native void html5ImageTexSubImage2D(WebGL2RenderingContext ctx, int target, int format, int type, HTMLImageElement image);
+
+	public static final void updateImageTexture() {
+		long ms = System.currentTimeMillis();
+		if(ms - imageFrameTimer < imageFrameRate && imageTexIsInitialized) {
+			return;
+		}
+		imageFrameTimer = ms;
+		if(currentImage != null && imageTexture != null && imageIsLoaded) {
+			try {
+				_wglBindTexture(_wGL_TEXTURE_2D, imageTexture);
+				if(imageTexIsInitialized) {
+					html5ImageTexSubImage2D(webgl, _wGL_TEXTURE_2D, _wGL_RGBA, _wGL_UNSIGNED_BYTE, currentImage);
+				}else {
+					html5ImageTexImage2D(webgl, _wGL_TEXTURE_2D, _wGL_RGBA, _wGL_RGBA, _wGL_UNSIGNED_BYTE, currentImage);
+					_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_S, _wGL_CLAMP);
+					_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_T, _wGL_CLAMP);
+					_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_MIN_FILTER, _wGL_LINEAR);
+					_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_MAG_FILTER, _wGL_LINEAR);
+					imageTexIsInitialized = true;
+				}
+			}catch(Throwable t) {
+				// rip
+			}
+		}
+	}
+	public static final void bindImageTexture() {
+		if(imageTexture != null) {
+			_wglBindTexture(_wGL_TEXTURE_2D, imageTexture);
+		}
+	}
+	public static final int getImageWidth() {
+		if(currentImage != null && imageIsLoaded) {
+			return currentImage.getWidth();
+		}else {
+			return -1;
+		}
+	}
+	public static final int getImageHeight() {
+		if(currentImage != null && imageIsLoaded) {
+			return currentImage.getHeight();
+		}else {
+			return -1;
+		}
+	}
+
+	public static final void setImageFrameRate(float fps) {
 		frameRate = (int)(1000.0f / fps);
 		if(frameRate < 1) {
 			frameRate = 1;
