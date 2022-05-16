@@ -24,7 +24,8 @@ public class EarlyLoadScreen {
 		_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_MIN_FILTER, _wGL_NEAREST);
 		_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_S, _wGL_CLAMP);
 		_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_T, _wGL_CLAMP);
-		EaglerImage img = EaglerImage.loadImage(Base64.decodeBase64(loadScreen));
+		//EaglerImage img = EaglerImage.loadImage(Base64.decodeBase64(loadScreen));
+		EaglerImage img = EaglerAdapter.loadPNG(Base64.decodeBase64(loadScreen));
 		IntBuffer upload = GLAllocation.createDirectIntBuffer(192*192);
 		upload.put(img.data);
 		upload.flip();
@@ -116,7 +117,8 @@ public class EarlyLoadScreen {
 		_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_MIN_FILTER, _wGL_NEAREST);
 		_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_S, _wGL_CLAMP);
 		_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_T, _wGL_CLAMP);
-		EaglerImage img = EaglerImage.loadImage(Base64.decodeBase64(enableScreen));
+		//EaglerImage img = EaglerImage.loadImage(Base64.decodeBase64(enableScreen));
+		EaglerImage img = EaglerAdapter.loadPNG(Base64.decodeBase64(enableScreen));
 		IntBuffer upload = GLAllocation.createDirectIntBuffer(128*128);
 		upload.put(img.data);
 		upload.flip();

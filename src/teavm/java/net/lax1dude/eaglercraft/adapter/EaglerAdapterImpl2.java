@@ -25,6 +25,8 @@ import org.teavm.jso.ajax.ReadyStateChangeHandler;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
+import org.teavm.jso.canvas.CanvasRenderingContext2D;
+import org.teavm.jso.canvas.ImageData;
 import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.KeyboardEvent;
@@ -41,6 +43,7 @@ import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Float32Array;
 import org.teavm.jso.typedarrays.Int32Array;
 import org.teavm.jso.typedarrays.Uint8Array;
+import org.teavm.jso.typedarrays.Uint8ClampedArray;
 import org.teavm.jso.webaudio.AudioBuffer;
 import org.teavm.jso.webaudio.AudioBufferSourceNode;
 import org.teavm.jso.webaudio.AudioContext;
@@ -63,6 +66,7 @@ import org.teavm.jso.websocket.WebSocket;
 
 import net.lax1dude.eaglercraft.AssetRepository;
 import net.lax1dude.eaglercraft.Base64;
+import net.lax1dude.eaglercraft.EaglerImage;
 import net.lax1dude.eaglercraft.EarlyLoadScreen;
 import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.lax1dude.eaglercraft.ServerQuery;
@@ -886,6 +890,73 @@ public class EaglerAdapterImpl2 {
 	}
 	public static final boolean isWindows() {
 		return getString("window.navigator.platform").toLowerCase().contains("win");
+	}
+
+	private static HTMLCanvasElement imageLoadCanvas = null;
+	private static CanvasRenderingContext2D imageLoadContext = null;
+
+	@JSBody(params = { "buf", "mime" }, script = "return URL.createObjectURL(new Blob([buf], {type: mime}));")
+	private static native String getDataURL(ArrayBuffer buf, String mime);
+	
+	@JSBody(params = { "url" }, script = "URL.revokeObjectURL(url);")
+	private static native void freeDataURL(String url);
+	
+	public static final EaglerImage loadPNG(byte[] data) {
+		ArrayBuffer arr = ArrayBuffer.create(data.length);
+		Uint8Array.create(arr).set(data);
+		return loadPNG0(arr);
+	}
+	
+	@Async
+	private static native EaglerImage loadPNG0(ArrayBuffer data);
+	
+	private static void loadPNG0(ArrayBuffer data, final AsyncCallback<EaglerImage> ret) {
+		final HTMLImageElement toLoad = (HTMLImageElement) doc.createElement("img");
+		toLoad.addEventListener("load", new EventListener<Event>() {
+			@Override
+			public void handleEvent(Event evt) {
+				if(imageLoadCanvas == null) {
+					imageLoadCanvas = (HTMLCanvasElement) doc.createElement("canvas");
+				}
+				if(imageLoadCanvas.getWidth() < toLoad.getWidth()) {
+					imageLoadCanvas.setWidth(toLoad.getWidth());
+				}
+				if(imageLoadCanvas.getHeight() < toLoad.getHeight()) {
+					imageLoadCanvas.setHeight(toLoad.getHeight());
+				}
+				if(imageLoadContext == null) {
+					imageLoadContext = (CanvasRenderingContext2D) imageLoadCanvas.getContext("2d");
+				}
+				imageLoadContext.clearRect(0, 0, toLoad.getWidth(), toLoad.getHeight());
+				imageLoadContext.drawImage(toLoad, 0, 0, toLoad.getWidth(), toLoad.getHeight());
+				ImageData pxlsDat = imageLoadContext.getImageData(0, 0, toLoad.getWidth(), toLoad.getHeight());
+				Uint8ClampedArray pxls = pxlsDat.getData();
+				int totalPixels = pxlsDat.getWidth() * pxlsDat.getHeight();
+				freeDataURL(toLoad.getSrc());
+				if(pxls.getByteLength() < totalPixels * 4) {
+					ret.complete(null);
+					return;
+				}
+				int[] pixels = new int[totalPixels];
+				for(int i = 0; i < pixels.length; ++i) {
+					pixels[i] = (pxls.get(i * 4) << 16) | (pxls.get(i * 4 + 1) << 8) | pxls.get(i * 4 + 2) | (pxls.get(i * 4 + 3) << 24);
+				}
+				ret.complete(new EaglerImage(pixels, pxlsDat.getWidth(), pxlsDat.getHeight(), true));
+			}
+		});
+		toLoad.addEventListener("error", new EventListener<Event>() {
+			@Override
+			public void handleEvent(Event evt) {
+				freeDataURL(toLoad.getSrc());
+				ret.complete(null);
+			}
+		});
+		String src = getDataURL(data, "image/png");
+		if(src == null) {
+			ret.complete(null);
+		}else {
+			toLoad.setSrc(src);
+		}
 	}
 
 	private static HTMLVideoElement currentVideo = null;
