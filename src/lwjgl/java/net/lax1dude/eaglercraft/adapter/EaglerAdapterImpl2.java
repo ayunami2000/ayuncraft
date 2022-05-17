@@ -1393,7 +1393,7 @@ public class EaglerAdapterImpl2 {
 	}
 	
 	public static final String getUserAgent() {
-		return System.getProperty("os.name");
+		return "Desktop/" + System.getProperty("os.name");
 	}
 	
 	public static final String getClipboard() {

@@ -157,6 +157,8 @@ public class Minecraft implements Runnable {
 	int fpsCounter = 0;
 	long prevFrameTime = -1L;
 	
+	public int showHints = 140;
+	
 	long secondTimer = 0l;
 	
 	private HashSet<String> shownPlayerMessages = new HashSet();
@@ -1233,6 +1235,11 @@ public class Minecraft implements Runnable {
 									this.gameSettings.thirdPersonView = 0;
 								}
 							}
+							
+							if (EaglerAdapter.getEventKey() == 7 && this.gameSettings.keyBindFunction.pressed) {
+								this.gameSettings.showCoordinates = !this.gameSettings.showCoordinates;
+								this.gameSettings.saveOptions();
+							}
 
 							if (EaglerAdapter.getEventKey() == 9 && this.gameSettings.keyBindFunction.pressed) {
 								this.gameSettings.smoothCamera = !this.gameSettings.smoothCamera;
@@ -1330,10 +1337,14 @@ public class Minecraft implements Runnable {
 		if (this.theWorld != null) {
 			if (this.thePlayer != null) {
 				++this.joinPlayerCounter;
-
+				
 				if (this.joinPlayerCounter == 30) {
 					this.joinPlayerCounter = 0;
 					this.theWorld.joinEntityInSurroundings(this.thePlayer);
+				}
+				
+				if(this.showHints > 0) {
+					--this.showHints;
 				}
 			}
 

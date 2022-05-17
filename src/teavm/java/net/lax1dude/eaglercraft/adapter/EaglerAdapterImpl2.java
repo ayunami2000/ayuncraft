@@ -164,6 +164,8 @@ public class EaglerAdapterImpl2 {
 	public static HTMLDocument doc = null;
 	public static HTMLElement parent = null;
 	public static HTMLCanvasElement canvas = null;
+	public static CanvasRenderingContext2D frameBuffer = null;
+	public static HTMLCanvasElement renderingCanvas = null;
 	public static WebGL2RenderingContext webgl = null;
 	public static Window win = null;
 	private static byte[] loadedPackage = null;
@@ -207,8 +209,14 @@ public class EaglerAdapterImpl2 {
 		doc = win.getDocument();
 		canvas = (HTMLCanvasElement)doc.createElement("canvas");
 		canvas.setAttribute("id", "deevis589723589");
+		canvas.setWidth(parent.getClientWidth());
+		canvas.setHeight(parent.getClientHeight());
 		rootElement.appendChild(canvas);
-		webgl = (WebGL2RenderingContext) canvas.getContext("webgl2", youEagler());
+		renderingCanvas = (HTMLCanvasElement)doc.createElement("canvas");
+		renderingCanvas.setWidth(canvas.getWidth());
+		renderingCanvas.setHeight(canvas.getHeight());
+		frameBuffer = (CanvasRenderingContext2D) canvas.getContext("2d");
+		webgl = (WebGL2RenderingContext) renderingCanvas.getContext("webgl2", youEagler());
 		if(webgl == null) {
 			throw new RuntimeException("WebGL 2.0 is not supported in your browser ("+getString("window.navigator.userAgent")+")");
 		}
@@ -1540,16 +1548,48 @@ public class EaglerAdapterImpl2 {
 		return false;
 	}
 	
+	@Async
+	private static native Object interrupt();
+	
+	private static void interrupt(final AsyncCallback<Object> cb) {
+		Window.setTimeout(new TimerHandler() {
+			
+			@Override
+			public void onTimer() {
+				cb.complete(null);
+			}
+			
+		}, 0);
+	}
+	
 	@JSBody(params = { "obj" }, script = "if(obj.commit) obj.commit();")
 	private static native int commitContext(JSObject obj);
 	
 	public static final void updateDisplay() {
-		commitContext(webgl);
+		//commitContext(webgl);
+		int w = parent.getClientWidth();
+		int h = parent.getClientHeight();
+		if(canvas.getWidth() != w) {
+			canvas.setWidth(w);
+		}
+		if(canvas.getHeight() != h) {
+			canvas.setHeight(h);
+		}
+		frameBuffer.drawImage(renderingCanvas, 0, 0, w, h);
+		if(renderingCanvas.getWidth() != w) {
+			renderingCanvas.setWidth(w);
+		}
+		if(renderingCanvas.getHeight() != h) {
+			renderingCanvas.setHeight(h);
+		}
+		/*
 		try {
 			Thread.sleep(1l);
 		} catch (InterruptedException e) {
 			;
 		}
+		*/
+		interrupt();
 	}
 	public static final void setVSyncEnabled(boolean p1) {
 		
@@ -1580,14 +1620,10 @@ public class EaglerAdapterImpl2 {
 		return win.getScreen().getAvailHeight();
 	}
 	public static final int getCanvasWidth() {
-		int w = parent.getClientWidth();
-		canvas.setWidth(w);
-		return w;
+		return renderingCanvas.getWidth();
 	}
 	public static final int getCanvasHeight() {
-		int h = parent.getClientHeight();
-		canvas.setHeight(h);
-		return h;
+		return renderingCanvas.getHeight();
 	}
 	public static final void setDisplaySize(int x, int y) {
 		
