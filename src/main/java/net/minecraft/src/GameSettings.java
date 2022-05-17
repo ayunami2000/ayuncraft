@@ -133,7 +133,7 @@ public class GameSettings {
 		this.thirdPersonView = 0;
 		this.showDebugInfo = false;
 		this.showDebugProfilerChart = true;
-		this.showCoordinates = false;
+		this.showCoordinates = true;
 		this.lastServer = "";
 		this.noclip = false;
 		this.smoothCamera = false;

@@ -157,8 +157,6 @@ public class Minecraft implements Runnable {
 	int fpsCounter = 0;
 	long prevFrameTime = -1L;
 	
-	public int showHints = 140;
-	
 	long secondTimer = 0l;
 	
 	private HashSet<String> shownPlayerMessages = new HashSet();
@@ -952,7 +950,7 @@ public class Minecraft implements Runnable {
 	
 	public void displayEaglercraftText(String s) {
 		if(this.thePlayer != null && shownPlayerMessages.add(s)) {
-			this.thePlayer.sendChatToPlayer("notice: "+s);
+			this.thePlayer.sendChatToPlayer(s);
 		}
 	}
 
@@ -1342,10 +1340,6 @@ public class Minecraft implements Runnable {
 					this.joinPlayerCounter = 0;
 					this.theWorld.joinEntityInSurroundings(this.thePlayer);
 				}
-				
-				if(this.showHints > 0) {
-					--this.showHints;
-				}
 			}
 
 			this.mcProfiler.endStartSection("gameRenderer");
@@ -1488,7 +1482,13 @@ public class Minecraft implements Runnable {
 			StringTranslate var4 = StringTranslate.getInstance();
 			
 			if(!this.gameSettings.fancyGraphics || this.gameSettings.ambientOcclusion == 0) {
-				displayEaglercraftText(var4.translateKey("fancyGraphicsNote"));
+				displayEaglercraftText("Note: " + var4.translateKey("fancyGraphicsNote"));
+			}
+			
+			if(this.gameSettings.showCoordinates) {
+				displayEaglercraftText(EnumChatFormatting.LIGHT_PURPLE + "Note: use F+6 to hide the coordinates off of the screen (if you're in public)");
+			}else {
+				displayEaglercraftText(EnumChatFormatting.LIGHT_PURPLE + "Note: use F+6 to show your coordinates on the screen");
 			}
 
 			this.thePlayer.preparePlayerToSpawn();

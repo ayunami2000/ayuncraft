@@ -1548,20 +1548,6 @@ public class EaglerAdapterImpl2 {
 		return false;
 	}
 	
-	@Async
-	private static native Object interrupt();
-	
-	private static void interrupt(final AsyncCallback<Object> cb) {
-		Window.setTimeout(new TimerHandler() {
-			
-			@Override
-			public void onTimer() {
-				cb.complete(null);
-			}
-			
-		}, 0);
-	}
-	
 	@JSBody(params = { "obj" }, script = "if(obj.commit) obj.commit();")
 	private static native int commitContext(JSObject obj);
 	
@@ -1582,14 +1568,11 @@ public class EaglerAdapterImpl2 {
 		if(renderingCanvas.getHeight() != h) {
 			renderingCanvas.setHeight(h);
 		}
-		/*
 		try {
 			Thread.sleep(1l);
 		} catch (InterruptedException e) {
 			;
 		}
-		*/
-		interrupt();
 	}
 	public static final void setVSyncEnabled(boolean p1) {
 		

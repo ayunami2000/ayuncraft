@@ -462,10 +462,6 @@ public class GuiIngame extends Gui {
 			
 			if(mc.gameSettings.showCoordinates) {
 				var8.drawStringWithShadow("x: "+MathHelper.floor_double(this.mc.thePlayer.posX)+", y: "+MathHelper.floor_double(this.mc.thePlayer.posY)+", z: "+MathHelper.floor_double(this.mc.thePlayer.posZ), 2, 12, 16777215);
-			}else {
-				if(mc.showHints > 0) {
-					var8.drawStringWithShadow("Press F+6 to show coordinates", 2, 12, 16777215);
-				}
 			}
 			
 			int offset = this.mc.isChatOpen() ? 135 : 0;
