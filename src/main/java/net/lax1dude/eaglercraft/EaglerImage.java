@@ -1,12 +1,5 @@
 package net.lax1dude.eaglercraft;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import com.baislsl.png.decode.DecodeException;
-import com.baislsl.png.decode.Decoder;
-import com.baislsl.png.decode.PNG;
-
 public class EaglerImage {
 	
 	public final int[] data;
@@ -37,16 +30,7 @@ public class EaglerImage {
 	}
 	
 	public static final EaglerImage loadImage(byte[] file) {
-		try {
-			PNG p = (new Decoder(new ByteArrayInputStream(file))).readInPNG();
-			return new EaglerImage(p.getColor(), (int)p.getWidth(), (int)p.getHeight(), p.isAlpha());
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (DecodeException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return EaglerAdapter.loadPNG(file);
 	}
 
 	public EaglerImage getSubImage(int x, int y, int pw, int ph) {

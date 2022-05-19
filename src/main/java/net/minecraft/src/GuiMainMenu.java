@@ -198,6 +198,7 @@ public class GuiMainMenu extends GuiScreen {
 				int w = this.fontRenderer.getStringWidth("eaglercraft readme.txt") * 3 / 4;
 				if(par1 >= (this.width - w - 4) && par1 <= this.width && par2 >= 0 && par2 <= 9) {
 					showAck = true;
+					return;
 				}
 				/*
 				w = this.fontRenderer.getStringWidth("debug console") * 3 / 4;
@@ -205,6 +206,31 @@ public class GuiMainMenu extends GuiScreen {
 					EaglerAdapter.openConsole();
 				}
 				*/
+				if(ConfigConstants.mainMenuItem > 0 && ConfigConstants.mainMenuItemLink != null) {
+					//drawRect((this.width - w - 4), 0, this.width, 9, 0x55200000);
+
+					int posX = this.width / 2 - 170 - this.width / 10;
+					int posY = this.height / 4 + 70;
+					int ww = 66;
+					int hh = 46;
+					int ln0w = ConfigConstants.mainMenuItemLine0 == null ? 0 : fontRenderer.getStringWidth(ConfigConstants.mainMenuItemLine0);
+					ww = ww < ln0w ? ln0w : ww;
+					hh = hh < ln0w ? hh + 12 : hh;
+					int ln1w = ConfigConstants.mainMenuItemLine1 == null ? 0 : fontRenderer.getStringWidth(ConfigConstants.mainMenuItemLine1);
+					ww = ww < ln1w ? ln1w : ww;
+					hh = hh < ln1w ? hh + 12 : hh;
+					int ln2w = ConfigConstants.mainMenuItemLine2 == null ? 0 : fontRenderer.getStringWidth(ConfigConstants.mainMenuItemLine2);
+					ww = ww < ln2w ? ln2w : ww;
+					hh = hh < ln2w ? hh + 12 : hh;
+					
+					ww += 20;
+					hh += 20;
+					
+					if(par1 > posX && par1 < posX + (ww / 4 * 3) && par2 > posY && par2 < posY + (hh / 4 * 3)) {
+						EaglerAdapter.openLink(ConfigConstants.mainMenuItemLink);
+						return;
+					}
+				}
 			}
 		}else {
 			if(par3 == 0) {
@@ -413,6 +439,7 @@ public class GuiMainMenu extends GuiScreen {
 	private static final TextureLocation mclogo = new TextureLocation("/title/mclogo.png");
 	private static final TextureLocation ackbk = new TextureLocation("/gui/demo_bg.png");
 	private static final TextureLocation beaconx = new TextureLocation("/gui/beacon.png");
+	private static final TextureLocation items = new TextureLocation("/gui/items.png");
 
 	/**
 	 * Draws the screen and all the components in it.
@@ -504,6 +531,92 @@ public class GuiMainMenu extends GuiScreen {
 		this.drawString(this.fontRenderer, var10, 0, 0, 16777215);
 		EaglerAdapter.glPopMatrix();
 		*/
+		
+		if(ConfigConstants.mainMenuItem > 0 && ConfigConstants.mainMenuItemLink != null) {
+			//drawRect((this.width - w - 4), 0, this.width, 9, 0x55200000);
+
+			int posX = this.width / 2 - 170 - this.width / 10;
+			int posY = this.height / 4 + 70;
+			int ww = 66;
+			int hh = 46;
+			int ln0w = ConfigConstants.mainMenuItemLine0 == null ? 0 : fontRenderer.getStringWidth(ConfigConstants.mainMenuItemLine0);
+			ww = ww < ln0w ? ln0w : ww;
+			hh = hh < ln0w ? hh + 12 : hh;
+			int ln1w = ConfigConstants.mainMenuItemLine1 == null ? 0 : fontRenderer.getStringWidth(ConfigConstants.mainMenuItemLine1);
+			ww = ww < ln1w ? ln1w : ww;
+			hh = hh < ln1w ? hh + 12 : hh;
+			int ln2w = ConfigConstants.mainMenuItemLine2 == null ? 0 : fontRenderer.getStringWidth(ConfigConstants.mainMenuItemLine2);
+			ww = ww < ln2w ? ln2w : ww;
+			hh = hh < ln2w ? hh + 12 : hh;
+			
+			ww += 20;
+			hh += 20;
+			
+			boolean over = par1 > posX && par1 < posX + (ww / 4 * 3) && par2 > posY && par2 < posY + (hh / 4 * 3);
+			
+			int iconSize = 45;
+			
+			if(over) {
+				EaglerAdapter.glPushMatrix();
+				EaglerAdapter.glTranslatef(posX, posY, 0.0f);
+				EaglerAdapter.glScalef(0.75f, 0.75f, 0.75f);
+
+				drawRect(0, 0, ww, hh, 0x44000022);
+				
+				drawRect(3, 3, ww - 3, 4, 0x99999999);
+				drawRect(3, hh - 4, ww - 3, hh - 3, 0x99999999);
+				drawRect(3, 4, 4, hh - 4, 0x99999999);
+				drawRect(ww - 4, 4, ww - 3, hh - 4, 0x99999999);
+				
+				int i = 10;
+				
+				if(ln0w > 0) {
+					this.drawString(this.fontRenderer, ConfigConstants.mainMenuItemLine0, (ww - ln0w) / 2, i, 0xFFFF99);
+					i += 12;
+				}
+				
+				items.bindTexture();
+				
+				EaglerAdapter.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+				this.drawTexturedModelRectFromIcon((ww - iconSize) / 2, i, Item.itemsList[ConfigConstants.mainMenuItem].getIconFromDamage(0), iconSize, iconSize);
+				
+				i += iconSize + 5;
+				
+				if(ln1w > 0) {
+					this.drawString(this.fontRenderer, ConfigConstants.mainMenuItemLine1, (ww - ln1w) / 2, i, 0xFFFF99);
+					i += 12;
+				}
+				
+				if(ln2w > 0) {
+					this.drawString(this.fontRenderer, ConfigConstants.mainMenuItemLine2, (ww - ln2w) / 2, i, 0xDDDDDD);
+				}
+				
+				int ww75 = (ww * 4 / 3);
+				int hh75 = (hh * 4 / 3);
+				
+				//this.drawString(this.fontRenderer, var10, this.width - this.fontRenderer.getStringWidth(var10) - 2, this.height - 10, 16777215);
+				
+				EaglerAdapter.glPopMatrix();
+				
+			}else {
+				EaglerAdapter.glEnable(EaglerAdapter.GL_BLEND);
+				EaglerAdapter.glBlendFunc(EaglerAdapter.GL_SRC_ALPHA, EaglerAdapter.GL_ONE_MINUS_SRC_ALPHA);
+				EaglerAdapter.glColor4f(0.9f, 0.9f, 0.9f, MathHelper.sin((float)(System.currentTimeMillis() % 1000000l) / 300f) * 0.17f + 0.5f);
+				
+				items.bindTexture();
+				
+				EaglerAdapter.glPushMatrix();
+				EaglerAdapter.glTranslatef(posX, posY, 0.0f);
+				EaglerAdapter.glScalef(0.75f, 0.75f, 0.75f);
+				this.drawTexturedModelRectFromIcon((ww - iconSize) / 2, ln0w > 0 ? 22 : 10, Item.itemsList[ConfigConstants.mainMenuItem].getIconFromDamage(0), iconSize, iconSize);
+				EaglerAdapter.glPopMatrix();
+				
+				EaglerAdapter.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+				EaglerAdapter.glDisable(EaglerAdapter.GL_BLEND);
+			}
+			
+		}
+		
 		if(showAck) {
 			super.drawScreen(0, 0, par3);
 			this.drawGradientRect(0, 0, this.width, this.height, -1072689136, -804253680);

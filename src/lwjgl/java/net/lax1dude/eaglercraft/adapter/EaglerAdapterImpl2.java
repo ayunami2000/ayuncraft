@@ -13,6 +13,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,6 +35,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -65,6 +67,7 @@ import org.lwjgl.util.glu.GLU;
 
 import de.cuina.fireandfuel.CodecJLayerMP3;
 import net.lax1dude.eaglercraft.AssetRepository;
+import net.lax1dude.eaglercraft.EaglerImage;
 import net.lax1dude.eaglercraft.EarlyLoadScreen;
 import net.lax1dude.eaglercraft.ServerQuery;
 import net.lax1dude.eaglercraft.adapter.EaglerAdapterImpl2.ProgramGL;
@@ -635,6 +638,18 @@ public class EaglerAdapterImpl2 {
 		return GL20.glGetAttribLocation(p1.obj, p2);
 	}
 	
+	public static final EaglerImage loadPNG(byte[] data) {
+		try {
+			BufferedImage img = ImageIO.read(new ByteArrayInputStream(data));
+			int[] pxls = img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth());
+			return new EaglerImage(pxls, img.getWidth(), img.getHeight(), true);
+		} catch (IOException e) {
+			System.err.println("Could not load PNG file:");
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	public static final boolean isVideoSupported() {
 		return false;
 	}
@@ -701,6 +716,43 @@ public class EaglerAdapterImpl2 {
 
 	public static final int getVideoError() {
 		throw new UnsupportedOperationException("Video is not supported in LWJGL runtime");
+	}
+
+	public static final boolean isImageSupported() {
+		return false;
+	}
+	public static final void loadImage(String src) {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void loadImage(String src, String setJavascriptPointer) {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void loadImage(String src, String setJavascriptPointer, String javascriptOnloadFunction) {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void bufferImage(String src, int ttl) {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void unloadImage() {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final boolean isImageLoaded() {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void updateImageTexture() {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void bindImageTexture() {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final int getImageWidth() {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final int getImageHeight() {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
+	}
+	public static final void setImageFrameRate(float seconds) {
+		throw new UnsupportedOperationException("Image is not supported in LWJGL runtime");
 	}
 
 	// =======================================================================================
@@ -1369,7 +1421,7 @@ public class EaglerAdapterImpl2 {
 	}
 	
 	public static final String getUserAgent() {
-		return System.getProperty("os.name");
+		return "Desktop/" + System.getProperty("os.name");
 	}
 	
 	public static final String getClipboard() {

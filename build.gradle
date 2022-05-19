@@ -63,7 +63,7 @@ teavm {
    
    classesToPreserve = null;
    stopOnErrors = false;
-   optimizationLevel = "FULL"; //org.teavm.vm.TeaVMOptimizationLevel.SIMPLE;
+   optimizationLevel = "ADVANCED"; //org.teavm.vm.TeaVMOptimizationLevel.SIMPLE;
    fastGlobalAnalysis = false;
    targetType = "JAVASCRIPT"; //org.teavm.tooling.TeaVMTargetType.JAVASCRIPT;
    cacheDirectory = null;

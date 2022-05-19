@@ -52,7 +52,8 @@ public class TextureManager {
 		ITexturePack var3 = Minecraft.getMinecraft().texturePackList.getSelectedTexturePack();
 		byte[] b = var3.getResourceAsBytes("/" + par1Str);
 		if(b != null) {
-			EaglerImage var9 = EaglerImage.loadImage(b);
+			//EaglerImage var9 = EaglerImage.loadImage(b);
+			EaglerImage var9 = EaglerAdapter.loadPNG(b);
 			int var10 = var9.w;
 			int var11 = var9.h;
 			String var12 = this.getBasename(par1Str);

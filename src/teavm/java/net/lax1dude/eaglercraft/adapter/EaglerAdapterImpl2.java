@@ -25,6 +25,8 @@ import org.teavm.jso.ajax.ReadyStateChangeHandler;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
+import org.teavm.jso.canvas.CanvasRenderingContext2D;
+import org.teavm.jso.canvas.ImageData;
 import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.KeyboardEvent;
@@ -35,11 +37,13 @@ import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.dom.html.HTMLVideoElement;
+import org.teavm.jso.dom.html.HTMLImageElement;
 import org.teavm.jso.media.MediaError;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Float32Array;
 import org.teavm.jso.typedarrays.Int32Array;
 import org.teavm.jso.typedarrays.Uint8Array;
+import org.teavm.jso.typedarrays.Uint8ClampedArray;
 import org.teavm.jso.webaudio.AudioBuffer;
 import org.teavm.jso.webaudio.AudioBufferSourceNode;
 import org.teavm.jso.webaudio.AudioContext;
@@ -62,6 +66,7 @@ import org.teavm.jso.websocket.WebSocket;
 
 import net.lax1dude.eaglercraft.AssetRepository;
 import net.lax1dude.eaglercraft.Base64;
+import net.lax1dude.eaglercraft.EaglerImage;
 import net.lax1dude.eaglercraft.EarlyLoadScreen;
 import net.lax1dude.eaglercraft.LocalStorageManager;
 import net.lax1dude.eaglercraft.ServerQuery;
@@ -183,6 +188,8 @@ public class EaglerAdapterImpl2 {
 	public static HTMLDocument doc = null;
 	public static HTMLElement parent = null;
 	public static HTMLCanvasElement canvas = null;
+	public static CanvasRenderingContext2D frameBuffer = null;
+	public static HTMLCanvasElement renderingCanvas = null;
 	public static WebGL2RenderingContext webgl = null;
 	public static Window win = null;
 	private static byte[] loadedPackage = null;
@@ -226,8 +233,14 @@ public class EaglerAdapterImpl2 {
 		doc = win.getDocument();
 		canvas = (HTMLCanvasElement)doc.createElement("canvas");
 		canvas.setAttribute("id", "deevis589723589");
+		canvas.setWidth(parent.getClientWidth());
+		canvas.setHeight(parent.getClientHeight());
 		rootElement.appendChild(canvas);
-		webgl = (WebGL2RenderingContext) canvas.getContext("webgl2", youEagler());
+		renderingCanvas = (HTMLCanvasElement)doc.createElement("canvas");
+		renderingCanvas.setWidth(canvas.getWidth());
+		renderingCanvas.setHeight(canvas.getHeight());
+		frameBuffer = (CanvasRenderingContext2D) canvas.getContext("2d");
+		webgl = (WebGL2RenderingContext) renderingCanvas.getContext("webgl2", youEagler());
 		if(webgl == null) {
 			throw new RuntimeException("WebGL 2.0 is not supported in your browser ("+getString("window.navigator.userAgent")+")");
 		}
@@ -910,7 +923,74 @@ public class EaglerAdapterImpl2 {
 	public static final boolean isWindows() {
 		return getString("window.navigator.platform").toLowerCase().contains("win");
 	}
+
+	private static HTMLCanvasElement imageLoadCanvas = null;
+	private static CanvasRenderingContext2D imageLoadContext = null;
+
+	@JSBody(params = { "buf", "mime" }, script = "return URL.createObjectURL(new Blob([buf], {type: mime}));")
+	private static native String getDataURL(ArrayBuffer buf, String mime);
 	
+	@JSBody(params = { "url" }, script = "URL.revokeObjectURL(url);")
+	private static native void freeDataURL(String url);
+	
+	public static final EaglerImage loadPNG(byte[] data) {
+		ArrayBuffer arr = ArrayBuffer.create(data.length);
+		Uint8Array.create(arr).set(data);
+		return loadPNG0(arr);
+	}
+	
+	@Async
+	private static native EaglerImage loadPNG0(ArrayBuffer data);
+	
+	private static void loadPNG0(ArrayBuffer data, final AsyncCallback<EaglerImage> ret) {
+		final HTMLImageElement toLoad = (HTMLImageElement) doc.createElement("img");
+		toLoad.addEventListener("load", new EventListener<Event>() {
+			@Override
+			public void handleEvent(Event evt) {
+				if(imageLoadCanvas == null) {
+					imageLoadCanvas = (HTMLCanvasElement) doc.createElement("canvas");
+				}
+				if(imageLoadCanvas.getWidth() < toLoad.getWidth()) {
+					imageLoadCanvas.setWidth(toLoad.getWidth());
+				}
+				if(imageLoadCanvas.getHeight() < toLoad.getHeight()) {
+					imageLoadCanvas.setHeight(toLoad.getHeight());
+				}
+				if(imageLoadContext == null) {
+					imageLoadContext = (CanvasRenderingContext2D) imageLoadCanvas.getContext("2d");
+				}
+				imageLoadContext.clearRect(0, 0, toLoad.getWidth(), toLoad.getHeight());
+				imageLoadContext.drawImage(toLoad, 0, 0, toLoad.getWidth(), toLoad.getHeight());
+				ImageData pxlsDat = imageLoadContext.getImageData(0, 0, toLoad.getWidth(), toLoad.getHeight());
+				Uint8ClampedArray pxls = pxlsDat.getData();
+				int totalPixels = pxlsDat.getWidth() * pxlsDat.getHeight();
+				freeDataURL(toLoad.getSrc());
+				if(pxls.getByteLength() < totalPixels * 4) {
+					ret.complete(null);
+					return;
+				}
+				int[] pixels = new int[totalPixels];
+				for(int i = 0; i < pixels.length; ++i) {
+					pixels[i] = (pxls.get(i * 4) << 16) | (pxls.get(i * 4 + 1) << 8) | pxls.get(i * 4 + 2) | (pxls.get(i * 4 + 3) << 24);
+				}
+				ret.complete(new EaglerImage(pixels, pxlsDat.getWidth(), pxlsDat.getHeight(), true));
+			}
+		});
+		toLoad.addEventListener("error", new EventListener<Event>() {
+			@Override
+			public void handleEvent(Event evt) {
+				freeDataURL(toLoad.getSrc());
+				ret.complete(null);
+			}
+		});
+		String src = getDataURL(data, "image/png");
+		if(src == null) {
+			ret.complete(null);
+		}else {
+			toLoad.setSrc(src);
+		}
+	}
+
 	private static HTMLVideoElement currentVideo = null;
 	private static TextureGL videoTexture = null;
 	private static boolean videoIsLoaded = false;
@@ -1212,6 +1292,171 @@ public class EaglerAdapterImpl2 {
 			frameRate = 1;
 		}
 	}
+
+	private static HTMLImageElement currentImage = null;
+	private static TextureGL imageTexture = null;
+	private static boolean imageIsLoaded = false;
+	private static boolean imageTexIsInitialized = false;
+	private static int imageFrameRate = 33;
+	private static long imageFrameTimer = 0l;
+
+	public static final boolean isImageSupported() {
+		return true;
+	}
+	public static final void loadImage(String src) {
+		loadImage(src, null);
+	}
+	public static final void loadImage(String src, String setJavascriptPointer) {
+		loadImage(src, setJavascriptPointer, null);
+	}
+
+	@JSBody(params = { "ptr", "el" }, script = "window[ptr] = el;")
+	private static native void setImagePointer(String ptr, HTMLImageElement el);
+	@JSBody(params = { "ptr", "el" }, script = "window[ptr](el);")
+	private static native void callImageLoadEvent(String ptr, HTMLImageElement el);
+
+	public static final void loadImage(String src, String setJavascriptPointer, final String javascriptOnloadFunction) {
+		imageIsLoaded = false;
+		imageTexIsInitialized = false;
+		if(imageTexture == null) {
+			imageTexture = _wglGenTextures();
+		}
+		if(currentImage != null) {
+			currentImage.setSrc("");
+		}
+
+		BufferedImageElem img = imagesBuffer.get(src);
+
+		if(img != null) {
+			currentImage = img.imageElement;
+			imagesBuffer.remove(src);
+		}else {
+			currentImage = (HTMLImageElement) win.getDocument().createElement("img");
+			currentImage.setAttribute("crossorigin", "anonymous");
+		}
+
+		if(setJavascriptPointer != null) {
+			setImagePointer(setJavascriptPointer, currentImage);
+		}
+
+		currentImage.addEventListener("load", new EventListener<Event>() {
+			@Override
+			public void handleEvent(Event evt) {
+				imageIsLoaded = true;
+				if(javascriptOnloadFunction != null) {
+					callImageLoadEvent(javascriptOnloadFunction, currentImage);
+				}
+			}
+		});
+
+		if(img == null) {
+			currentImage.setSrc(src);
+		}
+	}
+
+	private static class BufferedImageElem {
+
+		protected final HTMLImageElement imageElement;
+		protected final String url;
+		protected final long requestedTime;
+		protected final int ttl;
+
+		public BufferedImageElem(HTMLImageElement imageElement, String url, int ttl) {
+			this.imageElement = imageElement;
+			this.url = url;
+			this.requestedTime = System.currentTimeMillis();
+			this.ttl = ttl;
+		}
+
+	}
+
+	private static final HashMap<String, BufferedImageElem> imagesBuffer = new HashMap();
+
+	public static final void bufferImage(String src, int ttl) {
+		if(!imagesBuffer.containsKey(src)) {
+			HTMLImageElement image = (HTMLImageElement) win.getDocument().createElement("img");
+			image.setAttribute("crossorigin", "anonymous");
+			image.setSrc(src);
+			imagesBuffer.put(src, new BufferedImageElem(image, src, ttl));
+		}
+	}
+
+	public static final void unloadImage() {
+		if(imageTexture != null) {
+			_wglDeleteTextures(imageTexture);
+			imageTexture = null;
+		}
+		if(currentImage != null) {
+			currentImage.setSrc("");
+			currentImage = null;
+		}
+	}
+	public static final boolean isImageLoaded() {
+		return imageTexture != null && currentImage != null && imageIsLoaded;
+	}
+
+	@JSBody(
+			params = {"ctx", "target", "internalformat", "format", "type", "image"},
+			script = "ctx.texImage2D(target, 0, internalformat, format, type, image);"
+	)
+	private static native void html5ImageTexImage2D(WebGL2RenderingContext ctx, int target, int internalformat, int format, int type, HTMLImageElement image);
+
+	@JSBody(
+			params = {"ctx", "target", "format", "type", "image"},
+			script = "ctx.texSubImage2D(target, 0, 0, 0, format, type, image);"
+	)
+	private static native void html5ImageTexSubImage2D(WebGL2RenderingContext ctx, int target, int format, int type, HTMLImageElement image);
+
+	public static final void updateImageTexture() {
+		long ms = System.currentTimeMillis();
+		if(ms - imageFrameTimer < imageFrameRate && imageTexIsInitialized) {
+			return;
+		}
+		imageFrameTimer = ms;
+		if(currentImage != null && imageTexture != null && imageIsLoaded) {
+			try {
+				_wglBindTexture(_wGL_TEXTURE_2D, imageTexture);
+				if(imageTexIsInitialized) {
+					html5ImageTexSubImage2D(webgl, _wGL_TEXTURE_2D, _wGL_RGBA, _wGL_UNSIGNED_BYTE, currentImage);
+				}else {
+					html5ImageTexImage2D(webgl, _wGL_TEXTURE_2D, _wGL_RGBA, _wGL_RGBA, _wGL_UNSIGNED_BYTE, currentImage);
+					_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_S, _wGL_CLAMP);
+					_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_WRAP_T, _wGL_CLAMP);
+					_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_MIN_FILTER, _wGL_LINEAR);
+					_wglTexParameteri(_wGL_TEXTURE_2D, _wGL_TEXTURE_MAG_FILTER, _wGL_LINEAR);
+					imageTexIsInitialized = true;
+				}
+			}catch(Throwable t) {
+				// rip
+			}
+		}
+	}
+	public static final void bindImageTexture() {
+		if(imageTexture != null) {
+			_wglBindTexture(_wGL_TEXTURE_2D, imageTexture);
+		}
+	}
+	public static final int getImageWidth() {
+		if(currentImage != null && imageIsLoaded) {
+			return currentImage.getWidth();
+		}else {
+			return -1;
+		}
+	}
+	public static final int getImageHeight() {
+		if(currentImage != null && imageIsLoaded) {
+			return currentImage.getHeight();
+		}else {
+			return -1;
+		}
+	}
+
+	public static final void setImageFrameRate(float fps) {
+		frameRate = (int)(1000.0f / fps);
+		if(frameRate < 1) {
+			frameRate = 1;
+		}
+	}
 	
 	private static MouseEvent currentEvent = null;
 	private static KeyboardEvent currentEventK = null;
@@ -1331,7 +1576,22 @@ public class EaglerAdapterImpl2 {
 	private static native int commitContext(JSObject obj);
 	
 	public static final void updateDisplay() {
-		commitContext(webgl);
+		//commitContext(webgl);
+		int w = parent.getClientWidth();
+		int h = parent.getClientHeight();
+		if(canvas.getWidth() != w) {
+			canvas.setWidth(w);
+		}
+		if(canvas.getHeight() != h) {
+			canvas.setHeight(h);
+		}
+		frameBuffer.drawImage(renderingCanvas, 0, 0, w, h);
+		if(renderingCanvas.getWidth() != w) {
+			renderingCanvas.setWidth(w);
+		}
+		if(renderingCanvas.getHeight() != h) {
+			renderingCanvas.setHeight(h);
+		}
 		try {
 			Thread.sleep(1l);
 		} catch (InterruptedException e) {
@@ -1367,14 +1627,10 @@ public class EaglerAdapterImpl2 {
 		return win.getScreen().getAvailHeight();
 	}
 	public static final int getCanvasWidth() {
-		int w = parent.getClientWidth();
-		canvas.setWidth(w);
-		return w;
+		return renderingCanvas.getWidth();
 	}
 	public static final int getCanvasHeight() {
-		int h = parent.getClientHeight();
-		canvas.setHeight(h);
-		return h;
+		return renderingCanvas.getHeight();
 	}
 	public static final void setDisplaySize(int x, int y) {
 		
