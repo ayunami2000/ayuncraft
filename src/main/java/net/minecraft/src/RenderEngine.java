@@ -67,7 +67,8 @@ public class RenderEngine {
 			if (var7 == null) {
 				var4 = this.missingTextureImage.data;
 			} else {
-				var4 = EaglerImage.loadImage(var7).data;
+				//var4 = EaglerImage.loadImage(var7).data;
+				var4 = EaglerAdapter.loadPNG(var7).data;
 			}
 
 			this.textureContentsMap.put(par1Str, var4);
@@ -124,7 +125,7 @@ public class RenderEngine {
 					if (var6 == null) {
 						this.setupTextureExt(this.missingTextureImage, var3, var9, var5);
 					} else {
-						this.setupTextureExt(this.readTextureImage(var6), var3, var9, var5);
+						this.setupTextureExt(EaglerImage.loadImage(var6), var3, var9, var5);
 					}
 
 					this.textureMap.put(var8, Integer.valueOf(var3));
@@ -299,13 +300,16 @@ public class RenderEngine {
 					var11 = var11.substring(7);
 				}
 				
-				byte[] b = var1.getResourceAsBytes(var11);
-				if(b != null) {
-					EaglerImage var5 = this.readTextureImage(b);
+				//byte[] b = var1.getResourceAsBytes(var11); //what the fuck
+				//if(b != null) {
+					EaglerImage var5 = EaglerAdapter.loadPNG(var1.getResourceAsBytes(var11));
+					if(var5 == null) {
+						throw new IOException("Could not load PNG");
+					}
 					this.setupTextureExt(var5, var12, var6, var7);
-				}else {
-					System.err.println("could not reload: "+var11);
-				}
+				//}else {
+				//	System.err.println("could not reload: "+var11);
+				//}
 			} catch (IOException var9) {
 				var9.printStackTrace();
 			}
@@ -317,7 +321,10 @@ public class RenderEngine {
 			var11 = (String) var2.next();
 
 			try {
-				var4 = this.readTextureImage(var1.getResourceAsBytes(var11));
+				var4 = EaglerAdapter.loadPNG(var1.getResourceAsBytes(var11));
+				if(var4 == null) {
+					throw new IOException("Could not load PNG");
+				}
 				System.arraycopy(var4.data, 0, (int[]) this.textureContentsMap.get(var11), 0, var4.data.length);
 			} catch (IOException var8) {
 				var8.printStackTrace();
@@ -332,7 +339,8 @@ public class RenderEngine {
 	 * Returns a BufferedImage read off the provided input stream. Args: inputStream
 	 */
 	private EaglerImage readTextureImage(byte[] par1InputStream) throws IOException {
-		return EaglerImage.loadImage(par1InputStream);
+		return null;//EaglerImage.loadImage(par1InputStream);
+		//return EaglerAdapter.loadPNG(par1InputStream);
 	}
 
 	public void refreshTextureMaps() {

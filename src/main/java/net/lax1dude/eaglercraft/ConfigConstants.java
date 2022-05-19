@@ -6,7 +6,7 @@ public class ConfigConstants {
 	
 	public static boolean profanity = false;
 
-	public static final String version = "22w16h";
+	public static final String version = "22w20b";
 	public static final String mainMenuString = "ayuncraft " + version;
 	
 	public static final String forkMe = "https://github.com/ayunami2000/ayuncraft";
@@ -26,4 +26,9 @@ public class ConfigConstants {
 			+ "(([0-9]{1,3}\\.){3})[0-9]{1,3})" // Ip
 			+ "(:"
 			+ "[0-9]{1,5})?$"); // Port
+	public static int mainMenuItem = -1;
+	public static String mainMenuItemLine0 = null;
+	public static String mainMenuItemLine1 = null;
+	public static String mainMenuItemLine2 = null;
+	public static String mainMenuItemLink = null;
 }

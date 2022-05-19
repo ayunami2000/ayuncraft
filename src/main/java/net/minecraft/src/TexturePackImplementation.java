@@ -62,7 +62,8 @@ public abstract class TexturePackImplementation implements ITexturePack {
 	 * Load and initialize thumbnailImage from the the /pack.png file.
 	 */
 	private void loadThumbnailImage() {
-		this.thumbnailImage = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes("/pack.png"));
+		//this.thumbnailImage = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes("/pack.png"));
+		this.thumbnailImage = EaglerAdapter.loadPNG(EaglerAdapter.loadResourceBytes("/pack.png"));
 	}
 
 	/**

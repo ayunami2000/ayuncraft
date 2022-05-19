@@ -113,6 +113,8 @@ public class GameSettings {
 	/** true if debug info should be displayed instead of version */
 	public boolean showDebugInfo;
 	public boolean showDebugProfilerChart;
+	
+	public boolean showCoordinates;
 
 	/** The lastServer string. */
 	public String lastServer;
@@ -149,6 +151,7 @@ public class GameSettings {
 		this.thirdPersonView = 0;
 		this.showDebugInfo = false;
 		this.showDebugProfilerChart = true;
+		this.showCoordinates = true;
 		this.lastServer = "";
 		this.noclip = false;
 		this.smoothCamera = false;
@@ -514,6 +517,7 @@ public class GameSettings {
 			if(yee.hasKey("chatScale")) this.chatScale = yee.getFloat("chatScale");
 			if(yee.hasKey("chatWidth")) this.chatWidth = yee.getFloat("chatWidth");
 			if(yee.hasKey("patchAnisotropic")) this.patchAnisotropic = yee.getBoolean("patchAnisotropic");
+			if(yee.hasKey("showCoordinates")) this.showCoordinates = yee.getBoolean("showCoordinates");
 			
 			for (int var4 = 0; var4 < this.keyBindings.length; ++var4) {
 				if(yee.hasKey(keyBindings[var4].keyDescription)) this.keyBindings[var4].keyCode = yee.getInteger(keyBindings[var4].keyDescription);
@@ -567,6 +571,7 @@ public class GameSettings {
 		yee.setFloat("chatScale", this.chatScale);
 		yee.setFloat("chatWidth", this.chatWidth);
 		yee.setBoolean("patchAnisotropic", this.patchAnisotropic);
+		yee.setBoolean("showCoordinates", this.showCoordinates);
 		
 		for (int var4 = 0; var4 < this.keyBindings.length; ++var4) {
 			yee.setInteger(keyBindings[var4].keyDescription, keyBindings[var4].keyCode);

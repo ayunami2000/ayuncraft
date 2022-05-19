@@ -951,7 +951,7 @@ public class Minecraft implements Runnable {
 
 	public void displayEaglercraftText(String s) {
 		if(this.thePlayer != null && shownPlayerMessages.add(s)) {
-			this.thePlayer.sendChatToPlayer("notice: "+s);
+			this.thePlayer.sendChatToPlayer(s);
 		}
 	}
 
@@ -1235,6 +1235,11 @@ public class Minecraft implements Runnable {
 									this.gameSettings.thirdPersonView = 0;
 								}
 							}
+							
+							if (EaglerAdapter.getEventKey() == 7 && this.gameSettings.keyBindFunction.pressed) {
+								this.gameSettings.showCoordinates = !this.gameSettings.showCoordinates;
+								this.gameSettings.saveOptions();
+							}
 
 							if (EaglerAdapter.getEventKey() == 9 && this.gameSettings.keyBindFunction.pressed) {
 								this.gameSettings.smoothCamera = !this.gameSettings.smoothCamera;
@@ -1332,7 +1337,7 @@ public class Minecraft implements Runnable {
 		if (this.theWorld != null) {
 			if (this.thePlayer != null) {
 				++this.joinPlayerCounter;
-
+				
 				if (this.joinPlayerCounter == 30) {
 					this.joinPlayerCounter = 0;
 					this.theWorld.joinEntityInSurroundings(this.thePlayer);
@@ -1479,7 +1484,13 @@ public class Minecraft implements Runnable {
 			StringTranslate var4 = StringTranslate.getInstance();
 
 			if(!this.gameSettings.fancyGraphics || this.gameSettings.ambientOcclusion == 0) {
-				displayEaglercraftText(var4.translateKey("fancyGraphicsNote"));
+				displayEaglercraftText("Note: " + var4.translateKey("fancyGraphicsNote"));
+			}
+			
+			if(this.gameSettings.showCoordinates) {
+				displayEaglercraftText(EnumChatFormatting.LIGHT_PURPLE + "Note: use F+6 to hide the coordinates off of the screen (if you're in public)");
+			}else {
+				displayEaglercraftText(EnumChatFormatting.LIGHT_PURPLE + "Note: use F+6 to show your coordinates on the screen");
 			}
 
 			this.thePlayer.preparePlayerToSpawn();

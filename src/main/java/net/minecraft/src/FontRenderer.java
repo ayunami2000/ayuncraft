@@ -130,7 +130,8 @@ public class FontRenderer {
 	}
 
 	private void readFontTexture(String par1Str) {
-		EaglerImage e = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes(par1Str));
+		//EaglerImage e = EaglerImage.loadImage(EaglerAdapter.loadResourceBytes(par1Str));
+		EaglerImage e = EaglerAdapter.loadPNG(EaglerAdapter.loadResourceBytes(par1Str));
 		int[] var5 = e.data;
 		int var3 = e.w;
 		int var4 = e.h;

@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.lax1dude.eaglercraft.ConfigConstants;
 import net.lax1dude.eaglercraft.EaglerAdapter;
 import net.lax1dude.eaglercraft.EaglercraftRandom;
+import net.lax1dude.eaglercraft.EnumBrowser;
 import net.lax1dude.eaglercraft.TextureLocation;
 import net.lax1dude.eaglercraft.adapter.Tessellator;
 import net.lax1dude.eaglercraft.glemu.EffectPipeline;
@@ -397,17 +398,27 @@ public class GuiIngame extends Gui {
 			var8.drawStringWithShadow(this.mc.getEntityDebug(), 2, 22, 16777215);
 			var8.drawStringWithShadow(this.mc.debugInfoEntities(), 2, 32, 16777215);
 			var8.drawStringWithShadow(this.mc.getWorldProviderName(), 2, 42, 16777215);
-			long var39;
-			long var37;
-			long var41;
-			var39 = EaglerAdapter.maxMemory();
-			var37 = EaglerAdapter.totalMemory();
-			var41 = EaglerAdapter.freeMemory();
-			long var44 = var37 - var41;
-			String var45 = "Used memory: " + var44 * 100L / var39 + "% (" + var44 / 1024L / 1024L + "MB) of " + var39 / 1024L / 1024L + "MB";
-			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 2, 14737632);
-			var45 = "Allocated memory: " + var37 * 100L / var39 + "% (" + var37 / 1024L / 1024L + "MB)";
-			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 12, 14737632);
+			String var45;
+			int offset = 0;
+			if(EaglerAdapter._wisWebGL()) {
+				var45 = "Game is running in a browser (" + EnumBrowser.getBrowser().toString() + ")";
+				this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 2, 14737632);
+				offset = -10;
+			}else {
+				long var39;
+				long var37;
+				long var41;
+				var39 = EaglerAdapter.maxMemory();
+				var37 = EaglerAdapter.totalMemory();
+				var41 = EaglerAdapter.freeMemory();
+				long var44 = var37 - var41;
+				var45 = "Used memory: " + var44 * 100L / var39 + "% (" + var44 / 1024L / 1024L + "MB) of " + var39 / 1024L / 1024L + "MB";
+				this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 2, 14737632);
+				var45 = "Allocated memory: " + var37 * 100L / var39 + "% (" + var37 / 1024L / 1024L + "MB)";
+				this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 12, 14737632);
+				offset = 0;
+			}
+			
 			this.drawString(var8, "Player is not using an xbox live account", 2, 64, 0xFFBBBB);
 			this.drawString(var8, "Using cracked server @ " + mc.getServerURI(), 2, 73, 0xFFBBBB);
 			var47 = MathHelper.floor_double(this.mc.thePlayer.posX);
@@ -418,28 +429,29 @@ public class GuiIngame extends Gui {
 			this.drawString(var8, "z: "+doubleToShorterString(this.mc.thePlayer.posZ)+" ("+var23+") // c: "+(var23 >> 4)+" ("+(var23 & 15)+")", 2, 108, 14737632);
 			var24 = MathHelper.floor_double((double) (this.mc.thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 			this.drawString(var8, "f: " + var24 + " (" + Direction.directions[var24] + ") / " + MathHelper.wrapAngleTo180_float(this.mc.thePlayer.rotationYaw), 2, 116, 14737632);
+			this.drawString(var8, "Press F+6 to " + (mc.gameSettings.showCoordinates ? "disable" : "enable") + " showing coords in ingame GUI", 2, 135, 0xFFFFFFFF);
 
 			//this.drawString(var8, String.format("ws: %.3f, fs: %.3f, g: %b, fl: %d", new Object[] { Float.valueOf(this.mc.thePlayer.capabilities.getWalkSpeed()), Float.valueOf(this.mc.thePlayer.capabilities.getFlySpeed()),
 			//		Boolean.valueOf(this.mc.thePlayer.onGround), Integer.valueOf(this.mc.theWorld.getHeightValue(var47, var23)) }), 2, 104, 14737632);
 			var45 = "opengl emulator status - v1.0";
-			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 36, 14737632);
+			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, offset + 36, 14737632);
 			var45 = "lists: "+EaglerAdapter.getDisplayListCount()+", upload: "+(EaglerAdapter.getBitsPerSecond() / 1000000)+"mbps";
-			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 46, 14737632);
+			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, offset + 46, 14737632);
 			var45 = "verts: "+(EaglerAdapter.getVertexesPerSecond() / 1000)+"k, triangles: "+(EaglerAdapter.getTrianglesPerSecond() / 1000)+"k";
-			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 56, 14737632);
+			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, offset + 56, 14737632);
 			var45 = "rendering backend: "+(EaglerAdapter.isWebGL ? "webgl20" : "opengl30");
-			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 66, 14737632);
+			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, offset + 66, 14737632);
 			var45 = "glsl "+(EaglerAdapter._wgetShaderHeader() +", 32 bytes/vert");
-			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 76, 14737632);
+			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, offset + 76, 14737632);
 			var45 = "Bound Shaders:";
-			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 100, 14737632);
+			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, offset + 100, 14737632);
 			var45 = "/glsl/core.glsl";
-			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 110, 14737632);
+			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, offset + 110, 14737632);
 			var45 = "/glsl/occl.glsl";
-			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 120, 14737632);
+			this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, offset + 120, 14737632);
 			for(int i = 0; i < EffectPipeline.pipeline.length; i++) {
 				var45 = EffectPipeline.pipeline[i];
-				this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, 130 + i*10, 14737632);
+				this.drawString(var8, var45, var6 - var8.getStringWidth(var45) - 2, offset + 130 + i*10, 14737632);
 			}
 			EaglerAdapter.glPopMatrix();
 			this.mc.mcProfiler.endSection();
@@ -447,7 +459,11 @@ public class GuiIngame extends Gui {
 			EaglerAdapter.glPushMatrix();
 			EaglerAdapter.glScalef(0.75f, 0.75f, 0.75f);
 			var8.drawStringWithShadow(this.mc.renderGlobal.getDebugInfoShort(), 2, 2, 16777215);
-			var8.drawStringWithShadow("x: "+MathHelper.floor_double(this.mc.thePlayer.posX)+", y: "+MathHelper.floor_double(this.mc.thePlayer.posY)+", z: "+MathHelper.floor_double(this.mc.thePlayer.posZ), 2, 12, 16777215);
+			
+			if(mc.gameSettings.showCoordinates) {
+				var8.drawStringWithShadow("x: "+MathHelper.floor_double(this.mc.thePlayer.posX)+", y: "+MathHelper.floor_double(this.mc.thePlayer.posY)+", z: "+MathHelper.floor_double(this.mc.thePlayer.posZ), 2, 12, 16777215);
+			}
+			
 			int offset = this.mc.isChatOpen() ? 135 : 0;
 			int offset2 = this.mc.isChatOpen() ? 4 : 0;
 			String str = "not using an xbox live account";

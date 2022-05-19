@@ -330,4 +330,8 @@ public class NBTTagCompound extends NBTBase {
 	public static Map getTagMap(NBTTagCompound par0NBTTagCompound) {
 		return par0NBTTagCompound.tagMap;
 	}
+
+	public String getStringOrNull(String string) {
+		return !this.tagMap.containsKey(string) ? null : ((NBTTagString) this.tagMap.get(string)).data;
+	}
 }

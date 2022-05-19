@@ -134,7 +134,8 @@ public class TextureTerrainMap implements IconRegister {
 			if(data == null) {
 				map.replaceTexture(this, map.missingData);
 			}else {
-				EaglerImage img = EaglerImage.loadImage(data);
+				//EaglerImage img = EaglerImage.loadImage(data);
+				EaglerImage img = EaglerAdapter.loadPNG(data);
 				if(img == null) {
 					map.replaceTexture(this, map.missingData);
 				}else {

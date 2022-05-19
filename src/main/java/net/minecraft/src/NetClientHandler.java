@@ -1021,6 +1021,8 @@ public class NetClientHandler extends NetHandler {
 			ItemMap.readAyunamiMapPacket(this.mc.theWorld, par1Packet131MapData.uniqueID, par1Packet131MapData.itemData);
 		} else if (par1Packet131MapData.itemID == 104) {
 			ItemMap.processVideoMap(this.mc.theWorld, par1Packet131MapData.itemData);
+		} else if (par1Packet131MapData.itemID == 105) {
+			ItemMap.processImageMap(this.mc.theWorld, par1Packet131MapData.itemData);
 		} else {
 			System.err.println("Unknown itemid: " + par1Packet131MapData.itemID);
 		}
