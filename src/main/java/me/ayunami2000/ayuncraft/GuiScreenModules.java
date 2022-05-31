@@ -21,7 +21,7 @@ public class GuiScreenModules extends GuiScreen {
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 6 + 52, "Give"));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, this.height / 6 + 76, "Toggle Notebot"));
         this.buttonList.add(new GuiButton(3, this.width / 2 - 100, this.height / 6 + 100, "Toggle Legit mode"));
-        this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 6 + 124, "Toggle Flight"));
+        //this.buttonList.add(new GuiButton(4, this.width / 2 - 100, this.height / 6 + 124, "Toggle Flight"));
     }
 
     public void onGuiClosed() {
