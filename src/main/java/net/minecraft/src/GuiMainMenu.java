@@ -138,6 +138,7 @@ public class GuiMainMenu extends GuiScreen {
 		//GuiButton single;
 		this.buttonList.add(new GuiButton(2, this.width / 2 - 100, var4, var2.translateKey("menu.multiplayer")));
 		this.buttonList.add(new GuiButton(3, this.width / 2 - 100, var4 + 24 * 1, var2.translateKey("menu.forkme")));
+		this.buttonList.add(new GuiButton(2, this.width / 2 - 100, var4 + 48 * 1, var2.translateKey("menu.shitpiss")));
 		//this.buttonList.add(new GuiButton(3, this.width / 2 - 100, var4 + 24 * 2, var2.translateKey("menu.forkme")));
 		//single.enabled = false;
 
